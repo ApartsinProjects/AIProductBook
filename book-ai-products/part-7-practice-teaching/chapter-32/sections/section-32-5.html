@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>32.5 EduGen Failure Postmortem - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></div>
+        <div class="chapter-label">Chapter 32, Section 32.5</div>
+        <h1>Failure Case with Postmortem: EduGen</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            EduGen raised $15 million, built a 40-person team, and spent 18 months developing an AI-powered vocational training platform. They shut down in March 2025. This is their postmortem.
+        </p>
+
+        <div class="epigraph">
+            <p>We were so convinced we understood the problem that we never seriously tested our assumptions. By the time we did, we had run out of money and time.</p>
+            <cite>Founder, EduGen (anonymous)</cite>
+        </div>
+
+        <h2>32.5.1 The Vision</h2>
+
+        <p>
+            EduGen launched in 2023 with a compelling pitch: AI-powered vocational training that adapted to each student's learning pace, provided personalized feedback, and simulated real-world job scenarios. The target market was healthcare workforce development, specifically training certified nursing assistants (CNAs) and medical assistants.
+        </p>
+
+        <p>
+            The founders had personal experience with vocational training gaps. Two of the three founders had family members who failed certification exams due to inadequate preparation. They believed AI could democratize access to high-quality training.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Pitch That Raised $15M</div>
+            <p>"We're building the Duolingo for healthcarevocational training. AI tutors that adapt to every student, simulation-based skills practice, and a 40% improvement in certification pass rates. The addressable market is $4.2 billion."</p>
+        </div>
+
+        <h2>32.5.2 What Went Wrong</h2>
+
+        <p>
+            Eighteen months after founding, EduGen had 42,000 registered users but only 2,100 active monthly users, a 12% 30-day retention rate against an industry benchmark of 40%, $3.1 million in the bank with monthly burn of $800,000, no enterprise customers despite 50 sales calls, and an AI that users did not trust for skills assessments.
+        </p>
+
+        <p>
+            In March 2025, the board voted to shut down. The postmortem identified five critical failures.
+        </p>
+
+        <h2>32.5.3 Failure #1: Wrong Problem Validation</h2>
+
+        <p>
+            The founders validated their idea through surveys and interviews, not actual behavior. When asked if they would pay for AI-powered training, 78% of respondents said yes. When offered a free trial, only 31% activated. When asked to pay $50/month, fewer than 5% converted.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Survey-to-Revenue Gap</div>
+            <p>Stated preference (surveys) diverged dramatically from revealed preference (actual usage and payment). The team had optimized for survey approval rather than market validation. This failure manifested in overestimated TAM and unrealistic revenue projections.</p>
+        </div>
+
+        <h2>32.5.4 Failure #2: AI Quality That Users Did Not <a href="../../../part-1-why-ai-changes/chapter-4/sections/section-4-6.html" class="cross-ref">Trust</a></h2>
+
+        <p>
+            EduGen's AI provided feedback on clinical skills, but nursing educators identified significant accuracy issues. The AI sometimes praised incorrect techniques and failed to catch safety violations. Users reported that they could not distinguish good feedback from bad, eroding trust in the entire system.
+        </p>
+
+        <p>
+            The eval coverage was insufficient. The team had tested their AI on five hundred synthetic scenarios but had never validated it against expert nurse educators. By the time they received expert feedback, they had already burned through their runway on other initiatives. The planned evaluation coverage had called for five thousand test scenarios, but only five hundred were actually completed. Expert review cases were planned at five hundred but never conducted at all. A/B testing was planned for twelve weeks but ran for only three weeks before being cut short. Industry benchmark comparison was planned but never completed, leaving the team without a critical reference point for success.
+        </p>
+
+        <h2>32.5.5 Failure #3: Misaligned Go-to-Market Strategy</h2>
+
+        <p>
+            EduGen pursued two markets simultaneously: individual students and healthcare employers. Individual students had high acquisition costs and low willingness to pay. Employers had complex procurement cycles and demanded features that did not exist.
+        </p>
+
+        <p>
+            The sales team spent 18 months chasing enterprise deals that never closed. Meanwhile, the consumer acquisition strategy relied on content marketing and social media, generating traffic but no conversions.
+        </p>
+
+        <h2>32.5.6 Failure #4: Team Structure That Inhibited Learning</h2>
+
+        <p>
+            The founding team was technically strong but lacked domain expertise in vocational education or healthcare workforce development. They made product decisions based on what was technically interesting rather than what educators needed.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Competence Trap</div>
+            <p>The technical founders were excellent at building AI features. They built many features. But features that educators actually needed, like better progress tracking and clearer certification alignment, were deprioritized in favor of technically impressive but educationally marginal capabilities.</p>
+        </div>
+
+        <h2>32.5.7 Failure #5: <a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">Governance</a> and Safety Ignored</h2>
+
+        <p>
+            EduGen's AI made recommendations about patient care techniques in a training context. The team treated this as low-stakes because it was "just training." They never built systematic bias detection, failed to implement content safety guardrails, and did not establish an ethics review process.
+        </p>
+
+        <p>
+            When a user discovered that the AI provided inconsistent guidance on handwashing protocols across different modules, the incident received media attention and accelerated their reputational decline.
+        </p>
+
+        <h2>32.5.8 Root Cause Analysis</h2>
+
+        <p>
+            The postmortem concluded that the ultimate failure was a governance problem: the team had no mechanism for updating their beliefs as evidence accumulated. They had built a product that matched their initial vision rather than one that solved actual market problems. When low free trial activation indicated the problem was not compelling, they added more features instead of revisiting their approach. When expert review rejected their AI, signaling insufficient quality, they interviewed more users rather than improving the technology. When enterprise deals failed repeatedly, indicating the product was not ready, they hired more sales staff instead of fixing the product. When high churn revealed retention was not sustainable, they improved onboarding emails rather than addressing the underlying value proposition.
+        </p>
+
+        <h2>32.5.9 Lessons for AI Product Teams</h2>
+
+        <div class="callout tip">
+            <div class="callout-title">What EduGen's Failure Teaches</div>
+            <p>EduGen's failure teaches that stated preference is not validation because survey results are cheap to gather and easy to misinterpret, and behavioral data such as usage, payment, and retention is the only true validation. Domain expertise is not optional because AI products in regulated or specialized domains require deep domain knowledge on the team, and technical capability alone is insufficient. Evaluation is existential for AI products because when your product's quality is hard to judge, users will assume the worst, and EduGen's lack of expert validation proved fatal. Governance applies to training products because even low-stakes AI that influences professional practice requires safety guardrails and bias monitoring. Singular focus beats parallel pursuits because trying to serve both consumers and enterprises stretched EduGen thin, and the team should have picked one and proven it before diversifying. Evidence-based course correction requires culture because building a learning organization is harder than building a product, and teams must have psychological safety to update beliefs.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-32-4.html">32.4 HealthMetrics</a>
+            <a class="up" href="../index.html">Chapter 32</a>
+            <a class="next" href="../index.html">Chapter 32</a>
+        </nav>
+
+        <footer>
+            <p>32.5 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

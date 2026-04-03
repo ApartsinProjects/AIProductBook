@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14.3 Architectural Hardening - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 14.3</div>
+        <h1><a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Architectural</a> Hardening</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Vibe-coded prototypes often have sound core logic but shaky architecture. Architectural hardening improves structure without changing behavior.
+        </p>
+
+        <h2>The <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Architecture</a> Debt Problem</h2>
+
+        <p>Architectural debt accumulates when code is written for immediate needs without regard for long-term structure. <a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> accelerates the accumulation of this debt because the focus is on generating working code quickly, not on producing maintainable architecture.</p>
+
+        <p>Architectural debt is not immediately visible since the code works. But it becomes problematic when you need to add new features in adjacent areas, debug issues in complex interaction paths, onboard new team members, or scale the system to handle increased load.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Technical Debt vs Architectural Debt</div>
+            <p><strong>Technical debt</strong> is conscious trade-offs: we shipped fast knowing we would need to refactor later.</p>
+            <p><strong>Architectural debt</strong> is unconscious neglect: we did not think about architecture because we were focused on functionality.</p>
+            <p><a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> tends to produce architectural debt because the focus is on generating working code, not on designing systems.</p>
+        </div>
+
+        <h2>Common Architectural Issues</h2>
+
+        <h3>Monolithic Files</h3>
+
+        <p>AI often generates everything in a single file or a few large files. This works for prototypes but becomes unwieldy at scale.</p>
+
+        <h3>Tight Coupling</h3>
+
+        <p>Components are entangled rather than separated by interface. Changes propagate unpredictably.</p>
+
+        <h3>Missing Abstraction Layers</h3>
+
+        <p>Business logic, data access, and presentation are mixed rather than separated. This makes testing and modification difficult.</p>
+
+        <h3>Inconsistent Patterns</h3>
+
+        <p>Different parts of the codebase use different approaches for similar problems. This increases cognitive load.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Architectural Hardening Journey</div>
+            <p>QuickShip's vibe-coded exception handler had these architectural issues:</p>
+            <p><strong>Before:</strong> QuickShip's exception handler had a single 2000-line file with all logic, with email parsing, classification, response generation, and database operations all mixed together, no interfaces so everything called everything, and inconsistent error handling across functions.</p>
+            <p><strong>Hardening approach:</strong> They split into modules for email processing, classification, response, and database, defined interfaces between modules, extracted common utilities, and standardized error handling.</p>
+            <p><strong>After:</strong> The system had five focused modules with clear responsibilities, clean interfaces between modules, shared utilities for common operations, and consistent error handling patterns.</p>
+        </div>
+
+        <h2>Hardening Techniques</h2>
+
+        <h3>Modularization</h3>
+
+        <p>Split monolithic code into focused modules with clear responsibilities. Each module should do one thing well.</p>
+
+        <h3>Interface Extraction</h3>
+
+        <p>Define explicit interfaces between components. This enables changing one component without affecting others.</p>
+
+        <h3>Dependency Injection</h3>
+
+        <p>Pass dependencies as parameters rather than creating them internally. This makes testing and substitution easier.</p>
+
+        <h3>Layer Separation</h3>
+
+        <p>Separate business logic from data access from presentation. Each layer should be independently testable.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">Hardening Priority</div>
+            <p>Harden architecture in order of impact, starting with critical path modules that affect the most users or run most frequently, then modules that change frequently and would benefit from improved structure, followed by modules that are difficult to test due to poor architecture, and finally modules that new features will touch so hardening enables easier extension.</p>
+        </div>
+
+        <h2>When to Harden</h2>
+
+        <p>Architectural hardening has costs including time, risk of introducing bugs, and delayed feature development. Harden when you are adding significant new features that would benefit from better structure, when you are experiencing debugging difficulty due to architectural issues, when you are onboarding new team members who need to understand the codebase, when the system will be long-lived and require ongoing maintenance, or when change requests frequently affect multiple areas indicating tight coupling. Do not harden when the prototype is disposable and will not be maintained, when you need to validate the approach quickly and structure would slow you down, or when the system is simple enough that hardening would be over-engineering.</p>
+
+        <h2>Measuring <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Architecture</a> Quality</h2>
+
+        <p>Measure architecture quality through several metrics. Cyclomatic complexity indicates how complex individual functions are and whether they are too difficult to understand. Coupling measures how many dependencies exist between modules and whether changes will propagate across the system. Cohesion measures how focused individual modules are and whether each module has a clear single responsibility. Instability measures how likely changes are to cascade and whether modifying one area breaks others.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Architectural debt accumulates when focus is on functionality over structure, which is the natural tendency of vibe coding. Common issues include monolithic files that are difficult to navigate, tight coupling where components are entangled, missing abstraction layers that make testing and modification hard, and inconsistent patterns that increase cognitive load. Hardening techniques include modularization to split monolithic code, interface extraction to define clear boundaries, dependency injection to make testing easier, and layer separation to separate concerns. Harden when impact justifies cost, focusing effort where structure problems cause real problems, and do not harden disposable prototypes. Measure architecture quality using complexity, coupling, cohesion, and instability metrics to identify where hardening will provide the most value.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Architectural Self-Assessment</div>
+            <p>Evaluate the architecture of a vibe-coded system through a structured assessment. First, identify the major modules and assess whether each is focused on a single responsibility. Second, evaluate how coupled modules are by considering what would break if you changed one. Third, determine whether layers are properly separated between business logic, data access, and presentation. Fourth, identify the most significant architectural issues causing problems today. Fifth, assess what hardening would cost in terms of time and risk versus what it would gain in maintainability and extensibility.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 14.4, we examine <strong>Preparing for Team Handoff</strong>, transitioning from individual prototype work to team production.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-14-2.html">14.2 Test Generation</a>
+            <a class="up" href="../index.html">Chapter 14 Overview</a>
+            <a class="next" href="section-14-4.html">14.4 Team Handoff</a>
+        </nav>
+
+        <footer>
+            <p>Section 14.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

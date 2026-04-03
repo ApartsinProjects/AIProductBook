@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appendix E: Architecture Checklists - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../index.html">Part VII: Practice and Teaching Kit</a></div>
+        <div class="chapter-label">Appendix E</div>
+        <h1>Architecture Checklists</h1>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Provide pre-launch architecture review checklists for AI products.
+        </p>
+
+        <h2>E.1 Pre-Launch AI Architecture Review</h2>
+
+        <div class="callout tip">
+            <div class="callout-title">Pre-Launch Architecture Checklist</div>
+            <p>Functional Requirements must verify that all priority user stories have been implemented, core AI capability has been verified against requirements, edge cases have been identified and handled, and graceful degradation has been tested. Performance requirements must confirm that latency meets SLA targets at the ninety-fifth and ninety-ninth percentiles, throughput has been validated under load, cost per request is within budget, and resource utilization has been optimized. Reliability requirements must ensure that failover mechanisms have been tested, circuit breakers have been implemented, timeout handling has been verified, and error rates are within acceptable range. Scalability requirements must verify that horizontal scaling has been verified, database connection pooling has been configured, a caching strategy has been implemented, and rate limiting is in place. Observability requirements must confirm that structured logging has been implemented, a metrics dashboard has been deployed, alerts have been configured with thresholds, and distributed tracing has been enabled.</p>
+        </div>
+
+        <h2>E.2 Security and Privacy Assessment</h2>
+
+        <div class="callout warning">
+            <div class="callout-title">Security Checklist for AI Systems</div>
+            <p>Data Protection requires that PII data has been identified and classified, data encryption at rest and in transit has been implemented, sensitive data logging is prohibited, and data retention policies are enforced. Access Control requires that authentication has been implemented, authorization is properly scoped, API keys are rotated regularly, and the least privilege principle has been followed. AI-Specific Threats require that prompt injection mitigations are in place, input validation and sanitization has been implemented, output filtering has been implemented, and rate limiting prevents abuse. Compliance requires that GDPR requirements have been addressed if operating in the EU, HIPAA requirements have been addressed if in healthcare, data residency requirements have been met, and an audit trail has been implemented.</p>
+        </div>
+
+        <h2>E.3 Cost and Latency Evaluation</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Cost Factor</th>
+                    <th>Target</th>
+                    <th>Measurement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>LLM cost per 1K tokens</td>
+                    <td>[Define based on unit economics]</td>
+                    <td>Production monitoring</td>
+                </tr>
+                <tr>
+                    <td>Avg tokens per request</td>
+                    <td>[Optimize for quality/cost]</td>
+                    <td>Request logging</td>
+                </tr>
+                <tr>
+                    <td>Cost per user session</td>
+                    <td>[Below willingness to pay]</td>
+                    <td>User cohort analysis</td>
+                </tr>
+                <tr>
+                    <td>P50 latency</td>
+                    <td>[&lt; 500ms for interactive]</td>
+                    <td>APM monitoring</td>
+                </tr>
+                <tr>
+                    <td>P95 latency</td>
+                    <td>[&lt; 1s for most interactions]</td>
+                    <td>APM monitoring</td>
+                </tr>
+                <tr>
+                    <td>P99 latency</td>
+                    <td>[Define acceptable max]</td>
+                    <td>APM monitoring</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="caption">Cost and latency targets template</p>
+
+        <h2>E.4 Observability Readiness</h2>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Observability Checklist</div>
+            <p>Metrics to Capture must include request volume across total, by endpoint, and by user dimensions; latency at the fiftieth, ninety-fifth, and ninety-ninth percentiles by endpoint; error rates across total, by type, and by severity; AI-specific metrics including token usage, model latency, and retrieval quality; and business metrics including conversion, engagement, and satisfaction. Logging Requirements must include structured JSON logging, request correlation IDs, user ID and session tracking, an AI decision audit trail, and verification that no sensitive data appears in logs. Alerting Rules must include error rate spike alerts, latency degradation alerts, cost anomaly alerts, AI quality regression alerts, and a defined on-call escalation procedure.</p>
+        </div>
+
+        <h2>E.5 Compliance Verification</h2>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Compliance Verification Checklist</div>
+            <p>Pre-Launch Compliance Gates require that legal review has been completed, a privacy impact assessment has been done, a security penetration test has been conducted, an accessibility audit has been passed, and documentation for regulators has been prepared. Ongoing Compliance requires that data retention audits occur quarterly, access log reviews occur monthly, model bias assessments occur quarterly, the incident response plan has been tested, and compliance training is current.</p>
+        </div>
+
+        <h2>E.6 Rollback Procedures</h2>
+
+        <div class="callout tip">
+            <div class="callout-title">Rollback Readiness Checklist</div>
+            <p>Feature flags must be in place for all major changes, the rollback procedure must be documented, rollback must be tested in staging, database migration rollback scripts must be ready, the communication template must be prepared, the on-call runbook must be updated, and customer support must be briefed.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="appendix-d-evaluation-rubrics.html">Appendix D: Rubrics</a>
+            <a class="up" href="../index.html">Part VII Overview</a>
+            <a class="next" href="appendix-f-prompts-skills-examples.html">Appendix F: Prompts</a>
+        </nav>
+
+        <footer>
+            <p>Appendix E &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

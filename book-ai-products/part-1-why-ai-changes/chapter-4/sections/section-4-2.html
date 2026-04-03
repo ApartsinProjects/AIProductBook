@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.2 Bounded Rationality and Human-AI Complementarity - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../index.html">Part I: Why AI Changes</a></div>
+        <div class="chapter-label">Chapter 4, Section 4.2</div>
+        <h1>Bounded Rationality and Human-AI Complementarity</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Herbert Simon, who won the Nobel Prize in Economics for his work on decision-making, observed that humans do not make optimal decisions. They make satisfactory decisions given the limits of their information, cognitive capacity, and time. This bounded rationality is not a human flaw; it is the fundamental condition of being a thinking agent in a complex world. The same is true of AI systems.
+        </p>
+
+        <section class="core-concept">
+            <h2>Bounded Rationality: A Shared Human-AI Condition</h2>
+            
+            <p>Simon introduced the concept of bounded rationality in 1957 to explain why people do not always make economically rational choices. The key insight: decision-making is constrained by the information available, the cognitive limitations of the decision-maker, and the finite time available to decide. We do not optimize; we satisfice. We find solutions that are good enough and move on.</p>
+
+            <p>AI systems exhibit bounded rationality in analogous ways. They are constrained by training data limitations (what the system learned, and when it learned it), computational limits (how much context it can consider at once), statistical nature (the inherent uncertainty in probabilistic inference), and objective function constraints (what it was optimized to do, and what it was not).</p>
+
+            <div class="concept-definition">
+                <h3>AI as Approximation Engines</h3>
+                <p>Every AI system is, at its core, an approximation engine. It approximates the patterns in its training data. It approximates reasoning about new inputs based on past examples. It approximates what a good response looks like based on learned distributions. These approximations are extraordinarily useful, but they are still approximations.</p>
+                
+                <p>Understanding AI as an approximation engine clarifies what these systems can and cannot do. They can approximate well in domains where training data is rich and patterns are consistent. They struggle where data is sparse, patterns are edge cases, or the problem requires truly novel reasoning.</p>
+            </div>
+
+            <div class="callout fun-note">
+                <div class="callout-title">The Silver Lining</div>
+                <p>Unlike humans, AI doesn't get tired after 8 hours, doesn't need vacation days, and won't complain about your coffee. It will, however, confidently tell you that 2+2=7 if that's what it learned from your training data.</p>
+            </div>
+        </section>
+
+        <section class="deeper-principles">
+            <h2>Designing for "Good Enough" with Quantified Uncertainty</h2>
+
+            <p>Traditional software engineering aims for correctness. AI product engineering aims for acceptable performance with known failure modes. This shift requires new frameworks for thinking about quality.</p>
+
+        <div class="framework-box">
+            <h3>The Confidence-Uncertainty Framework</h3>
+            <p>Every AI output should be considered in the context of the system's confidence and the uncertainty of that confidence. Understanding these four combinations helps you design appropriate responses:</p>
+            <p><strong>High confidence, low uncertainty:</strong> The system has seen clear patterns similar to this input and is likely correct. Show the output directly.</p>
+            <p><strong>High confidence, high uncertainty:</strong> The system provides a strong answer but may be wrong in ways it cannot detect. Proceed with caution and consider showing confidence indicators.</p>
+            <p><strong>Low confidence, low uncertainty:</strong> The system honestly acknowledges its limitations. This represents situations where the system knows it does not know.</p>
+            <p><strong>Low confidence, high uncertainty:</strong> The system is guessing and may not recognize its own guessing. This is the most dangerous combination. Trigger human review, request clarification, or offer multiple options.</p>
+        </div>
+
+        <p>How you present AI outputs shapes how users interact with the system and ultimately affects outcomes.</p>
+
+        <div class="principle-callout principle-primary">
+                <div class="principle-header">
+                    <span class="principle-icon">5</span>
+                    <h4>Principle: Interfaces Are Control Systems</h4>
+                </div>
+                <p>Every interface to an AI system is a control system. The way you present AI outputs, the choices you offer users, the information you provide about confidence: all of these shape how the system affects the world. Interface design is control system design.</p>
+            </div>
+        </section>
+
+        <section class="deeper-principles">
+            <h2>Human-AI Complementarity</h2>
+
+            <p>The most effective AI products are not those that replace human judgment, but those that combine human and AI capabilities in ways that leverage the strengths of each. This is not a temporary limitation while AI improves; it is a fundamental principle that will remain true even as AI capabilities advance.</p>
+
+            <div class="concept-definition">
+                <h3>Comparative Advantages: Humans vs AI</h3>
+                <div class="comparison-table">
+                    <div class="compare-col">
+                        <h4>Human Strengths</h4>
+                        <p>Humans excel at handling novel situations without precedent, understanding context, nuance, and social dynamics, ethical reasoning and value judgment, adapting to truly unexpected failure modes, learning from extremely sparse data, and providing emotional intelligence and empathy.</p>
+                    </div>
+                    <div class="compare-col">
+                        <h4>AI Strengths</h4>
+                        <p>AI excels at processing vast amounts of information quickly, consistent application of learned patterns, working 24/7 without fatigue degradation, generating many options rapidly, pattern recognition in high-dimensional spaces, and cross-referencing large knowledge bases.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h3>Worked Example: AI-Assisted Medical Diagnosis</h3>
+                <p>Consider an AI system that helps doctors diagnose diseases. Neither the AI nor the doctor alone is optimal. The AI can process thousands of research papers, patient histories, and imaging data to suggest possible diagnoses, while the doctor understands the patient's life circumstances, values, and preferences that affect treatment decisions. The AI might miss a rare condition that the doctor recognizes from a specific pattern, and the doctor might overlook a drug interaction that the AI flags from the complete medical record.</p>
+            </div>
+
+            <div class="callout practical-example">
+                <div class="callout-title">Running Product: QuickShip Logistics</div>
+                <p>QuickShip's route optimization AI and their human dispatchers each have bounded rationality, but of different types. The AI is constrained by its training data (historical routes and performance), while the human dispatcher brings contextual knowledge that the AI lacks: knowing that a particular driver's dog is usually in the yard on Tuesdays, affecting delivery times.</p>
+                <p>Initially, QuickShip tried fully autonomous routing. Routes were mathematically optimal but ignored real-world factors that caused failures. Now they use bounded rational delegation: the AI generates 3 route options within 5% of optimal, and the human dispatcher picks based on contextual knowledge the AI cannot capture.</p>
+                <p>The result: route execution rate improved from 78% to 94%, because the human-AI combination leverages the bounded rationality of each while compensating for the other's blind spots.</p>
+            </div>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14.1 Code Quality Uplift - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 14.1</div>
+        <h1>Code Quality Uplift</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            <a href="../../../part-3-vibe-coding/chapter-11/sections/section-11-1.html" class="cross-ref">Vibe-coded prototypes</a> work but often do not meet production quality standards. Code quality uplift transforms working prototypes into codebases ready for review.
+        </p>
+
+        <h2>The Prototype-to-Production Gap</h2>
+
+        <p>Vibe-coded prototypes are optimized for speed and exploration. Production code is optimized for reliability, maintainability, and collaboration. These different optimization targets produce different code characteristics.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Prototype vs Production Characteristics</div>
+            <p>Understanding the differences between prototype and production code guides where to focus uplift effort. In error handling, prototypes have minimal or no handling while production requires comprehensive coverage. In naming, prototypes may be inconsistent but production requires consistent and descriptive names. In documentation, prototypes have sparse or absent docs while production has complete documentation for public APIs. In structure, prototypes may be organic while production follows established conventions. In testing, prototypes have none or minimal tests while production has adequate test coverage.</p>
+        </div>
+
+        <p>Understanding these differences guides where to focus uplift effort.</p>
+
+        <h2>Quality Uplift Priorities</h2>
+
+        <p>Quality uplift should be prioritized. Not all prototype code requires the same level of improvement. Focus uplift efforts where they matter most.</p>
+
+        <h3>Critical Path First</h3>
+
+        <p>Prioritize code on the critical path: code that runs frequently, handles important data, or affects users directly. Non-critical code can be cleaned up later or left as technical debt.</p>
+
+        <h3>High-Leverage Improvements</h3>
+
+        <p>Some improvements have outsized impact on system quality. Error handling prevents cascading failures that can bring down entire systems. Security hardening prevents vulnerabilities that could be exploited by attackers. Observability enables debugging in production when issues arise, making it possible to diagnose and fix problems quickly.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: QuickShip Logistics</div>
+            <p>QuickShip analyzed their vibe-coded exception handler for uplift priorities:</p>
+            <p><strong>Critical path (uplifted immediately):</strong> The email classification API because it runs on every email and affects all users, response generation because it creates customer-facing content, and database operations because they store sensitive data.</p>
+            <p><strong>Non-critical (deferred):</strong> Admin dashboard components because they have low traffic and are easy to fix later, logging utility functions because they can be improved incrementally, and documentation because it is important but not blocking.</p>
+        </div>
+
+        <p>Prioritization ensures uplift effort delivers the highest impact first.</p>
+
+        <h2>Systematic Uplift Process</h2>
+
+        <h3>Step 1: Code Review</h3>
+
+        <p>Have someone who did not write the code review it. Fresh eyes catch issues the author misses. AI-generated code especially benefits from human review because the author may not fully understand what was generated.</p>
+
+        <h3>Step 2: Lint and Format</h3>
+
+        <p>Run linters and formatters to enforce consistent style. This eliminates bike-shedding debates and ensures code meets team standards.</p>
+
+        <h3>Step 3: Type Checking</h3>
+
+        <p>For dynamically typed languages, add type annotations. For statically typed languages, ensure all types are explicit. Type errors are a common source of production bugs.</p>
+
+        <h3>Step 4: Error Handling Review</h3>
+
+        <p>Review all error handling paths. Ask: What can go wrong? What happens when it does? Is the failure mode acceptable?</p>
+
+        <div class="callout tip">
+            <div class="callout-title">Uplift Checklist</div>
+            <p>Complete the uplift checklist to ensure thorough quality improvement. Code review should be completed by someone other than the original developer. Linting and formatting should be applied to enforce consistent style. Type checking should be passing with no type errors. Error handling should be reviewed for completeness and correctness. Security hardening should be applied to address common vulnerabilities. Observability should be added through logging, metrics, and tracing. Tests should be written to cover critical functionality.</p>
+        </div>
+
+        <h2>Security Hardening</h2>
+
+        <p>AI-generated code often lacks security considerations. Security hardening is a critical uplift step.</p>
+
+        <h3>Common AI Security Gaps</h3>
+
+        <p>AI-generated code has common security gaps to watch for. Input validation is often missing, leading to injection attacks. Authentication may be assumed rather than enforced, with code that assumes authenticated context without verifying it. Data handling may log sensitive data or store it insecurely without proper protection. Access control may not be enforced, allowing unauthorized access to resources.</p>
+
+        <h3>Hardening Checklist</h3>
+
+        <p>Apply security hardening through a systematic checklist. All inputs should be validated before processing. Authentication and authorization should be enforced on every request. Sensitive data should not be logged anywhere. PII should be handled according to relevant policies and regulations. Dependencies should be kept up to date and verified as free from known vulnerabilities.</p>
+
+        <div class="callout warning">
+            <div class="callout-title">Security Review Requirement</div>
+            <p>Security hardening should be reviewed by someone with security expertise. Do not rely on vibe coding uplift alone for security-critical code.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: HealthMetrics Analytics</div>
+            <p>HealthMetrics applies strict security hardening to their vibe-coded prototypes due to HIPAA compliance requirements:</p>
+            <p><strong>Critical security uplift for clinical data features:</strong> Input validation ensures all patient data inputs are validated for format, range, and PII content before processing. Authentication enforces multi-factor authentication for all AI-assisted clinical workflows. Data handling ensures PHI data is never logged, cached, or stored in AI prompt contexts without explicit consent. Access control implements role-based access control ensuring clinical staff only see patient data they are authorized to access. Audit trails log all AI recommendations with full context for compliance auditing.</p>
+            <p>HealthMetrics found that vibe coding acceleration was only valuable if the uplift phase included mandatory security review. They created a healthcare-specific security checklist that runs as part of every prototype-to-production transition.</p>
+        </div>
+
+        <h2>Observability Addition</h2>
+
+        <p>AI-generated code often lacks observability. Add logging, metrics, and tracing to enable debugging in production.</p>
+
+        <h3>What to Observe</h3>
+
+        <p>Add observability by tracking key operations to understand what the system is doing, latency to measure how long operations take, errors to track what goes wrong and how often, and business metrics to understand what outcomes occur in production.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Prototype code differs from production code in error handling, naming, documentation, structure, and testing. Prioritize uplift effort on critical path code and high-leverage improvements that prevent cascading failures, vulnerabilities, or debugging difficulty. Follow a systematic uplift process: code review, linting and formatting, type checking, error handling review, security hardening, and observability addition. Security hardening requires security expertise; do not rely on vibe coding uplift alone for security-critical code. Observability enables debugging in production, so add logging, metrics, and tracing to understand system behavior.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Uplifting a Prototype</div>
+            <p>Apply uplift to a vibe-coded prototype by working through a systematic process. First, identify the critical path code that runs frequently, handles important data, or affects users directly. Second, run linting and formatting to enforce consistent style. Third, review error handling paths to ensure failures are caught and handled gracefully. Fourth, apply security hardening to address common vulnerabilities. Fifth, add observability through logging, metrics, and tracing to enable production debugging.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 14.2, we examine <strong>Test Generation</strong>, exploring how to add test coverage to AI-generated code.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 14: Prototype to System</a>
+            <a class="up" href="../index.html">Chapter 14 Overview</a>
+            <a class="next" href="section-14-2.html">14.2 Test Generation</a>
+        </nav>
+
+        <footer>
+            <p>Section 14.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

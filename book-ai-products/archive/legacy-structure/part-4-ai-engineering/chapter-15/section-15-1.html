@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15.1 Serving Options - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 15</div>
+        <h1>Inference Serving and LLMOps</h1>
+        <p class="chapter-subtitle">15.1 Serving Options</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Make systems fast and cost-effective with proper serving and LLMOps.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Chapters 11-14 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Infrastructure Matters</div>
+            <p>This section covers inference serving options from vLLM to cloud-managed solutions. In the context of AI engineering, your model is only as good as its serving infrastructure. The choice between self-hosted and managed solutions involves tradeoffs between control, cost, and operational complexity.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The GPU That Wasnt</div>
+            <p>A startup deployed vLLM proudly advertising "GPU-accelerated inference." They later discovered their cloud provider had assigned them a CPU-only instance by accident. Their "GPU" model was running 50x slower than expected. Always verify your hardware.</p>
+        </div>
+
+        <h2 id="section-15-1">15.1 Inference Serving Options</h2>
+
+        <p>
+            Choosing the right inference serving infrastructure is crucial for performance, cost, and operational complexity. Each option has distinct tradeoffs that match different organizational needs and scale requirements.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Your model is only as good as its serving infrastructure. A great model with poor serving will have high latency, inconsistent response times, and excessive costs. The serving layer determines whether users experience your AI as magical or frustrating.
+        </p>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Academic Perspective: Queuing Theory and Latency Optimization</div>
+            <p>The science of AI serving infrastructure draws from <strong>Queuing Theory</strong>, the mathematical study of waiting lines. Little's Law (1961) establishes that the average number of items in a queue equals the arrival rate multiplied by the average time in system. For AI serving, this means that throughput (requests/second) and latency are fundamentally linked through the number of requests in flight.</p>
+            <p>Research by Gunther (1998) on universal scalability law demonstrates that contention and coherence costs grow super-linearly with system scale, explaining why simply adding GPU resources does not linearly improve throughput. The vLLM continuous batching approach specifically addresses this by dynamically packing sequences to minimize GPU idle time, a practical application of queuing optimization.</p>
+            <p><em>Key references: Little, J.D.C. (1961). "Little's Law." Operations Research, 9(5); Gunther, N.J. (1998). "Universal Scalability Law." Springer.</em></p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: vLLM Isn't Always Faster</div>
+            <p>While vLLM offers excellent throughput for large batches, for low-latency single requests, the difference over simpler solutions may be minimal. vLLM shines when you have high throughput requirements (many concurrent requests). For low-volume or latency-critical applications, a managed API may actually provide better latency. Don't add infrastructure complexity unless your scale justifies it.</p>
+        </div>
+
+        <h3>1. vLLM: High-Throughput, Open-Source</h3>
+
+        <p>
+            vLLM is an open-source inference server that provides industry-leading throughput through optimizations like PagedAttention. It is the choice for teams that want maximum performance at the lowest cost and are comfortable managing their own infrastructure.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: vLLM Setup</div>
+            <pre class="code-block"># Run vLLM server
+vllm serve meta-llama/Llama-3.2-70B-Instruct \
+    --tensor-parallel-size 4 \
+    --gpu-memory-utilization 0.9 \
+    --max-num-seqs 256
+
+# Query the server
+curl http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "meta-llama/Llama-3.2-70B-Instruct",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+
+# vLLM provides OpenAI-compatible API
+# Easy migration from OpenAI API</pre>
+        </div>
+
+        <p>vLLM excels when you need to serve large models at scale with minimal latency. It supports continuous batching, which allows dynamic batch sizing based on demand.</p>
+
+        <h3>2. NVIDIA Triton: Enterprise-Grade</h3>
+
+        <p>
+            Triton is NVIDIA's inference serving platform, designed for enterprise deployments with requirements for reliability, monitoring, and multi-model support. It integrates deeply with NVIDIA hardware and provides sophisticated deployment options.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Enterprise Deployment with Triton</div>
+            <p>A large financial services company needed to serve multiple models simultaneously:</p>
+            <ul>
+                <li>Small embedding model for retrieval</li>
+                <li>Medium model for classification</li>
+                <li>Large model for complex reasoning</li>
+            </ul>
+            <p>Triton provided:</p>
+            <ul>
+                <li>Model ensemble for routing between models</li>
+                <li>Dynamic batching across all models</li>
+                <li>GPU sharing for cost efficiency</li>
+                <li>Integration with their existing monitoring (Datadog, Prometheus)</li>
+            </ul>
+        </div>
+
+        <h3>3. Hugging Face Text Generation Inference (TGI)</h3>
+
+        <p>
+            TGI is Hugging Face's official inference solution, optimized for their model hub. It provides easy deployment of models from the hub with good performance and simple configuration.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: TGI with Docker</div>
+            <pre class="code-block"># Run TGI via Docker
+docker run --gpus all --shm-size 1g -p 8080:80 \
+    ghcr.io/huggingface/text-generation-inference \
+    --model-id meta-llama/Llama-3.2-70B-Instruct \
+    --max-input-length 4096 \
+    --max-total-tokens 8192 \
+    --quantize bitsandbytes-nf4
+
+# TGI provides:
+# - Automatic model downloading from hub
+# - BitsAndBytes quantization support
+# - OpenAI-compatible endpoint
+# - Streaming support</pre>
+        </div>
+
+        <h3>4. Cloud-Managed Solutions</h3>
+
+        <p>
+            Cloud providers offer fully managed inference that minimizes operational burden. This is the right choice when you want to focus on application development rather than infrastructure.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Provider</th><th>Service</th><th>Best For</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>AWS</td><td>SageMaker Endpoints</td><td>Existing AWS infrastructure</td></tr>
+                <tr><td>Google</td><td>Vertex AI</td><td>Training + serving, TPUs</td></tr>
+                <tr><td>Azure</td><td>AI Studio</td><td>Microsoft ecosystem</td></tr>
+                <tr><td>OpenAI</td><td>API</td><td>Quickest path to production</td></tr>
+                <tr><td>Anthropic</td><td>API</td><td>Claude-specific features</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Decision Framework</div>
+            <p>Start with API providers (OpenAI, Anthropic) for fastest time-to-market. Migrate to self-hosted (vLLM) when you hit cost or control requirements. Use Triton for enterprise needs requiring advanced features.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>CI/CD for Prompts and Models</strong> - treating AI components like software.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Ch 15: Overview</a>
+            <a class="up" href="index.html">Chapter 15 Index</a>
+            <a class="next" href="section-15-2.html">15.2 CI/CD for Prompts/Models</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 15.1 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

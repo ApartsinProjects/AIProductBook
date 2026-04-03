@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.4 Testing and Iteration Loops - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <div class="chapter-label">Chapter 4</div>
+        <h1>Vibe Coding Workflows That Deliver Production-Ready Code</h1>
+        <p class="chapter-subtitle">4.4 Testing and Iteration Loops</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master testing and iteration workflows that transform AI-generated code into reliable, production-ready software.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 4.3 recommended. Understanding of test-driven development helpful. Familiarity with basic programming concepts assumed.
+        </div>
+
+        <h2 id="section-4-4">4.4 Testing and Iteration Loops: The Engine of Reliable AI Code</h2>
+
+        <p>
+            When vibe coding, the line between "it seems right" and "it actually works" can feel blurry. You describe what you want, the AI generates something that looks correct, and you move on. But this is where many developers get into trouble. Without systematic testing and iteration, even the most sophisticated AI-generated code can harbor subtle bugs, edge case failures, and integration failures that only surface in production. In this section, you will learn how to build a robust testing infrastructure into your vibe coding workflow, transforming the generate-test-iterate cycle into a reliable engine for producing production-ready code.
+        </p>
+
+        <h3 id="why-testing-matters">Why Testing Matters in Vibe Coding</h3>
+
+        <p>
+            Before diving into workflows, let us establish why testing is especially critical when working with AI-generated code. When you write code manually, you have a mental model of what each line does. When an AI generates code, it produces something that may look structurally sound but contains hidden assumptions, undocumented edge cases, or logical errors that are not immediately apparent. The AI is optimizing for "likely correct" based on patterns in its training data, not for "correct in your specific context."
+        </p>
+
+        <div class="callout key-concept">
+            <div class="callout-title">The Trust Gap</div>
+            <p>AI-generated code often works for the happy path but fails on edge cases. Tests bridge the trust gap between "it looks right" and "it actually works."</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The 47-Cent Bug</div>
+            <p>In 1994, a rounding error in a Bank of America trading program cost $500 million in a single day. The bug: a floating-point calculation rounded .5 down instead of up on certain currency conversions. This is why we test.</p>
+        </div>
+
+        <p>
+            Consider this scenario: You ask an AI to write a function that validates email addresses. The AI produces a regex pattern that correctly validates 95% of emails. But your application needs to handle 100% of valid emails, including edge cases like international domains, plus signs in Gmail addresses, and subdomain variations. The AI did not know your specific requirements. Tests catch these gaps before they become production issues.
+        </p>
+
+        <h3 id="testing-workflow">The Four-Step Testing Workflow</h3>
+
+        <p>
+            Integrate testing into your vibe coding workflow with this systematic approach:
+        </p>
+
+        <ol class="workflow-steps">
+            <li>
+                <strong>Write test descriptions first</strong> &mdash; Before asking AI to generate any code, clearly define what success looks like. This is your specification and your validation criteria.
+            </li>
+            <li>
+                <strong>Generate tests alongside implementation</strong> &mdash; When the AI generates your implementation code, simultaneously generate test code that validates that implementation.
+            </li>
+            <li>
+                <strong>Run tests after each AI generation</strong> &mdash; Never assume the AI got it right. Run tests immediately to catch failures early.
+            </li>
+            <li>
+                <strong>Iterate based on test results</strong> &mdash; When tests fail, use the failure information to guide your next prompt to the AI, creating a feedback loop.
+            </li>
+        </ol>
+
+        <p>
+            This is not merely a "best practice" from traditional development adapted for AI. It is a fundamentally different way of working. In traditional development, tests often lag behind implementation. In vibe coding, tests should lead the way, defining the contract that the AI must fulfill.
+        </p>
+
+        <h3 id="step-one-test-descriptions">Step 1: Writing Test Descriptions First</h3>
+
+        <p>
+            The first step in the testing workflow is to write test descriptions before any code generation. These descriptions serve a dual purpose: they document your requirements for the AI, and they become the acceptance criteria that validate whether the generated code meets your needs.
+        </p>
+
+        <h4>What Makes a Good Test Description</h4>
+
+        <p>
+            A good test description is specific, observable, and complete. It answers three questions: What is the input? What is the expected output or behavior? What are the edge cases that must be handled?
+        </p>
+
+        <div class="callout practical-tip">
+            <div class="callout-title">Practical Tip</div>
+            <p>Think of test descriptions as a contract between you and the AI. The clearer the contract, the better the AI can fulfill it. Vague requirements produce vague code.</p>
+        </div>
+
+        <h4>Real-World Scenario: E-Commerce Shopping Cart</h4>
+
+        <p>
+            Imagine you are building an e-commerce shopping cart feature. Before asking the AI to write any code, you write these test descriptions:
+        </p>
+
+        <pre><code>Test Descriptions for Shopping Cart:
+
+1. Adding a single item to cart
+   - Input: Product ID "PROD-123", quantity 1
+   - Expected: Cart contains 1 item with quantity 1, total equals item price
+
+2. Adding multiple quantities of the same item
+   - Input: Product ID "PROD-123", quantity 3
+   - Expected: Cart item quantity updates to 3, total equals price * 3
+
+3. Adding different items to cart
+   - Input: Product ID "PROD-123" quantity 1, Product ID "PROD-456" quantity 2
+   - Expected: Cart contains 2 different items with correct quantities
+
+4. Removing an item from cart
+   - Input: Cart with items, remove product "PROD-123"
+   - Expected: Cart no longer contains product "PROD-123"
+
+5. Empty cart display
+   - Input: Empty cart
+   - Expected: "Your cart is empty" message displayed
+
+6. Total calculation with tax
+   - Input: Items with subtotal $100
+   - Expected: Total = $108 (subtotal + 8% tax)</code></pre>
+
+        <p>
+            Notice how these descriptions are concrete enough that you could verify them manually. They are not "test the cart functionality" &mdash; they are specific scenarios with inputs and expected outputs. When you pass these to an AI, you are giving it a clear target to hit.
+        </p>
+
+        <h4>Case Study: AI Test Generation Failure</h4>
+
+        <p>
+            A startup building a fitness tracking app asked an AI to generate a function that calculates daily calorie burn based on exercise data. The AI generated a function that correctly handled running, cycling, and swimming. However, the developers had not written test descriptions first. Six months later, they discovered the function crashed when users logged "walking" as an activity &mdash; because "walking" was not in the AI's training examples of "common exercises."
+        </p>
+
+        <p>
+            If the developers had written test descriptions first, they would have included walking as a required activity, and the AI would have either handled it correctly or flagged that it could not. Instead, the bug made it to production and affected thousands of users.
+        </p>
+
+        <h3 id="step-two-generate-tests">Step 2: Generate Tests Alongside Implementation</h3>
+
+        <p>
+            Once you have your test descriptions, the next step is to generate tests alongside implementation. This is where the vibe coding workflow shines: you can ask the AI to generate both the implementation and the tests in parallel, ensuring they stay in sync.
+        </p>
+
+        <h4>Why Parallel Generation Matters</h4>
+
+        <p>
+            When you generate implementation and tests separately, you risk a mismatch. The implementation might evolve in ways that the tests do not cover. When you generate them together, the AI can ensure the tests properly cover the implementation it generates.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Key Insight</div>
+            <p>In vibe coding, the AI can see both the implementation and the test. This allows it to ensure they are aligned, reducing the gap between what the code does and what the tests verify.</p>
+        </div>
+
+        <h4>Code Example: Python Function with Tests</h4>
+
+        <p>
+            Here is an example of generating a Python function with its tests:
+        </p>
+
+        <pre><code>Your prompt to AI:
+
+Generate a Python function that calculates the compound interest on a savings account,
+and generate pytest unit tests for it. The function should accept: principal (float),
+annual interest rate (float as decimal, e.g., 0.05 for 5%), time in years (int),
+and compounding frequency (str: 'annually', 'monthly', 'daily'). Return the final amount.
+
+Test cases should cover:
+- Standard compound interest calculation
+- Zero interest rate
+- Zero years (should return principal)
+- Large time periods (30+ years)
+- Invalid compounding frequency (should raise ValueError)</code></pre>
+
+        <p>
+            The AI might respond with something like this:
+        </p>
+
+        <pre><code># Implementation
+def calculate_compound_interest(principal, rate, years, frequency):
+    if rate < 0:
+        raise ValueError("Interest rate cannot be negative")
+    if years < 0:
+        raise ValueError("Years cannot be negative")
+    if principal < 0:
+        raise ValueError("Principal cannot be negative")
+    
+    frequency_map = {
+        'annually': 1,
+        'monthly': 12,
+        'daily': 365
+    }
+    
+    if frequency not in frequency_map:
+        raise ValueError(f"Invalid frequency: {frequency}. Must be one of: {list(frequency_map.keys())}")
+    
+    n = frequency_map[frequency]
+    amount = principal * (1 + rate / n) ** (n * years)
+    return round(amount, 2)
+
+
+# Tests
+import pytest
+
+def test_standard_compound_interest():
+    result = calculate_compound_interest(1000, 0.05, 10, 'annually')
+    assert result == 1628.89  # 1000 * (1.05)^10
+
+def test_zero_interest_rate():
+    result = calculate_compound_interest(1000, 0, 5, 'annually')
+    assert result == 1000.0
+
+def test_zero_years():
+    result = calculate_compound_interest(1000, 0.05, 0, 'annually')
+    assert result == 1000.0
+
+def test_large_time_period():
+    result = calculate_compound_interest(1000, 0.07, 30, 'monthly')
+    assert round(result, 2) == 8110.42
+
+def test_invalid_frequency_raises_error():
+    with pytest.raises(ValueError):
+        calculate_compound_interest(1000, 0.05, 5, 'weekly')</code></pre>
+
+        <p>
+            Notice how the AI included validation for edge cases (negative inputs, invalid frequency) even though you did not explicitly ask for them. This is the AI's pattern recognition at work, and it is valuable. However, you still need to run the tests to verify these behaviors.
+        </p>
+
+        <h4>Skill Demonstration: Test Generation for REST API</h4>
+
+        <p>
+            For a REST API endpoint, you would generate both the endpoint code and tests. Here is a more complex example:
+        </p>
+
+        <pre><code>Your prompt to AI:
+
+Generate a FastAPI endpoint for user registration that:
+1. Accepts username (string, 3-20 characters), email (valid email), password (min 8 chars)
+2. Hashes the password using bcrypt before storing
+3. Returns 201 on success with user ID, returns 400 on validation error
+4. Returns 409 if email already exists
+
+Also generate pytest tests using FastAPI's TestClient that verify:
+- Successful registration returns 201
+- Invalid email format returns 400
+- Short password returns 400
+- Duplicate email returns 409
+- Password is actually hashed (not stored as plaintext)</code></pre>
+
+        <p>
+            This type of comprehensive prompt ensures you get both the implementation and the validation tests together, and the tests verify both the happy path and the error conditions.
+        </p>
+
+        <h3 id="step-three-run-tests">Step 3: Run Tests After Each AI Generation</h3>
+
+        <p>
+            The third step is to run tests immediately after every AI code generation. This is where many developers fail to build the habit. They assume that because the AI "understood" the prompt, the code must be correct. This assumption is dangerous.
+        </p>
+
+        <h4>The Psychology of AI Trust</h4>
+
+        <p>
+            There is a psychological effect at play in vibe coding: when AI produces code that looks polished and well-formatted, we tend to trust it more than we should. The code looks professional, uses proper syntax, includes comments &mdash; it feels like it was written by an expert. But looking professional and being correct are not the same thing.
+        </p>
+
+        <div class="callout key-concept">
+            <div class="callout-title">Code Quality vs. Correctness</div>
+            <p>AI-generated code often looks polished (proper formatting, good variable names) but may contain logical errors. Tests verify correctness, not just quality.</p>
+        </div>
+
+        <h4>How to Run Tests in Your Workflow</h4>
+
+        <p>
+            After receiving code from the AI, you should run tests immediately. Here is the workflow:
+        </p>
+
+        <pre><code># Run unit tests for a specific module
+pytest tests/test_interest.py -v
+
+# Run all tests in a project
+pytest --tb=short
+
+# Run tests with coverage report
+pytest --cov=src --cov-report=html</code></pre>
+
+        <h4>Real-World Scenario: The Decimal Precision Bug</h4>
+
+        <p>
+            A developer was vibe coding a financial application. The AI generated a function to calculate monthly loan payments. The code looked perfect: proper formula implementation, clear variable names, good documentation. The developer moved on without running tests.
+        </p>
+
+        <p>
+            Six weeks later, the finance team discovered that monthly payment calculations were off by a few cents on large loans. The issue was a floating-point precision error that only manifested with certain loan amounts. If the developer had run the tests immediately, they might have caught a test case with a large loan amount that exposed the precision issue.
+        </p>
+
+        <p>
+            The lesson: run tests immediately, even when the code looks correct. Edge cases often reveal problems that are not visible in the happy path.
+        </p>
+
+        <h4>Case Study: CI Pipeline Integration</h4>
+
+        <p>
+            A development team integrated automated testing into their vibe coding workflow by setting up a continuous integration pipeline that runs tests on every AI-generated pull request. Here is how they structured it:
+        </p>
+
+        <ol>
+            <li>Developer prompts AI for code changes</li>
+            <li>Developer reviews generated code and commits to a branch</li>
+            <li>CI pipeline automatically runs: unit tests, integration tests, linting, type checking</li>
+            <li>Pipeline fails if any test fails or any quality check fails</li>
+            <li>Developer iterates with AI to fix failures</li>
+        </ol>
+
+        <p>
+            This approach created a safety net. Even if a developer was tempted to skip testing, the CI pipeline enforced it. Over time, the team found that their production incidents decreased by 60% compared to their pre-vibe coding period.
+        </p>
+
+        <h3 id="step-four-iterate">Step 4: Iterate Based on Test Results</h4>
+
+        <p>
+            The final step is to use test failures as feedback to guide your next interaction with the AI. This is where the iteration loop closes, and where vibe coding really demonstrates its power: you can rapidly fix issues by providing the AI with specific error information.
+        </p>
+
+        <h4>How to Use Test Failures Effectively</h4>
+
+        <p>
+            When a test fails, do not just fix it manually. Instead, use the failure message as input for the AI. The test output contains precisely the information the AI needs to understand what went wrong.
+        </p>
+
+        <pre><code>Example: Test failure feedback to AI
+
+Your prompt to AI:
+
+The following test failed. Please fix the implementation to make it pass.
+
+Test:
+def test_monthly_payment_calculation():
+    result = calculate_monthly_payment(100000, 0.05, 30)
+    assert result == 536.82  # Expected: $536.82
+
+Error:
+AssertionError: assert 536.1562300000001 == 536.82
+
+The implementation returns 536.15623 instead of 536.82. Please fix the rounding logic.</code></pre>
+
+        <p>
+            This approach works because you are giving the AI exactly what it needs: the expected behavior, the actual behavior, and a hint about where the problem might be.
+        </p>
+
+        <div class="callout practical-tip">
+            <div class="callout-title">Pro Tip</div>
+            <p>Include the full error traceback when feeding failures back to the AI. The traceback often points to the exact line where the problem occurs.</p>
+        </div>
+
+        <h4>Code Example: Iteration Loop</h4>
+
+        <p>
+            Here is a complete iteration cycle demonstrating the feedback loop:
+        </p>
+
+        <pre><code># Iteration 1: Initial prompt
+# Prompt: "Generate a function that converts Celsius to Fahrenheit"
+# AI generates: fahrenheit = celsius * 9/5 + 32
+# Tests: 
+#   test_celsius_to_fahrenheit(): assert convert(0) == 32  # PASS
+#   assert convert(100) == 212  # PASS
+#   assert convert(-40) == -40  # FAIL
+
+# Iteration 2: Feedback with failure
+# Prompt: "The test for -40°C failed. It returned 32 instead of -40.
+# Please fix the function."
+# AI fixes: recognizes that -40 is the point where C and F are equal
+# New implementation handles -40 correctly
+
+# Iteration 3: Verify
+# All tests pass</code></pre>
+
+        <p>
+            Notice how each iteration is faster than writing the code from scratch. The AI does the heavy lifting of implementing fixes; you provide direction through test failures.
+        </p>
+
+        <h4>Real-World Scenario: Multi-Round Fix</h4>
+
+        <p>
+            A team was building a data pipeline that processed CSV files. The initial AI generation handled the happy path well, but tests revealed several edge cases that needed fixing. Here is their iteration history:
+        </p>
+
+        <pre><code>Round 1: Initial generation
+- Generated CSV parser
+- Tests: 3/10 passed
+- Failures: empty file handling, quoted fields, special characters
+
+Round 2: Fixed empty file handling
+- Tests: 5/10 passed
+- New failure: quoted fields with commas inside
+
+Round 3: Fixed quoted fields
+- Tests: 8/10 passed
+- New failures: Unicode characters, very long lines
+
+Round 4: Fixed Unicode and line length
+- Tests: 10/10 passed
+- Pipeline ready for integration testing</code></ol>
+
+        <p>
+            This multi-round approach would have taken hours if done manually. With vibe coding and the test-driven iteration loop, the team completed it in about 20 minutes of active work (plus time for AI to generate responses).
+        </p>
+
+        <h3 id="types-of-tests">Types of Tests for Vibe Coding Projects</h3>
+
+        <p>
+            Understanding what types of tests to use is crucial for building confidence in your AI-generated code. Each test type serves a different purpose and catches different categories of issues.
+        </p>
+
+        <h4>Unit Tests</h4>
+
+        <p>
+            Unit tests verify individual functions or methods in isolation. They are the foundation of your test suite and the first line of defense against bugs.
+        </p>
+
+        <pre><code>Example unit test for a utility function:
+
+def test_email_validator_valid_email():
+    assert validate_email("user@example.com") == True
+
+def test_email_validator_invalid_email():
+    assert validate_email("not-an-email") == False</code></pre>
+
+        <p>
+            <strong>When to use:</strong> For every function, utility, or class method that has deterministic behavior. Unit tests are your bread and butter.
+        </p>
+
+        <h4>Integration Tests</h4>
+
+        <p>
+            Integration tests verify that different parts of your system work together correctly. They test how components interact, including database connections, API calls, and file I/O.
+        </p>
+
+        <pre><code>Example integration test for API + Database:
+
+def test_user_registration_flow():
+    # Create a new user via API
+    response = client.post("/api/users", json={
+        "email": "new@example.com",
+        "username": "newuser"
+    })
+    assert response.status_code == 201
+    
+    # Verify user was saved to database
+    user = db.query(User).filter_by(email="new@example.com").first()
+    assert user is not None
+    assert user.username == "newuser"</code></pre>
+
+        <p>
+            <strong>When to use:</strong> After unit tests pass, to verify that components work together. Especially important for database interactions, external API calls, and file operations.
+        </p>
+
+        <h4>End-to-End Tests</h4>
+
+        <p>
+            End-to-end (E2E) tests simulate real user behavior, testing the entire application from the user's perspective. They are the most comprehensive but also the slowest and most brittle.
+        </p>
+
+        <pre><code>Example E2E test with Playwright:
+
+def test_user_can_sign_up_and_login():
+    # Navigate to signup page
+    page.goto("https://myapp.com/signup")
+    
+    # Fill out signup form
+    page.fill("#email", "test@example.com")
+    page.fill("#password", "password123")
+    page.click("#signup-button")
+    
+    # Should redirect to dashboard
+    assert page.url == "https://myapp.com/dashboard"
+    assert page.locator(".welcome-message").is_visible()
+    
+    # Can log out and log back in
+    page.click("#logout")
+    page.goto("https://myapp.com/login")
+    page.fill("#email", "test@example.com")
+    page.fill("#password", "password123")
+    page.click("#login-button")
+    assert page.url == "https://myapp.com/dashboard"</code></pre>
+
+        <p>
+            <strong>When to use:</strong> For critical user flows like signup, checkout, or key business processes. Do not over-rely on E2E tests as they are slow and can be flaky.
+        </p>
+
+        <h4>Property-Based Tests</h4>
+
+        <p>
+            Property-based tests verify that code satisfies certain properties across a wide range of inputs. Instead of testing specific inputs, you define rules that should always be true.
+        </p>
+
+        <pre><code>Example property-based test with Hypothesis:
+
+from hypothesis import given, strategies as st
+
+@given(st.lists(st.integers(min_value=1, max_value=1000)))
+def test_sort_preserves_length(items):
+    sorted_items = sort_items(items)
+    assert len(sorted_items) == len(items)
+
+@given(st.lists(st.integers()))
+def test_sort_is_ordered(items):
+    sorted_items = sort_items(items)
+    for i in range(len(sorted_items) - 1):
+        assert sorted_items[i] <= sorted_items[i + 1]
+
+@given(st.lists(st.integers()))
+def test_sort_contains_same_elements(items):
+    sorted_items = sort_items(items)
+    assert sorted(sorted_items) == sorted(items)</code></pre>
+
+        <p>
+            <strong>When to use:</strong> For functions where you know certain properties should always hold (like ordering, preservation of elements, mathematical properties). Property-based testing is especially powerful for catching edge cases that would be tedious to enumerate manually.
+        </p>
+
+        <h3 id="testing-strategies">Testing Strategies for AI-Generated Code</h3>
+
+        <p>
+            Beyond test types, certain strategies are particularly effective when working with AI-generated code.
+        </p>
+
+        <h4>Adversarial Testing</h4>
+
+        <p>
+            Adversarial testing means intentionally trying to break the AI-generated code. Ask yourself: "How would someone misuse this function?" Then write tests for those scenarios.
+        </p>
+
+        <pre><code>Example adversarial tests for a user input parser:
+
+def test_empty_input():
+    with pytest.raises(ValueError):
+        parse_user_input("")
+
+def test_sql_injection_attempt():
+    result = parse_user_input("'; DROP TABLE users;--")
+    # Should sanitize or reject dangerous input
+    assert "DROP" not in result
+
+def test_extremely_long_input():
+    long_input = "a" * 100000
+    with pytest.raises(ValueError):
+        parse_user_input(long_input)
+
+def test_null_bytes():
+    result = parse_user_input("test\x00string")
+    # Should handle null bytes appropriately
+    assert "\x00" not in result or result == ""</code></pre>
+
+        <h4>Boundary Testing</h4>
+
+        <p>
+            Test the boundaries of your inputs. Many bugs occur at the edges: zero, negative numbers, maximum values, empty collections.
+        </p>
+
+        <pre><code>Example boundary tests for a discount calculator:
+
+def test_zero_price():
+    assert calculate_discount(0, 0.10) == 0
+
+def test_zero_discount():
+    assert calculate_discount(100, 0) == 100
+
+def test_100_percent_discount():
+    assert calculate_discount(100, 1.0) == 0
+
+def test_negative_price():
+    with pytest.raises(ValueError):
+        calculate_discount(-10, 0.10)
+
+def test_negative_discount():
+    with pytest.raises(ValueError):
+        calculate_discount(100, -0.10)
+
+def test_discount_over_100_percent():
+    with pytest.raises(ValueError):
+        calculate_discount(100, 1.5)</code></pre>
+
+        <h4>Regression Testing</h4>
+
+        <p>
+            When you fix a bug, add a test that verifies the fix. This prevents the bug from reappearing in future iterations. The AI might generate similar buggy code again; having the test catches it.
+        </p>
+
+        <pre><code>Add after fixing a bug:
+
+# Bug was: Date parsing failed for leap years
+# After fixing, add this test to prevent regression:
+def test_leap_year_date_parsing():
+    result = parse_date("2024-02-29")  # Valid leap year date
+    assert result.year == 2024
+    assert result.month == 2
+    assert result.day == 29
+
+# Also test the invalid case that was causing issues:
+def test_invalid_leap_year():
+    with pytest.raises(ValueError):
+        parse_date("2023-02-29")  # 2023 is not a leap year</code></pre>
+
+        <h3 id="test-maintenance">Maintaining Tests Over Time</h3>
+
+        <p>
+            As your project evolves, tests need maintenance. AI-generated code changes, requirements shift, and tests can become outdated. Here is how to keep your test suite healthy.
+        </p>
+
+        <h4>When to Update Tests</h4>
+
+        <ul>
+            <li><strong>Requirements change:</strong> If the expected behavior changes, update the tests to match</li>
+            <li><strong>New edge cases discovered:</strong> Add tests for bugs that surfaced in production</li>
+            <li><strong>Code refactoring:</strong> Ensure tests still pass after refactoring; they may need updating if the interface changed</li>
+            <li><strong>AI generates different implementation:</strong> If you re-prompt and get different implementation, verify tests still apply</li>
+        </ul>
+
+        <h4>Test Debt</h4>
+
+        <p>
+            Just like code debt, test debt accumulates when tests are neglected. Watch for these warning signs:
+        </p>
+
+        <ul>
+            <li>Tests that consistently pass or fail for no apparent reason</li>
+            <li>Tests that are commented out</li>
+            <li>Test files that have not been updated in months</li>
+            <li>Growing gap between test coverage and code coverage</li>
+        </ul>
+
+        <div class="callout warning">
+            <div class="callout-title">Warning</div>
+            <p>Do not let test debt accumulate. The value of tests diminishes rapidly if they are not maintained. A stale test suite provides false confidence.</p>
+        </div>
+
+        <h3 id="relationships-to-other-concepts">Relationships to Other Concepts</h3>
+
+        <p>
+            Testing and iteration loops connect to several other concepts in this book:
+        </p>
+
+        <ul>
+            <li>
+                <strong>Section 4.3: Transitioning to Testable Code</strong> &mdash; The test descriptions you write in this section directly relate to making code testable. The cleaner the code structure, the easier it is to write comprehensive tests.
+            </li>
+            <li>
+                <strong>Chapter 3: Prompt Engineering</strong> &mdash; Writing effective test descriptions is a form of prompt engineering. The more precisely you specify requirements, the better the AI-generated tests and code.
+            </li>
+            <li>
+                <strong>Section 4.1: Code Generation Workflows</strong> &mdash; Testing is the verification step in the generation workflow. It closes the loop between getting code and trusting it.
+            </li>
+            <li>
+                <strong>Chapter 5: Full Product Lifecycle</strong> &mdash; The testing habits you build here directly impact production readiness. Teams that test rigorously in development have fewer production incidents.
+            </li>
+            <li>
+                <strong>Section 4.2: Code Review and Validation</strong> &mdash; Tests are a form of automated code review. They verify correctness programmatically, complementing human code review.
+            </li>
+        </ul>
+
+        <h3 id="chapter-summary">Chapter Summary</h3>
+
+        <p>
+            In this section, you learned how to integrate testing into your vibe coding workflow. The key takeaways are:
+        </p>
+
+        <ol>
+            <li><strong>Write test descriptions first</strong> &mdash; Define what success looks like before generating any code. This creates a contract for the AI to fulfill.</li>
+            <li><strong>Generate tests alongside implementation</strong> &mdash; Ask for tests in the same prompt as implementation code to ensure they stay aligned.</li>
+            <li><strong>Run tests immediately</strong> &mdash; Never assume AI-generated code is correct. Run tests after every generation to catch issues early.</li>
+            <li><strong>Iterate with test feedback</strong> &mdash; Use test failures to guide the AI in fixing issues. This creates a powerful feedback loop.</li>
+            <li><strong>Use multiple test types</strong> &mdash; Combine unit tests, integration tests, E2E tests, and property-based tests for comprehensive coverage.</li>
+            <li><strong>Test adversarially</strong> &mdash; Intentionally try to break the code to find edge cases the AI might have missed.</li>
+        </ol>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Key Insight</div>
+            <p>Vibe coding is not about "AI does everything." It is about "AI accelerates the tedious parts, human focuses on decisions." Testing is where the human makes the critical decision: does this code actually work? The AI handles the implementation; you verify the result.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Now that you have the testing workflow mastered, <a href="chapter-5/index.html">Chapter 5</a> takes you through the complete product lifecycle with vibe coding: from initial prototype to production deployment. You will learn how to validate ideas, build MVPs, and ship production-ready code that scales. The testing skills you learned here will be essential as you move into production environments where reliability matters most.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-4-3.html">4.3 Transitioning to Testable Code</a>
+            <a class="up" href="index.html">Chapter 4 Index</a>
+            <a class="next" href="chapter-5/index.html">Ch 5: Full Lifecycle</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 4.4 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

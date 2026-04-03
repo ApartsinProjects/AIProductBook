@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17.2 Templates and Checklists - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-integration/index.html">Part V: Integration</a></div>
+        <div class="chapter-label">Chapter 17</div>
+        <h1>Integrated Vibe-to-Production Playbook</h1>
+        <p class="chapter-subtitle">17.2 Templates and Checklists</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Tie everything together in a repeatable end-to-end process.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 17.1 recommended.
+        </div>
+
+        <h2 id="section-17-2">17.2 Templates and Checklists</h2>
+
+        <p>
+            Templates and checklists transform tribal knowledge into repeatable processes. 
+            They ensure nothing falls through the cracks and make it easy to onboard new team members. 
+            Use these as starting points that you adapt to your specific context.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            AI product development involves many moving parts. Without structured checklists, 
+            teams frequently forget critical steps like adding rate limiting or documenting 
+            fallback behavior. Templates accelerate onboarding and ensure consistent quality 
+            across the team.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Analogy: The Pre-Flight Checklist</div>
+            <p>
+                Pilots don't rely on memory for critical steps - they use checklists. Before 
+                every flight, they systematically go through dozens of items, not because 
+                they're forgetful, but because the stakes are too high to miss anything. AI 
+                product development works the same way. Your "flight" is shipping to production, 
+                and the checklist ensures you don't forget the critical steps that prevent 
+                disasters.
+            </p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Checklist That Caught the Uncatchable</div>
+            <p>A team added "test on mobile" to their checklist as an afterthought. During that test, they discovered their AI feature was completely unusable on mobile due to a context length issue that would have affected 40% of users. The "obvious" test nobody had time for caught a critical bug.</p>
+        </div>
+
+        <hr>
+
+        <h3>Eval Creation Checklist</h3>
+
+        <p>
+            Before writing your first line of evaluation code, work through this checklist 
+            to ensure you have the right foundation.
+        </p>
+
+        <pre><code>Eval Creation Checklist:
+
+PHASE 1: Define Success Metrics
+□ Identify the primary business outcome your AI impacts
+□ Define user-facing quality dimensions (accuracy, speed, helpfulness)
+□ Set target performance thresholds for each dimension
+□ Establish how you'll measure improvement over time
+
+PHASE 2: Create Golden Dataset
+□ Collect 50+ representative examples (more for complex products)
+□ Include edge cases and failure modes (at least 20%)
+□ Ensure diversity in query types, lengths, and complexity
+□ Document the expected output for each example
+□ Have 3+ humans annotate each example for inter-annotator agreement
+
+PHASE 3: Write Evaluation Prompts
+□ Define rubric with clear scoring criteria (0-5 scale works well)
+□ Write instructions that leave no room for interpretation
+□ Test with human raters before automated eval
+□ Include edge case handling in the rubric
+
+PHASE 4: Establish Baseline
+□ Run baseline eval on current/golden standard version
+□ Document baseline scores for each quality dimension
+□ Calculate inter-rater reliability (aim for 80%+ agreement)
+□ Create dashboard to track scores over time</code></pre>
+
+        <div class="callout">
+            <div class="callout-title">Skill Demonstration: Creating a Golden Dataset</div>
+            <p>
+                For a code review AI assistant, a properly constructed golden dataset included:
+            </p>
+            <ul>
+                <li>100 real GitHub PR descriptions from users</li>
+                <li>20 examples of "should skip" (PRs needing human review only)</li>
+                <li>30 edge cases (very long PRs, ambiguous descriptions, multi-file changes)</li>
+                <li>Each annotated with: expected action, confidence level, explanation</li>
+            </ul>
+            <p>
+                This dataset revealed that the initial model struggled with PRs over 500 lines, 
+                leading to adding a pre-processing step to summarize long diffs.
+            </p>
+        </div>
+
+        <hr>
+
+        <h3>Production Readiness Checklist</h3>
+
+        <p>
+            Before shipping to any user (even alpha), ensure you've addressed these production concerns.
+        </p>
+
+        <pre><code>Production Readiness Checklist:
+
+EVAL-DRIVEN DEVELOPMENT
+□ Eval runs automatically on every code change
+□ Eval scores trend is visible on dashboard
+□ Threshold for blocking deployment is defined
+□ Regression detection is automated
+
+COST OPTIMIZATION
+□ Per-request cost is tracked and capped
+□ Model routing based on complexity is implemented
+□ Caching strategy is defined (what can be cached?)
+□ Fallback to cheaper model on failure works
+□ Budget alerts configured for unexpected usage spikes
+
+OBSERVABILITY
+□ Tracing is implemented for all AI calls (input/output/timing)
+□ Metrics dashboard shows latency, cost, quality
+□ Error logging includes sufficient context for debugging
+□ Health check endpoint exists for monitoring
+
+ERROR HANDLING AND FALLBACKS
+□ Timeout handling (max wait time before fallback)
+□ API failure recovery (retry with exponential backoff)
+□ Graceful degradation (what happens if AI is unavailable?)
+□ User-facing error messages are helpful, not technical
+
+SECURITY REVIEW
+□ Input validation blocks prompt injection attempts
+□ Output filtering prevents sensitive data leakage
+□ Authentication and authorization verified
+□ Rate limiting is implemented per user/IP
+□ PII handling complies with privacy requirements
+
+LOAD TESTING
+□ Tested at 2x expected peak traffic
+□ Behavior under sustained load verified
+□ Resource limits identified and configured
+□ Cascading failure scenarios tested
+
+ROLLBACK PLAN
+□ Previous version can be deployed in under 5 minutes
+□ Rollback triggers are clearly defined
+□ Database migrations can be reversed
+□ Rollback communication plan exists</code></pre>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: The Checklist That Saved Them</div>
+            <p>
+                A startup rushed to ship an AI feature before a conference. They skipped the 
+                security review checklist item about input validation. Within 24 hours of 
+                launch, users had discovered they could inject arbitrary prompts through 
+                the chat interface, causing the AI to reveal system instructions. The fix 
+                required an emergency deployment and a 3-day incident response. The lesson: 
+                the checklist exists for a reason.
+            </p>
+        </div>
+
+        <hr>
+
+        <h3>Template: PRD for AI Features</h3>
+
+        <p>
+            Use this template when proposing a new AI feature or product.
+        </p>
+
+        <pre><code># AI Feature PRD Template
+
+## 1. Problem Statement
+[One paragraph describing the specific user problem this AI feature solves]
+
+## 2. User Impact
+- Who is this for?
+- How does their workflow change?
+- What's the before/after?
+
+## 3. Success Metrics
+| Metric | Target | How Measured |
+|--------|--------|--------------|
+| Primary: [e.g., Task completion rate] | [e.g., 85%] | [e.g., Analytics] |
+| Secondary: [e.g., User satisfaction] | [e.g., 4.5/5] | [e.g., Survey] |
+
+## 4. AI Approach
+- Model selection rationale
+- Retrieval strategy (if applicable)
+- Input/output constraints
+
+## 5. Eval Strategy
+- Golden dataset size: [e.g., 100 examples]
+- Key quality dimensions: [e.g., accuracy, relevance, tone]
+- Baseline target: [e.g., 80% on eval]
+
+## 6. Cost Analysis
+- Expected queries per day: [e.g., 10,000]
+- Estimated cost per 1K queries: [e.g., $0.50]
+- Monthly cost estimate: [e.g., $1,500]
+
+## 7. Guardrails
+- Input validation: [describe]
+- Output filtering: [describe]
+- Rate limiting: [describe]
+
+## 8. Rollout Plan
+- Phase 1: [e.g., 5% of users, 2 weeks]
+- Phase 2: [e.g., 25% of users, 2 weeks]
+- Phase 3: [e.g., 100%]
+
+## 9. Kill Conditions
+- [e.g., Eval score drops below 70%]
+- [e.g., Cost exceeds $10K/month]
+- [e.g., Critical security issue found]</code></pre>
+
+        <hr>
+
+        <h3>Template: Incident Post-Mortem for AI Issues</h3>
+
+        <p>
+            When your AI product has issues, use this template to learn and improve.
+        </p>
+
+        <pre><code># AI Incident Post-Mortem Template
+
+## Incident Summary
+- Date/Time:
+- Severity:
+- User Impact:
+
+## What Happened
+[Detailed description of the incident]
+
+## Root Cause Analysis
+- Why did the AI produce this output?
+- What failed: model, retrieval, prompt, data?
+- Was this a known edge case?
+
+## Detection
+- How was this detected?
+- Time from occurrence to detection:
+- Alert that fired (if any):
+
+## Response
+- Immediate containment:
+- Communication to users:
+- Fix implemented:
+
+## Prevention
+- What guardrail should have caught this?
+- What eval should have detected it?
+- Action items:
+  - [ ] Add to golden dataset
+  - [ ] Add to eval
+  - [ ] Add guardrail
+  - [ ] Update documentation
+
+## Timeline
+- [T+0] Incident started
+- [T+15] Detection
+- [T+30] Containment
+- [T+2h] Fix deployed</code></pre>
+
+        <hr>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Key Takeaways</div>
+            <ul>
+                <li>Checklists prevent critical oversights that cause incidents</li>
+                <li>Templates accelerate team workflow and ensure consistency</li>
+                <li>Customize templates to your context, but start with proven ones</li>
+                <li>Review and update templates after each major incident</li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Cross-Role Collaboration</strong> - PMs, AI Engineers, and Vibe Developers working together.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-17-1.html">17.1 End-to-End Workflow</a>
+            <a class="up" href="index.html">Chapter 17 Index</a>
+            <a class="next" href="section-17-3.html">17.3 Cross-Role Collaboration</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 17.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

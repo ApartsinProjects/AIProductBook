@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20.3 EU AI Act Compliance - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-integration/index.html">Part V: Integration</a></div>
+        <div class="chapter-label">Chapter 20</div>
+        <h1>Future-Proofing</h1>
+        <p class="chapter-subtitle">20.3 EU AI Act Compliance</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Prepare for what's next with emerging trends and personal roadmaps.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 20.2 recommended.
+        </div>
+
+        <h2 id="section-20-3">20.3 Preparing for EU AI Act Compliance</h2>
+
+        <p>
+            The European Union's AI Act represents the most comprehensive AI regulation 
+            in the world. With full enforcement beginning in 2027 for high-risk systems, 
+            understanding and preparing for compliance is essential for any AI product 
+            company that serves European users or processes European data. This section 
+            provides a practical guide to what the Act requires and how to prepare.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Non-compliance can result in significant penalties: up to 3% of global annual 
+            revenue for non-notified systems, up to 6% for prohibited practices. But 
+            beyond penalties, compliance is becoming a market requirement. European customers 
+            increasingly expect AI vendors to demonstrate compliance, and this expectation 
+            is spreading to other markets.
+        </p>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The GDPR of AI</div>
+            <p>When GDPR launched, companies thought compliance would be impossible. Now every website has a cookie banner. The EU AI Act will follow the same pattern. The companies preparing in 2025 will have the same advantage that early GDPR adopters had in 2018.</p>
+        </div>
+
+        <hr>
+
+        <h3>Understanding the EU AI Act</h3>
+
+        <h4>Risk Categories</h4>
+
+        <table>
+            <thead>
+                <tr><th>Category</th><th>Risk Level</th><th>Requirements</th><th>Examples</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Unacceptable</strong></td>
+                    <td>Prohibited</td>
+                    <td>Complete ban</td>
+                    <td>Social scoring, exploitation of children</td>
+                </tr>
+                <tr>
+                    <td><strong>High-risk</strong></td>
+                    <td>High</td>
+                    <td>Strict requirements</td>
+                    <td>Biometric ID, employment decisions, credit scoring</td>
+                </tr>
+                <tr>
+                    <td><strong>Limited risk</strong></td>
+                    <td>Medium</td>
+                    <td>Transparency obligations</td>
+                    <td>Chatbots, deepfake generators</td>
+                </tr>
+                <tr>
+                    <td><strong>Minimal risk</strong></td>
+                    <td>Low</td>
+                    <td>No specific obligations</td>
+                    <td>Spam filters, video games, recommendation systems</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Important Distinction</div>
+            <p>
+                Most AI-powered products will fall into "limited risk" or "high-risk" 
+                categories. If your product makes decisions about people (employment, 
+                credit, healthcare, law enforcement), it's likely high-risk. If it's 
+                an interactive AI (chatbot, assistant), it's likely limited risk.
+            </p>
+        </div>
+
+        <hr>
+
+        <h3>Requirements for Limited Risk (Most AI Products)</h3>
+
+        <h4>Transparency Obligations</h4>
+        <ul>
+            <li><strong>AI disclosure:</strong> Users must know they're interacting with AI</li>
+            <li><strong>Content labeling:</strong> AI-generated content must be labeled</li>
+            <li><strong>Deepfake disclosure:</strong> AI-generated audio/video must be identified</li>
+        </ul>
+
+        <div class="callout">
+            <div class="callout-title">Skill Demonstration: Transparency Implementation</div>
+            <pre><code>// Implementing AI disclosure for a chatbot
+function renderChatbotUI() {
+  return {
+    header: {
+      // Visible indicator that this is AI
+      badge: 'AI Assistant',
+      disclosure: 'Powered by AI. Responses may not be accurate.'
+    },
+    
+    // For AI-generated content
+    messageBubble: {
+      metadata: {
+        generatedBy: 'ai',
+        timestamp: Date.now(),
+        modelVersion: '1.0'
+      }
+    },
+    
+    // For AI-generated media (images, audio)
+    mediaContent: {
+      watermark: 'AI-generated',
+      sourceAttribution: true
+    }
+  };
+}</code></pre>
+        </div>
+
+        <hr>
+
+        <h3>Requirements for High-Risk Systems</h3>
+
+        <p>
+            If your AI system is high-risk (impacts employment, healthcare, credit, etc.), 
+            you have significantly more obligations.
+        </p>
+
+        <h4>Before Market Entry</h4>
+
+        <ul>
+            <li><strong>Conformity assessment:</strong> Demonstrate compliance through 
+            self-assessment or third-party audit</li>
+            <li><strong>Registration:</strong> Register in EU database before offering</li>
+            <li><strong>Technical documentation:</strong> Extensive documentation of 
+            system design, training data, capabilities, limitations</li>
+        </ul>
+
+        <h4>Ongoing Obligations</h4>
+
+        <ul>
+            <li><strong>Human oversight:</strong> Implement human review for AI decisions</li>
+            <li><strong>Logging and recording:</strong> Maintain logs of system operations</li>
+            <li><strong>Transparency:</strong> Provide information to users about the AI</li>
+            <li><strong>Accuracy and robustness:</strong> Ensure system performs reliably</li>
+            <li><strong>Cybersecurity:</strong> Protect against attacks and manipulation</li>
+        </ul>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: High-Risk Compliance</div>
+            <p>
+                A company building AI-powered resume screening for hiring faced high-risk 
+                classification. They implemented:
+            </p>
+            <ul>
+                <li>Full documentation of training data (source, diversity, bias checks)</li>
+                <li>Human-in-the-loop for final hiring decisions</li>
+                <li>Extensive logging: every screening decision, inputs, outputs</li>
+                <li>Bias monitoring: regular audits of demographic parity</li>
+                <li>Appeal process: candidates can request human review</li>
+                <li>Registration in EU database before launch</li>
+            </ul>
+            <p>
+                The compliance work took 6 months but became a competitive advantage 
+                - their enterprise customers valued the rigorous approach.
+            </p>
+        </div>
+
+        <hr>
+
+        <h3>Compliance Roadmap</h3>
+
+        <pre><code>// EU AI Act compliance roadmap
+const complianceRoadmap = {
+  phase1: {
+    timeframe: 'Q1 2025',
+    focus: 'Assessment',
+    tasks: [
+      'Classify your AI systems by risk category',
+      'Map which systems serve EU users or data',
+      'Identify gaps between current practices and requirements',
+      'Assign ownership for compliance work'
+    ]
+  },
+  
+  phase2: {
+    timeframe: 'Q2-Q3 2025',
+    focus: 'Implementation',
+    tasks: [
+      'Implement transparency requirements (disclosure, labeling)',
+      'Build documentation infrastructure',
+      'Implement logging and audit trails',
+      'Design human oversight workflows (if high-risk)'
+    ]
+  },
+  
+  phase3: {
+    timeframe: 'Q4 2025',
+    focus: 'Validation',
+    tasks: [
+      'Review and update technical documentation',
+      'Conduct internal compliance audit',
+      'Test human oversight mechanisms',
+      'Validate logging and reporting systems'
+    ]
+  },
+  
+  phase4: {
+    timeframe: 'Q1 2026',
+    focus: 'Certification',
+    tasks: [
+      'Complete conformity assessment (high-risk)',
+      'Register in EU database (if required)',
+      'Obtain any necessary certifications',
+      'Establish ongoing monitoring processes'
+    ]
+  }
+};</code></pre>
+
+        <hr>
+
+        <h3>Documentation Requirements</h3>
+
+        <p>
+            Compliance requires extensive documentation. Build this into your development 
+            process, not as an afterthought.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Documentation Checklist</div>
+            <ul>
+                <li><strong>System description:</strong> What the AI does, how it works</li>
+                <li><strong>Training data:</strong> Sources, size, composition, bias analysis</li>
+                <li><strong>Model information:</strong> Architecture, training process, evaluation</li>
+                <li><strong>Intended use:</strong> What it's designed for, what it's not</li>
+                <li><strong>Known limitations:</strong> Failure modes, edge cases, uncertainty</li>
+                <li><strong>Risk assessment:</strong> Analysis of potential harms</li>
+                <li><strong>Mitigation measures:</strong> How risks are addressed</li>
+            </ul>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Code Example: Model Card Template</div>
+            <pre><code>// Model card for documentation compliance
+const modelCard = {
+  modelDetails: {
+    name: 'CustomerSupportBot-v2',
+    version: '2.1.0',
+    type: 'LLM-based conversational AI',
+    releaseDate: '2025-01-15'
+  },
+  
+  trainingData: {
+    sources: ['Internal support tickets', 'Public QA datasets'],
+    size: '1.2M conversations',
+    diversity: '10 languages, 5 industries',
+    biasCheck: 'Completed - no significant demographic bias detected'
+  },
+  
+  performance: {
+    evalScore: 0.87,
+    evalDataset: 'golden-dataset-v2',
+    failureModes: ['Complex multi-part queries', 'Non-English inputs'],
+    limitations: 'Not suitable for legal/medical advice'
+  },
+  
+  riskAssessment: {
+    riskLevel: 'limited',
+    potentialHarms: ['Misinformation', 'Privacy leakage'],
+    mitigations: ['Guardrails', 'Input/output filtering', 'Rate limiting']
+  }
+};</code></pre>
+        </div>
+
+        <hr>
+
+        <h3>What Happens Without Compliance</h3>
+
+        <table>
+            <thead>
+                <tr><th>Violation</th><th>Penalty</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Prohibited practice</td>
+                    <td>Up to 3% of global annual revenue</td>
+                </tr>
+                <tr>
+                    <td>Non-compliant high-risk system</td>
+                    <td>Up to 3% of global annual revenue</td>
+                </tr>
+                <tr>
+                    <td>Incorrect conformity assessment</td>
+                    <td>Up to 1.5% of global annual revenue</td>
+                </tr>
+                <tr>
+                    <td>Failure to provide required information</td>
+                    <td>Up to 1% of global annual revenue</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: The Cost of Non-Compliance</div>
+            <p>
+                A mid-sized SaaS company with €10M revenue launched an AI feature without 
+                assessing compliance requirements. When the feature gained traction in 
+                Europe, they received a compliance notice. The company faced:
+            </p>
+            <ul>
+                <li>Retroactive compliance assessment: 4 months of work</li>
+                <li>Potential fine: €100K-300K (pending)</li>
+                <li>Delayed European expansion while they caught up</li>
+                <li>Lost enterprise deals waiting for compliance certification</li>
+            </ul>
+            <p>
+                The lesson: assess compliance early, not when you're forced to.
+            </p>
+        </div>
+
+        <hr>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Key Takeaways</div>
+            <ul>
+                <li>Most AI products are "limited risk" with transparency obligations</li>
+                <li>High-risk systems (employment, healthcare, credit) have strict requirements</li>
+                <li>Start compliance work now - full enforcement in 2027</li>
+                <li>Build documentation into development process, not as afterthought</li>
+                <li>Consider compliance a competitive advantage, not just cost</li>
+                <li>Non-compliance can result in significant fines</li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Personal Roadmap</strong> - your 30/60/90-day plan.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-20-2.html">20.2 From Apps to Agents</a>
+            <a class="up" href="index.html">Chapter 20 Index</a>
+            <a class="next" href="section-20-4.html">20.4 Personal Roadmap</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 20.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

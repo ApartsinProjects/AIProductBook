@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>19.2 Hiring and Upskilling - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-integration/index.html">Part V: Integration</a></div>
+        <div class="chapter-label">Chapter 19</div>
+        <h1>Team Structures, Collaboration, and Culture</h1>
+        <p class="chapter-subtitle">19.2 Hiring and Upskilling</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Enable organizational success with the right team structures and collaboration patterns.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 19.1 recommended.
+        </div>
+
+        <h2 id="section-19-2">19.2 Hiring and Upskilling</h2>
+
+        <p>
+            Building an AI product team requires both hiring the right talent and upskilling 
+            existing team members. The AI talent market is competitive, and the best teams 
+            combine external hiring with internal development. This section provides strategies 
+            for both.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            The AI talent shortage is real. Companies that only hire externally struggle to 
+            scale. Companies that only upskill miss external perspectives. The best approach 
+            combines both: hire strategically for critical roles while building capability 
+            across the organization.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Analogy: Building a Sports Team</div>
+            <p>
+                Building an AI team is like building a sports team. You can recruit star players 
+                from other teams (hire externally), but that expensive and you can only get 
+                so many. You also need to train your existing players (upskill), develop 
+                team chemistry, and create a pipeline of new talent. Teams that only recruit 
+                stars have huge salaries and fragile rosters. Teams that only train internally 
+                lack the breakthrough skills that star players bring. The best teams do both.
+            </p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Interview That Interviewed Back</div>
+            <p>A candidate asked the interviewer "How will you measure whether I'm successful in this role?" The interviewer had no answer ready. The candidate took the job elsewhere. The best candidates ask hard questions. If you cannot answer them, you will lose the best people.</p>
+        </div>
+
+        <hr>
+
+        <h3>Hiring Strategies</h3>
+
+        <h4>What to Look For</h4>
+
+        <ul>
+            <li><strong>Adaptability:</strong> AI evolves fast. Look for people who learn quickly, not people who know the latest framework</li>
+            <li><strong>Systems thinking:</strong> AI products are complex. Look for people who understand how components interact</li>
+            <li><strong>Practical orientation:</strong> Academic knowledge matters, but shipping experience matters more</li>
+        </ul>
+
+        <div class="callout">
+            <div class="callout-title">Interview Question: Adaptability</div>
+            <p>
+                Instead of asking "What is transformers architecture?", ask "Tell me about a technology 
+                you learned recently. How did you learn it? What resources did you use?" Look for 
+                people who can explain complex concepts clearly and who have systematic learning approaches.
+            </p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Interview Question: Systems Thinking</div>
+            <p>
+                Ask "Walk me through how you would debug a production AI system that's returning 
+                poor quality responses." Look for answers that consider multiple failure modes: 
+                retrieval issues, model behavior, data quality, prompt problems. Someone who only 
+                blames the model hasn't worked on production systems.
+            </p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: The Perfect Resume Red Flag</div>
+            <p>
+                A company interviewed a candidate with a PhD in ML and 10 papers on transformers. 
+                When asked to build a simple prototype, they struggled with basic API integration. 
+                They had deep theory but no production experience. The company passed and hired 
+                someone with fewer papers but a portfolio of shipped AI features.
+            </p>
+        </div>
+
+        <h4>Where to Find Talent</h4>
+
+        <ul>
+            <li><strong>Adjacent fields:</strong> Strong engineers from data science, search, or NLP often adapt quickly</li>
+            <li><strong>Research backgrounds:</strong> Look for people who want to ship, not just publish</li>
+            <li><strong>Internal promotion:</strong> Engineers who use AI tools fluently often become great AI engineers</li>
+        </ul>
+
+        <hr>
+
+        <h3>Upskilling Existing Teams</h3>
+
+        <p>
+            Don't wait to hire. Upskill your existing team to work with AI. The investment pays 
+            off in retention (people want to learn), capability (you build depth), and culture 
+            (everyone grows together).
+        </p>
+
+        <h4>Building an Upskilling Program</h4>
+
+        <div class="callout">
+            <div class="callout-title">Sample Learning Path for Engineers</div>
+            <p><strong>Week 1-2: Foundation</strong></p>
+            <ul>
+                <li>Complete fast.ai course (practical orientation)</li>
+                <li>Build 3-5 small AI prototypes using vibes tools</li>
+                <li>Read: First 3 chapters of "Designing Machine Learning Systems"</li>
+            </ul>
+
+            <p><strong>Week 3-4: Practical Skills</strong></p>
+            <ul>
+                <li>Build first <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> pipeline with real data</li>
+                <li>Learn prompt engineering through experimentation</li>
+                <li>Create an eval for their project</li>
+            </ul>
+
+            <p><strong>Month 2: Production</strong></p>
+            <ul>
+                <li>Add observability and cost tracking</li>
+                <li>Deploy to production environment</li>
+                <li>Iterate based on production data</li>
+            </ul>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: The Successful Upskilling</div>
+            <p>
+                A company with 5 backend engineers wanted to add AI capabilities. Instead of 
+                hiring 5 ML engineers, they sent all 5 to a 2-week AI bootcamp. After training, 
+                each engineer built an AI feature prototype in 2 weeks. The company saved 6 months 
+                of hiring time and built team-wide capability. Three engineers became core AI 
+                contributors, and the other two became AI-aware backend engineers who could 
+                support AI features.
+            </p>
+        </div>
+
+        <h4>Learning Resources by Role</h4>
+
+        <table>
+            <thead>
+                <tr><th>Role</th><th>Primary Resources</th><th>Time Investment</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Engineers</td>
+                    <td>fast.ai, LangChain docs, Cursor tutorials</td>
+                    <td>20-40 hours</td>
+                </tr>
+                <tr>
+                    <td>Product Managers</td>
+                    <td>AI product courses, prompt engineering basics</td>
+                    <td>10-20 hours</td>
+                </tr>
+                <tr>
+                    <td>Designers</td>
+                    <td>AI UX patterns, voice/visual interface design</td>
+                    <td>10-20 hours</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Skill Demonstration: Setting Learning Goals</div>
+            <pre><code>// Effective learning goals for AI product teams
+const learningGoals = {
+  engineer: {
+    outcome: 'Build and ship AI feature independently',
+    milestones: [
+      'Week 2: Complete vibe coding tool tutorial',
+      'Week 4: Build working <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> prototype',
+      'Week 8: Ship first production AI feature'
+    ],
+    measure: 'Feature ships and performs in production'
+  },
+  
+  productManager: {
+    outcome: 'Define AI quality criteria and measure them',
+    milestones: [
+      'Week 2: Define 5 quality dimensions for product',
+      'Week 4: Create golden dataset with 20 examples',
+      'Week 8: Establish eval review process'
+    ],
+    measure: 'Eval runs weekly with team'
+  },
+  
+  designer: {
+    outcome: 'Design AI-native interfaces',
+    milestones: [
+      'Week 2: Study AI UX patterns',
+      'Week 4: Design 3 AI interaction flows',
+      'Week 8: Implement and test one flow'
+    ],
+    measure: 'User testing shows improvement'
+  }
+};</code></pre>
+        </div>
+
+        <hr>
+
+        <h3>Building AI Culture Across the Organization</h3>
+
+        <p>
+            AI capability shouldn't live in one team. Build AI literacy across the organization.
+        </p>
+
+        <h4>Organization-Wide Initiatives</h4>
+
+        <ul>
+            <li><strong>AI lunch and learns:</strong> Monthly sessions where team members share AI learnings</li>
+            <li><strong>AI office hours:</strong> Regular time where AI engineers help others with questions</li>
+            <li><strong>AI prototypes program:</strong> Anyone can submit AI project ideas; get budget to build them</li>
+            <li><strong>AI awareness training:</strong> Basic training for non-engineering roles</li>
+        </ul>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: The Company-Wide AI Movement</div>
+            <p>
+                A 200-person company wanted to build AI capability. They started with "AI Fridays" - 
+                2 hours every Friday for anyone to learn or experiment. Within 3 months, 40% of 
+                employees had participated. They then created an "AI Champion" program - one 
+                person per team who became the go-to AI resource. The company went from 2 AI-savvy 
+                people to 50+ over 6 months, all through internal development.
+            </p>
+        </div>
+
+        <hr>
+
+        <h3>Retaining AI Talent</h3>
+
+        <p>
+            AI talent is competitive. Retention requires giving people what they want: impact, 
+            learning, and autonomy.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">What AI Engineers Want</div>
+            <ul>
+                <li><strong>Access to cutting-edge tools:</strong> Don't constrain them to outdated tech</li>
+                <li><strong>Time for learning:</strong> 10-20% of time for exploration</li>
+                <li><strong>Ownership:</strong> Let them own problems, not just execute specs</li>
+                <li><strong>Ship to production:</strong> Research without shipping burns people out</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Key Takeaways</div>
+            <ul>
+                <li>Look for adaptability, not just current knowledge</li>
+                <li>Combine external hiring with internal upskilling</li>
+                <li>Build AI capability across the organization, not just in one team</li>
+                <li>Give AI talent the tools, time, and ownership they need</li>
+                <li>Learning goals should be outcome-focused, not activity-focused</li>
+                <li>Invest in continuous learning - the field moves fast</li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Culture of Experimentation</strong> - building the right environment for AI teams.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-19-1.html">19.1 Cross-Functional Team Models</a>
+            <a class="up" href="index.html">Chapter 19 Index</a>
+            <a class="next" href="section-19-3.html">19.3 Culture of Experimentation</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 19.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

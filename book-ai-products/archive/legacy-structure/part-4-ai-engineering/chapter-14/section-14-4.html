@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14.4 Benchmarking in 2026 - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 14</div>
+        <h1>Model Selection, Customization, and Evaluation</h1>
+        <p class="chapter-subtitle">14.4 Benchmarking in 2026</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Choose and improve models wisely with the right evaluation frameworks.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 14.3 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Benchmarks Guide Selection</div>
+            <p>This section covers the key benchmarks for reasoning, code generation, multimodal, and agentic capabilities in 2026. In the context of AI engineering, benchmarks provide standardized ways to compare models. Understanding which benchmarks matter for your use case helps you make informed model selection decisions.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Benchmark That Benchmarked Nothing</div>
+            <p>A model scored 98% on a popular math benchmark but failed at calculating a 15% tip. It turned out the benchmark contained training data that the model had memorized. Always verify benchmarks measure real capability, not memorization.</p>
+        </div>
+
+        <h2 id="section-14-4">14.4 Benchmarking in 2026</h2>
+
+        <p>
+            Benchmarks provide standardized ways to compare models and track progress. Understanding which benchmarks matter for your use case helps you make informed model selection decisions.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Model providers optimize for benchmarks. Knowing which benchmarks are relevant to your use case helps you interpret reported scores and avoid optimizing for the wrong metric. A model that excels at math benchmarks may not be the best choice for creative writing.
+        </p>
+
+        <h3>1. Reasoning Benchmarks</h3>
+
+        <div class="example-box">
+            <div class="example-title">Key Reasoning Benchmarks</div>
+            <table>
+                <thead>
+                    <tr><th>Benchmark</th><th>Focus</th><th>Use When</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>MATH</td><td>Competition math problems</td><td>Need mathematical reasoning</td></tr>
+                    <tr><td>GSM8K</td><td>Grade school math word problems</td><td>Need step-by-step arithmetic</td></tr>
+                    <tr><td>BBH (Big Bench Hard)</td><td>Complex reasoning tasks</td><td>Need diverse reasoning</td></tr>
+                    <tr><td>GPQA</td><td>Graduate-level science questions</td><td>Need expert-level reasoning</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            The MATH benchmark contains 12,500 competition math problems ranging from elementary to graduate level. High scores indicate strong mathematical reasoning capabilities. GSM8K focuses on multi-step arithmetic word problems, testing the ability to break down problems into sequential steps.
+        </p>
+
+        <h3>2. Code Generation Benchmarks</h3>
+
+        <div class="example-box">
+            <div class="example-title">Key Code Benchmarks</div>
+            <table>
+                <thead>
+                    <tr><th>Benchmark</th><th>Focus</th><th>Use When</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>HumanEval</td><td>Python code from docstrings</td><td>Need code completion</td></tr>
+                    <tr><td>MBPP</td><td>Basic Python programming</td><td>Need Python helper</td></tr>
+                    <tr><tdSWE-Bench</td><td>Real-world bug fixes</td><td>Need software engineering</td></tr>
+                    <tr><td>RepoEval</td><td>Multi-file repository tasks</td><td>Need complex codebase work</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            SWE-Bench (Software Engineering Benchmark) evaluates models on real-world GitHub issues, requiring models to understand codebase context, generate appropriate patches, and pass test cases. This is the most realistic benchmark for software engineering tasks.
+        </p>
+
+        <h3>3. Multimodal Benchmarks</h3>
+
+        <div class="example-box">
+            <div class="example-title">Key Multimodal Benchmarks</div>
+            <table>
+                <thead>
+                    <tr><th>Benchmark</th><th>Focus</th><th>Use When</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>MMMU</td><td>Multi-modal understanding</td><td>Need image+text reasoning</td></tr>
+                    <tr><td>MMBench</td><td>Comprehensive multimodal</td><td>Need broad vision capabilities</td></tr>
+                    <tr><td>MathVista</td><td>Visual math reasoning</td><td>Need math from diagrams</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            MMMU (Multi-Modal Multi-Structure Understanding) tests models on college-level problems requiring diagrams, charts, and images. It tests whether models can reason over visual information as well as text.
+        </p>
+
+        <h3>4. Agentic Benchmarks</h3>
+
+        <div class="example-box">
+            <div class="example-title">Key Agentic Benchmarks</div>
+            <table>
+                <thead>
+                    <tr><th>Benchmark</th><th>Focus</th><th>Use When</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>GAIA</td><td>General AI assistants</td><td>Need general assistant capabilities</td></tr>
+                    <tr><td>WebArena</td><td>Web navigation and interaction</td><td>Need web automation</td></tr>
+                    <tr><td>OSWorld</td><td>OS-level tasks</td><td>Need computer use</td></tr>
+                    <tr><td>AgentBench</td><td>Multi-domain <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></td><td>Need diverse agent tasks</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            GAIA (General AI Assistants) tests models on tasks requiring multiple tools, planning, and complex reasoning. It includes tasks like "Find the answer to this question by searching the web and analyzing the data." High scores indicate strong agent capabilities.
+        </p>
+
+        <h3>Using Benchmarks Effectively</h3>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Benchmark Selection Framework</div>
+            <pre class="code-block">def select_benchmarks(use_case: str) -> list[str]:
+    """Select relevant benchmarks based on use case"""
+    
+    benchmark_map = {
+        "customer_support": ["MMLU", "BBH"],  # General understanding
+        "code_assistant": ["HumanEval", "SWE-Bench", "MBPP"],
+        "data_analysis": ["MATH", "GSM8K", "MMMU"],  # Math + visual
+        "research_assistant": ["GPQA", "BBH", "GAIA"],  # Deep reasoning + <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>
+        "creative_writing": [],  # No good benchmarks - rely on human eval
+    }
+    
+    return benchmark_map.get(use_case, ["MMLU"])
+
+def evaluate_model_on_benchmarks(model, benchmarks: list[str]) -> dict:
+    """Run evaluation on selected benchmarks"""
+    results = {}
+    
+    for benchmark in benchmarks:
+        if benchmark in ["MATH", "GSM8K"]:
+            score = run_harness(model, "openai/evals", benchmark)
+        elif benchmark in ["HumanEval", "MBPP"]:
+            score = run_harness(model, "openai/evals", f"code-{benchmark}")
+        elif benchmark in ["SWE-Bench"]:
+            score = run_swebench_eval(model)
+        
+        results[benchmark] = {
+            "score": score,
+            "representation": interpret_score(benchmark, score)
+        }
+    
+    return results</pre>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Benchmarks Are Not Everything</div>
+            <p>Benchmarks capture a slice of capability. A model that scores 95% on MATH may still fail at creative tasks. Use benchmarks to narrow down model choices, then evaluate on your actual use case with your evaluation framework.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-15/index.html">Chapter 15: Inference Serving and LLMOps</a> 
+                to learn how to make systems fast and cost-effective with proper serving infrastructure.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-14-3.html">14.3 Evaluation Frameworks</a>
+            <a class="up" href="index.html">Chapter 14 Index</a>
+            <a class="next" href="chapter-15/index.html">Ch 15: Inference Serving</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 14.4 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14.3 Evaluation Frameworks - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 14</div>
+        <h1>Model Selection, Customization, and Evaluation</h1>
+        <p class="chapter-subtitle">14.3 Evaluation Frameworks</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Choose and improve models wisely with the right evaluation frameworks.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 14.2 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Evaluation Enables Iteration</div>
+            <p>This section covers evaluation frameworks including LLM-as-judge, human evaluation, and regression testing. In the context of AI engineering, evaluation is the foundation of iterative improvement. Without systematic evaluation, you optimize based on gut feeling; with it, you optimize based on data.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Judge That Disagreed With Itself</div>
+            <p>One team found that their LLM judge gave the same response different scores 30% of the time due to temperature. When they set temperature to 0, consistency jumped to 95%. The lesson: LLM judges need near-zero temperature to be reliable.</p>
+        </div>
+
+        <h2 id="section-14-3">14.3 Evaluation Frameworks</h2>
+
+        <p>
+            Evaluation is the foundation of iterative improvement. Without systematic evaluation, you cannot determine if your changes are helping or hurting. A robust evaluation framework combines multiple approaches to give you confidence in your system's quality.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            AI systems behave differently on different inputs. Without evaluation, you optimize based on gut feeling. With evaluation, you optimize based on data. The difference is the difference between guesswork and engineering.
+        </p>
+
+        <h3>1. LLM-as-Judge</h3>
+
+        <p>
+            Use frontier models to evaluate outputs from other models. This is scalable and captures nuanced quality assessments that programmatic metrics miss.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Implementing LLM Judge</div>
+            <pre class="code-block">from langchain.output_parsers import PydanticOutputParser
+from pydantic import BaseModel
+
+class ResponseQuality(BaseModel):
+    accuracy: int  # 1-5
+    helpfulness: int  # 1-5
+    clarity: int  # 1-5
+    overall_score: int  # 1-5
+    reasoning: str
+
+def evaluate_response(response: str, question: str, context: str) -> ResponseQuality:
+    """Use LLM to evaluate a response"""
+    
+    judge_prompt = f"""You are evaluating an AI assistant's response to a user question.
+
+Question: {question}
+
+Context used: {context}
+
+Response to evaluate: {response}
+
+Evaluate on these dimensions:
+- accuracy: Is the response factually correct given the context?
+- helpfulness: Does the response address the user's needs?
+- clarity: Is the response easy to understand?
+- overall_score: Overall quality assessment
+
+Provide scores and brief reasoning."""
+    
+    parser = PydanticOutputParser(pydantic_object=ResponseQuality)
+    
+    judge = ChatOpenAI(model="gpt-4o", temperature=0)
+    result = judge.invoke(judge_prompt)
+    
+    return parser.parse(result.content)
+
+# Use to compare different prompt versions or models
+def compare_models(prompts: list[str], test_cases: list[TestCase]):
+    results = []
+    for prompt in prompts:
+        scores = []
+        for test in test_cases:
+            response = invoke_model(prompt, test.question)
+            quality = evaluate_response(response, test.question, test.context)
+            scores.append(quality.overall_score)
+        results.append({
+            "prompt": prompt[:50],
+            "avg_score": sum(scores) / len(scores)
+        })
+    return results</pre>
+        </div>
+
+        <h3>2. Human Evaluation</h3>
+
+        <p>
+            Human evaluation is the gold standard for quality. Even with sophisticated automated evaluation, you need human judgment to catch issues that automated systems miss.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Building an Evaluation Dataset</div>
+            <p>A team built a human evaluation pipeline:</p>
+            <pre class="code-block">EVALUATION_DATASET = []
+
+def create_eval_dataset(test_cases: list[TestCase]):
+    """Create diverse evaluation dataset"""
+    
+    # Sample from production traffic
+    production_samples = sample_production_queries(500)
+    
+    # Add edge cases
+    edge_cases = create_edge_cases([
+        "ambiguous queries",
+        "out of scope requests",
+        "toxic inputs",
+        "very long inputs",
+        "non-English queries",
+    ])
+    
+    # Add ground truth cases
+    golden_cases = load_golden_dataset("test_data.json")
+    
+    return production_samples + edge_cases + golden_cases
+
+def run_human_eval(dataset: list[TestCase]):
+    """Have humans evaluate responses"""
+    eval_app = create_evaluation_app(dataset)  # UI for evaluators
+    
+    results = []
+    for test_case in dataset:
+        response = invoke_model(test_case.question)
+        
+        # Show to human evaluators (3 per case)
+        scores = []
+        for evaluator in range(3):
+            score = eval_app.evaluate(
+                question=test_case.question,
+                expected_answer=test_case.expected,
+                actual_answer=response,
+            )
+            scores.append(score)
+        
+        results.append({
+            "question": test_case.question,
+            "avg_score": sum(scores) / 3,
+            "agreement": calculate_agreement(scores)
+        })
+    
+    return results</pre>
+        </div>
+
+        <h3>3. Regression Testing</h3>
+
+        <p>
+            Automated regression tests catch quality degradation when you make changes. These tests should run on every code change and alert you to problems before they reach production.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Regression Test Suite</div>
+            <pre class="code-block">import pytest
+from evals import llm_as_judge
+
+class TestResponseQuality:
+    """Regression tests that must pass before deployment"""
+    
+    @pytest.fixture
+    def test_cases(self):
+        return load_test_cases("regression_cases.json")
+    
+    def test_factual_accuracy(self, test_cases):
+        """Responses must be factually correct"""
+        for case in test_cases:
+            if case.expected_facts:
+                response = invoke_model(case.question)
+                facts_correct = verify_facts(response, case.expected_facts)
+                assert facts_correct, f"Facts incorrect for: {case.question}"
+    
+    def test_format_compliance(self, test_cases):
+        """Responses must follow required format"""
+        for case in test_cases:
+            if case.required_format:
+                response = invoke_model(case.question)
+                format_valid = validate_format(response, case.required_format)
+                assert format_valid, f"Format invalid for: {case.question}"
+    
+    def test_no_harmful_content(self):
+        """No responses should contain harmful content"""
+        harmful_queries = load_harmful_queries()
+        
+        for query in harmful_queries:
+            response = invoke_model(query)
+            is_safe = safety_classifier.classify(response)
+            assert is_safe.safe, f"Unsafe response to: {query}"
+    
+    @pytest.mark.slow
+    def test_judge_evaluation(self, test_cases):
+        """LLM judge evaluation for comprehensive quality"""
+        scores = []
+        for case in test_cases:
+            response = invoke_model(case.question)
+            quality = llm_as_judge.evaluate(response, case.question)
+            scores.append(quality.overall_score)
+        
+        avg_score = sum(scores) / len(scores)
+        assert avg_score >= 4.0, f"Average score {avg_score} below threshold"</pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Method</th><th>Scale</th><th>Cost</th><th>Use Case</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>LLM-as-judge</td><td>High</td><td>Medium</td><td>Quick iteration, automated</td></tr>
+                <tr><td>Human evaluation</td><td>Low</td><td>High</td><td>Gold standard, final validation</td></tr>
+                <tr><td>Regression testing</td><td>High</td><td>Low</td><td>CI/CD integration, catch regressions</td></tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Benchmarking in 2026</strong> - key benchmarks for reasoning, code, multimodal, and agentic.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-14-2.html">14.2 Fine-tuning vs Distillation</a>
+            <a class="up" href="index.html">Chapter 14 Index</a>
+            <a class="next" href="section-14-4.html">14.4 Benchmarking in 2026</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 14.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

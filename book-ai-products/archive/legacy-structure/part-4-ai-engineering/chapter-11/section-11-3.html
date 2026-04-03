@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11.3 Layers of the AI Stack - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 11</div>
+        <h1>Core Principles of Modern AI Engineering</h1>
+        <p class="chapter-subtitle">11.3 Layers of the AI Stack</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Shift mindset from PoC to production with core engineering principles.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 11.2 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: The AI Stack in Context</div>
+            <p>This section covers the five layers of the AI stack from compute to tooling. Understanding these layers helps you make informed decisions about where to invest effort and when to use existing solutions versus building custom components. This connects to the practical engineering skills that translate AI capabilities into viable products.</p>
+        </div>
+
+        <h2 id="section-11-3">11.3 Layers of the AI Stack</h2>
+
+        <p>
+            Understanding the layers of the AI stack helps you make informed decisions about where to invest effort and when to use existing solutions versus building custom components. Each layer has emerged to address specific challenges in building AI products, and the ecosystem around each layer is maturing rapidly.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            The AI stack is still evolving, but understanding these layers helps you architect systems that are both effective today and adaptable to future changes. The key insight is that you should leverage existing solutions at most layers while maintaining the flexibility to swap them out. The rapid pace of innovation means today's best solution might be tomorrow's outdated choice.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Don't Over-Engineer Your Stack</div>
+            <p>A common mistake is building custom solutions at every layer "just in case." The reality is that managed services at most layers are good enough for most products. Start with managed solutions (API providers, managed vector DBs, hosted inference) and only build custom components when you hit specific limitations. Premature optimization at multiple layers adds unnecessary complexity.</p>
+        </div>
+
+        <h3>The Five Layers</h3>
+
+        <h4>1. Compute Layer</h4>
+        <p>
+            The compute layer encompasses the GPU infrastructure and cloud resources that power AI model execution. Today, most teams do not own GPU infrastructure but rent it from cloud providers. The key decisions at this layer involve selecting the right instance types for your workload, optimizing for cost-performance tradeoffs, and understanding the differences between model serving and training requirements.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: Choosing Compute Options</div>
+            <p>A startup building a document analysis product faced a choice:</p>
+            <ul>
+                <li><strong>AWS SageMaker:</strong> Fully managed, easy setup, predictable costs</li>
+                <li><strong>Azure ML:</strong> Strong enterprise integration, good for Microsoft-heavy teams</li>
+                <li><strong>Google Vertex:</strong> Best for training, strong TPUs available</li>
+                <li><strong>Self-hosted on Lambda Labs:</strong> Cheaper at scale, more operational work</li>
+                <li><strong>RunPod/Vast.ai:</strong> Flexible spot instances, cost-effective for batch work</li>
+            </ul>
+            <p>They chose SageMaker for production serving (reliability priority) and Lambda Labs for fine-tuning (cost priority). Multi-cloud strategies are increasingly common as teams seek to avoid vendor lock-in and optimize costs.</p>
+        </div>
+
+        <h4>2. Models Layer</h4>
+        <p>
+            The models layer includes foundation models from providers like OpenAI, Anthropic, Google, and open-source alternatives, along with <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuned custom models</a>. The dominant strategy today is to start with foundation models and only invest in fine-tuning when specific use cases require it. Foundation models improve rapidly, making custom fine-tuning a moving target.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Model Selection for a Legal Tech Product</div>
+            <p>A legal tech company needed to summarize contracts. They evaluated multiple options:</p>
+            <table>
+                <thead>
+                    <tr><th>Model</th><th>Pros</th><th>Cons</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>GPT-4o</td><td>Best reasoning, reliable</td><td>Most expensive</td></tr>
+                    <tr><td>Claude Sonnet</td><td>Excellent at long documents, careful</td><td>Slightly slower</td></tr>
+                    <tr><td>Gemini 2.0 Pro</td><td>Great <a href="../../part-1-foundations/chapter-1/sections/section-1-3.html">Context Window</a> (1M+ tokens)</td><td>May be less precise</td></tr>
+                    <tr><td>Llama 4 70B (self-hosted)</td><td>Full control, no per-call costs</td><td>Requires GPU infrastructure</td></tr>
+                </tbody>
+            </table>
+            <p>They used GPT-4o for complex contracts requiring nuanced understanding, but routed simpler documents to a fine-tuned 7B model for cost efficiency. The key decision is which model to use for each task: generally, use the most capable model you can afford for complex reasoning, and smaller models for simple tasks where cost matters more.</p>
+        </div>
+
+        <h4>3. Data and Retrieval Layer</h4>
+        <p>
+            The data and retrieval layer is critical for products that use <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG (retrieval-augmented generation)</a> architectures. This includes vector databases like Pinecone, Weaviate, and pgvector, along with the <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> pipelines that manage document processing, embedding generation, and retrieval. <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> optimization is a deep topic that involves understanding chunking strategies, embedding model selection, and retrieval algorithm tuning. The quality of retrieval directly impacts the quality of generation, making this layer essential for <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> products.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Building a Retrieval Pipeline</div>
+            <pre class="code-block">from langchain_community.retrievers import BM25Retriever
+from langchain.retrievers import ContextualCompressionRetriever
+from langchain.retrievers.document_compressors import CrossEncoderReranker
+from langchain_community.cross_encoders import CrossEncoder
+
+class AdvancedRetrievalPipeline:
+    """Combines multiple retrieval strategies for better results"""
+    
+    def __init__(self, documents: list, vectorstore):
+        # Dense retrieval (semantic similarity)
+        self.dense_retriever = vectorstore.as_retriever(
+            search_type="similarity_threshold",
+            search_kwargs={"k": 10, "score_threshold": 0.7}
+        )
+        
+        # Sparse retrieval (keyword-based BM25)
+        self.bm25_retriever = BM25Retriever.from_documents(documents)
+        self.bm25_retriever.k = 10
+        
+        # Reranking model
+        self.cross_encoder = CrossEncoder(
+            "cross-encoder/ms-marco-MiniLM-L-6-v2"
+        )
+    
+    def retrieve(self, query: str) -> list:
+        # Get results from both retrievers
+        dense_results = self.dense_retriever.invoke(query)
+        bm25_results = self.bm25_retriever.invoke(query)
+        
+        # Combine and deduplicate
+        combined = self._merge_results(dense_results, bm25_results)
+        
+        # Rerank top results
+        reranked = self._rerank(query, combined[:20])
+        
+        return reranked[:5]  # Return top 5 after reranking
+    
+    def _merge_results(self, dense: list, bm25: list) -> list:
+        # Deduplicate and interleave results
+        seen = set()
+        merged = []
+        for d, b in zip(dense, bm25):
+            if d.page_content not in seen:
+                seen.add(d.page_content)
+                merged.append(d)
+            if b.page_content not in seen:
+                seen.add(b.page_content)
+                merged.append(b)
+        return merged
+    
+    def _rerank(self, query: str, docs: list) -> list:
+        # Score all documents with cross-encoder
+        pairs = [(query, doc.page_content) for doc in docs]
+        scores = self.cross_encoder.predict(pairs)
+        
+        # Sort by score and return
+        scored_docs = list(zip(docs, scores))
+        scored_docs.sort(key=lambda x: x[1], reverse=True)
+        return [doc for doc, score in scored_docs]</pre>
+        </div>
+
+        <h4>4. Orchestration Layer</h4>
+        <p>
+            The orchestration layer manages the flow of information through your AI system. For simple applications, this may just be API calls. For complex applications, orchestration frameworks like <a href="../../part-4-ai-engineering/chapter-12/sections/section-12-3.html">LangGraph, CrewAI, and AutoGen</a> provide tools for building multi-agent systems, managing state, and handling complex workflows. The choice of orchestration framework affects how quickly you can build new features and how maintainable your codebase becomes.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: Choosing an Orchestration Framework</div>
+            <p>A team building a research assistant evaluated orchestration options:</p>
+            <table>
+                <thead>
+                    <tr><th>Framework</th><th>Best For</th><th>Tradeoffs</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>LangGraph</td><td>Complex workflows with cycles, stateful apps</td><td>Steeper learning curve, very flexible</td></tr>
+                    <tr><td>CrewAI</td><td>Role-based multi-agent systems</td><td>More opinionated, good for team simulations</td></tr>
+                    <tr><td>AutoGen</td><td>Flexible agent communication patterns</td><td>Microsoft ecosystem, extensive but complex</td></tr>
+                    <tr><td>Direct API calls</td><td>Simple, linear workflows</td><td>Limited to single-step operations</td></tr>
+                </tbody>
+            </table>
+            <p>They chose LangGraph because they needed to handle complex research workflows that required iteration and conditional branching.</p>
+        </div>
+
+        <h4>5. Tooling Layer</h4>
+        <p>
+            The tooling layer encompasses the infrastructure for observability, evaluation, and continuous integration. This includes tracing tools like LangSmith and Langfuse, evaluation frameworks like LangChain evals, and CI/CD systems adapted for AI models. The tooling layer is what makes your system production-ready, enabling you to monitor quality, detect regressions, and deploy updates safely.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Layer</th><th>Components</th><th>Key Decision</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Compute</strong></td><td>GPU, cloud infrastructure</td><td>Managed vs self-hosted</td></tr>
+                <tr><td><strong>Models</strong></td><td>Foundation models, fine-tuned models</td><td>Which model for which task</td></tr>
+                <tr><td><strong>Data/Retrieval</strong></td><td>Vector DB, <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> pipelines</td><td>Chunking and retrieval strategy</td></tr>
+                <tr><td><strong>Orchestration</strong></td><td>Agents, chains, workflows</td><td>Framework choice</td></tr>
+                <tr><td><strong>Tooling</strong></td><td>Observability, evals, CI/CD</td><td>What to instrument</td></tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-12/index.html">Chapter 12: Prompts, Chains, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and Orchestration</a> 
+                to master the building blocks of AI systems.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-11-2.html">11.2 Three Core Principles</a>
+            <a class="up" href="index.html">Chapter 11 Index</a>
+            <a class="next" href="section-11-4.html">11.4 AI Antipatterns</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 11.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

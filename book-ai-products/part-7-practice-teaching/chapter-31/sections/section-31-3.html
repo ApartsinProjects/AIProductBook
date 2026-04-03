@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>31.3 Prototype to Eval - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></div>
+        <div class="chapter-label">Chapter 31, Section 31.3</div>
+        <h1>Prototype to Eval: Phases 4-5</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            <a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> and <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">evaluation</a> are two sides of the same coin. You prototype to learn what to build; you eval to ensure what you built actually works. Skipping either leads to expensive failures.
+        </p>
+
+        <h2>Phase 4: Prototype (Weeks 5-6)</h2>
+
+        <h3>31.3.1 Vibe Coding Approach</h3>
+
+        <p>
+            <a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> is high-velocity prototyping where you use AI to accelerate development while maintaining creative direction. The goal is not to ship production code; it is to learn what the right product is.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Vibe Coding Mindset</div>
+            <p><strong>"Move fast, break things, and learn what 'thing' you should actually be building."</strong></p>
+            <p>Do not optimize for code quality or architecture during prototyping. Optimize for learning velocity and validation of the core hypothesis.</p>
+        </div>
+
+        <p>
+            <strong>Running Example - DraftBot:</strong> The DraftBot team spent Week 5 vibe coding a prototype that generated marketing copy. They used Cursor to rapidly build UI for inputting brand guidelines, product descriptions, and tone preferences. The AI generated multiple copy variants in seconds. Within a day, they had a working demo to show potential users.
+        </p>
+
+        <h3>31.3.2 Rapid Prototyping Workflow</h3>
+
+        <p>
+            Follow this rapid prototyping cycle: first define the prototype scope by identifying the one thing you need to learn; then set a time box of two to four hours maximum per iteration; next build the happy path to get the main flow working while ignoring edge cases; test with users by showing it to two or three users within twenty-four hours; capture feedback by noting what worked, what was confusing, and what was missing; finally iterate or pivot by building a better version or acknowledging the idea is not working.
+        </p>
+
+        <div class="callout tip">
+            <div class="callout-title">Prototype Scope Template</div>
+            <p><strong>Question to answer:</strong> [What do we need to learn?]<br/>
+            <strong>What we will build:</strong> [One-paragraph description]<br/>
+            <strong>What we will NOT build:</strong> [Edge cases, polish, error handling]<br/>
+            <strong>Success criteria:</strong> [How will we know if this prototype validates the idea?]</p>
+        </div>
+
+        <h3>31.3.3 User Testing of Prototype</h3>
+
+        <p>
+            Test prototypes early and often because even crude prototypes provide valuable signal. Paper prototypes work well for exploring UI concepts before building. Wizard of Oz testing uses a human to act as the AI to test the concept before building the actual AI. Concierge testing provides a manual service that mimics the AI, revealing what automation should actually do. Live prototypes involve a working system tested in realistic conditions.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Prototype Testing Protocol</div>
+            <p>Follow this protocol when testing prototypes with users: recruit three to five representative users and give them a specific task such as "Use this prototype to complete goal." Observe without interference, avoiding help unless the user is stuck for more than two minutes. After the session, ask open-ended questions like "What did you expect to happen when...?" to understand their mental model. Finally, capture behavioral patterns by noting confusion points, workarounds, and abandoned attempts.</p>
+        </div>
+
+        <h3>31.3.4 Iteration Based on Feedback</h3>
+
+        <p>
+            After each round of testing, categorize feedback into five types. Foundation issues indicate a wrong problem, wrong users, or wrong core workflow and require pivots rather than iteration. UX issues involve confusion about how to use the product and should be fixed in the next iteration. AI quality issues manifest as responses that are wrong, slow, or irrelevant and should be addressed through evaluation and prompt engineering. Missing features represent things users need that you did not build and should be added to the backlog. Delighters are unexpected positive reactions that warrant doubling down on those aspects.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Pivot Decision</div>
+            <p>If more than half of your users say they would not use the product as currently conceived, you have a foundation issue. Do not iterate your way out of a wrong product. Pivot or go back to discovery.</p>
+        </div>
+
+        <h2>Phase 5: Eval Suite (Week 7)</h2>
+
+        <h3>31.3.5 Building <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Evals</a> Before Coding</h3>
+
+        <p>
+            Eval-driven development means defining success criteria as automated tests before writing production code. This is especially critical for AI products where "working" is subjective.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Eval-First Principle</div>
+            <p><strong>"Write the test that your code must pass before you write the code. This is especially true for AI products where 'correct' is probabilistic."</strong></p>
+        </div>
+
+        <p>
+            <strong>Running Example - DraftBot:</strong> After validating the prototype, the team spent Week 7 building an eval suite. They created a dataset of 100 brand guidelines and product descriptions with expected tone scores. The eval checked whether DraftBot's output matched the expected tone profile.
+        </p>
+
+        <h3>31.3.6 Test Dataset Creation</h3>
+
+        <p>
+            Create a test dataset that covers the diversity of inputs your AI will encounter. Happiness path examples are representative inputs with known good outputs, typically comprising twenty to fifty examples. Edge cases are inputs that stress the system and reveal boundaries of capability, usually ten to twenty examples. Failure cases are inputs the system should handle gracefully without crashing or producing harmful outputs, generally ten to twenty examples. Diversity cases cover inputs across demographic and linguistic varieties to ensure fair and robust performance across different user groups, typically twenty to thirty examples. Together, these datasets should total fifty to one hundred examples to provide meaningful evaluation coverage.
+        </p>
+
+        <div class="callout tip">
+            <div class="callout-title">Test Dataset Quality</div>
+            <p>Maintain test dataset quality by ensuring each example includes an input, expected output, and scoring rubric. Label examples as a team rather than individually to reduce subjective bias. Store datasets in version control alongside code to maintain traceability. Regularly add examples from production failures and user feedback to keep the dataset representative of real-world usage.</p>
+        </div>
+
+        <h3>31.3.7 Baseline Metrics</h3>
+
+        <p>
+            Before improving, establish baseline metrics so you know whether changes are actually improvements. Pass rate measures the percentage of test cases that pass. Average score captures the mean quality score across test cases when using LLM-as-Judge. Coverage indicates what percentage of your test dimensions are covered. False positive rate reveals how often the AI claims success when it actually failed.
+        </p>
+
+        <div class="callout note">
+            <div class="callout-title">Baseline Metrics Template</div>
+            <p><strong>Date:</strong> [When baseline was measured]<br/>
+            <strong>Model:</strong> [Which model/version was used]<br/>
+            <strong>Prompt version:</strong> [Which prompt configuration]<br/>
+            <strong>Pass rate:</strong> [X%]<br/>
+            <strong>Average score:</strong> [X.X/5]<br/>
+            <strong>Key failure modes:</strong> [List]</p>
+        </div>
+
+        <h3>31.3.8 Success Criteria Formalization</h3>
+
+        <p>
+            Define formal success criteria that must be met before shipping:
+        </p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">Success Criteria Format</div>
+            <p><strong>Criterion:</strong> [Name]<br/>
+            <strong>Measurement:</strong> [How to measure]<br/>
+            <strong>Threshold:</strong> [Must achieve X to ship]<br/>
+            <strong>Current baseline:</strong> [Where we are now]</p>
+        </div>
+
+        <p>
+            Example success criteria for DraftBot include tone match requiring output tone scores within 0.5 points of target on a 5-point scale with a baseline of 3.2/5. Brand consistency demands brand keywords present in 90% or more of outputs against a baseline of 78%. Completion rate requires 95% or more of requests producing valid output with a baseline of 89%. Latency requires 90% or more of responses within 10 seconds against a baseline of 65%.
+        </p>
+
+        <div class="callout key-takeaway">
+            <div class="callout-title">Phase 4-5 Checklist</div>
+            <p>Completing phases four and five requires that a vibe coding prototype has been built within the time box, user testing has been completed with three or more participants, feedback has been categorized and prioritized, a pivot decision has been made if needed or confirmed to continue, a test dataset has been created with fifty to one hundred examples, an eval pipeline has been implemented, baseline metrics have been established, and formal success criteria have been defined with thresholds.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-31-2.html">31.2 Discovery to Design</a>
+            <a class="up" href="../index.html">Chapter 31</a>
+            <a class="next" href="section-31-4.html">31.4 Engineering to Launch</a>
+        </nav>
+
+        <footer>
+            <p>31.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

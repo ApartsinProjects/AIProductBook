@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 9: Requirements for Probabilistic Products - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-discovery-design/index.html">Part II: AI-Native Product Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 9</div>
+        <h1>Requirements for Probabilistic Products</h1>
+    </header>
+
+    <main class="content">
+        <div class="opening-hook">
+            A product manager writes a requirement that says "the AI should recommend relevant products." The engineer implements it. Three months later, users are upset because the AI confidently recommends items that are out of stock, inappropriate for the season, or completely irrelevant to what they were browsing. Nobody specified what "relevant" meant, what confidence threshold was acceptable, or how to handle edge cases. Traditional PRDs assume deterministic behavior. AI products require a new kind of requirements document that embraces probability, defines acceptable error rates, and specifies evaluation criteria alongside functional requirements. This is the challenge the USID.O framework solves.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-9-opener.png"
+                 alt="Chapter 9 opener illustration">
+            <figcaption>
+                Probabilistic products require fundamentally different requirements thinking than deterministic software.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Requirements Simulation</div>
+            <p>Vibe-coding enables requirements simulation before writing formal specs. Quickly prototype different PRD formulations to see which ones produce testable outcomes. If an eval-first requirement seems too strict or too loose, vibe-code variations and test them against real AI behavior. Vibe-coding lets you stress-test your requirements against actual AI capabilities, revealing gaps and ambiguities before they become costly implementation errors.</p>
+        </div>
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master the eval-first approach to writing requirements for AI products.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                Split from current AI PM Toolkit. This chapter covers the USID.O framework, eval-first PRDs, LLM-as-Judge, and requirements that embrace probabilistic behavior.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> What constitutes a real spec for a probabilistic product, including acceptable error rates and evaluation criteria alongside functional requirements.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> Writing an eval-first PRD for one AI feature that defines success criteria, acceptable failure modes, and measurement approaches before writing any code.</li>
+                <li><strong>What would count as success or failure?</strong> A requirement document that enables objective evaluation of whether the AI feature meets user needs, not just whether it produces outputs.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Eval-first requirements prevent the common failure of shipping AI features with no measurable success criteria.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Apply the USID.O framework to AI products</li>
+                <li>Write eval-first PRDs</li>
+                <li>Use LLM-as-Judge for requirements validation</li>
+                <li>Define acceptance criteria for AI features</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">9.1</span> <a href="sections/section-9-1.html">The USID.O Framework for AI</a></li>
+                <li><span class="sec-num">9.2</span> <a href="sections/section-9-2.html">Eval-First PRDs</a></li>
+                <li><span class="sec-num">9.3</span> <a href="sections/section-9-3.html">LLM-as-Judge for Requirements</a></li>
+                <li><span class="sec-num">9.4</span> <a href="sections/section-9-4.html">Acceptance Criteria for AI</a></li>
+            </ul>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-8/index.html">Ch 8: AI UX</a>
+            <a class="up" href="../../part-2-discovery-design/index.html">Part II Overview</a>
+            <a class="next" href="sections/section-9-1.html">9.1 USID.O Framework</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 9 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

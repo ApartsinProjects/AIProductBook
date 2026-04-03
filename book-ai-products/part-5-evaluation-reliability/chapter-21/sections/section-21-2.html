@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 21.2: Types of Evaluations - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 21</div>
+        <h1>Types of Evaluations</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Not all evaluations are created equal. A task eval tells you if the dog caught the car. A system eval tells you if the car still works afterward."</p>
+            <cite>A Systems Engineer With Parking Lot Trauma</cite>
+        </blockquote>
+
+        <h2 id="eval-taxonomy">A Taxonomy of Evaluation Types</h2>
+
+        <p>
+            Evaluation types serve different purposes and measure different things. Understanding this taxonomy helps you build comprehensive evaluation coverage for your AI product.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The Five Core Eval Types</h4>
+            <p>Every AI product needs all five types of evaluation. They answer different questions and catch different failure modes. Skipping any one of them leaves a gap in your quality assurance.</p>
+        </div>
+
+        <h2 id="task-evals">Task Evals: Does It Complete the Task Correctly?</h2>
+
+        <p>
+            Task evaluations measure whether the AI system accomplishes a specific task correctly. The question is simple: given this input, does the output meet the success criteria?
+        </p>
+
+        <h3 id="task-eval-characteristics">Characteristics of Task Evals</h3>
+
+        <p>Task evals are characterized by the presence of ground truth, meaning there exists a known correct answer or set of acceptable answers against which outputs can be measured. The test inputs in task evals are structured and can be specified precisely, allowing for consistent and repeatable testing. Additionally, the outputs are measurable, enabling success to be determined automatically without subjective judgment.</p>
+
+        <h3 id="task-eval-examples">Task Eval Examples</h3>
+
+        <p>Task evals appear in many forms across different applications. Classification accuracy evals measure whether a model correctly classifies emails as spam or not spam. Extraction precision evals assess whether a system can extract structured information such as the date, time, and location from a calendar invitation. Translation quality evals compare machine translations against human reference translations to measure closeness. Code generation evals verify whether generated code passes predefined unit tests.</p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Task Eval Design Principle</h4>
+            <p>Task evals work when you can enumerate the test cases and define success criteria for each. When ground truth is unclear or when the task is subjective, you need other eval types.</p>
+        </div>
+
+        <h2 id="system-evals">System Evals: Does the Whole System Work Together?</h2>
+
+        <p>
+            System evaluations measure whether the components of your AI system work together correctly. A system might have task-level evals passing for each component while failing at the system level.
+        </p>
+
+        <h3 id="system-eval-characteristics">Characteristics of System Evals</h3>
+
+        <p>System evals focus on component interaction, where multiple components must coordinate correctly to produce the desired outcome. They measure end-to-end behavior, treating the whole pipeline as the unit of evaluation rather than individual parts in isolation. System evals also capture emergent properties, which are behaviors that arise from the interaction of components and cannot be predicted by examining any single component alone.</p>
+
+        <h3 id="system-eval-examples">System Eval Examples</h3>
+
+        <p>System evals manifest in several common scenarios. RAG recall evals measure whether a retrieval plus generation pipeline can answer questions correctly by correctly retrieving relevant documents and generating accurate responses. Agent task completion evals assess whether an agent can use tools correctly to accomplish multi-step goals that require coordinating multiple operations. Conversational coherence evals evaluate whether a dialogue system maintains context across multiple turns, ensuring natural and consistent conversation flow.</p>
+
+        <div class="callout warning">
+            <h4 class="callout-title">Common System Eval Failure</h4>
+            <p>Components that pass task evals in isolation can fail system evals when combined. The retrieval system might return relevant documents individually, but fail to return the right combination when the query requires synthesizing across multiple documents.</p>
+        </div>
+
+        <h2 id="agent-evals">Agent Evals: Does the Agent Behave Correctly Over Time?</h2>
+
+        <p>
+            Agent evaluations measure whether an AI agent behaves correctly over extended interactions. This includes task completion, but also resource management, error recovery, and appropriate tool use.
+        </p>
+
+        <h3 id="agent-eval-characteristics">Characteristics of Agent Evals</h3>
+
+        <p>Agent evals capture long-horizon behavior, recognizing that an agent's actions have consequences that accumulate over time rather than producing immediate isolated results. They evaluate stateful interactions, where the agent maintains and updates state across multiple steps in a process. Agent evals also examine tool use patterns, assessing whether the agent selects and sequences tools correctly to accomplish its goals.</p>
+
+        <h3 id="agent-eval-metrics">Agent Eval Metrics</h3>
+
+        <p>Agent evals track several key metrics. Task completion rate measures what fraction of tasks the agent completes successfully. Step efficiency evaluates whether the agent takes a reasonable number of steps to accomplish goals, avoiding unnecessary complexity. Error recovery assesses whether the agent can recognize when something has gone wrong and take appropriate corrective action. Resource usage measures how efficiently the agent uses API calls, tokens, and time to accomplish its objectives.</p>
+
+        <h2 id="integration-evals">Integration Evals: Do Components Work Together?</h2>
+
+        <p>
+            Integration evaluations verify that your AI system works correctly with external systems, APIs, data sources, and user interfaces. The question is whether the AI system fits into the broader ecosystem.
+        </p>
+
+        <h3 id="integration-eval-dimensions">Integration Eval Dimensions</h3>
+
+        <p>Integration evals examine multiple dimensions of compatibility with the broader ecosystem. API compatibility measures whether the system handles API changes gracefully without breaking existing functionality. Data pipeline integrity verifies that the system produces data in the expected format for downstream consumers. UI/UX interaction evaluates whether AI outputs render correctly in the interface and provide a good user experience. Latency requirements ensure that the system responds within acceptable time bounds to maintain a smooth user experience.</p>
+
+        <div class="callout tip">
+            <h4 class="callout-title">Integration Eval Timing</h4>
+            <p>Run integration evals before deployment, not after. Catching a UI rendering issue or an API compatibility problem in testing is far less expensive than catching it in production.</p>
+        </div>
+
+        <h2 id="regression-evals">Regression Evals: Did We Break Something?</h2>
+
+        <p>
+            Regression evaluations detect when changes to the system cause previously working behavior to degrade. They are the safety net that enables rapid iteration.
+        </p>
+
+        <h3 id="regression-eval-design">Regression Eval Design</h3>
+
+        <p>Effective regression evals are designed to be fast, deterministic, comprehensive, and actionable. They must run quickly since they execute on every change, providing immediate feedback. They are deterministic, meaning the same change always produces the same result, enabling reliable detection of regressions. They are comprehensive, covering the behaviors that matter most to users and the business. When they fail, they are actionable, making it clear what broke and why so developers can address the issue promptly.</p>
+
+        <h3 id="regression-thresholds">Setting Regression Thresholds</h3>
+
+        <p>
+            Regression thresholds define how much degradation is acceptable. Set them conservatively for critical behaviors and more leniently for edge cases.
+        </p>
+
+        <div class="callout algorithm">
+            <h4 class="callout-title">Regression Threshold Strategy</h4>
+            <p>For each behavior in your regression suite, begin by defining the baseline through measuring the behavior on your current production system. Then set the threshold, which is the maximum acceptable regression percentage. The specific thresholds depend on the criticality of the behavior: critical behaviors typically allow zero to five percent regression, important behaviors allow five to ten percent, and minor behaviors can tolerate ten to twenty percent. Set alerts to warn at fifty percent of the threshold and fail at the full threshold. Finally, monitor trends over time, recognizing that even small regressions accumulating over time can become significant.</p>
+        </div>
+
+        <h2 id="eval-type-selection">Choosing the Right Eval Type</h2>
+
+        <p>Use this decision framework to determine which eval type to use based on the question you need to answer. If you are asking whether a component produces correct output, use a task eval. If you need to know whether components work together correctly, use a system eval. When evaluating whether an agent behaves well over extended interactions, use an agent eval. If you need to determine whether the system fits into the broader ecosystem including APIs and user interfaces, use an integration eval. Finally, if you want to know whether your changes broke existing behavior, use a regression eval.</p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Layering Your Evals</h4>
+            <p>The most robust evaluation strategy layers all five eval types. Task evals catch component failures. System evals catch integration issues. Agent evals catch long-horizon problems. Integration evals catch ecosystem issues. Regression evals catch everything new.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-21-1.html">21.1 Why Evals Are Central</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-21-3.html">21.3 Building Effective Evals</a>
+        </nav>
+
+        <footer>
+            <p>Section 21.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

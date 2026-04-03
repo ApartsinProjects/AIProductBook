@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.3 How PM Evals Prevent Engineering Waste - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-1-foundations/index.html">Part I: Foundations</a></div>
+        <div class="chapter-label">Chapter 2</div>
+        <h1>The Synergy Triangle</h1>
+        <p class="chapter-subtitle">2.3 How PM Evals Prevent Engineering Waste</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Introduce the book's core framework and show the interdependence between the three pillars.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Basic familiarity with software development concepts. Completion of Sections 2.1-2.2 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Evals as the Bridge Between PM and Engineering</div>
+            <p>This section covers eval-driven development, showing how PM-defined evaluations prevent engineering waste and align teams around measurable outcomes. In the context of the Synergy Triangle, evals are the critical feedback mechanism that connects AI PM to AI Engineering: PM provides the specification through evals, and Engineering measures progress against those evals. Without evals, the triangle breaks into isolated pillars that cannot coordinate.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Golden Set Ghost</div>
+            <p>The term "golden dataset" comes from Hollywood. Editors would splice together the best takes from multiple film rolls into a single "golden" master. This golden copy became the reference point for all later edits. PM golden sets work the same way: they are the best examples from which all future work is judged.</p>
+        </div>
+
+        <h2 id="section-2-3">2.3 How PM Evals Prevent Engineering Waste</h2>
+
+        <p>
+            One of the most expensive problems in AI product development is building the wrong thing well. Engineering teams are good at solving problems, but they need to know which problems to solve. Without clear, measurable success criteria, engineers optimize for the wrong thing. They might spend months improving a metric that doesn't matter to users, or worse, they might build features that satisfy the stated requirements but fail to achieve the actual business outcomes.
+        </p>
+
+        <p>
+            This problem is particularly acute in AI because the output is probabilistic. Unlike traditional software where you can check if a feature is implemented correctly, AI features require judgment: is this response good? Is this summary accurate? Is this recommendation helpful? These aren't binary questions, and without frameworks for answering them, teams end up in endless subjective debates or, worse, shipping products that look great in testing but fail in production.
+        </p>
+
+        <p>
+            <strong>Why subjective debates are unsolvable:</strong> When you ask "is this output good?" you're asking about quality, but quality is in the eye of the beholder. One reviewer might think a response is helpful because it's comprehensive; another might think it's too long. There's no right answer because the question is fundamentally about preferences and context. Without an objective frame of reference, these debates can't resolve - they're philosophical disagreements wearing the mask of product decisions. Evals break this deadlock by replacing "is it good?" with "does it match our criteria?" - a question that has an answer.
+        </p>
+
+        <h3>The Cost of Unclear Success Criteria</h3>
+
+        <p>
+            Consider a common scenario: the product team says "make the AI more helpful." Engineering interprets this as "make the AI produce longer responses" because that's easy to measure. After months of work, they achieve longer responses. Users don't notice improvement. The team wonders what went wrong. What happened is a classic case of measurement misalignment: the proxy metric (response length) diverged from the actual goal (helpfulness).
+        </p>
+
+        <p>
+            This is one example of a pervasive problem. Without evals, every decision becomes a debate. Which model is better? Which prompt is better? Which feature improves things? These questions can't be resolved with intuition - you need systematic measurement. The cost isn't just the engineering time wasted on wrong objectives; it's the opportunity cost of not improving what actually matters, the confusion and frustration in the team, and the erosion of trust when shipped features don't deliver expected results.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Engineering Time Sink</div>
+            <p>In organizations without eval-driven development, AI engineering teams often spend 30-50% of their time on work that doesn't improve the product from a user perspective. They optimize metrics that look good in dashboards but don't translate to user value. The root cause is always the same: unclear or unmeasurable success criteria. Evals aren't optional - they're the only way to know if you're making progress.</p>
+        </div>
+
+        <h3>Eval-Driven Development (EDD): The Methodology</h3>
+
+        <p>
+            EDD is the methodology where evaluations serve as the working specification. Instead of vague requirements like "make it better," EDD translates business requirements into measurable eval criteria that guide all development. This creates alignment: PM knows what they're asking for, engineers know what to build, and everyone can see whether progress is being made.
+        </p>
+
+        <p>
+            The methodology has three phases that form a continuous loop:
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Phase</th><th>Activity</th><th>Output</th><th>Who Owns It</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Define</td><td>Translate business requirements into measurable eval criteria</td><td>Golden sets, eval suites</td><td>PM with Engineering input</td></tr>
+                <tr><td>Optimize</td><td>Run experiments against evals after each change</td><td>Quantified tradeoff analysis</td><td>Engineering</td></tr>
+                <tr><td>Refine</td><td>Update evals as business criteria evolve</td><td>Production traces added to golden sets</td><td>PM</td></tr>
+            </tbody>
+        </table>
+
+        <h4>Define Phase</h4>
+        <p>
+            In the define phase, PMs work with engineers to translate what "good" looks like into concrete evaluation criteria. This involves creating golden sets: curated examples of inputs and the expected outputs. If you're building a customer service AI, your golden set might include example customer queries and the ideal responses. The key insight is that these examples become the specification - the AI should produce outputs similar to the golden set, and deviation indicates a problem.
+        </p>
+
+        <p>
+            Creating good golden sets is challenging and requires thought. You need examples that cover the key scenarios your product should handle, including edge cases and failure modes. The golden set should be representative of real usage, which means using actual user queries rather than synthetic test cases. And the set needs to be large enough to provide statistical significance while small enough to be manually curated and maintained.
+        </p>
+
+        <h4>Optimize Phase</h4>
+        <p>
+            In the optimize phase, every code change is validated against the eval suite. This means you don't just hope improvements are improvements - you measure them. If you change the prompt, you run it against the eval suite. If you switch models, you run it against the eval suite. If you add a new feature, you run it against the eval suite. This continuous measurement creates a tight feedback loop that prevents regression and enables informed trade-offs.
+        </p>
+
+        <p>
+            The key insight is that evals make trade-offs explicit. Every change has costs and benefits. A change might improve accuracy but increase latency. It might help with complex queries but hurt simple ones. Without evals, these trade-offs are invisible - you don't know what's changing. With evals, you can see exactly what's improving and what's degrading, enabling informed decisions about whether to ship.
+        </p>
+
+        <h4>Refine Phase</h4>
+        <p>
+            In the refine phase, evals evolve as understanding deepens. The initial eval suite is likely incomplete - it probably doesn't cover all edge cases, all user populations, or all failure modes. As the product is used in production, new scenarios emerge. Some are handled well, others poorly. The poor-handled scenarios get added to the eval suite. This creates a virtuous cycle: production reveals weaknesses, weaknesses get added to evals, improvements address evals, product improves.
+        </p>
+
+        <p>
+            This is why evals aren't a one-time investment - they're an ongoing capability. The eval suite grows over time as the product matures. The key is to capture production failures as learning opportunities. When the AI makes a mistake in production that users notice, that mistake should become part of the eval suite to prevent regression.
+        </p>
+
+        <h3>The Hard Problem Shifts</h3>
+
+        <p>
+            With evals as the specification, the nature of the problem changes fundamentally. Before EDD, the question was "Is this output good?" - a subjective, unresolvable question that led to endless debates and gut-feeling decisions. With EDD, the question shifts to "Is my eval right?" - a bounded, solvable problem.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">From Intuition to Evidence</div>
+            <p>The shift from "is this good?" to "is my eval right?" changes everything. The first question has no answer - it's a philosophical debate about subjective quality. The second question has a clear answer: if your eval doesn't predict real-world performance, fix your eval. This is a concrete, actionable problem. You can test whether your eval correlates with user satisfaction, whether it catches production failures, whether it guides improvements that users actually notice.</p>
+        </div>
+
+        <ul>
+            <li><strong>Before EDD</strong>: "Is this output good?" (subjective, unresolvable debates)</li>
+            <li><strong>With EDD</strong>: "Is my eval right?" (solvable, bounded problem)</li>
+        </ul>
+
+        <h3>What Makes a Good Eval?</h3>
+
+        <p>
+            Not all evals are created equal. A good eval has several properties:
+        </p>
+
+        <p>
+            <strong>Correlation with user outcomes:</strong> The eval should predict whether users will be satisfied. An eval that measures something users don't care about is worse than no eval - it gives false confidence. Test this by comparing eval scores with user satisfaction metrics. If they're not correlated, fix the eval.
+        </p>
+
+        <p>
+            <strong>Coverage of failure modes:</strong> The eval should catch the ways the AI actually fails. This requires understanding your product's specific failure modes - what kinds of mistakes does it make? The eval should include examples of these mistakes.
+        </p>
+
+        <p>
+            <strong>Stability under perturbation:</strong> Small changes in prompt or model shouldn't cause wild swings in eval scores (unless those changes are actually important). If eval scores are too volatile, they become uninterpretable.
+        </p>
+
+        <p>
+            <strong>Interpretability:</strong> When the eval fails, you should be able to understand why. An eval that just says "bad" without explaining what's bad isn't helpful for debugging.
+        </p>
+
+        <h3>The Economic Value of Evals</h3>
+
+        <p>
+            Evals have direct economic value. Without evals, teams guess at what improves the product. With evals, they know. Consider the engineering time saved: if your team makes 100 changes per quarter and without evals only 30% of them improve the product, you're wasting 70 engineering-weeks per quarter on changes that don't help. With evals catching these issues early, that waste disappears.
+        </p>
+
+        <p>
+            The value extends beyond engineering time. Evals enable faster iteration because you don't need to ship to production to know if something works. Evals enable better decisions because trade-offs are explicit. Evals enable smaller teams to achieve more because each person can be more confident their work is contributing.
+        </p>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore how <strong>Engineering Makes Prototypes Shippable</strong> - adding reliability, scalability, and observability. This is the third feedback loop: production infrastructure that enables vibe coding experiments to become real products.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-2-2.html">2.2 How Vibe Coding Fuels PM Hypothesis Testing</a>
+            <a class="up" href="index.html">Ch 2: Overview</a>
+            <a class="next" href="section-2-4.html">2.4 How Engineering Makes Prototypes Shippable</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 2.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

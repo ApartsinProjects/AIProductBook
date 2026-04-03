@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12.4 Agent Skills and Tool Use - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 12</div>
+        <h1>Prompts, Chains, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and Orchestration</h1>
+        <p class="chapter-subtitle">12.4 Agent Skills and Tool Use</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master the building blocks of AI systems: prompts, chains, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and orchestration frameworks.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 12.3 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Tools Extend Agent Capabilities</div>
+            <p>This section covers how <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> use tools to interact with external systems, from web search to code execution to API calls. In the context of AI product development, tool use is what transforms AI from a text generator into a useful assistant. Understanding tool categories helps you design effective agent systems.</p>
+        </div>
+
+        <h2 id="section-12-4">12.4 Agent Skills and Tool Use</h2>
+
+        <p>
+            Modern <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> can use tools to interact with external systems, extending their capabilities beyond pure text generation. Tools transform <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> from passive responders into active participants that can take actions in the world. Understanding how to define, implement, and manage tools is essential for building capable AI systems.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Without tools, an agent is just a sophisticated text generator. With tools, an agent can retrieve real-time information, execute code, interact with APIs, and take actions that affect the real world. The combination of agent reasoning and tool execution is what makes AI systems genuinely useful for production applications.
+        </p>
+
+        <h3>Core Tool Categories</h3>
+
+        <h4>1. Web Search and Browsing</h4>
+        <p>
+            Search tools allow <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> to access current information beyond their training data. This is essential for questions about recent events, rapidly changing domains, or information that may have changed since the model's knowledge cutoff.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Search Tool Implementation</div>
+            <pre class="code-block">from langchain.<a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> import Tool
+from langchain_community.utilities import SerpAPIWrapper
+
+search = SerpAPIWrapper()
+
+search_tool = Tool(
+    name="web_search",
+    func=search.run,
+    description="""Use this tool for questions about current events, 
+    recent developments, or real-time information. 
+    Input should be a search query."""
+)
+
+# Agent can now use this to answer "What happened in tech this week?"
+# The agent decides when to use the tool based on the question</pre>
+        </div>
+
+        <h4>2. Code Execution</h4>
+        <p>
+            Code execution tools enable <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> to run code, perform calculations, and even build and test software. This is crucial for <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> that need to analyze data, run simulations, or help with software development tasks.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Python REPL Tool</div>
+            <pre class="code-block">from langchain_experimental.tools import PythonREPLTool
+
+python_tool = PythonREPLTool()
+
+# The agent can execute Python code for:
+# - Data analysis and visualization
+# - Mathematical calculations
+# - Text processing
+# - Testing code snippets
+
+# Example usage in an agent task:
+# "Calculate the moving average of these stock prices and plot the result"
+# Agent: 1) Uses code tool to load data
+#        2) Computes moving average
+#        3) Creates visualization
+#        4) Describes findings to user</pre>
+        </div>
+
+        <h4>3. API Calls</h4>
+        <p>
+            API tools connect <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> to external services, databases, and enterprise systems. This enables integration with your existing infrastructure, allowing <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> to look up customer data, create tickets, send notifications, or interact with business systems.
+        </p>
+
+        <div class="example-box">
+            <div name="example-title">Case Study: CRM Integration</div>
+            <pre class="code-block">import requests
+from langchain.tools import StructuredTool
+
+def get_customer(customer_id: str) -> dict:
+    """Get customer information from CRM"""
+    response = requests.get(
+        f"https://api.crm.example.com/customers/{customer_id}",
+        headers={"Authorization": f"Bearer {API_KEY}"}
+    )
+    return response.json()
+
+def create_ticket(customer_id: str, title: str, description: str) -> dict:
+    """Create a support ticket"""
+    response = requests.post(
+        "https://api.crm.example.com/tickets",
+        json={
+            "customer_id": customer_id,
+            "title": title,
+            "description": description,
+            "priority": "medium"
+        }
+    )
+    return response.json()
+
+# Define tools for the agent
+tools = [
+    StructuredTool.from_function(get_customer),
+    StructuredTool.from_function(create_ticket),
+]
+
+# Agent can now handle support requests end-to-end:
+# 1. Look up customer
+# 2. Understand the issue
+# 3. Create a ticket with the right details</pre>
+        </div>
+
+        <h4>4. File System Operations</h4>
+        <p>
+            File tools allow <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> to read, write, and manage files. This is essential for development tasks, document processing, and any application that needs to work with persistent data.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: File Operations</div>
+            <pre class="code-block">from langchain_community.agent_toolkits import FileManagementToolkit
+
+toolkit = FileManagementToolkit(
+    root_dir="/project",
+    allowed_directories=["/project/docs", "/project/data"]
+)
+
+# Available tools:
+# - read_file
+# - write_file  
+# - list_directory
+# - file_search
+# - move_file
+# - delete_file
+
+# Agent can now:
+# - Read code files to understand a codebase
+# - Write generated documentation
+# - Search through file contents
+# - Organize project files</pre>
+        </div>
+
+        <h3>Tool Definition Best Practices</h3>
+
+        <div class="callout">
+            <div class="callout-title">The Art of Tool Descriptions</div>
+            <p>The description field is critical. It tells the agent when to use the tool and how. A good description explains: (1) what the tool does, (2) when to use it, (3) what input it expects. Vague descriptions lead to <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> not using tools or using them incorrectly.</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Tool Type</th><th>Use Case</th><th>Example</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Search</td><td>Real-time information</td><td>Web search, database queries</td></tr>
+                <tr><td>Code Execution</td><td>Calculations, data analysis</td><td>Python REPL, calculator</td></tr>
+                <tr><td>API Calls</td><td>External integrations</td><td>CRM, calendar, notifications</td></tr>
+                <tr><td>File Operations</td><td>Persistent data</td><td>Read, write, search files</td></tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-13/index.html">Chapter 13: Knowledge Retrieval and Advanced RAG</a> 
+                to learn how to build reliable knowledge systems with advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> techniques.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-12-3.html">12.3 MCP and A2A Protocols</a>
+            <a class="up" href="index.html">Chapter 12 Index</a>
+            <a class="next" href="section-12-5.html">12.5 Advanced Agent Patterns</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 12.4 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

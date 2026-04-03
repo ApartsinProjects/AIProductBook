@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9.1 The USID.O Framework for AI - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-2-discovery-design/index.html">Part II: Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 9</div>
+        <h1>Requirements for Probabilistic Products</h1>
+        <p class="chapter-subtitle">9.1 The USID.O Framework for AI</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn the USID.O framework for structuring AI product requirements that embrace probabilistic behavior while maintaining clear acceptance criteria.
+        </p>
+
+        <blockquote class="epigraph">
+            <p>"Traditional requirements assume deterministic behavior. AI products require requirements that embrace probability, define acceptable error rates, and specify evaluation criteria alongside functional requirements."</p>
+            <cite>AI Product Requirements Handbook</cite>
+        </blockquote>
+
+        <div class="callout fun-note">
+            <div class="callout-title">The Requirements Reality</div>
+            <p>The PM writes: "AI should work correctly." The engineer asks: "What does correctly mean?" The PM says: "You know, correctly." This is why AI requirements are hard, and why 90% of AI PRDs are still just "make the AI do the thing."</p>
+        </div>
+
+        <h2 id="section-9-1">9.1 The USID.O Framework for AI</h2>
+
+        <p>
+            The USID.O framework (Understand, Specify, Implement, Deliver, operate) provides a structured approach to AI product requirements that accounts for the probabilistic nature of AI systems.
+        </p>
+
+        <h3>Why Traditional Requirements Fail for AI</h3>
+
+        <p>
+            Traditional product requirements assume deterministic output where the same input always produces the same output, clear acceptance where requirements are either met or not met, complete specification where all edge cases can be enumerated, and perfect testability where every requirement can be definitively verified.
+        </p>
+
+        <p>
+            AI systems violate all of these assumptions. They are probabilistic, their outputs vary, edge cases are numerous, and verification is statistical.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The USID.O Framework Overview</div>
+            <p><strong>U - Understand:</strong> Define what success looks like in user terms, not AI terms</p>
+            <p><strong>S - Specify:</strong> Create measurable acceptance criteria including error rates and confidence thresholds</p>
+            <p><strong>I - Implement:</strong> Build evaluation infrastructure before building features</p>
+            <p><strong>D - Deliver:</strong> Define rollout criteria based on evaluation results</p>
+            <p><strong>O - Operate:</strong> Monitor in production and iterate based on real-world performance</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                The USID.O framework is itself an eval-first methodology. For each AI feature, define how you will measure success at every stage. A micro-<a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval</a> for USID.O implementation tracks: evaluation dataset quality before implementation, threshold attainment rates at each milestone, and production metric correlation with eval metrics. QuickShip's eval-first insight: they discovered their eval metrics (accuracy, latency) only weakly correlated with user satisfaction scores. They added UX metrics to their evaluation framework and saw NPS improve 15 points because they were optimizing for what users actually cared about.
+            </p>
+        </div>
+
+        <h3>U: Understand (User Outcomes First)</h3>
+
+        <p>
+            Start with user outcomes, not AI capabilities. Teams should ask what user problem the AI solves, how success looks to the user, what the cost of AI errors is to users, and what users are willing to tolerate in terms of accuracy tradeoffs.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Understanding Example: AI Meeting Summarizer</div>
+            <p><strong>Wrong start:</strong> "Summarize meetings with 90% accuracy"</p>
+            <p><strong>Right start:</strong> "Help users find action items from meetings without reading full transcripts"</p>
+            <p><strong>User outcome question:</strong> "What percentage of action items should be captured?"</p>
+            <p><strong>Error cost question:</strong> "What happens if we miss an action item?"</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Misconception</div>
+            <p>
+                Accuracy percentages obscure distribution. Saying "90% accurate" sounds good but tells you nothing about which 10% fails. A system that misses 10% of easy cases is very different from one that fails on 10% of hard cases. Specify what kinds of errors are acceptable and which are not. A 90% accurate medical diagnosis AI that misses 10% of cancers is not 90% good; it is dangerous.
+            </p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: HealthMetrics Analytics</div>
+            <p>HealthMetrics applies the USID.O framework to their clinical data coordination product. For the Understand phase, hospital administrators need to reduce patient wait times and improve resource utilization without compromising care quality. For the Specify phase, AI suggestions must be explainable to clinical staff, achieve 90% accuracy on bed assignments, and defer to human judgment when confidence is below 75%. For the Implement phase, they build an eval pipeline with clinical safety as the primary metric before implementing any routing logic. For the Deliver phase, they roll out to one department first, measure escalation rates, and expand only when human override rate is below 5%. For the Operate phase, they monitor trust trajectory and if clinical staff consistently overrides AI, the eval metrics are not matching user needs.</p>
+            <p>Their <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval-first</a> approach revealed that administrators cared more about "explainability to patients" than they had initially specified, leading to a redesigned UX that showed patients why a particular bed assignment was recommended.</p>
+        </div>
+
+        <h3>S: Specify (Measurable Criteria)</h3>
+
+        <p>
+            Specify requirements that can be measured statistically:
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Specifying AI Requirements</div>
+            <p>Specifying AI requirements involves defining measurable criteria across several dimensions. Accuracy metrics include precision, recall, F1, and AUROC (see the <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">evaluation</a> methods section for details). Error rate thresholds specify acceptable false positive rates such as "no more than 5% false positives." Confidence calibration ensures that "90% confidence should be correct 90% of the time," indicating well-calibrated uncertainty. Latency requirements specify that "95th percentile response under 2 seconds" for acceptable performance. Fairness metrics ensure performance does not vary significantly across user groups.</p>
+        </div>
+
+        <h3>I: Implement (Eval First)</h3>
+
+        <p>
+            Build evaluation infrastructure before implementing features. This includes creating evaluation datasets with ground truth, establishing automated evaluation pipelines (see the <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">architecture</a> patterns section for details), defining thresholds for acceptable performance, and building human evaluation workflows for edge cases that require human judgment.
+        </p>
+
+        <h3>D: Deliver (Rollout Based on Metrics)</h3>
+
+        <p>
+            Define explicit rollout criteria. Teams should determine what evaluation metrics must pass before launch, what percentage of users get the feature first, what rollback triggers are defined, and what monitoring is in place post-launch to catch any issues.
+        </p>
+
+        <h3>O: Operate (Monitor and Iterate)</h3>
+
+        <p>
+            AI products require ongoing monitoring. Teams should track performance metrics in production, monitor for distribution shift that indicates model drift, collect user feedback on AI quality, and iterate based on real-world performance rather than relying solely on pre-launch evaluation.
+        </p>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Eval-First PRDs</strong>, understanding how to write product requirements documents that start with evaluation criteria.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 9: Overview</a>
+            <a class="up" href="../index.html">Chapter 9 Index</a>
+            <a class="next" href="section-9-2.html">9.2 Eval-First PRDs</a>
+        </nav>
+
+        <footer>
+            <p>Section 9.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

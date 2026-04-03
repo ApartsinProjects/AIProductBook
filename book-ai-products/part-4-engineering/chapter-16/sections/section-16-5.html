@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16.5 Latency, Cost, and Quality Trade-offs - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+    <style>
+        .tradeoff-diagram {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+        .economics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        .economics-table th, .economics-table td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .economics-table th {
+            background: var(--accent);
+            color: white;
+        }
+        .economics-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .code-block {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .code-block .keyword { color: #c678dd; }
+        .code-block .string { color: #98c379; }
+        .code-block .function { color: #61afef; }
+        .code-block .comment { color: #5c6370; font-style: italic; }
+        .code-block .number { color: #d19a66; }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 16.5</div>
+        <h1>Latency, Cost, and Quality Trade-offs</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Every AI product operates in a triangle of constraints: latency, cost, and quality. You can optimize any two, but the third will suffer. Understanding which constraint is negotiable for each request is the art of AI engineering."</p>
+            <cite>A Platform Architect Who Has Made Every Mistake</cite>
+        </blockquote>
+
+        <h2>Introduction</h2>
+        <p>
+            AI products are fundamentally constrained by three resources: latency (how fast responses arrive), cost (how much each request costs), and quality (how good the outputs are). These constraints are in tension: reducing latency often increases cost; reducing cost often degrades quality; improving quality often increases both latency and cost.
+        </p>
+        <p>
+            This section covers real-time versus batch trade-offs, caching strategies, quality degradation options, and unit economics for AI products.
+        </p>
+
+        <h2>Real-Time Versus Batch Trade-offs</h2>
+        <p>
+            Not every request needs an immediate response. Understanding when real-time processing is necessary versus when batch processing suffices is a fundamental architectural decision.
+        </p>
+
+        <h3>Real-Time Processing</h3>
+        <p>
+            Real-time processing returns responses immediately, synchronously. Users wait for the response before proceeding. This pattern is essential for interactive applications: chatbots, coding assistants, document editors.
+        </p>
+        <p>
+            <strong>When required:</strong> Interactive applications where latency directly affects user experience, any case where users are waiting for results, any case where downstream actions depend on the response.
+        </p>
+        <p>
+            <strong>Trade-offs:</strong> Real-time processing cannot take advantage of batch optimization. You pay premium for immediacy.
+        </p>
+
+        <h3>Batch Processing</h3>
+        <p>
+            Batch processing accumulates requests and processes them together. This enables optimization: sharing prompt templates across requests, reusing computed context, and scheduling during off-peak hours.
+        </p>
+        <p>
+            <strong>When appropriate:</strong> Non-interactive use cases, report generation, bulk document processing, any case where results are needed but immediacy is not required.
+        </p>
+        <p>
+            <strong>Trade-offs:</strong> Batch processing introduces delay. For some use cases, this delay is acceptable; for others, it is not.
+        </p>
+
+        <div class="tradeoff-diagram">
++------------------------------------------------------------------+
+|               REAL-TIME VS BATCH DECISION                          |
++------------------------------------------------------------------+
+|                                                                     |
+|   Is user waiting for response?                                      |
+|         |                                                          |
+|    YES--+---> Real-time processing                                 |
+|         |         |                                                 |
+|         |    User experience critical                               |
+|         |    Latency budget < 5s                                     |
+|         |                                                          |
+|    NO   +----> Batch processing                                     |
+|              |                                                      |
+|          Results needed within hours?                               |
+|              |                                                      |
+|         YES--+---> Scheduled batch (overnight)                     |
+|              |                                                      |
+|         NO  +----> On-demand batch (when triggered)                  |
+|                                                                      |
++------------------------------------------------------------------+
+        </div>
+
+        <h3>Hybrid Approaches</h3>
+        <p>
+            Many applications benefit from hybrid approaches. Provide fast, lower-quality responses immediately, then refine in the background. This pattern is common in search: show results instantly, then improve ranking as more computation becomes available.
+        </p>
+        <p>
+            <strong>Streaming:</strong> Return partial results as they become available rather than waiting for complete generation. This reduces perceived latency even when actual processing time is unchanged.
+        </p>
+
+        <h2>Caching Strategies</h2>
+        <p>
+            Caching eliminates redundant computation by storing and reusing previous results. Effective caching dramatically reduces cost and latency for repeat requests.
+        </p>
+
+        <h3>Caching by Request</h3>
+        <p>
+            The simplest caching strategy stores results keyed by request hash. Identical requests return cached results immediately without model invocation.
+        </p>
+        <p>
+            <strong>Best for:</strong> Requests with high repetition (FAQs, common queries), scenarios where exact duplicates are common.
+        </p>
+        <p>
+            <strong>Limitation:</strong> Most production requests are not exact duplicates. Even small variations in phrasing produce different outputs.
+        </p>
+
+        <div class="code-block">
+<span class="comment">// Request hash caching</span>
+<span class="keyword">async function</span> <span class="function">cachedComplete</span>(prompt, options) {
+  <span class="keyword">const</span> cacheKey = hash(prompt + JSON.stringify(options));
+  
+  <span class="keyword">const</span> cached = <span class="keyword">await</span> cache.get(cacheKey);
+  <span class="keyword">if</span> (cached) {
+    metrics.recordCacheHit();
+    <span class="keyword">return</span> cached;
+  }
+  
+  metrics.recordCacheMiss();
+  <span class="keyword">const</span> result = <span class="keyword">await</span> model.complete(prompt, options);
+  <span class="keyword">await</span> cache.set(cacheKey, result, { ttl: <span class="number">3600</span> });
+  <span class="keyword">return</span> result;
+}
+</div>
+
+        <h3>Semantic Caching</h3>
+        <p>
+            Semantic caching stores embeddings of requests and returns cached results for semantically similar requests. This dramatically increases cache hit rates compared to exact matching.
+        </p>
+        <p>
+            <strong>How it works:</strong> Compute embedding for incoming request, find nearest cached embedding above similarity threshold, return cached result if found.
+        </p>
+        <p>
+            <strong>Best for:</strong> Any request distribution with semantic similarity, long-tail distributions where exact duplicates are rare.
+        </p>
+
+        <div class="code-block">
+<span class="comment">// Semantic caching</span>
+<span class="keyword">async function</span> <span class="function">semanticCachedComplete</span>(prompt, options) {
+  <span class="keyword">const</span> embedding = <span class="keyword">await</span> embedder.embed(prompt);
+  
+  <span class="keyword">const</span> cached = <span class="keyword">await</span> semanticCache.lookup(embedding, {
+    threshold: <span class="number">0.95</span>,
+    maxResults: <span class="number">1</span>
+  });
+  
+  <span class="keyword">if</span> (cached) {
+    metrics.recordCacheHit();
+    <span class="keyword">return</span> { ...cached.result, cacheHit: <span class="keyword">true</span> };
+  }
+  
+  metrics.recordCacheMiss();
+  <span class="keyword">const</span> result = <span class="keyword">await</span> model.complete(prompt, options);
+  
+  <span class="keyword">await</span> semanticCache.store(embedding, result, { ttl: <span class="number">86400</span> });
+  <span class="keyword">return</span> { ...result, cacheHit: <span class="keyword">false</span> };
+}
+</div>
+
+        <h3>Cache Invalidation</h3>
+        <p>
+            Caches must be invalidated when underlying data changes. Without proper invalidation, stale cached results reflect outdated information.
+        </p>
+        <p>
+            <strong>Time-based:</strong> Expire cached entries after a fixed duration. Simple but may serve stale content before expiration.
+        </p>
+        <p>
+            <strong>Event-based:</strong> Invalidate cache entries when relevant data changes. More complex but ensures freshness.
+        </p>
+        <p>
+            <strong>Version-based:</strong> Include version identifiers in cache keys. When versions change, old cache entries become effectively invalid.
+        </p>
+
+        <div class="callout key-insight">
+            <h4>The Cache Hit Rate Illusion</h4>
+            <p>High cache hit rates are not always good. If your cache is too aggressive, semantically different requests may receive inappropriate cached results. Monitor not just hit rates but quality of cached results. If cached results are frequently overridden or rejected, your cache threshold is too loose.</p>
+        </div>
+
+        <h2>Quality Degradation Options</h2>
+        <p>
+            When resources are constrained, you can deliberately degrade quality in controlled ways. The key is understanding which degradations are acceptable for your use case.
+        </p>
+
+        <h3>Model Downgrade</h3>
+        <p>
+            Route to smaller models when quality constraints allow. This is the most direct way to reduce cost and often reduces latency as well.
+        </p>
+        <p>
+            <strong>When acceptable:</strong> Low-stakes tasks, internal tools, cases where users are not paying premium for quality.
+        </p>
+        <p>
+            <strong>When not acceptable:</strong> High-stakes decisions, customer-facing outputs where quality reflects on your brand.
+        </p>
+
+        <h3>Context Truncation</h3>
+        <p>
+            Reduce the context sent to models by truncating long inputs. Smaller inputs cost less and generate faster.
+        </p>
+        <p>
+            <strong>When acceptable:</strong> When the truncated portion is not critical to the task, when models can reason effectively with limited context.
+        </p>
+        <p>
+            <strong>When not acceptable:</strong> Tasks requiring full document understanding, cases where key information may be in any part of the document.
+        </p>
+
+        <h3>Output Length Limits</h3>
+        <p>
+            Limit the length of generated outputs to reduce cost and latency.
+        </p>
+        <p>
+            <strong>When acceptable:</strong> Summaries, brief responses, cases where conciseness is acceptable.
+        </p>
+        <p>
+            <strong>When not acceptable:</strong> Detailed analysis, comprehensive outputs, cases where completeness is required.
+        </p>
+
+        <div class="tradeoff-diagram">
++------------------------------------------------------------------+
+|                    QUALITY DEGRADATION SPECTRUM                     |
++------------------------------------------------------------------+
+|                                                                     |
+|   High Quality                                                     |
+|      ^                                                             |
+|      |  Full models | Full context | No limits                      |
+|      |                                                             |
+|      |  Smaller     | Truncated    | Length                         |
+|      |  models      | context      | limits                         |
+|      |                                                             |
+|      |  Fallback    | Summarized   | Concise                        |
+|      |  models      | context      | outputs                        |
+|      |                                                             |
+|   Low Quality                                                      |
+|                                                                     |
++------------------------------------------------------------------+
+        </div>
+
+        <h2>Unit Economics</h2>
+        <p>
+            Unit economics tracks the cost and revenue per unit of value delivered. For AI products, understanding unit economics guides pricing, architecture, and optimization priorities.
+        </p>
+
+        <h3>Cost Components</h3>
+        <p>
+            AI product costs have multiple components:
+        </p>
+        <p>
+            <strong>Token costs:</strong> Input and output tokens processed by models. This is often the largest cost component but is not the only one.
+        </p>
+        <p>
+            <strong>Infrastructure costs:</strong> Compute, storage, networking for serving infrastructure. These scale differently than token costs.
+        </p>
+        <p>
+            <strong>Engineering costs:</strong> Development and maintenance of the AI system. These are fixed costs that amortize over volume.
+        </p>
+        <p>
+            <strong>Evaluation costs:</strong> Human evaluation, automated testing, quality monitoring. Often overlooked but essential.
+        </p>
+
+        <table class="economics-table">
+            <thead>
+                <tr>
+                    <th>Cost Component</th>
+                    <th>How to Reduce</th>
+                    <th>Risk of Reduction</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Token costs</strong></td>
+                    <td>Smaller models, caching, batching</td>
+                    <td>Quality degradation</td>
+                </tr>
+                <tr>
+                    <td><strong>Infrastructure</strong></td>
+                    <td>Right-sizing, spot instances, regions</td>
+                    <td>Reliability, latency</td>
+                </tr>
+                <tr>
+                    <td><strong>Engineering</strong></td>
+                    <td>Reduce features, simplify architecture</td>
+                    <td>Technical debt, maintainability</td>
+                </tr>
+                <tr>
+                    <td><strong>Evaluation</strong></td>
+                    <td>Reduce testing, automate more</td>
+                    <td>Quality blind spots</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Optimization Priorities</h3>
+        <p>
+            Focus optimization efforts where they have the most impact. Use cost drivers analysis to identify where changes have the largest effect on unit economics.
+        </p>
+        <p>
+            <strong>High-leverage optimizations:</strong> Switching to smaller models for appropriate tasks, improving cache hit rates, eliminating unnecessary context.
+        </p>
+        <p>
+            <strong>Low-leverage optimizations:</strong> Negotiating model provider rates (marginal gains), micro-optimizations in serving infrastructure.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>Practical Example: HealthMetrics Unit Economics</h4>
+            <p><strong>Who:</strong> A healthcare analytics startup with three product tiers</p>
+            <p><strong>Situation:</strong> HealthMetrics charges per-query pricing but costs were higher than revenue for most customers</p>
+            <p><strong>Analysis:</strong> The team analyzed cost drivers across 100,000 requests:</p>
+            <p>Token costs: 65% of total cost. Cache hit rate: 23% (much lower than target). Context inflation: Average 40% of input tokens were unnecessary context from long conversation histories. Model selection: 45% of requests routed to GPT-4 when smaller models would suffice.</p>
+            <p><strong>Interventions:</strong> (1) Implemented semantic caching, hit rate improved to 71%. (2) Added context truncation for conversations over 10 turns. (3) Retuned router to be more aggressive with smaller models. (4) Added usage tiers that matched model selection to customer tier.</p>
+            <p><strong>Result:</strong> Cost per query decreased 68%. Unit economics flipped from negative to positive at current pricing. Free tier still negative but subsidised by paid tiers.</p>
+        </div>
+
+        <h3>Pricing Implications</h3>
+        <p>
+            Understanding unit economics directly informs pricing strategy. Do not price based on costs alone, but costs set the floor below which you lose money.
+        </p>
+        <p>
+            <strong>Cost-plus pricing:</strong> Price above unit cost by target margin. Simple but may be above customer willingness to pay.
+        </p>
+        <p>
+            <strong>Value-based pricing:</strong> Price based on value delivered to customer, not cost to serve. Higher margins for high-value use cases.
+        </p>
+        <p>
+            <strong>Tiered pricing:</strong> Different tiers for different usage levels or quality requirements. Allows capturing more surplus while serving price-sensitive segments.
+        </p>
+
+        <div class="callout big-picture">
+            <h4>The Margin Cascade</h4>
+            <p>AI product margins cascade through the system. A 10% improvement in cache hit rates may improve margins by more than 10% because it affects every request. A 10% improvement in routing accuracy may improve margins by 20% if it consistently moves expensive requests to cheaper models. Focus on the leverage points, not the obvious costs.</p>
+        </div>
+
+        <h2>Cross-References</h2>
+        <p>
+            For caching in RAG systems, see <a href="../../../part-4-engineering/chapter-17/sections/section-17-1.html">Chapter 17.1 Vector Databases and Retrieval</a>. For routing strategies, see <a href="section-16-2.html">Section 16.2 Model Routers</a>. For evaluation of cost-quality trade-offs, see <a href="../../../part-5-evaluation-reliability/chapter-24/index.html">Chapter 24 Evaluation</a>.
+        </p>
+
+        <h2>Section Summary</h2>
+        <p>
+            Latency, cost, and quality form a trade-off triangle. Real-time processing is required for interactive applications; batch processing enables optimization for non-interactive cases. Caching dramatically reduces cost and latency for repeat and semantically similar requests. Quality can be deliberately degraded through model downgrade, context truncation, or output limits. Unit economics analysis reveals high-leverage optimization opportunities. Pricing should account for but not be constrained by unit economics.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-16-4.html">16.4 Structured Outputs</a>
+            <a class="up" href="../index.html">Chapter 16 Overview</a>
+            <a class="next" href="../../chapter-17/index.html">Ch 17: Retrieval Systems</a>
+        </nav>
+
+        <footer>
+            <p>Section 16.5 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

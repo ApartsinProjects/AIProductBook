@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9.4 Acceptance Criteria for AI - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-2-discovery-design/index.html">Part II: Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 9</div>
+        <h1>Requirements for Probabilistic Products</h1>
+        <p class="chapter-subtitle">9.4 Acceptance Criteria for AI</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn to define and verify acceptance criteria for AI features that embrace probabilistic behavior while maintaining quality standards.
+        </p>
+
+        <blockquote class="epigraph">
+            <p>"Acceptance criteria for AI must define not just what success looks like, but how often success is required and how we measure it."</p>
+            <cite>Testing AI Systems</cite>
+        </blockquote>
+
+        <h2 id="section-9-4">9.4 Acceptance Criteria for AI</h2>
+
+        <p>
+            AI acceptance criteria differ from traditional software acceptance criteria. Rather than pass/fail on specific behaviors, AI acceptance criteria define statistical thresholds and quality distributions.
+        </p>
+
+        <h3>The AI Acceptance Criteria Challenge</h3>
+
+        <p>
+            Traditional software acceptance: "Given input X, system returns output Y"
+        </p>
+        <p>
+            AI acceptance criteria: "Given inputs similar to X, system returns outputs meeting quality threshold Z% of the time"
+        </p>
+
+        <div class="callout fun-note">
+            <div class="callout-title">The 85% Problem</div>
+            <p>"85% accuracy" sounds good until you realize it means 15 out of 100 diagnoses are wrong. In healthcare. Per day. That's a lot of wrong. But it's still "passing" the acceptance criteria.</p>
+        </div>
+
+        <h3>Types of AI Acceptance Criteria</h3>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Acceptance Criteria Categories</div>
+            <p><strong>1. Performance Metrics</strong></p>
+            <p>Accuracy, precision, recall, F1, AUROC, BLEU, ROUGE, etc.</p>
+            <p><strong>2. Quality Thresholds</strong></p>
+            <p>"90% of outputs must be rated 'good' by human <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">evaluators</a>"</p>
+            <p><strong>3. Error Rate Limits</strong></p>
+            <p>"False positive rate must be below 5%"</p>
+            <p><strong>4. Latency Requirements</strong></p>
+            <p>"95th percentile response time under 2 seconds"</p>
+            <p><strong>5. Fairness Criteria</strong></p>
+            <p>"Performance variance across demographic groups under 5%"</p>
+        </div>
+
+        <h3>Defining Measurable Thresholds</h3>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Threshold Setting Principles</div>
+            <p>Threshold setting follows several important principles. Teams should establish baseline first by measuring current performance before setting targets, ensuring targets are realistic. They should consider user tolerance by understanding what error rate users actually accept rather than assuming. Business constraints matter by determining what thresholds make business sense given resource limitations. Statistical validity requires ensuring sample sizes support the thresholds being set. Iteration path means thresholds should be achievable in reasonable iterations rather than requiring moonshots.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before setting acceptance criteria thresholds, define how you will measure whether thresholds were set correctly. A micro-<a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval</a> for acceptance criteria tracks: threshold attainment rate in production, user satisfaction at threshold-met versus threshold-exceeded, and regression detection rate. QuickShip's eval-first insight: their initial acceptance criteria required 85% accuracy on route suggestions. After measuring, they found that routes meeting 75% accuracy had equal user satisfaction because users could easily override. They relaxed thresholds to focus engineering on higher-value features.
+            </p>
+        </div>
+
+        <h3>Verification Approaches</h3>
+
+        <h4>Automated Testing</h4>
+        <p>
+            For criteria that can be automatically measured, teams should use unit tests for individual model outputs, integration tests for pipelines, and regression tests against known-good outputs to catch regressions quickly.
+        </p>
+
+        <h4>Human Evaluation</h4>
+        <p>
+            For criteria requiring human judgment, teams should use sample-based review of outputs to assess quality on representative cases, side-by-side comparison of alternatives to determine preference, and user satisfaction surveys to capture user experience.
+        </p>
+
+        <h4>Statistical Testing</h4>
+        <p>
+            For verifying performance claims statistically, teams should use confidence intervals for metrics to understand the range of possible values, significance testing for improvements to ensure changes are real rather than noise, and A/B testing in production to measure actual user behavior.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Acceptance Criteria Example</div>
+            <pre>
+Feature: AI Meeting Summarizer
+
+ACCEPTANCE CRITERIA:
+
+AC-1: Action Item Extraction
+  Metric: Recall of action items
+  Target: > 85% recall
+  Verification: Human evaluation on 100-meeting dataset
+  Minimum: 80% recall
+
+AC-2: Summary Coherence  
+  Metric: LLM-as-Judge coherence score
+  Target: Average score > 4.0/5.0
+  Verification: Automated evaluation
+  Minimum: 3.5/5.0
+
+AC-3: False Positive Rate
+  Metric: % of non-action items marked as actions
+  Target: < 10%
+  Verification: Human evaluation on dataset
+  Minimum: < 15%
+
+AC-4: Latency
+  Metric: Time to generate summary
+  Target: p95 < 5 seconds
+  Verification: Automated performance testing
+  Minimum: p95 < 10 seconds
+
+AC-5: Fairness
+  Metric: Performance variance by speaker accent
+  Target: < 5% variance in recall
+  Verification: Stratified evaluation dataset
+            </pre>
+        </div>
+
+        <h3>Acceptance vs. Rejection</h3>
+
+        <p>
+            Define explicit rejection criteria, not just acceptance. Hard blocks are criteria that must pass or the feature cannot ship under any circumstances. Warnings are criteria that trigger review but may allow shipping with appropriate sign-off. Deferred criteria are those deemed important but to be addressed in future iterations rather than blocking current release.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Acceptance Criteria Mistakes</div>
+            <p>Teams should avoid several common acceptance criteria mistakes. Vague thresholds such as "good quality" are not measurable and leave teams without clear targets. No minimums means operating without floor thresholds that protect against poor quality. Ignoring error types means failing to recognize that not all errors are equal in severity or impact. Single-metric focus means optimizing for one metric at the expense of others, creating unintended consequences.</p>
+        </div>
+
+        <h3>Acceptance Criteria Document</h3>
+
+        <p>
+            Each AI feature should have a documented acceptance criteria that lists all acceptance criteria with their specific metrics and thresholds, specifies how each criterion will be verified and by whom, identifies which criteria are hard blocks versus warnings, documents both baseline and target values, and includes responsible parties for verification to ensure accountability.
+        </p>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                This completes Chapter 9. You have learned about the USID.O framework, eval-first PRDs, LLM-as-Judge evaluation, and acceptance criteria for AI. Next, in Chapter 10, we explore <strong>AI Cost and ROI</strong>, understanding the economics of AI product development.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-9-3.html">9.3 LLM-as-Judge</a>
+            <a class="up" href="../index.html">Chapter 9 Index</a>
+            <a class="next" href="../../chapter-10/index.html">Ch 10: AI Cost and ROI</a>
+        </nav>
+
+        <footer>
+            <p>Section 9.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

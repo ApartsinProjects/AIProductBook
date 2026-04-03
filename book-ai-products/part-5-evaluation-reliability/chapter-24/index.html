@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 24: Cost, Latency, and Unit Economics - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 24</div>
+        <h1>Cost, Latency, and Unit Economics</h1>
+        <p class="subtitle">Making AI products economically sustainable</p>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"An AI feature that generates $1 of value but costs $5 to run is not a feature. It is a cost center. Understanding unit economics is essential for sustainable AI products."</p>
+            <cite>A Finance Partner Who Does the Math</cite>
+        </blockquote>
+
+        <div class="opening-hook">
+            AI inference has real costs. Token pricing, infrastructure, engineering time, and failure handling all add up. Without cost modeling, you are making business decisions based on capabilities without understanding economics. This chapter gives you the frameworks to model AI costs, optimize efficiency, route requests cost-effectively, and analyze feature ROI.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-24-opener.png"
+                 alt="Chapter 24 opener illustration">
+            <figcaption>
+                Unit economics determine whether your AI product is sustainable at scale.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Cost Modeling Experiments</div>
+            <p>Use vibe coding for rapid cost modeling experiments. Quickly prototype different routing strategies, test batching approaches, and explore caching patterns to see their actual cost impact. Vibe coding cost experiments lets you understand real unit economics rather than estimated ones, revealing optimization opportunities that theoretical models miss and invalidating assumptions that seemed obvious but do not hold in practice.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe Coding for Rapid Eval Creation</div>
+            <p>Cost optimization is measurable. Use vibe coding to quickly test different model routing strategies against your eval suite. Measure actual cost per request at different quality levels. This gives you evidence-based data for unit economics decisions rather than theoretical calculations that may not hold in practice.</p>
+        </div>
+
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master cost modeling, latency optimization, and unit economics for AI features, so you can make informed decisions about where to invest, how to optimize, and which features truly pay for themselves.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter covers the economics of AI products. You learn the cost drivers for AI inference, how to build cost models that capture all expenses, caching and batching strategies that improve efficiency, cost-aware routing that matches request complexity to model capability, and feature margin analysis that reveals which features are assets and which are liabilities.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> How to understand the true unit economics of our AI features and make data-driven optimization decisions.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> Building a cost model for one AI feature that captures all expenses (inference, engineering, failure handling) and calculates true cost per use.</li>
+                <li><strong>What would count as success or failure?</strong> Understanding whether each AI feature is a sustainable asset or a cost center that needs optimization or sunset.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Without cost modeling, teams make investment decisions based on capabilities without understanding economics, leading to unsustainable products.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Build comprehensive cost models that capture all AI expenses</li>
+                <li>Implement caching strategies that improve efficiency without sacrificing quality</li>
+                <li>Apply batching techniques that reduce per-request overhead</li>
+                <li>Design cost-aware routing that matches request complexity to model capability</li>
+                <li>Calculate feature margin and ROI to prioritize optimization investments</li>
+                <li>Make build/buy/optimize decisions based on economic analysis</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">24.1</span> <a href="sections/section-24-1.html">Inference Economics and Cost Modeling</a></li>
+                <li><span class="sec-num">24.2</span> <a href="sections/section-24-2.html">Caching, Batching, and Optimization</a></li>
+                <li><span class="sec-num">24.3</span> <a href="sections/section-24-3.html">Cost-Aware Routing</a></li>
+                <li><span class="sec-num">24.4</span> <a href="sections/section-24-4.html">Feature Margin Analysis and ROI</a></li>
+            </ul>
+        </div>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The Economics Imperative</h4>
+            <p>Every AI feature has a cost per use. The question is not whether to optimize cost, but whether the value delivered exceeds the cost incurred. Without cost modeling, you are flying blind. With it, you can make rational decisions about where to invest, what to optimize, and which features to sunset.</p>
+        </div>
+
+        <div class="role-specific-lenses">
+            <h3>Role-Specific Lenses</h3>
+            
+            <div class="callout note">
+                <h4 class="callout-title">For Product Managers</h4>
+                <p>Unit economics determine whether your AI features are sustainable. Understanding cost per session, conversion impact, and feature margin helps you make the case for investment or the decision to optimize.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Engineers</h4>
+                <p>You implement the cost optimization infrastructure. Caching layers, batching strategies, routing logic, and optimization tooling are all engineering problems with direct cost impact.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Designers</h4>
+                <p>Cost considerations can inform design decisions. Features that minimize token usage without sacrificing utility are both cheaper and often better user experiences.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Leaders</h4>
+                <p>AI economics are the difference between sustainable AI and AI that burns capital. Understanding unit economics at the feature level enables rational portfolio management and investment prioritization.</p>
+            </div>
+        </div>
+
+        <section class="bibliography" id="bibliography">
+            <h2>Bibliography</h2>
+            
+            <h3>Cost Optimization</h3>
+            <ol class="bib-list">
+                <li id="ref-1">
+                    <p class="bib-entry">
+                        <a href="https://arxiv.org/abs/2303.10425" target="_blank" rel="noopener">Liu, H., et al. (2023). "Cost-Effective LLM Serving: A Survey." <em>arXiv:2303.10425</em>.</a>
+                    </p>
+                    <p class="bib-annotation">Comprehensive survey of techniques for reducing LLM serving costs while maintaining quality.</p>
+                </li>
+            </ol>
+
+            <h3>Unit Economics</h3>
+            <ol class="bib-list">
+                <li id="ref-2">
+                    <p class="bib-entry">
+                        <a href="https://a16z.com/ai-costs/" target="_blank" rel="noopener">a16z. (2024). "The Economics of AI: Understanding Unit Economics."</a>
+                    </p>
+                    <p class="bib-annotation">Industry perspective on why unit economics matter for AI companies and how to think about AI feature margins.</p>
+                </li>
+            </ol>
+        </section>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-23/index.html">Ch 23: Reliability</a>
+            <a class="up" href="../../part-5-evaluation-reliability/index.html">Part V Overview</a>
+            <a class="next" href="sections/section-24-1.html">24.1 Inference Economics</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 24 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 21.6: Eval-Driven Development Workflow - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 21</div>
+        <h1>Eval-Driven Development Workflow</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Write the test first. Watch it fail. Write the code. Watch it pass. This is not just a testing strategy. It is a design philosophy."</p>
+            <cite>A Developer Who Treats Requirements as Testable Hypotheses</cite>
+        </blockquote>
+
+        <h2 id="eval-first-principle">Write Evals Before Code</h2>
+
+        <p>
+            Eval-driven development inverts the traditional workflow. Instead of building first and testing later, you define what success looks like before you start building.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The Eval-First Workflow</h4>
+            <p>The sequence is: Define the eval (what does good look like?), run the eval against a baseline (what do we have now?), implement the feature (build toward the eval), run the eval again (did we get there?), iterate (keep improving until the eval passes).</p>
+        </div>
+
+        <h3 id="eval-first-benefits">Benefits of Eval-First</h3>
+
+        <p>Eval-first development provides several benefits that accelerate quality and focus. Clear success criteria emerge from the process, giving you an exact target to build toward rather than an abstract goal. Baseline comparison becomes possible because you measure improvement from a known starting point, making the value of changes concrete and quantifiable. Focused development results because you avoid building features that do not matter for the eval, concentrating effort on what actually moves the needle. Incremental progress is achievable because the eval tells you when you are done, removing the ambiguity that often extends projects indefinitely.</p>
+
+        <h2 id="red-green-refactor">Red-Green-Refactor for AI</h2>
+
+        <p>
+            Apply the red-green-refactor pattern from test-driven development to AI systems.
+        </p>
+
+        <h3 id="red-phase">Red: Write a Failing Eval</h3>
+
+        <p>
+            Start by writing an eval that fails against your current system. The eval defines what you want to achieve. This phase forces you to think concretely about what "good" looks like.
+        </p>
+
+        <div class="callout algorithm">
+            <h4 class="callout-title">Writing the Red Eval</h4>
+            <p>Writing the red eval involves identifying the behavior you want, specifically what the system should do that it does not currently do. Create test cases that capture this desired behavior, including both positive cases that should work and negative cases that should not happen. Define success criteria by determining what score or pass rate constitutes success for the eval to be considered passing. Run the eval against the current system to confirm it fails, and understand why it fails to clarify what needs to be built. Finally, document the gap between current performance and success criteria, as this becomes the target that guides development efforts.</p>
+        </div>
+
+        <h3 id="green-phase">Green: Make the Eval Pass</h3>
+
+        <p>
+            Implement the feature that makes the eval pass. This may involve prompt changes, model changes, retrieval improvements, or architectural changes.
+        </p>
+
+        <h3 id="refactor-phase">Refactor: Improve Without Breaking</h3>
+
+        <p>
+            Once the eval passes, refactor to improve the implementation without degrading the eval score. The eval is now a regression guard.
+        </p>
+
+        <h2 id="cicd-evals">Continuous Evaluation in CI/CD</h2>
+
+        <p>
+            Integrate eval execution into your CI/CD pipeline to catch regressions before they reach production.
+        </p>
+
+        <h3 id="eval-pipeline-design">Eval Pipeline Design</h3>
+
+        <div class="callout algorithm">
+            <h4 class="callout-title">CI/CD Eval Pipeline</h4>
+            <p>The CI/CD eval pipeline executes on every code change to ensure quality is maintained throughout the development process. The first step runs the fast regression suite consisting of task evals that complete in under five minutes, failing the build if thresholds are breached. If the fast suite passes, the pipeline runs the full eval suite including all eval types with slower system evals, completing in under thirty minutes with results stored for trend analysis. If the full suite reveals regressions, the pipeline blocks deployment, generates a report for the developer, and creates an issue in the tracking system for tracking. On merge to main, the pipeline runs comprehensive eval including agent evals, updates the performance dashboard, and generates a delta report comparing results against the previous main branch.</p>
+        </div>
+
+        <h3 id="eval-gates">Eval Gates</h3>
+
+        <p>Eval gates are thresholds that must be met before code can progress through the pipeline, providing quality checkpoints at different stages of development. The fast gate runs on every commit with strict thresholds and requires fast execution to avoid slowing down developers. The quality gate runs before merge with tighter thresholds and comprehensive coverage to ensure changes meet higher standards. The release gate runs before deployment with the highest thresholds and full regression coverage to protect production quality.</p>
+
+        <h2 id="eval-as-metrics">Eval Results as Product Metrics</h2>
+
+        <p>
+            Eval results are product metrics. Track them over time to understand quality trends, measure the impact of changes, and make prioritization decisions.
+        </p>
+
+        <h3 id="metric-dashboards">Eval Metric Dashboards</h3>
+
+        <p>Build dashboards that visualize eval results and trends to make quality visible and actionable. The dashboard should show current performance by answering how the system is performing right now. It should display trend over time to show whether quality is improving or degrading across releases. A component breakdown helps identify which components are failing and need attention. User impact assessment connects eval failures to user experience, clarifying the real-world consequences of quality issues.</p>
+
+        <div class="callout tip">
+            <h4 class="callout-title">Alert on Trends, Not Just Thresholds</h4>
+            <p>Set up alerts for degrading trends even if you have not yet breached thresholds. A 2% decline per week is more alarming than a single 5% breach.</p>
+        </div>
+
+        <h2 id="eval-infrastructure">Eval Infrastructure</h2>
+
+        <p>
+            Scalable eval infrastructure enables effective eval-driven development. Invest in building and maintaining this infrastructure.
+        </p>
+
+        <h3 id="eval-pipelines-automation">Eval Pipelines and Automation</h3>
+
+        <p>Automate everything you can to reduce manual overhead and ensure consistency. Test data management should be automated including creation and refresh of test datasets so they remain current without manual intervention. Eval execution should automate the running of eval suites on the appropriate schedule or triggers. Result aggregation should automatically collect and analyze results, storing them for trend analysis and reporting. Failure reporting should generate automated alerts and create issues in the tracking system when failures occur.</p>
+
+        <h3 id="versioning-datasets">Versioning Eval Datasets</h3>
+
+        <p>
+            Treat eval datasets as versioned artifacts, not ad hoc collections. When you change an eval dataset, you change what you are measuring.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Dataset Version Control</h4>
+            <p>Version your eval datasets with the same rigor you apply to code. Track what changed, why it changed, and how the change affects comparability with previous results.</p>
+        </div>
+
+        <h3 id="regression-suites">Regression Test Suites</h3>
+
+        <p>Build comprehensive regression suites that cover the behaviors that matter most to your product and users. Critical behaviors including task completion, safety, and compliance should be tested in every regression run since failures here cause the most harm. Common paths covering high-frequency user interactions should be included because they affect the most users. Known failure modes representing problems you have seen before should be tested to ensure they do not recur. Recent changes should be tested for behaviors affected by new code to catch regressions introduced by specific modifications.</p>
+
+        <h2 id="eval-reporting">Eval Dashboards and Reporting</h2>
+
+        <p>
+            Make eval results visible and actionable. Teams improve what they measure.
+        </p>
+
+        <h3 id="reporting-stakeholders">Stakeholder Reporting</h3>
+
+        <p>Different stakeholders need different views of eval results tailored to their concerns and decision-making needs. Engineering teams need detailed eval results with failure cases and debugging information they can use to identify and fix problems. Product teams need quality trends, comparison with targets, and user impact assessment to make prioritization decisions and understand how quality affects user satisfaction. Leadership needs high-level quality metrics with risk indicators and trajectory to understand overall product health and make strategic decisions about investment and risk tolerance.</p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: Building an Eval-Driven Workflow</h4>
+            <p>The HealthMetrics team was building AI-assisted diagnosis support and needed to improve their AI's accuracy across fifty diagnostic categories while maintaining rigorous safety standards. Their problem was that without clear eval criteria, engineers optimized for metrics that did not correlate with clinical outcomes, wasting effort on improvements that did not matter. They faced a dilemma: how do you make evaluation central without slowing down rapid iteration?</p>
+            <p>The team decided to implement an eval-first workflow with an automated eval pipeline. They built a golden standard dataset with five thousand clinician-labeled cases to establish ground truth for evaluation. They created an automated eval pipeline that ran on every code change, with quality gates that blocked deployment if accuracy dropped below thresholds. They created a dashboard showing accuracy by diagnostic category so teams could see exactly where they stood.</p>
+            <p>Within six months, accuracy improved from seventy-eight percent to ninety-one percent across categories. They achieved zero safety incidents during this period. Deployment cadence actually increased because confidence in changes was higher. The lesson is that eval infrastructure is an investment that accelerates development, not a brake on it. Teams with good evals move faster because they have confidence in their changes.</p>
+        </div>
+
+        <h2 id="whats-next-evals">What's Next</h2>
+
+        <p>Eval-driven development connects to observability and reliability disciplines covered in the next chapters. Chapter 22 on observability covers instrumenting AI systems to capture the data that makes evaluation possible, as understanding what is happening inside your AI system is prerequisite to evaluating whether it is happening correctly. Chapter 23 on reliability addresses building guardrails and recovery mechanisms based on eval insights, since evals reveal failure modes and reliability patterns prevent those failures from reaching users. Chapter 27 on post-launch covers production evaluation and continuous monitoring, recognizing that the eval loop never stops and production monitoring is eval infrastructure running in real-time.</p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">The Eval Thread</h4>
+            <p>Evaluation is the thread that connects all parts of AI product development. It informs requirements (what does good look like?), guides implementation (are we there yet?), validates quality (did we succeed?), and enables improvement (what should we fix next?). Without this thread, development becomes guesswork.</p>
+        </div>
+
+        <div class="callout exercise">
+            <h4 class="callout-title">Exercise: Eval-Driven Development Audit</h4>
+            <p>Audit your current AI product development process by working through these steps. First, list your current evaluation methods for each major feature to understand what you are already measuring. Second, identify gaps where you are relying on implicit rather than explicit evaluation, meaning cases where quality is judged informally rather than through structured evals. Third, for each gap, design an eval that would make quality visible and measurable. Fourth, estimate the effort to implement each eval to understand the investment required. Fifth, prioritize the gaps and create a plan to close them, starting with high-impact evals that are relatively easy to implement.</p>
+            <details>
+                <summary>Click for example audit template</summary>
+                <pre>
+| Feature | Current Eval | Gap | Proposed Eval | Effort | Priority |
+|---------|--------------|-----|---------------|--------|----------|
+| Search  | Manual test  | No  | Automated     | Medium | High     |
+|         | of queries   | metric| precision/   |        |          |
+|         |              | tracking| recall       |        |          |
+                </pre>
+            </details>
+        </div>
+
+        <div class="callout key-takeaway">
+            <h4 class="callout-title">Key Takeaway</h4>
+            <p>Eval-driven development is not an additional phase. It is the discipline that makes every other phase effective. By making quality measurable before you build, you give yourself the ability to know when you have succeeded.</p>
+        </div>
+
+        <section class="bibliography" id="bibliography">
+            <h2>Bibliography</h2>
+            
+            <h3>Foundational Papers</h3>
+            <ol class="bib-list">
+                <li id="ref-1">
+                    <p class="bib-entry">
+                        <a href="https://arxiv.org/abs/2307.15125" target="_blank" rel="noopener">Zheng, L., et al. (2023). "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena." <em>arXiv:2307.15125</em>.</a>
+                    </p>
+                    <p class="bib-annotation">Comprehensive study of LLM-as-Judge reliability and failure modes, providing benchmark for judge quality.</p>
+                </li>
+                <li id="ref-2">
+                    <p class="bib-entry">
+                        <a href="https://arxiv.org/abs/2312.09210" target="_blank" rel="noopener">Wang, J., et al. (2023). "Self-Eval: Automatic Evaluation of LLMs as Judges." <em>arXiv:2312.09210</em>.</a>
+                    </p>
+                    <p class="bib-annotation">Proposes methods for improving LLM judge reliability through self-evaluation and calibration.</p>
+                </li>
+            </ol>
+
+            <h3>Tools and Frameworks</h3>
+            <ol class="bib-list">
+                <li id="ref-3">
+                    <p class="bib-entry">
+                        <a href="https://github.com/openai/evals" target="_blank" rel="noopener">OpenAI Evals. (2024). OpenSource Evaluation Framework.</a>
+                    </p>
+                    <p class="bib-annotation">Production-grade eval framework supporting diverse eval types and integration with CI/CD.</p>
+                </li>
+                <li id="ref-4">
+                    <p class="bib-entry">
+                        <a href="https://github.com/phieso/llm-jury" target="_blank" rel="noopener">LLM Jury. (2024). Structured LLM Evaluation Framework.</a>
+                    </p>
+                    <p class="bib-annotation">Implements structured evaluation protocols with multiple judge models and disagreement detection.</p>
+                </li>
+            </ol>
+
+            <h3>Industry Case Studies</h3>
+            <ol class="bib-list">
+                <li id="ref-5">
+                    <p class="bib-entry">
+                        <a href="https://docs.anthropic.com/en/docs/build-with-claude/evals" target="_blank" rel="noopener">Anthropic. (2024). "Building Effective Evals for Claude."</a>
+                    </p>
+                    <p class="bib-annotation">Detailed guide to building evals for production AI systems, with focus on practical implementation.</p>
+                </li>
+            </ol>
+        </section>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-21-5.html">21.5 LLM-as-Judge</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="../../chapter-22/index.html">Ch 22: Observability</a>
+        </nav>
+
+        <footer>
+            <p>Section 21.6 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

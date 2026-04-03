@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appendix B: Tool Comparison Matrices - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../index.html">Part VII: Practice and Teaching Kit</a></div>
+        <div class="chapter-label">Appendix B</div>
+        <h1>Tool Comparison Matrices</h1>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Compare AI development tools to inform build/buy/bake decisions.
+        </p>
+
+        <h2>B.1 AI Coding Assistants</h2>
+
+        <p>
+            AI coding assistants have become essential tools for AI product development. This comparison focuses on their applicability to AI product work, not general software development.
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tool</th>
+                    <th>Best For</th>
+                    <th>Context Handling</th>
+                    <th>AI Model</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Cursor</strong></td>
+                    <td>Full IDE with deep AI integration</td>
+                    <td>Excellent (project-wide)</td>
+                    <td>GPT-4o, Claude 3.5</td>
+                    <td>$20/mo pro</td>
+                </tr>
+                <tr>
+                    <td><strong>GitHub Copilot</strong></td>
+                    <td>Individual developers, existing workflows</td>
+                    <td>Good (file context)</td>
+                    <td>GPT-4o, Claude 3.5</td>
+                    <td>$19/mo</td>
+                </tr>
+                <tr>
+                    <td><strong>Claude Code</strong></td>
+                    <td>Task completion, agentic workflows</td>
+                    <td>Very good (repo-wide)</td>
+                    <td>Claude 3.5</td>
+                    <td>$100/mo (max)</td>
+                </tr>
+                <tr>
+                    <td><strong>Windsurf</strong></td>
+                    <td>Beginner-friendly AI coding</td>
+                    <td>Good (file context)</td>
+                    <td>GPT-4o, Claude 3.5</td>
+                    <td>$15/mo</td>
+                </tr>
+                <tr>
+                    <td><strong>VS Code AI Extensions</strong></td>
+                    <td>Customizable, open ecosystem</td>
+                    <td>Varies by extension</td>
+                    <td>Various</td>
+                    <td>Free-$20/mo</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="caption">AI coding assistant comparison</p>
+
+        <h2>B.2 RAG Frameworks</h2>
+
+        <p>
+            RAG (Retrieval-Augmented Generation) frameworks provide infrastructure for building knowledge-grounded AI applications.
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Framework</th>
+                    <th>Complexity</th>
+                    <th>Extensibility</th>
+                    <th>Eval Support</th>
+                    <th>Best For</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>LangChain</strong></td>
+                    <td>High</td>
+                    <td>Very high</td>
+                    <td>LangSmith</td>
+                    <td>Complex, custom workflows</td>
+                </tr>
+                <tr>
+                    <td><strong>LlamaIndex</strong></td>
+                    <td>Medium</td>
+                    <td>High</td>
+                    <td>Built-in</td>
+                    <td>Data-intensive RAG apps</td>
+                </tr>
+                <tr>
+                    <td><strong>Haystack</strong></td>
+                    <td>Medium</td>
+                    <td>Medium</td>
+                    <td>Limited</td>
+                    <td>Search-focused apps</td>
+                </tr>
+                <tr>
+                    <td><strong>Custom (minimal)</strong></td>
+                    <td>Low</td>
+                    <td>Full</td>
+                    <td>DIY</td>
+                    <td>Simple, high-performance needs</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="caption">RAG framework comparison</p>
+
+        <h2>B.3 Vector Databases</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Database</th>
+                    <th>Latency</th>
+                    <th>Scalability</th>
+                    <th>Managed</th>
+                    <th>Open Source</th>
+                    <th>Best For</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Pinecone</strong></td>
+                    <td>Low</td>
+                    <td>High</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                    <td>Production, managed</td>
+                </tr>
+                <tr>
+                    <td><strong>Weaviate</strong></td>
+                    <td>Low</td>
+                    <td>High</td>
+                    <td>Yes/No</td>
+                    <td>Yes</td>
+                    <td>Hybrid search</td>
+                </tr>
+                <tr>
+                    <td><strong>Chroma</strong></td>
+                    <td>Low</td>
+                    <td>Low-medium</td>
+                    <td>Yes/No</td>
+                    <td>Yes</td>
+                    <td>Prototyping, small scale</td>
+                </tr>
+                <tr>
+                    <td><strong>pgvector</strong></td>
+                    <td>Medium</td>
+                    <td>High</td>
+                    <td>Yes/No</td>
+                    <td>Yes</td>
+                    <td>Postgres shops</td>
+                </tr>
+                <tr>
+                    <td><strong>Qdrant</strong></td>
+                    <td>Low</td>
+                    <td>High</td>
+                    <td>Yes/No</td>
+                    <td>Yes</td>
+                    <td>High performance</td>
+                </tr>
+                <tr>
+                    <td><strong>Milvus</strong></td>
+                    <td>Low</td>
+                    <td>Very high</td>
+                    <td>Yes/No</td>
+                    <td>Yes</td>
+                    <td>Enterprise scale</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="caption">Vector database comparison</p>
+
+        <h2>B.4 Evaluation Platforms</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Platform</th>
+                    <th>Eval Types</th>
+                    <th>LLM-as-Judge</th>
+                    <th>Regression Testing</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>LangSmith</strong></td>
+                    <td>Custom, benchmark</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>$50/mo+</td>
+                </tr>
+                <tr>
+                    <td><strong>Arize Phoenix</strong></td>
+                    <td>Trace, LLM eval</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Free tier</td>
+                </tr>
+                <tr>
+                    <td><strong>Braintrust</strong></td>
+                    <td>Custom, benchmark</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>$75/mo+</td>
+                </tr>
+                <tr>
+                    <td><strong>PromptLayer</strong></td>
+                    <td>Prompt tracking</td>
+                    <td>Limited</td>
+                    <td>Limited</td>
+                    <td>$49/mo+</td>
+                </tr>
+                <tr>
+                    <td><strong>Custom (DIY)</strong></td>
+                    <td>Full control</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>API costs only</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="caption">Evaluation platform comparison</p>
+
+        <h2>B.5 Build/Buy/Bake Decision Framework</h2>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Framework for Tool Selection</div>
+            <p>Choose to Build when you have unique requirements, need full control, or the problem is core to your differentiation. Choose to Buy (Managed Service) when you want speed, reduced operational burden, and the problem is not core to differentiation. Choose to Bake (Hybrid) when you need managed infrastructure but custom logic on top.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="appendix-a-glossary.html">Appendix A: Glossary</a>
+            <a class="up" href="../index.html">Part VII Overview</a>
+            <a class="next" href="appendix-c-templates.html">Appendix C: Templates</a>
+        </nav>
+
+        <footer>
+            <p>Appendix B &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

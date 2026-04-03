@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16.1 Latency, Throughput, Multi-Tenancy - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 16</div>
+        <h1>Scaling, Reliability, and Observability</h1>
+        <p class="chapter-subtitle">16.1 Latency, Throughput, Multi-Tenancy</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Production harden your AI systems for scale and reliability.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Chapters 11-15 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Production Means Performance</div>
+            <p>This section covers latency management, throughput planning, and multi-tenant isolation for production AI systems. In the context of AI engineering, these are table-stakes for production systems. Users are sensitive to latency, throughput determines cost efficiency, and isolation ensures one tenant does not affect others.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The P99 Latency That Cost a Deal</div>
+            <p>A sales AI startup had excellent average latency (800ms) but terrible P99 latency (8 seconds). Their dashboard showed great metrics. A potential enterprise customer ran their own tests and saw the P99. The $2M deal fell through. Average latency is vanity, P99 latency is reality.</p>
+        </div>
+
+        <h2 id="section-16-1">16.1 Latency, Throughput, Multi-Tenancy</h2>
+
+        <p>
+            Production AI systems must handle real-world demands: low latency for user satisfaction, high throughput for cost efficiency, and isolation for multi-tenant security. Understanding these requirements and how to meet them is essential for production deployment.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Users are sensitive to latency. Every 100ms of delay increases abandonment rates. At scale, throughput determines whether your system is cost-effective. Multi-tenancy ensures one customer's issues do not affect others. These are table-stakes for production systems.
+        </p>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Academic Perspective: Observability and the Three Pillars</div>
+            <p>The concept of observability in AI systems draws from control theory and modern SRE practice. Originating from dynamical systems theory (Kalman, 1960), observability measures how well you can infer internal states from external outputs. For AI systems, this translates to understanding model behavior, retrieval quality, and generation characteristics from logs and metrics.</p>
+            <p>Tan et al.'s <strong>Three Pillars of Observability</strong> framework (metrics, logs, traces) extends naturally to AI systems with a fourth pillar: <strong>evaluation signals</strong>. Unlike traditional software where behavior is deterministic and observable through standard telemetry, AI systems require purpose-built evaluation infrastructure to understand whether outputs are correct, appropriate, and useful. Production AI observability must capture both operational metrics (latency, throughput) and quality metrics (relevance, hallucination rates, user satisfaction signals).</p>
+            <p><em>Key references: Kalman, R.E. (1960). "On the General Theory of Control." IFAC; Tan, B. et al. (2022). "The Three Pillars of Observability." SRE Weekly.</em></p>
+        </div>
+
+        <div class="callout signature-phrase">
+            <div class="callout-title">Rule of Thumb: The 2-Second Target</div>
+            <p><strong>Target p99 under 2 seconds for chat, 500ms for autocomplete.</strong></p>
+            <p>Your users live in the tail, not the average. Optimize for p99, not average latency. The most frustrated users are the ones who wait longest.</p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: p99 Latency vs Average Latency</div>
+            <p>A common mistake is optimizing for average latency while ignoring tail latency. In AI systems, the average might be good (1.5s) but p99 could be terrible (10s) because of queuing, retries, or slow model inference. Always measure and target p99 or p95 latency, not averages. Your most frustrated users are in the tail, not the average.</p>
+        </div>
+
+        <h3>1. Latency Management</h3>
+
+        <p>
+            Target p99 latency under 2 seconds for chat interfaces. This means 99% of requests must complete within 2 seconds, providing a consistently responsive experience.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Latency Optimization</div>
+            <pre class="code-block">class LatencyOptimizer:
+    """Optimize for consistent low latency"""
+    
+    def __init__(self):
+        self.cache = RedisCache()
+    
+    async def process_request(self, query: str) -> Response:
+        start = time.time()
+        
+        # Check cache first
+        cached = await self.cache.get(query)
+        if cached:
+            return Response(text=cached, from_cache=True, latency=time.time() - start)
+        
+        # Retrieval should be fast (<200ms for most cases)
+        docs = await self.retriever.aget(query, k=3)  # Limit docs for speed
+        
+        # Generate response
+        response = await self.llm.agenerate(
+            docs=docs,
+            query=query,
+            max_tokens=500  # Limit output length
+        )
+        
+        # Cache the result
+        await self.cache.set(query, response.text)
+        
+        total_latency = time.time() - start
+        return Response(text=response.text, latency=total_latency)
+
+# Latency breakdown targets:
+# - Cache lookup: <10ms
+# - Retrieval: <200ms
+# - Generation: <1500ms (depends on model)
+# - Total: <2000ms p99</pre>
+        </div>
+
+        <h4>Latency Optimization Techniques</h4>
+        <ul>
+            <li><strong>Streaming:</strong> Start returning tokens before full response is ready</li>
+            <li><strong>Prefetching:</strong> Anticipate next user action and prepare in advance</li>
+            <li><strong>Caching:</strong> Cache common queries and responses</li>
+            <li><strong>Batching:</strong> Batch requests for better GPU utilization</li>
+        </ul>
+
+        <h3>2. Throughput Planning</h3>
+
+        <p>
+            Plan for 10x traffic growth. Systems that work at 100 requests/day often fail at 1,000. Design capacity with headroom.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Capacity Planning</div>
+            <p>A startup planning for growth:</p>
+            <table>
+                <thead>
+                    <tr><th>Period</th><th>Expected QPS</th><th>Infrastructure</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Launch</td><td>10</td><td>1 API instance</td></tr>
+                    <tr><td>3 months</td><td>100</td><td>3 API instances + autoscaling</td></tr>
+                    <tr><td>6 months</td><td>500</td><td>10 instances, load balancer</td></tr>
+                    <tr><td>1 year</td><td>1000</td><td>Multiple regions</td></tr>
+                </tbody>
+            </table>
+            <p>They designed for 10x current load at each stage, avoiding rearchitecting as they grew.</p>
+        </div>
+
+        <h3>3. Multi-Tenancy Isolation</h3>
+
+        <p>
+            In multi-tenant systems, you must isolate tenant data and compute. One tenant's workload shouldn't affect another's performance or security.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Tenant Isolation</div>
+            <pre class="code-block">class TenantAwareSystem:
+    """Ensure tenant isolation at every layer"""
+    
+    def __init__(self):
+        self.rate_limiters = {}  # Per-tenant rate limits
+        self.resource_pools = {}  # Per-tenant compute allocation
+    
+    async def process(self, tenant_id: str, query: str) -> Response:
+        # Check rate limits
+        if not self.check_rate_limit(tenant_id):
+            raise RateLimitExceeded(tenant_id)
+        
+        # Get tenant-specific resources
+        resource = self.get_tenant_resources(tenant_id)
+        
+        # Use tenant-specific data (no cross-tenant data access)
+        docs = await self.get_tenant_docs(tenant_id, query)
+        
+        # Generate with tenant context
+        response = await self.llm.agenerate(
+            docs=docs,
+            query=query,
+            system_prompt=self.get_tenant_prompt(tenant_id)
+        )
+        
+        # Log for tenant-specific monitoring
+        self.log_request(tenant_id, response)
+        
+        return response
+    
+    def check_rate_limit(self, tenant_id: str) -> bool:
+        # Each tenant gets their own rate limit bucket
+        limiter = self.rate_limiters.get(tenant_id)
+        if not limiter:
+            limiter = TokenBucket(rate=1000, capacity=1000)
+            self.rate_limiters[tenant_id] = limiter
+        return limiter.consume(1)
+    
+    async def get_tenant_docs(self, tenant_id: str, query: str):
+        # Ensure only tenant's documents are retrieved
+        return await self.vectorstore.as_retriever(
+            filter={"tenant_id": tenant_id}  # Database-level isolation
+        ).aget(query)</pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Concern</th><th>Target</th><th>Mitigation</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Latency</td><td>p99 < 2s</td><td>Caching, prefetching, streaming</td></tr>
+                <tr><td>Throughput</td><td>10x headroom</td><td>Autoscaling, load balancing</td></tr>
+                <tr><td>Multi-tenancy</td><td>Zero leakage</td><td>Isolated pools, rate limits</td></tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Guardrails and Fallbacks</strong> - ensuring safe AI operation.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Ch 16: Overview</a>
+            <a class="up" href="index.html">Chapter 16 Index</a>
+            <a class="next" href="section-16-2.html">16.2 Guardrails and Fallbacks</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 16.1 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

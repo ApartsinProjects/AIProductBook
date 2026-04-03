@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10.3 Where It Misleads - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 10.3</div>
+        <h1>Where It Misleads</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Vibe coding promises speed but delivers it unevenly. Understanding where it leads you astray is as important as knowing where it accelerates progress.
+        </p>
+
+        <h2>The Confidence Illusion</h2>
+
+        <p>AI generates code with confidence regardless of whether the code is correct. This creates a dangerous asymmetry: the code looks confident, the explanations sound authoritative, but the actual correctness may range from brilliant to broken. Your ability to detect the difference depends on your expertise.</p>
+
+        <p>The confidence illusion is particularly dangerous because it affects novices more than experts. Novices lack the experience to recognize when AI-generated code is wrong. They see confident code and assume it is correct code. This can lead to shipping broken, insecure, or architecturally unsound solutions.</p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Dunning-Kruger Amplification</div>
+            <p><a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> amplifies the Dunning-Kruger effect. Novices do not know enough to recognize their own ignorance about AI-generated code quality. They may confidently accept wrong solutions because they lack the expertise to perceive the errors. Experts, who could detect many AI mistakes, often use vibe coding less because they know what they want and how to specify it.</p>
+            <p>The result: those least equipped to evaluate AI output are often those most likely to accept it uncritically.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">The Confidence Calibration Problem</div>
+            <p>AI-generated code looks exactly the same whether it's a security masterpiece or a SQL injection vulnerability waiting to happen. The formatting is identical. The variable names are equally reasonable. The confidence is equally high. Your ability to tell the difference depends entirely on whether you know what to look for.</p>
+        </div>
+
+        <h2>Contextual Failure Modes</h2>
+
+        <h3>Niche Domain Knowledge</h3>
+
+        <p>AI training data skews toward common knowledge. When your problem involves niche domain expertise, AI may generate plausible but wrong solutions. The code looks correct to the AI because it appears correct in general programming contexts, but misses domain-specific nuances.</p>
+
+        <p>QuickShip encountered this when building carrier-specific routing logic. AI generated solutions that worked for generic logistics but missed carrier-specific constraints that experienced logistics engineers would have known. The generated code looked reasonable but would have caused routing failures in production.</p>
+
+        <h3>Security and Compliance</h3>
+
+        <p>AI has weak security reasoning. It often generates code that is functionally correct but security-naive. This is not necessarily a flaw in the AI so much as a reflection of how security considerations are distributed in training data. Secure code receives less attention than working code.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Security-Aware Vibe Coding</div>
+            <p>When vibe coding security-sensitive features, treat security as a constraint layer that you explicitly enforce rather than something the AI will handle correctly. Explicitly state security requirements in your constraints so the AI understands what must be protected. Have a security expert review all generated code before it reaches production. Use security-specific linters and scanners on generated output to catch common vulnerabilities. Do not rely on AI to discover security vulnerabilities since it has weak security reasoning. Assume generated code is insecure until proven otherwise through deliberate review and testing.</p>
+        </div>
+
+        <h3>Legacy System Integration</h3>
+
+        <p>When working with legacy systems, AI generates code that assumes modern patterns. It may not know about legacy quirks, workaround patterns, or historical decisions that constrain the current implementation. Generated code may be technically correct in isolation but incompatible with the existing system.</p>
+
+        <h3>Performance-Critical Paths</h3>
+
+        <p>AI optimizes for correctness and clarity by default. It may not optimize for performance unless explicitly asked, and may generate solutions that work but perform poorly at scale. Generated algorithms may have acceptable performance for small datasets but degrade catastrophically at production scale.</p>
+
+        <h2>Architectural Drift</h2>
+
+        <p><a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> tends toward immediate correctness rather than long-term <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">architecture</a>. Each generated piece may be locally correct but collectively drift from the intended architecture. Over time, a vibe-coded codebase accumulates architectural debt that makes future development slower.</p>
+
+        <p>This is not a flaw in individual generations but an emergent property of the approach. When you are moving fast, you accept generated code that works without questioning whether it fits the architecture. Over time, the fit becomes worse.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: The Architectural Drift Experience</div>
+            <p>QuickShip used vibe coding extensively for three months to build their initial product. By month four, they had a working application but noticed it was becoming harder to modify, with each new feature requiring more work to integrate. When they conducted an architectural review, they discovered inconsistent data layer patterns across modules using five different ORM usage patterns, no clear separation between business logic and data access, duplicated validation logic in multiple places, and inconsistent error handling approaches. These are not AI failures but rather the natural result of many independent generation decisions that were individually correct but collectively uncoordinated. Addressing this required a deliberate architectural uplift sprint that partially offset their speed gains.</p>
+        </div>
+
+        <h2>The Sunk Cost of Many Wrong Turns</h2>
+
+        <p><a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> encourages rapid exploration, but exploration includes wrong turns. Wrong turns are valuable when you recognize them quickly and course-correct. They become expensive when you do not recognize them and continue down the wrong path.</p>
+
+        <p>The risk is particularly high when: you are inexperienced and cannot tell a wrong turn from a right one; the wrong turn looks reasonable but fails edge cases you have not tested; you have invested significant time in a direction and are reluctant to abandon it.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">The Five-Minute Wrong Turn Detection</div>
+            <p>After any vibe coding session, before investing more time in the generated direction, ask yourself five diagnostic questions. First, can you explain why this approach solves the problem? If not, you may not understand your own solution. Second, what would falsify this approach? What evidence would show it is wrong? Third, have you tested the generated code with realistic inputs or only happy path examples? Fourth, what does an expert in this domain think of this approach? Fifth, if you had to throw this away and start over, would that be easy or hard? This last question reveals your true confidence in the direction.</p>
+        </div>
+
+        <h2>Over-Generation and Decision Fatigue</h2>
+
+        <p><a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> makes generation cheap. This sounds like an advantage but creates a hidden cost: decision fatigue. Every generation requires evaluation. When you can generate endlessly, you spend endless time evaluating. The result may be worse than fewer generations with more careful evaluation.</p>
+
+        <p>Set generation budgets. If you have generated three approaches and none is clearly superior, do not generate four more. Step back and clarify your requirements rather than continuing to generate.</p>
+
+        <h2>Misaligned Incentives in AI Behavior</h2>
+
+        <p>AI generates what it thinks you want based on your prompt. This sounds straightforward but can misalign in subtle ways. The AI may optimize for impressive-looking output over correct output. It may prefer novel solutions over proven patterns because novel solutions sound more intelligent. It may hedge against being wrong by generating more complex code that sounds more thorough.</p>
+
+        <p>These tendencies are not malicious but they can lead astray. The antidote is expressing clear success criteria that prioritize correctness and simplicity over impressiveness.</p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Vibe Coding Failure Modes Summary</div>
+            <p>Understanding failure modes helps you recognize and mitigate them. The confidence illusion manifests as accepting wrong code without question, and you mitigate it through expert review and testing requirements. Niche domain gaps produce plausible but domain-incorrect solutions, which you address through domain expert involvement and explicit constraints. Security naivety results in functionally correct but insecure code, mitigated by treating security as an explicit constraint and requiring specialist review. Architectural drift occurs when individually correct but collectively uncoordinated code accumulates, addressed through periodic architectural review and pattern enforcement. Wrong turn persistence means continuing down incorrect paths too long, mitigated through a falsification mindset and generation budgets. Decision fatigue creates too many options and paralysis by analysis, addressed through generation budgets and clear criteria.</p>
+        </div>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>AI generates confident code regardless of correctness, creating an illusion of quality that can mislead unwary developers. Niche domains, security, and legacy integration represent high-risk areas where vibe coding is most prone to errors. Architectural drift accumulates through many locally-correct but collectively-uncoordinated generations, creating technical debt that slows future development. Exploration includes wrong turns, and the skill lies in recognizing them quickly before significant investment. Decision fatigue from over-generation can offset the speed advantages that vibe coding provides. AI may optimize for impressiveness over correctness, so you must express clear success criteria that prioritize working solutions over polished-looking ones.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Auditing Past Vibe Coding Sessions</div>
+            <p>Reflect on a past vibe coding experience that did not go well by working through several diagnostic questions. First, identify which failure mode from this section best describes what happened, whether confidence illusion, niche domain gaps, security naivety, architectural drift, wrong turn persistence, or decision fatigue. Second, consider what signals were present that you did not recognize at the time, training yourself to spot these warning signs in the future. Third, determine how you could have detected the problem earlier, perhaps through earlier testing, expert consultation, or falsification mindset. Fourth, reflect on what you would do differently if you faced the same situation today, applying these lessons to future vibe coding sessions.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 10.4, we examine <strong>Prototype Classes and Fidelity Levels</strong>, classifying prototypes by their purpose and establishing appropriate investment levels for each class.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-10-2.html">10.2 Where Vibe Coding Excels</a>
+            <a class="up" href="../index.html">Chapter 10 Overview</a>
+            <a class="next" href="section-10-4.html">10.4 Prototype Classes</a>
+        </nav>
+
+        <footer>
+            <p>Section 10.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

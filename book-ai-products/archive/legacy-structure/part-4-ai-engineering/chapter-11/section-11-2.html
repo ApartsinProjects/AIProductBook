@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11.2 Three Core Principles - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 11</div>
+        <h1>Core Principles of Modern AI Engineering</h1>
+        <p class="chapter-subtitle">11.2 Three Core Principles</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Shift mindset from PoC to production with core engineering principles.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 11.1 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Three Principles for Production AI</div>
+            <p>This section covers the three core principles that differentiate successful production AI systems: eval-driven development, cost-aware architecture, and observability. In the context of AI product development, these principles connect directly to the eval-driven approach that AI PMs must champion. Cost awareness ensures products remain viable, while observability enables continuous improvement.</p>
+        </div>
+
+        <h2 id="section-11-2">11.2 Principles: Eval-Driven, Cost-Aware, Observable</h2>
+
+        <p>
+            Three core principles differentiate successful production AI systems from frustrated experiments. These principles should inform every architectural decision and code change you make.
+        </p>
+
+        <h3>1. Eval-Driven: Define Success Before Building</h3>
+
+        <p>
+            The most common failure pattern in AI product development is building before defining success. Teams spend months developing features only to discover they cannot measure whether those features work. Evals are your specification. Without them, you have no way to know if you are improving or degrading your product.
+        </p>
+
+        <h4>Why This Matters</h4>
+        <p>
+            Traditional software has clear success criteria: a function returns the correct output, an API responds within 200ms, a page loads without errors. AI systems are inherently harder to evaluate because there is often no single "correct" answer. This makes explicit evaluation criteria even more critical. Without evals, you are flying blind, making changes based on subjective impressions rather than objective evidence.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Evals Are Not Optional</div>
+            <p>One of the most common mistakes is treating evals as a "nice to have" rather than a requirement. Without evals, you cannot distinguish between improvements and regressions. A prompt that "feels better" may actually be worse on specific edge cases. If you only take away one thing from this chapter, let it be this: define your evals before you start building. You do not need perfect evals, but you need <em>some</em> way to measure progress.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Building a Code Review Assistant</div>
+            <p>A team building an AI code review assistant started with a vague goal: "improve code quality." After three months of development, they had no way to measure impact. They implemented eval-driven development:</p>
+            <pre class="code-block">EVALUATION_CRITERIA = {
+    "correctness_detection": {
+        "description": "Does the model identify actual bugs vs false positives?",
+        "metric": "precision/recall on labeled bug dataset",
+        "target": "0.8 precision, 0.7 recall"
+    },
+    "severity_ranking": {
+        "description": "Does the model rank issues by actual severity?",
+        "metric": "Correlation with expert severity rankings",
+        "target": "Spearman correlation > 0.75"
+    },
+    "actionability": {
+        "description": "Do developers act on the feedback?",
+        "metric": "Percentage of suggestions accepted",
+        "target": "> 40% acceptance rate"
+    },
+    "response_time": {
+        "description": "Time from code submission to feedback",
+        "metric": "p99 latency under 30 seconds"
+    }
+}</pre>
+            <p>With these criteria defined, the team could systematically improve their system. They measured baseline metrics, made changes, and measured again. Within two more months, they had improved precision from 0.5 to 0.82, approaching their target.</p>
+        </div>
+
+        <h3>2. Cost-Aware: Every AI Call Has a Price Tag</h3>
+
+        <p>
+            Every LLM call costs money. This is fundamentally different from traditional software where compute is essentially free after deployment. The cost is measured in dollars per million tokens, and costs compound quickly in agentic systems.
+        </p>
+
+        <h4>Why This Matters</h4>
+        <p>
+            A simple chatbot might make 1 LLM call per user message. An agent doing research might make 50-100 calls. A complex multi-agent system could make thousands. Without cost awareness, you might build a feature that works perfectly in testing but costs $10 per user per month to run, making it commercially unviable.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Cost Compounds in <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></div>
+            <p>When estimating costs, a common mistake is to count only the "main" LLM call. In agentic systems, every tool call, every retrieval, every verification step adds cost. A research agent that searches 20 times and verifies each search adds 40+ calls to what looks like a "single" request. Always model the full cost path, not just the final generation call.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Cost Estimation</div>
+            <p>Consider a customer support agent that uses retrieval to answer questions. If you process 10,000 support tickets per day:</p>
+            <pre class="code-block"># Cost calculation for a <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>-based support agent
+# Assuming GPT-4o for reasoning, embeddings for retrieval
+
+COSTS_PER_1K_TOKENS = {
+    "gpt-4o_input": $0.005,
+    "gpt-4o_output": $0.015,
+    "embedding": $0.0001
+}
+
+# Average per ticket:
+# - 500 tokens retrieved context
+# - 200 tokens user input
+# - 150 tokens model output
+per_ticket_cost = (
+    (500 + 200) * COSTS_PER_1K_TOKENS["gpt-4o_input"] / 1000 +
+    150 * COSTS_PER_1K_TOKENS["gpt-4o_output"] / 1000
+)
+# = $0.0046 per ticket
+
+daily_cost = 10000 * per_ticket_cost  # $46/day
+monthly_cost = daily_cost * 30       # $1,380/month
+
+# If we add a second reasoning pass to verify answers:
+# daily cost doubles to $92/day ($2,760/month)</pre>
+            <p>Now consider adding a more capable (and expensive) model just for complex tickets. A cost-aware architecture routes simple tickets to a cheaper model and only escalates to the premium model when needed.</p>
+        </div>
+
+        <div class="callout aha-moment">
+            <div class="callout-title">&#128161; Aha Moment: The Hidden Cost Reality</div>
+            <p><strong>The shock:</strong> A feature that processes 10,000 tickets per day can cost <strong>$1,380 per month</strong> to run. Add a second verification pass and it doubles to $2,760. Features that look "free" in prototypes become significant operational costs in production.</p>
+            <p><strong>What this means:</strong> Always model costs before building. A simple cost estimation should be part of your design phase, not an afterthought. The difference between a $500/month feature and a $5,000/month feature is often just architecture choices.</p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">The Cost Paradox</div>
+            <p>Agents make 3-10x more LLM calls than simple chatbots. A research agent that iterates 20 times to find an answer might cost 20x what a simple Q&A bot costs. Cost optimization is not optional, it is essential for viability. The difference between a profitable AI product and a money-losing experiment often comes down to how efficiently you use tokens.</p>
+        </div>
+
+        <h3>3. Observable: You Cannot Improve What You Cannot Measure</h3>
+
+        <p>
+            Observability goes beyond traditional monitoring. You need to understand not just whether your system is working, but how well it is working. What is the quality of responses? Which prompt variations perform better? Is your retrieval finding the right documents?
+        </p>
+
+        <h4>Why This Matters</h4>
+        <p>
+            In traditional software, you monitor for errors. If your API returns 500 errors, you know something is wrong. In AI systems, the system can "work" (return 200 OK) while producing poor quality outputs that users won't complain about explicitly. Without observability, you might not notice quality degradation until users start leaving.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: Implementing Tracing</div>
+            <pre class="code-block">from langsmith import Client
+from langchain.callbacks import LangChainTracer
+
+langsmith_client = Client()
+
+def create_traced_chain(chain_name: str):
+    """Create a chain with full observability"""
+    return (
+        RunnableSerializable.bind(
+            tags=[chain_name],
+            metadata={
+                "version": "2.1.0",
+                "environment": "production"
+            }
+        )
+        | LangChainTracer(
+            project_name=f"production-{chain_name}",
+            client=langsmith_client
+        )
+    )
+
+# Now every chain execution is traced with:
+# - Input/output tokens
+# - Latency per step
+# - Retrieval quality scores
+# - Final output quality (if you add eval)</pre>
+        </div>
+
+        <div class="callout exercise">
+            <div class="callout-title">Exercise: Calculate and Optimize AI Costs</div>
+            <p><strong>Scenario:</strong> Your AI code review assistant processes 500 PRs per day with the following pattern: 3 retrieval calls, 1 reasoning call, 1 verification call per PR.</p>
+            <ol>
+                <li>Calculate the daily cost assuming GPT-4o pricing ($0.40/million input tokens, $1.60/million output tokens) with average 500 input tokens and 100 output tokens per call.</li>
+                <li>If you implement caching for repeated patterns, reducing retrieval calls by 50%, what is the new daily cost?</li>
+                <li>What eval metrics would you track alongside cost to ensure optimization doesn't degrade quality?</li>
+            </ol>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Layers of the AI Stack</strong> - from compute to tooling.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-11-1.html">11.1 Full-Stack AI Engineer Skills</a>
+            <a class="up" href="index.html">Chapter 11 Index</a>
+            <a class="next" href="section-11-3.html">11.3 Layers of the AI Stack</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 11.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

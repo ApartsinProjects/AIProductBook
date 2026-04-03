@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 25.4: Accountability and Transparency Patterns - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 25</div>
+        <h1><a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">Accountability</a> and Transparency Patterns</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Accountability requires knowing who made what decision with what information. AI systems that obscure this chain of custody cannot be held accountable when they fail."</p>
+            <cite>An AI Ethicist</cite>
+        </blockquote>
+
+        <h2 id="accountability-gap">The AI Accountability Gap</h2>
+
+        <p>
+            Traditional software accountability is straightforward: a developer writes code, the code runs, someone is responsible for its behavior. AI systems introduce opacity at multiple levels: (see <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">evaluation</a> patterns) training data influences, model behavior, and emergent capabilities that were not explicitly designed.
+        </p>
+
+        <p>
+            Closing the accountability gap requires deliberate design. Organizations must build systems that maintain clear lines of responsibility, document decisions, and provide mechanisms for auditing behavior.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Accountability Is Structural</h4>
+            <p>Accountability cannot be retrofitted. It must be designed into AI systems from the start. The organizational structures, documentation practices, and technical capabilities that enable accountability must be in place before deployment, not added after.</p>
+        </div>
+
+        <h2 id="accountability-patterns">Accountability Patterns</h2>
+
+        <h3 id="ownership-pattern">Clear Ownership</h3>
+
+        <p>
+            Every AI feature must have a named owner with clear responsibility:
+        </p>
+
+        <pre><code class="language-python">
+@dataclass
+class AIOwnership:
+    """Ownership record for an AI feature."""
+    feature_id: str
+    feature_name: str
+    
+    # Ownership chain
+    business_owner: str  # Business leader accountable for feature
+    technical_owner: str  # Engineering lead responsible for implementation
+    data_owner: str      # Owner of training data
+    model_owner: str     # Owner of model lifecycle
+    
+    # Accountability
+    deployed_at: datetime
+    deployment_approved_by: str
+    last_reviewed_at: datetime
+    next_review_due: datetime
+    
+    # Contact for incidents
+    incident_contact: str
+    on_call_rotation: str
+
+def assign_ownership(
+    feature: AIFeature,
+    business_owner: str,
+    technical_owner: str,
+    data_owner: str
+) -> AIOwnership:
+    """Assign ownership to an AI feature."""
+    ownership = AIOwnership(
+        feature_id=feature.id,
+        feature_name=feature.name,
+        business_owner=business_owner,
+        technical_owner=technical_owner,
+        data_owner=data_owner,
+        model_owner=technical_owner,  # Often same as technical
+        deployed_at=datetime.utcnow(),
+        deployment_approved_by=get_current_user(),
+        last_reviewed_at=datetime.utcnow(),
+        next_review_due=datetime.utcnow() + timedelta(days=90),
+        incident_contact=f"ai-oncall-{feature.team}",
+        on_call_rotation=feature.team_oncall
+    )
+    
+    return ownership
+        </code></pre>
+
+        <h3 id="decision-logging">Decision Logging</h3>
+
+        <p>
+            Log decisions for future auditing:
+        </p>
+
+        <pre><code class="language-python">
+@dataclass
+class AIDecisionLog:
+    """Immutable log of AI decisions."""
+    log_id: str
+    timestamp: datetime
+    
+    # Decision context
+    feature_id: str
+    feature_version: str
+    user_id: str
+    session_id: str
+    
+    # Input
+    input_hash: str  # Hash of input for privacy
+    input_summary: str  # Summarized for debugging
+    
+    # Decision
+    decision: dict  # The decision made
+    confidence: float
+    model_version: str
+    
+    # Traceability
+    retrieved_context_ids: list[str]  # IDs of retrieved docs
+    tool_calls: list[dict]  # Any tool calls made
+    latency_ms: float
+    
+    # Accountability
+    reviewed_by: str | None = None
+    reviewed_at: datetime | None = None
+
+async def log_ai_decision(
+    request: Request,
+    decision: dict,
+    context: AIGenerationContext
+) -> AIDecisionLog:
+    """Create immutable log of AI decision."""
+    log = AIDecisionLog(
+        log_id=str(uuid4()),
+        timestamp=datetime.utcnow(),
+        feature_id=context.feature_id,
+        feature_version=context.model_version,
+        user_id=request.user_id,
+        session_id=request.session_id,
+        input_hash=hash_pii(request.input),  # Privacy-safe hash
+        input_summary=summarize_for_debug(request.input),
+        decision=decision,
+        confidence=context.confidence,
+        model_version=context.model_version,
+        retrieved_context_ids=context.doc_ids,
+        tool_calls=context.tool_calls,
+        latency_ms=context.latency_ms
+    )
+    
+    await audit_log.store(log)
+    return log
+        </code></pre>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Audit Logs Must Be Immutable</h4>
+            <p>If audit logs can be modified or deleted, they provide no accountability. Design audit logging with immutability guarantees. Use append-only storage with access controls that prevent modification.</p>
+        </div>
+
+        <h2 id="transparency-patterns">Transparency Patterns</h2>
+
+        <h3 id="model-cards">Model Cards</h3>
+
+        <p>
+            Model cards provide standardized documentation of model characteristics:
+        </p>
+
+        <pre><code class="language-markdown">
+# Model Card: Route Optimization Model v2.3
+
+## Model Overview
+- **Model Name**: RouteOptimizer
+- **Version**: 2.3.1
+- **Owner**: QuickShip Engineering
+- **Last Updated**: 2024-03-15
+
+## Intended Use
+- **Primary Use**: Delivery route optimization for QuickShip logistics
+- **Out of Scope**: Passenger routing, international logistics
+
+## Training Data
+- **Data Source**: Historical QuickShip deliveries (2022-2024)
+- **Volume**: 50M delivery records
+- **Refresh Cadence**: Quarterly
+
+## Performance
+- **Primary Metric**: Route efficiency improvement vs. baseline
+- **Benchmark**: +18% average efficiency
+- **Known Limitations**:
+  - Performance degrades in areas with >50% new construction
+  - Rural route performance 8% below urban
+
+## Fairness Considerations
+- No protected attributes used in training
+- Routes optimized for time, not demographics
+
+## Safety & Limitations
+- Model cannot route around road closures < 6 hours old
+- Weather integration requires manual activation
+        </code></pre>
+
+        <h3 id="data-cards">Data Cards</h3>
+
+        <p>
+            Data cards document datasets used for AI training:
+        </p>
+
+        <pre><code class="language-markdown">
+# Data Card: Delivery History Dataset
+
+## Dataset Overview
+- **Name**: QuickShip Delivery History
+- **Version**: 2024-Q1
+- **Owner**: Data Platform Team
+
+## Composition
+- **Records**: 50M deliveries
+- **Time Range**: Jan 2022 - Dec 2023
+- **Geography**: US domestic only
+
+## Data Quality
+- Missing values: < 2% across all fields
+- Duplicate records: 0.1% (removed)
+- Outliers: Identified and flagged
+
+## Known Biases
+- Underrepresentation of rural addresses (12% vs 19% population)
+- Historical routes may reflect historical driver patterns
+
+## Privacy
+- PII removed per privacy policy
+- Addresses geohashed to 100m precision
+- Customer IDs anonymized
+        </code></pre>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: HealthMetrics Transparency Documentation</h4>
+            <p>HealthMetrics was building transparency documentation for clinical AI after physicians were uncertain about how to interpret AI suggestions. The problem was that there was no standardized way to communicate AI confidence and limitations to clinical users. They faced a dilemma about how much transparency clinicians need without overwhelming them with information.</p>
+            <p>The team implemented a layered transparency approach to provide information at appropriate levels of detail. They created model cards for each clinical AI model documenting training data, performance characteristics, and known limitations. They built confidence indicators into the clinical interface so physicians could see at a glance how certain the AI was about its suggestion. They added "why this suggestion" explanations that helped physicians understand the basis for AI recommendations. They documented known failure modes prominently so physicians knew when to be skeptical. They made model cards accessible from within the clinical workflow so information was available when needed, not buried in documentation.</p>
+            <p>The result was that physician trust in AI increased forty percent and appropriate utilization of AI suggestions improved. When the AI was wrong, physicians could identify why and override appropriately rather than blindly following incorrect guidance. The lesson is that transparency builds trust when it is actionable. Provide information clinicians can use, not just documentation for compliance.</p>
+        </div>
+
+        <h2 id="explainability">Explainability</h2>
+
+        <h3 id="local-explainability">Local Explainability</h3>
+
+        <p>
+            Explain individual predictions:
+        </p>
+
+        <pre><code class="language-python">
+class LocalExplainer:
+    """
+    Explain individual AI decisions.
+    """
+    def explain(
+        self,
+        model: Model,
+        input_data: dict,
+        prediction: dict
+    ) -> Explanation:
+        """
+        Generate explanation for a single prediction.
+        """
+        # Use SHAP for feature attribution
+        explainer = shap.TreeExplainer(model)
+        
+        # Get feature importance
+        shap_values = explainer.shap_values(input_data)
+        
+        # Generate natural language explanation
+        top_features = self._get_top_features(shap_values, n=5)
+        explanation_text = self._generate_text(top_features)
+        
+        return Explanation(
+            prediction_id=str(uuid4()),
+            input_data=input_data,
+            prediction=prediction,
+            feature_importance=top_features,
+            explanation_text=explanation_text,
+            confidence=prediction.get("confidence", 0.0)
+        )
+    
+    def _generate_text(self, top_features: list) -> str:
+        if not top_features:
+            return "No significant features identified."
+        
+        parts = []
+        for feature in top_features:
+            direction = "increased" if feature.value > 0 else "decreased"
+            parts.append(
+                f"{feature.name} {direction} likelihood by {abs(feature.contribution):.1%}"
+            )
+        
+        return "The prediction was influenced by: " + "; ".join(parts)
+        </code></pre>
+
+        <h3 id="system-explainability">System Explainability</h3>
+
+        <p>System explainability explains how complex AI systems arrive at decisions through multiple complementary mechanisms. Chain-of-thought documentation records the reasoning steps the AI took to reach its conclusion, providing visibility into the logical progression. Retrieved context shows which documents or information influenced the decision, helping users understand what information was available to the AI. Tool usage logs which tools were called and their outputs, revealing the actions the AI took and results it received during processing. Alternative considered shows, when feasible, alternatives that were rejected, helping users understand why the chosen option was selected over alternatives.</p>
+
+        <div class="callout warning">
+            <h4 class="callout-title">Explainability vs Performance</h4>
+            <p>More explainable models are often less accurate. The tradeoff must be explicit. For high-stakes decisions, invest in explainability even at some accuracy cost. For low-stakes decisions, simpler explanations may suffice.</p>
+        </div>
+
+        <h2 id="incident-accountability">Incident Accountability</h2>
+
+        <h3 id="incident-classification">AI Incident Classification</h3>
+
+        <p>Classify incidents by accountability implications to ensure the right parties are responsible for addressing different types of failures. System failures involve infrastructure or software defects and accountability rests with the engineering team. Model failures occur when the model produces incorrect output and accountability rests with the model owner. Data failures involve training or input data quality issues and accountability rests with the data owner. Design failures occur when the problem definition or approach was wrong and accountability rests with the product owner. Deployment failures involve incorrect configuration or monitoring and accountability rests with the deployment team.</p>
+
+        <h3 id="accountability-review">Accountability Review Process</h3>
+
+        <p>After any AI incident, conduct an accountability review following a structured process to ensure thorough analysis and appropriate follow-up. First, document what happened by capturing the timeline and context so the incident can be reconstructed later. Second, identify failures including both technical failures and process failures that contributed to the incident. Third, assign accountability by determining who is responsible for each failure so remediation can be properly directed. Fourth, determine systemic issues by understanding what allowed failures to occur, identifying root causes beyond individual errors. Fifth, assign remediation by determining who will fix what to ensure corrective actions are owned. Sixth, update processes to prevent recurrence by implementing changes that address the root causes discovered during the review.</p>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>Research on "accountability interfaces" explores how to present accountability information to different stakeholders. Clinicians need different explanations than lawyers, who need different explanations than engineers. Building stakeholder-specific accountability views is an emerging challenge.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-25-3.html">25.3 Release Checklists</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="../../part-5-evaluation-reliability/index.html">Part V Overview</a>
+        </nav>
+
+        <footer>
+            <p>Section 25.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

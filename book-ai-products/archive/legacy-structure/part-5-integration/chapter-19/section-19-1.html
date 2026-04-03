@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>19.1 Cross-Functional Team Models - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-integration/index.html">Part V: Integration</a></div>
+        <div class="chapter-label">Chapter 19</div>
+        <h1>Team Structures, Collaboration, and Culture</h1>
+        <p class="chapter-subtitle">19.1 Cross-Functional Team Models</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Enable organizational success with the right team structures and collaboration patterns.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Chapters 17-18 recommended.
+        </div>
+
+        <h2 id="section-19-1">19.1 Cross-Functional Team Models for AI Products</h2>
+
+        <p>
+            Building AI-powered products requires a fundamentally different team structure 
+            than traditional software development. The intersection of product management, 
+            ML engineering, data infrastructure, and user experience creates new roles 
+            and requires new collaboration patterns. This section provides proven team 
+            models that scale from startup to enterprise.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            The wrong team structure is one of the primary reasons AI products fail. A team 
+            with brilliant ML engineers but no product focus builds impressive technology 
+            that no one uses. A team with strong PMs but no ML expertise builds products that 
+            don't leverage AI's capabilities. The right structure enables each function to 
+            contribute what they do best while collaborating effectively.
+        </p>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Academic Perspective: Team Design and Organizational Theory</div>
+            <p>The cross-functional team models for AI products connect to <strong>Team Design Theory</strong> from organizational behavior research. Hackman's <strong>Team Effectiveness Framework</strong> (1987) identifies three conditions for team success: (1) a real team with clear boundaries, (2) compelling direction that motivates members, and (3) enabling structure that supports members. For AI products, the "enabling structure" includes shared mental models across disciplines that traditionally speak different languages.</p>
+            <p>Research on <strong>Cross-Functional Teams</strong> by Epple et al. (1991) demonstrates that product development teams integrating engineering, marketing, and operations outperform functional organizations on innovation speed but face coordination costs. For AI products, these coordination costs are amplified by the need for shared vocabulary around probabilistic systems, evaluation metrics, and quality criteria.</p>
+            <p><em>Key references: Hackman, J.R. (1987). "Senior Leadership Teams." Harvard Business School Press; Epple, D. et al. (1991). "Cross-Functional Product Development." Management Science, 37(9).</em></p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Team That Needed No Manager</div>
+            <p>A 4-person AI startup had no explicit manager. The "AI Engineer" handled technical decisions, the "PM" handled user research, and they co-built everything. Decision-making was faster than any team with a manager. Sometimes the best structure is no structure at all.</p>
+        </div>
+
+        <hr>
+
+        <h3>Proven Role Structures by Team Size</h3>
+
+        <h4>Small Team (3-5 people): The Startup Model</h4>
+        <p>
+            A small team must be highly multi-functional. Everyone does a bit of everything, 
+            but everyone has a primary focus.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Role</th><th>Primary Focus</th><th>Secondary</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>AI/ML Engineer</td>
+                    <td>Model selection, prompt engineering, eval</td>
+                    <td>Data pipeline, API integration</td>
+                </tr>
+                <tr>
+                    <td>Data Scientist</td>
+                    <td>Data analysis, golden dataset creation</td>
+                    <td>Eval metrics, quality monitoring</td>
+                </tr>
+                <tr>
+                    <td>Data Engineer</td>
+                    <td>Data pipeline, storage, preprocessing</td>
+                    <td>API infrastructure</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: The 3-Person AI Startup</div>
+            <p>
+                A 3-person team building an AI sales assistant worked like this:
+            </p>
+            <ul>
+                <li><strong>Alex (AI Engineer):</strong> Model selection, prompt optimization, API integration</li>
+                <li><strong>Jordan (PM + UX):</strong> User research, spec writing, interface design, eval criteria</li>
+                <li><strong>Taylor (Full-stack):</strong> Frontend, backend, data pipelines, deployment</li>
+            </ul>
+            <p>
+                They shipped their MVP in 8 weeks. Key insight: the PM also did UX because 
+                there wasn't enough work for a dedicated designer, and the full-stack 
+                person handled data because they had the most infrastructure experience.
+            </p>
+        </div>
+
+        <h4>Medium Team (6-10 people): The Growth Model</h4>
+        <p>
+            As you scale, you can start separating concerns while maintaining the ability 
+            to move fast.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Role</th><th>Count</th><th>Primary Focus</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>AI/ML Engineer</td>
+                    <td>2-3</td>
+                    <td>Model development, prompt engineering, eval systems</td>
+                </tr>
+                <tr>
+                    <td>Data Scientist</td>
+                    <td>2</td>
+                    <td>Data analysis, eval metrics, quality monitoring</td>
+                </tr>
+                <tr>
+                    <td>Data Engineer</td>
+                    <td>2</td>
+                    <td>Pipelines, storage, infrastructure</td>
+                </tr>
+                <tr>
+                    <td>Product Manager</td>
+                    <td>1</td>
+                    <td>Roadmap, priorities, user feedback</td>
+                </tr>
+                <tr>
+                    <td>Frontend/Full-stack</td>
+                    <td>2</td>
+                    <td>UI/UX, API integration, deployment</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Skill Demonstration: Weekly Routine for Medium Team</div>
+            <pre><code>// Weekly team rhythm for AI product teams
+const weeklyRhythm = {
+  monday: {
+    morning: 'Team standup - blockers and priorities',
+    afternoon: '1:1s - PM with each engineer'
+  },
+  tuesday: {
+    morning: 'Eval review - entire team reviews sample outputs',
+    afternoon: 'Sprint planning - commit to 2-week goals'
+  },
+  wednesday: {
+    morning: 'Deep work blocks (no meetings)',
+    afternoon: 'Pair programming sessions'
+  },
+  thursday: {
+    morning: 'Design review - UI/UX review',
+    afternoon: 'Tech review - AI Engineer presents new approach'
+  },
+  friday: {
+    morning: 'Demo - show what shipped this week',
+    afternoon: 'Retrospective - what to improve'
+  }
+};</code></pre>
+        </div>
+
+        <h4>Enterprise Team (10+ people): The Scale Model</h4>
+        <p>
+            At enterprise scale, you need dedicated roles and clear career tracks. But 
+            watch out for the trap of too much process.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Role</th><th>Count</th><th>Primary Focus</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>AI/ML Engineer</td>
+                    <td>5+</td>
+                    <td>Model development, optimization, research</td>
+                </tr>
+                <tr>
+                    <td>Data Scientist</td>
+                    <td>4+</td>
+                    <td>Analysis, eval, experimentation</td>
+                </tr>
+                <tr>
+                    <td>Data Engineer</td>
+                    <td>3-4</td>
+                    <td>Infrastructure, pipelines, platforms</td>
+                </tr>
+                <tr>
+                    <td>Product Manager</td>
+                    <td>1-2</td>
+                    <td>Strategy, roadmap, metrics</td>
+                </tr>
+                <tr>
+                    <td>Designer</td>
+                    <td>1</td>
+                    <td>UX, interaction patterns</td>
+                </tr>
+                <tr>
+                    <td>Frontend/Backend</td>
+                    <td>4+</td>
+                    <td>Full-stack development</td>
+                </tr>
+                <tr>
+                    <td>Platform/MLOps</td>
+                    <td>2</td>
+                    <td>Deployment, monitoring, tooling</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+
+        <h3>Critical Ratios and Hiring Principles</h3>
+
+        <h4>Engineer to Scientist Ratio: 2:1</h4>
+        <p>
+            This ratio has proven effective across many AI product teams. Too many scientists 
+            without engineers leads to proof-of-concepts that never ship. Too many engineers 
+            without scientists leads to shipping before understanding the problem.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Why 2:1 Works</div>
+            <p>
+                Scientists identify what "good" looks like and define the approach. Engineers 
+                build the production system. For every scientist defining the problem, you 
+                need two engineers to build the solution. This has nothing to do with 
+                capability - it's about the different work styles and timelines.
+            </p>
+        </div>
+
+        <h4>Senior to Junior Ratio: 60:40 or 70:30</h4>
+        <p>
+            AI products require significant judgment. Junior team members can execute well 
+            when given clear direction, but the ambiguous nature of AI development requires 
+            senior guidance. Aim for at least 60% senior.
+        </p>
+
+        <h4>Generalist to Specialist Ratio: 70:30</h4>
+        <p>
+            The AI landscape changes rapidly. A specialist in last year's hot model may be 
+            irrelevant this year. Build teams that can adapt. 70% of your team should be 
+            generalists who can work across the stack, with 30% specialists for critical 
+            depth in areas like ML infrastructure, eval systems, or domain expertise.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: The Wrong Ratio</div>
+            <p>
+                A company hired 10 ML scientists and 2 engineers for their AI product. 
+                After 6 months, they had impressive research papers but no shipped product. 
+                The scientists couldn't deploy anything because there wasn't engineering 
+                capacity, and the engineers were overwhelmed supporting multiple concurrent 
+                research projects. The fix: hire 5 more engineers and convert 3 scientists 
+                to engineer-scientist hybrids.
+            </p>
+        </div>
+
+        <hr>
+
+        <h3>Key Roles Explained</h3>
+
+        <h4>AI/ML Engineer vs. Data Scientist</h4>
+        <p>
+            This is a crucial distinction that many organizations get wrong.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Dimension</th><th>AI/ML Engineer</th><th>Data Scientist</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Output</td>
+                    <td>Production systems</td>
+                    <td>Insights and metrics</td>
+                </tr>
+                <tr>
+                    <td>Primary skill</td>
+                    <td>Software engineering + ML</td>
+                    <td>Statistics + domain knowledge</td>
+                </tr>
+                <tr>
+                    <td>Code quality bar</td>
+                    <td>Production-grade</td>
+                    <td>Exploratory acceptable</td>
+                </tr>
+                <tr>
+                    <td>Success metric</td>
+                    <td>System works in production</td>
+                    <td>Insights drive decisions</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Skill Demonstration: Role Clarity in Practice</div>
+            <p>
+                When building an eval system:
+            </p>
+            <ul>
+                <li><strong>Data Scientist:</strong> Defines what "good" output looks like, 
+                creates the golden dataset, designs the scoring rubric, identifies failure modes</li>
+                <li><strong>AI Engineer:</strong> Builds the eval pipeline that runs at scale, 
+                integrates with CI/CD, creates the dashboard, ensures reproducibility</li>
+            </ul>
+            <p>
+                Neither can do the other's job well, but together they create a complete eval system.
+            </p>
+        </div>
+
+        <hr>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Key Takeaways</div>
+            <ul>
+                <li>Start small: 3-5 people can ship AI products</li>
+                <li>Scale with purpose: Add roles as complexity requires</li>
+                <li>Engineer:Scientist ratio of 2:1 is proven</li>
+                <li>Senior:Junior ratio of 70:30 handles AI ambiguity</li>
+                <li>70:30 generalist:specialist enables adaptation</li>
+                <li>Clear role boundaries prevent confusion</li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Hiring and Upskilling</strong> - strategies for building AI talent.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Ch 19: Overview</a>
+            <a class="up" href="index.html">Chapter 19 Index</a>
+            <a class="next" href="section-19-2.html">19.2 Hiring and Upskilling</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 19.1 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

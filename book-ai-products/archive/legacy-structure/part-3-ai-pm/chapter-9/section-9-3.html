@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8.3 AI-Enhanced Roadmapping - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 8</div>
+        <h1>Discovery, Prioritization, and Roadmapping</h1>
+        <p class="chapter-subtitle">8.3 AI-Enhanced Roadmapping</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Handle uncertainty in AI products through adapted research, prioritization, and data strategies.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 8.2 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Planning for AI Uncertainty</div>
+            <p>AI product roadmaps must account for external dependencies that traditional software does not have: model release cycles, data collection timelines, and evaluation infrastructure requirements. Building model-release-ready infrastructure and starting data collection early are essential practices. The key insight is that AI roadmaps should include explicit uncertainty buffers and always have features that do not depend on external model capabilities.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Roadmap to Nowhere</div>
+            <p>The phrase "roadmap" originally referred to maps used for roads. In 1903, the first road maps were handed out at gas stations to encourage car travel. AI roadmaps serve a similar purpose: encouraging investment in a journey whose destination keeps changing.</p>
+        </div>
+
+        <h2 id="section-8-3">8.3 AI-Enhanced Roadmapping</h2>
+
+        <p>
+            Roadmapping for AI products introduces dependencies that do not exist in traditional software development. Model release cycles from providers like OpenAI, Anthropic, and Google can dramatically change what's possible, making long-term planning uncertain. Your roadmap must account for external model availability while building the infrastructure that can take advantage of improvements when they arrive.
+        </p>
+
+        <h3>Model Release Cycle Dependencies</h3>
+
+        <p>
+            The AI model landscape evolves rapidly. New model releases frequently introduce capabilities that enable features previously impossible or make existing features significantly cheaper to run. This creates both opportunity and risk for product roadmaps. The key is building flexibility into your roadmap while planning for known model capability trajectories.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: OpenAI o1 Release Impact</h4>
+            <p>
+                When OpenAI released the o1 reasoning model in late 2024, products requiring complex multi-step reasoning suddenly became viable. Several AI product companies had been planning "reasoning" features for 2025 but were able to ship within weeks of the model release. The key was having the infrastructure ready: they had built the user-facing features but were waiting for a model that could handle the reasoning requirements.
+            </p>
+            <p>
+                <strong>Why this matters:</strong> The companies that had prepared infrastructure in advance could capitalize immediately on the model release. Those that had not started would be months behind. This pattern repeats with every major model release.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Building Model-Release-Ready Infrastructure</h4>
+            <p>
+                When planning AI features, identify which features require specific model capabilities (reasoning, vision, function calling, low latency) and which work with current models. Build the infrastructure for all of them, but mark features requiring next-generation models as "pending model capability." This way, when new models release, you can activate those features quickly.
+            </p>
+            <p>
+                <strong>Example roadmap approach:</strong>
+            </p>
+            <ul>
+                <li><strong>Q1:</strong> Build <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> infrastructure, ship search features (works with current models)</li>
+                <li><strong>Q2:</strong> Build agentic workflow infrastructure, plan reasoning features</li>
+                <li><strong>Q3:</strong> When reasoning model releases, activate agentic features</li>
+                <li><strong>Q4:</strong> Optimize for cost as new efficient models release</li>
+            </ul>
+        </div>
+
+        <h3>Data Collection as a Parallel Track</h3>
+
+        <p>
+            Data collection is often the longest lead item in AI product development, frequently determining feature timelines more than engineering does. If your AI product requires domain-specific training data, evaluation data, or retrieval knowledge, collecting and preparing that data can take months. Build data collection into your roadmap as a parallel track starting early, independent of engineering progress.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Healthcare AI Data Challenges</h4>
+            <p>
+                A health-tech company planned a clinical decision support AI for release in Q2. Engineering completed the AI system in March, but the feature did not ship until August. The delay: they needed physician-annotated clinical scenarios for evaluation, and recruiting, training, and managing annotators took five months. The AI system was technically complete but could not be validated for clinical safety without the evaluation dataset.
+            </p>
+            <p>
+                <strong>Key lesson:</strong> Data timelines are not elastic. Start data collection at the beginning of the product planning process, not when engineering is complete.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Data Dependency Mapping</h4>
+            <p>
+                For each AI feature on your roadmap, identify:
+            </p>
+            <ol>
+                <li><strong>Training data:</strong> What data is needed to build or fine-tune the model?</li>
+                <li><strong>Evaluation data:</strong> What golden dataset is needed to validate quality?</li>
+                <li><strong>Knowledge data:</strong> What documents/content must be indexed for <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>?</li>
+                <li><strong>Feedback data:</strong> How will you collect user signals to improve?</li>
+            </ol>
+            <p>
+                For each data type, estimate collection time and work backwards from your target launch date.
+            </p>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Data Type</th><th>Typical Timeline</th><th>When to Start</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Training data (curated)</td><td>3-6 months</td><td>Project kickoff</td></tr>
+                <tr><td>Evaluation data</td><td>2-4 months</td><td>Project kickoff</td></tr>
+                <tr><td>Knowledge base (<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>)</td><td>1-3 months</td><td>3 months before launch</td></tr>
+                <tr><td>Feedback collection</td><td>1 month</td><td>Beta launch</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Evaluation Infrastructure as Prerequisite</h3>
+
+        <p>
+            Evaluation infrastructure is not an afterthought for AI products; it is a prerequisite for shipping. Without the ability to measure quality, you cannot reliably ship. Build eval infrastructure early in development and use it continuously to track quality as you iterate. This is particularly important for features that will improve over time: you need baseline measurements to know whether you are actually improving.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Building Eval Infrastructure Early</h4>
+            <p>
+                The eval infrastructure should include:
+            </p>
+            <ol>
+                <li><strong>Automated evaluation pipeline:</strong> Run golden dataset tests on every code change</li>
+                <li><strong>Quality dashboards:</strong> Track metrics over time, not just point-in-time scores</li>
+                <li><strong>Human evaluation workflow:</strong> Systematic process for human raters to assess outputs</li>
+                <li><strong>A/B testing framework:</strong> Infrastructure to compare model versions or prompt variations</li>
+            </ol>
+            <p>
+                Invest in eval infrastructure proportionally to the stakes of your AI feature. High-stakes AI (healthcare, legal, financial) requires more sophisticated evaluation than low-stakes AI (entertainment, productivity).
+            </p>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Continuous Eval Saves Launch</h4>
+            <p>
+                A B2B SaaS company built continuous evaluation into their AI email assistant from day one. At launch, automated eval caught a regression: the model had started generating 15% more overly promotional language after a prompt change. The regression was caught before any customers saw it. Without continuous eval, the issue would have affected thousands of users before being noticed through support tickets.
+            </p>
+            <p>
+                <strong>Why this matters:</strong> AI quality can degrade silently. Unlike traditional software bugs that cause errors, quality degradation often produces outputs that look acceptable but are systematically worse.
+            </p>
+        </div>
+
+        <h3>Handling Roadmap Uncertainty</h3>
+
+        <p>
+            AI product roadmaps should include explicit uncertainty buffers and fallback plans. Build your roadmap with three horizons: features that work with current models, features requiring announced model capabilities, and features requiring unannounced capabilities. This分层 approach ensures progress regardless of model release timing.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">The AI Roadmap Rule</div>
+            <p>
+                Always have at least one feature that does not depend on external model capabilities. This ensures your roadmap progresses even if model providers delay releases.
+            </p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Data Strategy for <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></strong> - choosing between <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, fine-tuning, or hybrid approaches.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-8-2.html">8.2 Prioritization with Kill Criteria</a>
+            <a class="up" href="index.html">Chapter 8 Index</a>
+            <a class="next" href="section-8-4.html">8.4 Data Strategy for RAG</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 8.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.6 Getting Started Checklist - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <div class="chapter-label">Chapter 3</div>
+        <h1>Understanding Vibe Coding in 2026</h1>
+        <p class="chapter-subtitle">3.6 Getting Started Checklist</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Demystify the shift from prompt engineering to agentic intent steering.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Basic programming knowledge helpful but not required. Completion of Sections 3.1-3.5 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: From Learning to Doing</div>
+            <p>This checklist transforms theoretical understanding into practical capability. Setting up your vibe coding environment correctly from the start prevents the frustration of context loss and poor outputs. The investment in configuring Cursor Rules and understanding tool settings pays dividends across every subsequent project, embodying the principle that preparation enables velocity.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The 10,000 HourShortcut</div>
+            <p>Malcolm Gladwell popularized the 10,000 hour rule for mastery. Vibe coding compresses this by 5-10x because you learn from every mistake the AI makes as well as your own. The feedback is faster and more varied than learning alone ever could be.</p>
+        </div>
+
+        <h2 id="section-3-6">3.6 Getting Started Checklist</h2>
+
+        <p>
+            Now that you understand what vibe coding is and why it matters, it's time to set up your environment and start practicing. This checklist provides a structured path from zero to productive with vibe coding tools. Each step includes guidance on what to do and why it matters. Follow these steps in order, and you'll have a fully functional vibe coding setup within an hour.
+        </p>
+
+        <h3>Phase 1: Choose Your IDE</h3>
+
+        <p>
+            The first decision is which tool to use. For most developers, we recommend starting with Cursor because it offers the most comprehensive feature set and has the gentlest learning curve for those already familiar with VS Code. However, your specific situation might favor a different tool.
+        </p>
+
+        <h4>Decision Guide</h4>
+
+        <pre><code># Choose your IDE based on your situation:
+
+If you're new to AI-assisted coding → Start with Cursor
+  Reason: Best documentation, most tutorials, broadest feature set
+
+If you prefer terminal workflows → Use Claude Code
+  Reason: Integrates with your existing CLI-based workflow
+
+If you want maximum automation → Choose Cursor with Automations
+  Reason: Most mature automation capabilities
+
+If you're building prototypes quickly → Try v0 or Bolt.new
+  Reason: Fastest for UI-focused prototypes</code></pre>
+
+        <h4>Installation Steps</h4>
+
+        <pre><code>1. Choose your IDE
+   [ ] Download Cursor from cursor.sh (recommended for most)
+   [ ] Or: Install Claude Code via: npm install -g @anthropic-ai/claude-code
+   [ ] Or: Try Windsurf from windsurf.ai
+
+2. Configure your environment
+   [ ] Create an account and add API keys in settings
+       - For Cursor: Settings → Models → Add API key
+       - For Claude Code: CLAUDE_API_KEY environment variable
+   [ ] Install recommended extensions:
+       - Prettier for code formatting
+       - GitLens for version control
+       - Error Lens for immediate issue visibility
+
+3. Set up project context (critical for good results!)
+   [ ] For Cursor: Create `.cursor/rules/` directory
+   [ ] For Claude Code: Create `CLAUDE.md` in project root
+   [ ] Start with basic rules about your project structure
+
+4. Start with small tasks
+   [ ] Use Cmd+K (or Ctrl+K) for inline code generation
+   [ ] Try Agent mode for multi-file tasks
+   [ ] Experiment with Automations (if using Cursor)
+
+5. Iterate and improve
+   [ ] Refine rules based on what works and doesn't
+   [ ] Build a personal library of effective prompts
+   [ ] Share learnings with your team
+   [ ] Read the documentation for advanced features</code></pre>
+
+        <h3>Phase 2: Essential Configuration</h3>
+
+        <p>
+            Beyond installation, several configuration steps dramatically improve your experience. These aren't optional - they're what separate productive vibe coders from frustrated ones.
+        </p>
+
+        <h4>API Key Setup</h4>
+
+        <p>
+            Without an API key, most features won't work. Get your key from the provider (OpenAI for GPT models, Anthropic for Claude models) and add it to your tool's settings. This is typically in Settings → Models or similar. The key typically starts with "sk-" for OpenAI or is a longer token for Anthropic. Store this securely - it's tied to your account and billing.
+        </p>
+
+        <h4>Model Selection</h4>
+
+        <p>
+            Most tools let you choose which model to use. For most tasks, the default is fine. For complex reasoning tasks, consider using the most capable model available. For simple tasks where speed matters, you might prefer faster models even if they're less capable. As you develop experience, you'll learn when each choice makes sense.
+        </p>
+
+        <h3>Phase 3: First Projects</h3>
+
+        <p>
+            Start with a small project you already understand. Don't try to build something complex or unfamiliar - you want to focus on learning the tool, not learning a new domain. A simple todo app, a basic API, or a small utility script are good first projects. The goal is to develop the back-and-forth rhythm with the AI, not to build something impressive.
+        </p>
+
+        <h4>Recommended First Tasks</h4>
+
+        <ul>
+            <li><strong>Task 1: Inline completion</strong> - Use Cmd+K to complete partial code. Start typing a function and see what the AI suggests.</li>
+            <li><strong>Task 2: Code generation</strong> - Describe what you want in natural language and see what the AI generates.</li>
+            <li><strong>Task 3: Code review</strong> - Ask the AI to review code you've written and suggest improvements.</li>
+            <li><strong>Task 4: Bug fixing</strong> - Describe a bug and ask the AI to fix it.</li>
+            <li><strong>Task 5: Refactoring</strong> - Ask the AI to improve code you've written while maintaining functionality.</li>
+        </ul>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Learning Curve</div>
+            <p>Most developers need 2-4 weeks of regular use before feeling comfortable with vibe coding. The first few sessions will feel awkward - you're learning a new way to express intent, and the AI is learning your preferences. Be patient. The investment pays off quickly: after a month, you'll be dramatically faster than you were before.</p>
+        </div>
+
+        <h3>Phase 4: Building Your Practice</h3>
+
+        <p>
+            Once you're comfortable with the basics, develop habits that maximize long-term effectiveness:
+        </p>
+
+        <p>
+            <strong>Write effective prompts:</strong> Practice clear, specific communication. Study what works and what doesn't. Keep a collection of prompts that produce good results.
+        </p>
+
+        <p>
+            <strong>Build project rules:</strong> As you work on real projects, create Cursor Rules or CLAUDE.md files that encode your conventions. These make subsequent sessions more productive.
+        </p>
+
+        <p>
+            <strong>Develop debugging skills:</strong> Learn how to diagnose when AI-generated code has problems. This is different from debugging code you wrote yourself - you need to understand what the AI was trying to do.
+        </p>
+
+        <p>
+            <strong>Integrate into your workflow:</strong> Find where vibe coding fits best in your process. Some developers use it for everything. Others use it only for complex tasks. Find what works for you.
+        </p>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Now that you understand vibe coding fundamentals, Chapter 4 takes you deeper into 
+                practical workflows. You will learn structured approaches for moving from idea to 
+                multi-file implementation, advanced techniques for refactoring at scale, and how to 
+                debug effectively with AI <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>. The chapter also covers transitioning from vibe-coded 
+                prototypes to production-ready, testable code. If you want to practice the fundamentals 
+                first, set up your environment and experiment with the techniques in this chapter before 
+                moving on.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-3-5.html">3.5 Multi-Agent Orchestration</a>
+            <a class="up" href="index.html">Ch 3: Overview</a>
+            <a class="next" href="../chapter-4/index.html">Ch 4: Vibe Coding Workflows</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 3.6 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

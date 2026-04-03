@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 28.4: PM/Design/Engineering Collaboration - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 28</div>
+        <h1>PM/Design/Engineering Collaboration</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"The old model was PM writes spec, designer designs screen, engineer builds feature. The new model is all three explore the AI solution space together, learning what is possible and what is valuable."</p>
+            <cite>Product Lead at a Series B SaaS Company</cite>
+        </blockquote>
+
+        <h2 id="new-collaboration-patterns">New Collaboration Patterns for AI</h2>
+
+        <p>
+            AI products break the traditional handoff model. In deterministic software, PMs can fully specify requirements before design begins, and designers can fully design before engineering implements. AI products require tighter collaboration because the capability space is not fully specifiable in advance.
+        </p>
+
+        <h3 id="discovery-phase">Discovery Phase Collaboration</h3>
+
+        <p>
+            <a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Chapter 10</a> introduced collaborative discovery for AI features. This is not a luxury for AI products; it is a necessity. The AI capability space is too uncertain to specify upfront. Teams must explore together.
+        </p>
+
+        <p>
+            AI products break the traditional handoff model. In deterministic software, PMs can fully specify requirements before design begins, and designers can fully design before engineering implements. AI products require tighter collaboration because the capability space is not fully specifiable in advance. Chapter 10 introduced collaborative discovery for AI features, and this is not a luxury for AI products; it is a necessity since the AI capability space is too uncertain to specify upfront and teams must explore together. During discovery, PM contributes user needs, success metrics, constraints, and prioritization framework. Designer contributes user mental models, interaction patterns, UX principles, and feedback mechanisms. Engineer contributes technical possibilities, model capabilities, performance constraints, and integration requirements.
+        </p>
+
+        <h3 id="eval-driven-development">Eval-Driven Development</h3>
+
+        <p>
+            <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Chapter 21</a> established <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">evaluation</a> as the core discipline for AI development. This creates a new shared language for PM, Design, and Engineering conversations.
+        </p>
+
+        <p>
+            When eval is central, the collaboration dynamic changes. Instead of PM specifying requirements and judging implementation success, all three disciplines contribute to defining what "good" looks like and measuring whether the AI achieves it.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Eval as Collaboration Infrastructure</h4>
+            <p>Eval frameworks serve as collaboration infrastructure because they create shared, objective reference points. When a team shares eval scores and example outputs, debates shift from subjective opinions to shared evidence. This reduces friction and accelerates alignment.</p>
+        </div>
+
+        <h3 id="shared-metrics">Shared Metrics for AI Quality</h3>
+
+        <p>
+            Traditional products have clear success metrics that each discipline can contribute to: conversion rates, engagement, revenue, NPS. AI products add a layer of metrics that require all three disciplines to understand and own.
+        </p>
+
+        <h2 id="eval-metric-ownership">Eval Metric Ownership</h2>
+
+        <p>
+            Who owns AI quality metrics depends on the metric type. Understanding ownership clarifies accountability and collaboration patterns.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">AI Metric Ownership Matrix</h4>
+            <p>Who owns AI quality metrics depends on the metric type, and understanding ownership clarifies accountability and collaboration patterns. Task completion rate is primarily owned by PM with Design and Engineering as contributors. AI accuracy/precision is primarily owned by Engineering with PM contributing on thresholds and Design contributing on error categorization. User satisfaction for AI is primarily owned by Design with PM and Engineering as contributors. Response latency is primarily owned by Engineering with PM contributing on thresholds and Design contributing on loading UX. False positive rate is primarily owned by PM with Engineering contributing on measurement and Design contributing on user override patterns.</p>
+        </div>
+
+        <h2 id="collaboration-ceremonies">Collaboration Ceremonies for AI Teams</h2>
+
+        <p>
+            Traditional teams have established ceremonies: sprint planning, design reviews, engineering standups. AI teams need additional ceremonies that bridge disciplines.
+        </p>
+
+        <h3 id="eval-review">Eval Review</h3>
+
+        <p>
+            A regular meeting where the team reviews AI performance data, examines low-scoring examples, and identifies improvement opportunities. All three disciplines participate with different lenses. PM asks whether low-performing cases are high-impact user scenarios and what thresholds should be cared about. Design asks whether failures are explainable to users and whether better error messaging or override mechanisms are needed. Engineering asks whether root causes can be identified and whether there are quick improvements or if this requires model work.
+        </p>
+
+        <h3 id="ai-spec-review">AI Spec Review</h3>
+
+        <p>
+            Before building AI features, all three disciplines review the AI specification: what the AI should do, how it should behave, what the evaluation criteria are, and how the UX will present AI outputs and failures.
+        </p>
+
+        <h3 id="example-exploration">Example Exploration Session</h3>
+
+        <p>
+            A structured session where the team reviews real examples of AI inputs and outputs. The goal is shared understanding of AI behavior, not task completion. These sessions often reveal surprising AI behaviors and surface assumptions different disciplines held.
+        </p>
+
+        <h2 id="cross-functional-retros">Cross-Functional Retrospectives</h2>
+
+        <p>
+            After AI feature launches, retrospectives that include all three disciplines surface insights that discipline-specific retrospectives miss.
+        </p>
+
+        <p>
+            After AI feature launches, retrospectives that include all three disciplines surface insights that discipline-specific retrospectives miss. PM insights include whether the eval criteria matched user needs and whether success metrics were appropriate. Design insights include whether users understood AI behavior and whether error states were handled well. Engineering insights include what deployment taught and what they would change about the eval approach.
+        </p>
+
+        <h2 id="org-chart-templates">AI Team Org Chart Templates</h2>
+
+        <p>
+            Different organizational contexts call for different structures. These templates provide starting points for common scenarios.
+        </p>
+
+        <h3 id="template-early-stage">Early Stage: Single AI Feature Team</h3>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Early Stage AI Team Structure</h4>
+            <pre>
+AI Feature Team
+├── Product Manager (AI-familiar)
+├── Designer (UX for AI)
+├── ML Engineer (embedded in team)
+└── Engineer (full-stack, AI-aware)
+
+Shared Services (from platform if available):
+- Model deployment
+- Eval framework
+- Data infrastructure
+            </pre>
+        </div>
+
+        <h3 id="template-growing">Growing: Multiple AI Features</h3>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Growing AI Team Structure</h4>
+            <pre>
+Product Area Teams (2-3 AI features each)
+├── AI PM
+├── AI Designer
+├── ML Engineer
+└── 2-3 Engineers
+
+AI Platform Team (shared infrastructure)
+├── ML Engineers (2-3)
+└── MLOps Engineer
+
+AI Center of Excellence (optional)
+├── AI Leaders (1-2)
+└── Training/Enablement
+            </pre>
+        </div>
+
+        <h3 id="template-enterprise">Enterprise: Full AI Organization</h3>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Enterprise AI Organization</h4>
+            <pre>
+Chief AI Officer
+├── AI Platform Division
+│   ├── Infrastructure Team
+│   ├── Evaluation Team
+│   └── Data Platform Team
+├── AI Product Division
+│   ├── AI Product Team A
+│   ├── AI Product Team B
+│   └── AI Product Team C
+├── AI Research Division (optional)
+└── AI Governance &amp; CoE
+    ├── Responsible AI
+    ├── AI Training
+    └── AI Strategy
+            </pre>
+        </div>
+
+        <h2 id="cross-ref-ch29">Connecting to Chapter 29</h2>
+
+        <p>
+            This section focused on team collaboration within a single AI product team. Chapter 29, "Building the AI Product Organization," expands to the organizational level: how to structure the broader organization, how to think about AI career paths, and how to hire AI talent.
+        </p>
+
+        <p>
+            The team topologies described here scale up to organizational topologies. Stream-aligned teams become business unit AI teams. Platform teams become shared services divisions. CoE functions become enterprise-wide capability centers.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-28-3.html">28.3 Central AI Enablement</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-28-5.html">28.5 AI Review Boards</a>
+        </nav>
+
+        <footer>
+            <p>Section 28.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

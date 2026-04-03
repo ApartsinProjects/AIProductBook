@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18.4 Lessons on Cost and Evals - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-integration/index.html">Part V: Integration</a></div>
+        <div class="chapter-label">Chapter 18</div>
+        <h1>Real-World Case Studies</h1>
+        <p class="chapter-subtitle">18.4 Lessons on Cost and Evals</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn from real-world AI products and their journeys from vibe to production.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 18.3 recommended.
+        </div>
+
+        <h2 id="section-18-4">18.4 What Can Go Wrong: Lessons from High-Profile Failures</h2>
+
+        <p>
+            The AI product landscape is littered with products that seemed promising but failed 
+            to deliver. Examining these failures reveals patterns that can help you avoid the 
+            same mistakes. This section analyzes three notable case studies.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Why Study Failures?</div>
+            <p>
+                Imagine learning to drive by only studying car races where everything went 
+                perfectly. You'd have no idea what to do when it rains, when a tire blows, 
+                or when another driver makes a mistake. Similarly, studying AI failures 
+                teaches you what to watch for - cost overruns, trust issues, and product-market 
+                misalignments that aren't obvious from success stories.
+            </p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The MVP That Cost $10 Million</div>
+            <p>A startup spent 18 months building an AI product, then discovered users wanted something completely different. The entire $10M investment was for the wrong product. The lesson: user research before engineering would have cost $50,000 and 2 months. MVP stands for Minimum Viable Product, not Maximum Viable Product.</p>
+        </div>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Learning from others' failures is cheaper than learning from your own. Understanding 
+            why high-profile AI products failed gives you a checklist of things to watch for in 
+            your own product development.
+        </p>
+
+        <hr>
+
+        <h3>Case Study 1: OpenAI Sora</h3>
+
+        <h4>What Happened</h4>
+        <p>
+            Sora was announced as a breakthrough in video generation, producing stunning 
+            one-minute videos from text prompts. However, by late 2024, it became clear that 
+            the product faced significant challenges.
+        </p>
+
+        <h4>What Went Wrong</h4>
+
+        <div class="callout">
+            <div class="callout-title">Three Critical Problems</div>
+            <ul>
+                <li><strong>High Inference Cost:</strong> Each video cost $X in compute, making consumer 
+                pricing unsustainable. At scale, daily compute costs would exceed revenue.</li>
+                <li><strong>The Novelty Cliff:</strong> Initial demos impressed, but users found the 
+                experience wore off quickly. The "wow factor" didn't translate to retention.</li>
+                <li><strong>Quality Moat Erosion:</strong> Within 3-6 months, competitors (Runway, 
+                Pika, Kling) caught up, diminishing the differentiation advantage.</li>
+            </ul>
+        </div>
+
+        <h4>Why This Matters for Your Product</h4>
+
+        <div class="callout">
+            <div class="callout-title">Skill Demonstration: Cost-Before-Building</div>
+            <pre><code>// Calculate cost per engagement before building
+function calculateCostPerEngagement() {
+  const modelCost = 0.03; // per minute of video
+  const computeOverhead = 0.02; // infrastructure
+  const totalCost = modelCost + computeOverhead;
+  
+  // At what price point is this sustainable?
+  // Consumer: $9.99/month, 5 videos/month = $2/video
+  // Sora's cost: $0.05/video -> sustainable
+  // But what about 50 videos/month? 
+  // Cost: $2.50, revenue: $2.00 -> lose money
+  
+  // Lesson: Calculate sustainable usage, not just base cost
+  return {
+    costPerVideo: totalCost,
+    breakEvenAtMonthlyVideos: totalCost / 2, // assuming $2 avg revenue
+    conclusion: 'Need usage limits or B2B model'
+  };
+}</code></pre>
+        </div>
+
+        <hr>
+
+        <h3>Case Study 2: Klarna AI Assistant</h3>
+
+        <h4>What Happened</h4>
+        <p>
+            Klarna launched an AI assistant to handle customer service queries, claiming it 
+            would replace human <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>. Early results showed high automation, but problems 
+            emerged.
+        </p>
+
+        <h4>What Went Wrong</h4>
+
+        <div class="callout">
+            <div class="callout-title">The Full Replacement Fallacy</div>
+            <ul>
+                <li><strong>Complex Issue Resolution:</strong> AI handled simple queries well but 
+                failed on complex issues like fraud disputes, chargebacks, and account takeovers. 
+                These required human judgment.</li>
+                <li><strong>Trust Erosion:</strong> Some users felt "shunted" to AI and escalated 
+                faster, increasing support volume instead of decreasing it.</li>
+                <li><strong>Nuance Failures:</strong> Financial services require precise language. 
+                AI occasionally gave imprecise answers that created legal exposure.</li>
+            </ul>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: The Chargeback Scenario</div>
+            <p>
+                A customer disputed a $200 charge. The AI assistant processed the dispute 
+                correctly but missed a key detail: this was the customer's third dispute in 
+                30 days, suggesting potential fraud. A human agent would have flagged this 
+                pattern and initiated additional verification. The AI just processed the 
+                standard workflow. Result: legitimate chargeback, loss of $200 + investigation 
+                cost = $250 total loss from one missed edge case.
+            </p>
+        </div>
+
+        <h4>Why Hybrid Beats Full Replacement</h4>
+
+        <table>
+            <thead>
+                <tr><th>Approach</th><th>Automation</th><th>Cost per Case</th><th>Error Rate</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Full AI</td><td>90%</td><td>$0.50</td><td>3% (high-value errors)</td></tr>
+                <tr><td>AI-Assisted</td><td>70%</td><td>$2.00</td><td>0.5%</td></tr>
+                <tr><td>Hybrid (80-15-5)</td><td>81%</td><td>$1.20</td><td>0.8%</td></tr>
+            </tbody>
+        </table>
+        <p><em>Hybrid approach balances automation with error avoidance</em></p>
+
+        <hr>
+
+        <h3>Case Study 3: Humane AI Pin</h3>
+
+        <h4>What Happened</h4>
+        <p>
+            Humane launched a $700 wearable AI device as a "phone replacement." Despite 
+            significant investment and hype, sales were disappointing and the company was 
+            eventually acquired for a fraction of its valuation.
+        </p>
+
+        <h4>What Went Wrong</h4>
+
+        <div class="callout">
+            <div class="callout-title">Product-Market Fit Failure</div>
+            <ul>
+                <li><strong>No Clear Use Case:</strong> What would you do with it that your phone 
+                doesn't do better? The answer was unclear, and the product required learning 
+                new interaction patterns.</li>
+                <li><strong>Performance Issues:</strong> Latency was higher than expected, 
+                voice recognition struggled in noisy environments, and the projector was 
+                hard to read outdoors.</li>
+                <li><strong>Price Mismatch:</strong> At $700 + $24/month subscription, it needed 
+                to be dramatically better than a free phone app. It wasn't.</li>
+                <li><strong>Integration Gap:</strong> The product existed in isolation rather 
+                than enhancing existing workflows.</li>
+            </ul>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: The "Show Me My Order" Test</div>
+            <p>
+                A common use case: "What's my order status?" On phone: 3 taps, 2 seconds. 
+                On AI Pin: Tap device, say "order status," wait for response, 5+ seconds. 
+                The AI Pin was slower than the existing solution for every real task. This 
+                fundamental issue - AI was adding friction rather than removing it - was 
+                the root cause of failure.
+            </p>
+        </div>
+
+        <hr>
+
+        <h3>Key Lessons Summary</h3>
+
+        <div class="callout warning">
+            <div class="callout-title">Critical Lessons</div>
+            <ul>
+                <li><strong>Calculate model inference cost per engagement before setting pricing</strong>
+                - You need sustainable unit economics from day one.</li>
+                <li><strong>Novelty is not a retention strategy</strong> - Users need ongoing value, 
+                not just initial excitement.</li>
+                <li><strong>Quality moats erode in 3-6 months</strong> - Plan for competition 
+                and differentiation that goes beyond model capability.</li>
+                <li><strong>Hybrid > full replacement</strong> - AI-assisted humans outperform 
+                either pure AI or pure human approaches.</li>
+                <li><strong>Product-market fit is non-negotiable</strong> - The best technology 
+                fails if it doesn't solve a clear user need better than alternatives.</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h3>Prevention Checklist</h3>
+
+        <pre><code>Before Launch, Verify:
+
+COST SUSTAINABILITY
+□ Cost per engagement calculated
+□ Pricing covers costs at expected scale
+□ Contingency for usage spikes
+
+RETENTION PLAN
+□ Beyond novelty, what's the ongoing value?
+□ What's the frequency of use?
+□ What's the switching cost from alternatives?
+
+COMPETITIVE POSITIONING  
+□ What's the moat beyond model quality?
+□ How quickly could competitors replicate?
+□ What prevents "just use ChatGPT"?
+
+APPROACH REALISM
+□ Is hybrid model viable for this use case?
+□ Can edge cases be identified and escalated?
+□ What's the error tolerance for this domain?
+
+USER NEED
+□ Would users pay for this vs. free alternatives?
+□ Is this faster/simpler than existing solutions?
+□ What's the actual use case, not the theoretical one?</code></pre>
+
+        <hr>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Key Takeaways</div>
+            <ul>
+                <li>High inference costs can make products unsustainable</li>
+                <li>Novelty wears off - plan for long-term value</li>
+                <li>Quality moats erode fast - build additional differentiation</li>
+                <li>Hybrid models outperform full replacement</li>
+                <li>Product-market fit matters more than technology</li>
+                <li>Use the prevention checklist before launch</li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-19/index.html">Chapter 19: Team Structures, Collaboration, and Culture</a> 
+                to learn how to build effective teams for AI product development.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-18-3.html">18.3 Multi-Agent Vertical Product</a>
+            <a class="up" href="index.html">Chapter 18 Index</a>
+            <a class="next" href="chapter-19/index.html">Ch 19: Team Structures</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 18.4 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

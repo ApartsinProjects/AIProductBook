@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17.4 Evaluation of Retrieval Quality - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+    <style>
+        .diagram-block {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+        .metric-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+        }
+        .metric-card h4 {
+            margin: 0 0 0.5rem 0;
+            color: #667eea;
+        }
+        .eval-framework {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .eval-level {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .eval-level h4 { margin: 0 0 0.5rem 0; }
+        .eval-level p { margin: 0; opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 17.4</div>
+        <h1>Evaluation of Retrieval Quality</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"You cannot improve what you cannot measure. For RAG systems, this means building a retrieval evaluation framework before you need it, not after your users start complaining about bad answers."</p>
+            <cite>AI Engineering Lead, HealthMetrics</cite>
+        </blockquote>
+
+        <h2>Introduction</h2>
+        <p>
+            Evaluating retrieval quality is harder than it looks. Unlike generation quality where you can ask human raters, retrieval evaluation requires ground truth annotations that are expensive to create and often ambiguous. This section provides a systematic approach to measuring and improving retrieval quality, covering test set creation, metrics computation, and continuous evaluation infrastructure.
+        </p>
+
+        <h2>The Three Levels of RAG Evaluation</h2>
+        <p>
+            RAG evaluation operates at three distinct levels: retrieval-level metrics measure whether relevant documents are found; generation-level metrics measure whether the LLM correctly uses retrieved context; end-to-end metrics measure whether the final answer satisfies the user.
+        </p>
+
+        <div class="eval-framework">
+            <div class="eval-level">
+                <h4>Level 1: Retrieval</h4>
+                <p>Are the right documents in the retrieved set?</p>
+            </div>
+            <div class="eval-level">
+                <h4>Level 2: Generation</h4>
+                <p>Does the LLM correctly use the context?</p>
+            </div>
+            <div class="eval-level">
+                <h4>Level 3: End-to-End</h4>
+                <p>Does the answer satisfy the user?</p>
+            </div>
+        </div>
+
+        <h2>Creating Retrieval Test Sets</h2>
+        <p>
+            The foundation of retrieval evaluation is a well-crafted test set. This requires identifying queries, determining the relevant documents for each query, and often creating multiple ground truth sets for queries with multiple valid answers.
+        </p>
+
+        <h3>Query Selection</h3>
+        <p>
+            Your test queries should cover the full distribution of queries you expect in production. This includes frequent queries that represent the twenty percent of queries accounting for eighty percent of your traffic, edge cases such as unusual phrasings, ambiguous queries, and queries with no good answer, challenging queries that involve complex multi-part questions or require multi-hop reasoning, and temporal queries about recent information that may not yet be in the index.
+        </p>
+
+        <div class="code-block">
+# Query categorization framework
+QUERY_CATEGORIES = {
+    "simple_factual": {
+        "description": "Single fact lookup",
+        "example": "What is DataForge's return policy?",
+        "expected_chunks": 1-2
+    },
+    "complex_factual": {
+        "description": "Multi-fact synthesis",
+        "example": "Compare DataForge's pricing to competitors including support tiers",
+        "expected_chunks": 3-5
+    },
+    "procedural": {
+        "description": "How-to questions",
+        "example": "How do I set up a new pipeline in DataForge?",
+        "expected_chunks": 5-10
+    },
+    "entity_centric": {
+        "description": "Questions about specific entities",
+        "example": "Tell me about the orders_pipeline and its dependencies",
+        "expected_chunks": 3-5
+    },
+    "comparative": {
+        "description": "Comparison questions",
+        "example": "What is the difference between full sync and incremental sync?",
+        "expected_chunks": 2-4
+    },
+    "negative": {
+        "description": "Questions with no good answer in the corpus",
+        "example": "Does DataForge support real-time streaming ingestion?",
+        "expected_chunks": 0 or exact match only
+    }
+}
+        </div>
+
+        <h3>Annotation Process</h3>
+        <p>
+            For each query, you need to identify which chunks are relevant. This is expensive human labor, so use annotation efficiently. First, leverage retrieval to reduce annotation by running your best retriever and only asking annotators to judge the top results plus random negatives. Second, use expert annotators since domain experts can judge relevance faster and more accurately than crowd workers. Third, collect multiple judgments because relevance is often subjective and multiple annotators enable measuring agreement. Fourth, distinguish relevant from highly relevant since not all relevant chunks are equally important, and a two-level judgment of relevant versus highly relevant is often easier than multi-point graded relevance scales.
+        </p>
+
+        <div class="callout big-picture">
+            <h4>The Annotation Budget Problem</h4>
+            <p>Full annotation of all query-document pairs is intractable. A test set of 500 queries against 100,000 chunks would require 50 million judgments. Use intelligent sampling: annotate only the top-k candidates from your best retriever, plus stratified samples to measure recall. Accept that your test set will be biased toward your current retrieval quality.</p>
+        </div>
+
+        <h2>Retrieval Metrics</h2>
+        <p>
+            Retrieval metrics measure whether the right documents appear in the right positions. The most important metrics for RAG evaluation are recall, precision, MRR, and NDCG.
+        </p>
+
+        <h3>Recall@K</h3>
+        <p>
+            Recall@K measures what fraction of all relevant documents appear in the top-K retrieved results. High recall means you are not missing important information.
+        </p>
+
+        <div class="code-block">
+def recall_at_k(
+    retrieved_ids: list[str],
+    relevant_ids: set[str],
+    k: int
+) -> float:
+    """Calculate recall@k."""
+    retrieved_k = set(retrieved_ids[:k])
+    relevant_in_k = retrieved_k.intersection(relevant_ids)
+    return len(relevant_in_k) / len(relevant_ids) if relevant_ids else 0.0
+        </div>
+
+        <h3>Precision@K and MRR</h3>
+        <p>
+            Precision@K measures what fraction of top-K results are relevant. MRR (Mean Reciprocal Rank) measures where the first relevant result appears.
+        </p>
+
+        <div class="code-block">
+def precision_at_k(
+    retrieved_ids: list[str],
+    relevant_ids: set[str],
+    k: int
+) -> float:
+    """Calculate precision@k."""
+    retrieved_k = set(retrieved_ids[:k])
+    relevant_in_k = retrieved_k.intersection(relevant_ids)
+    return len(relevant_in_k) / k
+
+def mean_reciprocal_rank(
+    retrieved_ids_per_query: list[list[str]],
+    relevant_ids_per_query: list[set[str]]
+) -> float:
+    """Calculate MRR across queries."""
+    reciprocal_ranks = []
+    for retrieved, relevant in zip(retrieved_ids_per_query, relevant_ids_per_query):
+        for rank, doc_id in enumerate(retrieved, 1):
+            if doc_id in relevant:
+                reciprocal_ranks.append(1.0 / rank)
+                break
+        else:
+            reciprocal_ranks.append(0.0)
+    return sum(reciprocal_ranks) / len(reciprocal_ranks)
+        </div>
+
+        <h3>NDCG@K</h3>
+        <p>
+            NDCG (Normalized Discounted Cumulative Gain) accounts for both relevance and position. Highly relevant documents appearing at the top contribute more to the score than relevant documents appearing lower.
+        </p>
+
+        <div class="code-block">
+def dcg_at_k(relevance_scores: list[float], k: int) -> float:
+    """Calculate DCG@k."""
+    return sum(rel / np.log2(rank + 1) for rank, rel in enumerate(relevance_scores[:k], 1))
+
+def ndcg_at_k(
+    retrieved_relevance: list[float],
+    ideal_relevance: list[float],
+    k: int
+) -> float:
+    """Calculate NDCG@k."""
+    dcg = dcg_at_k(retrieved_relevance, k)
+    ideal_dcg = dcg_at_k(sorted(ideal_relevance, reverse=True), k)
+    return dcg / ideal_dcg if ideal_dcg > 0 else 0.0
+        </div>
+
+        <h3>Choosing the Right Metric</h3>
+
+        <div class="metric-card">
+            <h4>Use Recall@K when:</h4>
+            <p>Missing information is costly. You want to ensure all relevant documents are retrieved, even if some irrelevant ones slip through. Good for medical, legal, and research applications.</p>
+        </div>
+        <div class="metric-card">
+            <h4>Use Precision@K when:</h4>
+            <p>Irrelevant documents pollute the context. You would rather miss some relevant information than include irrelevant noise. Good for when LLM context windows are limited.</p>
+        </div>
+        <div class="metric-card">
+            <h4>Use MRR when:</h4>
+            <p>The top result is all that matters. Good for single-answer queries where the user only wants the best document.</p>
+        </div>
+        <div class="metric-card">
+            <h4>Use NDCG when:</h4>
+            <p>Relevance is graded and position matters. Good for most general-purpose RAG where you want a balanced view of quality.</p>
+        </div>
+
+        <h2>Generation Evaluation</h2>
+        <p>
+            Retrieval quality is only meaningful insofar as it affects generation quality. Evaluation generation requires measuring both faithfulness (does the answer match the context) and relevance (does the answer match the question).
+        </p>
+
+        <h3>Faithfulness Metrics</h3>
+        <p>
+            Faithfulness measures whether the generated answer is supported by the retrieved context. Unfaithful answers hallucinate information not present in the context.
+        </p>
+
+        <div class="code-block">
+# Faithfulness evaluation using entailment
+FAITHFULNESS_PROMPT = """Given a context and an answer, determine if the answer is 
+faithful to the context (i.e., all claims in the answer are supported by the context).
+
+Context: {context}
+
+Answer: {answer}
+
+Is the answer faithful to the context? Answer YES or NO."""
+
+def evaluate_faithfulness(question: str, context: str, answer: str) -> float:
+    prompt = FAITHFULNESS_PROMPT.format(context=context, answer=answer)
+    response = llm.complete(prompt)
+    # Parse YES/NO and convert to float
+    return 1.0 if "YES" in response.text else 0.0
+        </div>
+
+        <h3>Context Utilization Metrics</h3>
+        <p>
+            Context utilization measures whether the model actually used the retrieved context. A low utilization score means the model ignored the context and relied on its parametric memory.
+        </p>
+
+        <div class="code-block">
+# Context utilization via attention tracing
+def calculate_context_utilization(
+    answer_tokens: list[str],
+    context_tokens: list[str],
+    attention_weights: list[list[float]]
+) -> float:
+    """Calculate what fraction of answer tokens attend to context tokens."""
+    total_attention = sum(sum(row) for row in attention_weights)
+    context_attention = sum(
+        sum(row[i] for i in range(len(context_tokens)))
+        for row in attention_weights
+    )
+    return context_attention / total_attention if total_attention > 0 else 0.0
+        </div>
+
+        <h3>End-to-End Answer Quality</h3>
+        <p>
+            The ultimate measure is whether users find value in the answers. This requires human evaluation or proxy metrics like task completion.
+        </p>
+
+        <div class="callout key-insight">
+            <h4>The LLM-as-Judge Paradox</h4>
+            <p>Using an LLM to evaluate RAG quality is tempting but problematic. LLMs are prone to preferring longer, more detailed answers that may not actually be more accurate. Use LLM evaluation for rapid iteration and debugging, but validate with human evaluation before making irreversible decisions about your retrieval system.</p>
+        </div>
+
+        <h2>Continuous Retrieval Monitoring</h2>
+        <p>
+            One-time evaluation is not enough. Retrieval quality can degrade over time as your corpus changes, query patterns evolve, and models drift. You need continuous monitoring to detect and diagnose problems.
+        </p>
+
+        <h3>The Retrieval Canary Pattern</h3>
+        <p>
+            Maintain a set of canary queries with known good answers. Run these queries on every retrieval update and track metrics over time. Degradation in canary performance triggers alerts before it affects users.
+        </p>
+
+        <div class="code-block">
+# Canary query monitoring
+CANARY_QUERIES = [
+    {
+        "query": "What is DataForge's data retention policy?",
+        "expected_top_chunks": ["retention_policy_doc"],
+        "min_relevance_score": 0.85
+    },
+    {
+        "query": "How do I configure OAuth2 authentication?",
+        "expected_top_chunks": ["oauth2_config_doc"],
+        "min_relevance_score": 0.80
+    },
+    # ... 50-100 canary queries covering key topics
+]
+
+def monitor_retrieval_health(retriever: Retriever) -> dict:
+    """Run canary queries and report health metrics."""
+    results = []
+    for canary in CANARY_QUERIES:
+        retrieved = retriever.retrieve(canary["query"], k=5)
+        scores = [calculate_relevance(canary["query"], doc) for doc in retrieved]
+        results.append({
+            "query": canary["query"],
+            "top_score": scores[0] if scores else 0,
+            "any_match": any(
+                doc.id in canary["expected_top_chunks"]
+                for doc in retrieved
+            )
+        })
+    
+    return {
+        "health_score": np.mean([r["top_score"] for r in results]),
+        "coverage": np.mean([r["any_match"] for r in results]),
+        "degraded_queries": [
+            r["query"] for r in results
+            if r["top_score"] < 0.5
+        ]
+    }
+        </div>
+
+        <h3>A/B Testing Retrieval Strategies</h3>
+        <p>
+            When you have multiple retrieval strategies, A/B testing enables data-driven selection. Split traffic between strategies and measure user-facing metrics.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>Practical Example: HealthMetrics Retrieval Evaluation</h4>
+            <p><strong>Challenge:</strong> HealthMetrics needed to choose between three retrieval strategies for their clinical guideline RAG: keyword search, vector search, and hybrid search.</p>
+            <p><strong>Approach:</strong> They built a three-stage evaluation pipeline with offline evaluation on 500 annotated queries using MRR and NDCG@10 at Stage 1, LLM-as-judge evaluation on 100 queries measuring faithfulness and relevance at Stage 2, and shadow deployment with five percent of traffic to measure real-world satisfaction at Stage 3.</p>
+            <p><strong>Results:</strong> Hybrid search won on offline metrics but vector search had better real-world satisfaction. Investigation revealed hybrid search returned noisier results that confused the LLM on edge cases.</p>
+            <p><strong>Lesson:</strong> Offline metrics are necessary but not sufficient. Always validate with production traffic before full rollout.</p>
+        </div>
+
+        <h2>Debugging Retrieval Failures</h2>
+        <p>
+            When retrieval quality is poor, systematic debugging identifies the root cause.
+        </p>
+
+        <h3>The Retrieval Debugging Checklist</h3>
+        <p>
+            When debugging retrieval failures, systematically check chunk quality by verifying that chunks are coherent and contain complete thoughts. Check embedding quality by testing whether similar chunks have similar embeddings using known similar pairs. Check recall by verifying that relevant documents are being retrieved at all and examining vector similarity scores. Check precision by determining whether irrelevant documents are outranking relevant ones and analyzing the score distribution. Check query-document vocabulary for mismatches between how users phrase queries and how documents are written. Check chunk boundaries to verify that relevant sections are not split across chunks in ways that break semantic coherence.
+        </p>
+
+        <div class="callout warning">
+            <h4>Warning: Metric Gaming</h4>
+            <p>When you measure MRR, teams eventually optimize for MRR. This often means over-optimizing for the top-1 result at the expense of top-5 through top-10 quality. Use multiple metrics that cannot be easily gamed. Include recall alongside MRR to ensure you are not sacrificing overall retrieval quality for top-1 performance.</p>
+        </div>
+
+        <h2>Section Summary</h2>
+        <p>
+            RAG evaluation requires measuring retrieval, generation, and end-to-end quality. Retrieval test sets should cover the full query distribution including frequent queries, edge cases, and challenging multi-hop questions. Key retrieval metrics include Recall@K for measuring completeness, Precision@K for measuring relevance in the top results, MRR for single-answer quality, and NDCG@K for graded relevance with position awareness. Generation metrics measure faithfulness to context and appropriate context utilization. Continuous monitoring via canary queries detects degradation before it affects users. A/B testing validates retrieval strategy changes with real traffic. Systematic debugging following a structured checklist identifies root causes of poor retrieval quality.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-17-3.html">17.3 Reranking and Graph-Aware Retrieval</a>
+            <a class="up" href="index.html">Chapter 17 Overview</a>
+            <a class="next" href="section-17-5.html">17.5 When NOT to Use RAG</a>
+        </nav>
+
+        <footer>
+            <p>Section 17.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

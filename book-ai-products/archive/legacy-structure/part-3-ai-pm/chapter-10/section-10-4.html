@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9.4 Governance in Agentic Systems - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 9</div>
+        <h1>Ethics, Trust, and Governance</h1>
+        <p class="chapter-subtitle">9.4 Governance in Agentic Systems</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Build trustworthy products with proper governance frameworks.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 9.3 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Governance for Autonomous AI</div>
+            <p>Agentic AI systems require governance mechanisms that go far beyond passive AI features because the stakes of failure or misuse are much higher when AI can take autonomous action. Human-in-the-loop requirements, behavioral guardrails, audit trails, and capability limits are essential controls that ensure AI <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> operate within acceptable boundaries. The principle of least privilege should guide all agentic system design.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Three Laws Bug</div>
+            <p>Isaac Asimov's Three Laws of Robotics were fictional. Every sci-fi robot ever built eventually violated them because real-world situations are more complex than clean rules. <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agentic AI</a> governance faces the same problem: rules work until they do not.</p>
+        </div>
+
+        <h2 id="section-9-4">9.4 Governance in Agentic Systems</h2>
+
+        <p>
+            <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agentic AI</a> systems, which can take autonomous actions on behalf of users, require additional governance beyond what is needed for passive AI features. When an AI can book flights, send emails, make purchases, or execute trades, the stakes of failure or misuse are much higher. Governance in agentic systems must address the unique challenges of autonomous action: what actions are permitted, who is accountable when things go wrong, and how users maintain control.
+        </p>
+
+        <h3>Why Agentic Systems Need More Governance</h3>
+
+        <p>
+            Traditional AI products generate outputs that users can review before acting on. An AI writes an email, and the user decides whether to send it. An AI suggests a response, and the user chooses to accept or ignore it. In agentic systems, the AI takes action without waiting for user approval. This fundamental shift changes the risk profile and requires governance mechanisms that would be unnecessary for passive AI.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Email That Was Sent</h4>
+            <p>
+                A productivity app added an "auto-send" feature where the AI would send AI-generated emails after a timeout. Users loved the time savings. Then a user discovered the AI had sent an email to their boss saying "I don't think this project is worth pursuing" without the user's knowledge. The user had been in the habit of reviewing before send but was interrupted before reviewing this particular email.
+            </p>
+            <p>
+                <strong>The consequence:</strong> The user had to have an uncomfortable conversation with their boss explaining that AI sent the email. Trust was damaged, and the company received negative press. The feature was eventually changed to require explicit user action for all emails to external recipients.
+            </p>
+        </div>
+
+        <h3>Human-in-the-Loop Requirements</h3>
+
+        <p>
+            Human-in-the-loop (HITL) governance ensures that humans approve or can override AI actions, especially for high-stakes decisions. The key principle is that the level of human oversight should be proportional to the impact of the action. Low-stakes, reversible actions can be automated. High-stakes, consequential actions require human approval or easy override.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Implementing Human-in-the-Loop</h4>
+            <p>
+                <strong>Define action tiers:</strong>
+            </p>
+            <ol>
+                <li><strong>Tier 1 - Fully autonomous:</strong> Actions that are easily reversed and low-impact (e.g., auto-filing emails, sorting into folders)</li>
+                <li><strong>Tier 2 - Human-in-the-loop:</strong> Actions requiring confirmation before execution (e.g., sending messages, making calendar changes)</li>
+                <li><strong>Tier 3 - Human-on-the-loop:</strong> AI executes but human must approve before completion (e.g., initiating payments, making purchases)</li>
+                <li><strong>Tier 4 - Human-only:</strong> AI can suggest but only human can execute (e.g., terminating accounts, deleting data)</li>
+            </ol>
+            <p>
+                <strong>Implementation:</strong> At each tier, define what the human review looks like. Is it explicit approval? A simple "yes/no" button? Or is it post-execution review?
+            </p>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Stripe's Agent Governance</h4>
+            <p>
+                Stripe, a payment processing company, allows AI <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> to make payments on behalf of users. Their governance approach requires explicit user permission for each action, with clear disclosure that an AI is acting. Users must set spending limits, and any transaction above the limit requires human approval. All agent actions are logged and can be viewed in the user's activity dashboard.
+            </p>
+            <p>
+                <strong>Why this works:</strong> Users maintain control through explicit permissions and spending limits, while still benefiting from automation for routine payments.
+            </p>
+        </div>
+
+        <h3>Behavioral Guardrails</h3>
+
+        <p>
+            Guardrails are constraints that prevent AI <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> from taking actions that violate policies, even if the AI would choose to do so otherwise. While <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> are designed to take autonomous action, guardrails ensure they cannot cross certain boundaries. Effective guardrails operate at multiple levels: input validation, action checking, and output filtering.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Designing Effective Guardrails</h4>
+            <p>
+                <strong>Input guardrails:</strong>
+            </p>
+            <ul>
+                <li>Validate that user requests are within the agent's permitted scope</li>
+                <li>Detect and block prompt injection attempts</li>
+                <li>Check for harmful or illegal requests</li>
+            </ul>
+            <p>
+                <strong>Action guardrails:</strong>
+            </p>
+            <ul>
+                <li>Verify proposed actions against allowed action list</li>
+                <li>Check action parameters against safety constraints</li>
+                <li>Enforce rate limits and quotas</li>
+            </ul>
+            <p>
+                <strong>Output guardrails:</strong>
+            </p>
+            <ul>
+                <li>Validate responses before returning to user</li>
+                <li>Filter sensitive information</li>
+                <li>Check for policy violations in generated content</li>
+            </ul>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Guardrail Type</th><th>Example</th><th>Implementation</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Scope limits</td><td>Can only access certain APIs</td><td>API gateway restrictions</td></tr>
+                <tr><td>Safety filters</td><td>Block harmful content</td><td>Content classification</td></tr>
+                <tr><td>Budget caps</td><td>Max $100 per transaction</td><td>Transaction validation</td></tr>
+                <tr><td>Rate limits</td><td>Max 10 actions per hour</td><td>Request throttling</td></tr>
+                <tr><td>Audit logging</td><td>All actions recorded</td><td>Immutable audit trail</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Audit Trails for Accountability</h3>
+
+        <p>
+            Agentic systems must maintain complete audit trails because when something goes wrong, you need to understand what happened. An audit trail should record the original user request, the AI's reasoning, the actions taken, the results, and any human decisions in the process. This serves both technical debugging and regulatory compliance.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Trading Bot Incident</h4>
+            <p>
+                A quantitative trading firm ran an AI agent that executed trades. The agent made a series of unusual trades that resulted in $2M in losses. Without an audit trail, the firm could not determine whether the losses were due to a model bug, data issues, or malicious prompt injection. With a complete audit trail, they could see the exact inputs, model outputs, and trade decisions, allowing them to identify and fix the root cause.
+            </p>
+            <p>
+                <strong>Key insight:</strong> Audit trails are not just for compliance; they are essential for debugging and improving agentic systems.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Building Audit Trails</h4>
+            <p>
+                Each agent action should record:
+            </p>
+            <ol>
+                <li><strong>Timestamp:</strong> When the action occurred</li>
+                <li><strong>User identity:</strong> Who initiated the request</li>
+                <li><strong>Request details:</strong> What the user asked for</li>
+                <li><strong>Agent reasoning:</strong> How the agent interpreted and planned to fulfill the request</li>
+                <li><strong>Actions taken:</strong> What the agent did (API calls, data access, etc.)</li>
+                <li><strong>Results:</strong> What happened as a result</li>
+                <li><strong>Human decisions:</strong> Any human approvals or overrides</li>
+            </ol>
+            <p>
+                Store audit logs immutably and retain them according to regulatory requirements (often 7+ years for financial services).
+            </p>
+        </div>
+
+        <h3>Capability Limits and Scope Control</h3>
+
+        <p>
+            Every agent should have clearly defined boundaries: what it can do, what it cannot do, and what it should not do but might accidentally try. Capability limits should be explicit and enforced technically, not just documented. Users should understand what the agent can and cannot do to set appropriate expectations.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">The Principle of Least Privilege</div>
+            <p>
+                Agentic systems should have only the minimum capabilities required to fulfill their purpose. If an agent needs to read documents, it should not also have write access unless explicitly required. Start restrictive and expand as needed.
+            </p>
+        </div>
+
+        <h3>Governance Framework Implementation</h3>
+
+        <p>
+            Implementing governance for agentic systems requires a structured approach:
+        </p>
+
+        <ol>
+            <li><strong>Capability mapping:</strong> Document everything the agent can do</li>
+            <li><strong>Risk assessment:</strong> For each capability, assess what could go wrong</li>
+            <li><strong>Control design:</strong> Implement controls proportional to risk</li>
+            <li><strong>Testing:</strong> Verify controls work through red-team exercises</li>
+            <li><strong>Monitoring:</strong> Track agent behavior in production</li>
+            <li><strong>Incident response:</strong> Have clear processes for when things go wrong</li>
+        </ol>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-10/index.html">Chapter 10: Go-to-Market, Pricing, Adoption, and Success Metrics</a> 
+                to learn how to drive real adoption and business value with the right pricing and metrics.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-9-3.html">9.3 Building User Trust</a>
+            <a class="up" href="index.html">Chapter 9 Index</a>
+            <a class="next" href="chapter-10/index.html">Ch 10: GTM</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 9.4 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

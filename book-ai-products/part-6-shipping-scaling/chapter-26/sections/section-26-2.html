@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 26.2: Staged Rollouts and User Education - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 26</div>
+        <h1>Staged Rollouts and User Education</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Users do not hate AI. They hate being surprised by AI. The best AI launches educate users about what to expect before expectations become disappointments."</p>
+            <cite>Product Lead Who Learned This from Launch Metrics</cite>
+        </blockquote>
+
+        <h2 id="staged-rollout-strategy">Staged Rollout Strategy</h2>
+
+        <p>
+            Section 26.1 covered the technical mechanisms of staged deployment: shadow mode and canary releases. This section covers the strategic planning of rollout progression: when to advance, when to pause, and how to sequence user segments.
+        </p>
+
+        <p>
+            The goal of staged rollout is not simply to reduce risk. It is to build confidence incrementally while preserving the ability to respond to unexpected signals. A well-designed rollout creates learning opportunities at each stage.
+        </p>
+
+        <h2 id="segment-selection">Segment Selection for Rollouts</h2>
+
+        <p>
+            Which users you expose to AI first shapes both your risk and your learning. Choose segments strategically.
+        </p>
+
+        <h3 id="internal-first">Internal Users First</h3>
+
+        <p>
+            Employees make ideal first users for several reasons: they understand the product context, they provide candid feedback, and they can be briefed on AI behavior expectations. Use internal rollout to catch issues before external exposure.
+        </p>
+
+        <p>
+            Employees make ideal first users because they understand the product context, provide candid feedback, and can be briefed on AI behavior expectations. Internal rollout catches issues before external exposure because employees will not abandon the product if AI behaves unexpectedly, employees can articulate what went wrong and why, internal tools and dashboards are already in place for monitoring, and employee reaction predicts external user reaction.
+        </p>
+
+        <h3 id="beta-user-strategy">Beta User Strategy</h3>
+
+        <p>
+            After internal rollout, select beta users who can provide quality feedback and tolerate uncertainty. Ideal beta users combine enthusiasm for new features with realistic expectations.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Beta User Segmentation</h4>
+            <p><strong>Power users:</strong> Deep product knowledge lets them evaluate AI suggestions meaningfully. However, they may be biased by existing workflows.</p>
+            <p><strong>Early adopters:</strong> Enthusiastic about AI and forgiving of imperfections. Good for initial feedback but may miss usability issues for mainstream users.</p>
+            <p><strong>Champion users:</strong> Internal advocates who can help educate other users once AI ships broadly.</p>
+            <p><strong>Diverse users:</strong> Include users from different use cases, geographies, and technical sophistication to catch segment-specific issues.</p>
+        </div>
+
+        <h2 id="rollout-gates">Rollout Gates and Advancement Criteria</h2>
+
+        <p>
+            Define clear gates between rollout stages. Each gate should have specific success criteria that must be met before advancing.
+        </p>
+
+        <h3 id="metric-gates">Metric-Based Gates</h3>
+
+        <p>
+            Establish quantitative thresholds for each rollout stage:
+        </p>
+
+        <p>
+            Metric-based gates establish quantitative thresholds for each rollout stage, including health metrics where error rate, latency, and availability must remain within acceptable bounds, user engagement where AI feature adoption rate must meet minimum threshold, feedback quality where negative feedback rate must be below threshold, and output quality where production eval scores must meet minimum thresholds.
+        </p>
+
+        <h3 id="qualitative-gates">Qualitative Gates</h3>
+
+        <p>
+            Quantitative metrics capture what happened but not why. Qualitative gates ensure you understand the user experience:
+        </p>
+
+        <p>
+            Quantitative metrics capture what happened but not why, so qualitative gates ensure you understand the user experience through user interviews conducted with users at each stage, support ticket analysis reviewing contacts related to AI features, feature adoption patterns observing whether users are discovering and exploring AI capabilities, and workflow integration assessing whether users are integrating AI into their workflows or abandoning it.
+        </p>
+
+        <h2 id="user-education">User Education for AI Features</h2>
+
+        <p>
+            AI features require more user education than traditional features because users need to understand what AI can and cannot do, how to interpret AI outputs, and how to provide feedback that improves the system.
+        </p>
+
+        <h3 id="onboarding-ai">AI Onboarding Elements</h3>
+
+        <p>
+            Structure onboarding to set appropriate expectations and teach effective use:
+        </p>
+
+        <p>
+            Structure onboarding to set appropriate expectations and teach effective use. This includes capability introduction that shows what the AI can do, not just how to access it, limitation framing that explicitly communicates what the AI cannot do or where it struggles, example interactions that demonstrate effective AI interactions through guided examples, and feedback mechanisms that teach users how to correct, refine, or report AI outputs.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: EduGen Teacher Onboarding</h4>
+            <p><strong>Who:</strong> EduGen product team launching AI assignment generation</p>
+            <p><strong>Situation:</strong> Beta testing showed teachers loved the feature but were uncertain about when to trust AI-generated assignments</p>
+            <p><strong>Problem:</strong> Without clear guidance, teachers either over-trusted AI (accepting poor outputs) or under-trusted AI (ignoring useful outputs)</p>
+            <p><strong>Decision:</strong> Restructure onboarding to include AI literacy components</p>
+            <p><strong>How:</strong> Added 3-part onboarding flow: (1) Capability demo showing example outputs, (2) Limitation framing explaining when AI struggles (complex nuance, subjective topics), (3) Workflow guidance showing effective human-AI collaboration patterns. Included practice exercise where teachers review AI output and identify needed edits.</p>
+            <p><strong>Result:</strong> Support tickets about AI quality dropped 60%. Teacher feedback shifted from "AI is wrong" to "AI is helpful but needs my input." Editing rate increased, indicating active engagement rather than passive acceptance.</p>
+            <p><strong>Lesson:</strong> <strong>Onboarding that teaches users how to work with AI, not just how to access AI, dramatically improves outcomes.</strong></p>
+        </div>
+
+        <h2 id="in-context-guidance">In-Context Guidance</h2>
+
+        <p>
+            Onboarding happens once. In-context guidance helps users throughout their product journey as they encounter new situations and capabilities.
+        </p>
+
+        <h3 id="progressive-disclosure">Progressive Disclosure</h3>
+
+        <p>
+            Introduce AI capabilities gradually as users encounter relevant contexts. Do not front-load every feature; surface capabilities when they become relevant to the user's current task.
+        </p>
+
+        <p>
+            Introduce AI capabilities gradually as users encounter relevant contexts rather than front-loading every feature, surfacing capabilities when they become relevant to the user's current task. This includes contextual tooltips that explain AI options when users hover or focus on relevant elements, feature discovery prompts that suggest AI capabilities when users show patterns that AI addresses, and empty state guidance that explains what input would trigger useful output when AI has no relevant output.
+        </p>
+
+        <h3 id="output-explanations">Output Explanations</h3>
+
+        <p>
+            When AI provides outputs, explain why. This builds trust and helps users calibrate when to rely on AI suggestions.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Explanation Levels Match Stakes</h4>
+            <p><strong>Low-stakes outputs:</strong> Simple confidence indicators (high/medium/low) without explanation</p>
+            <p><strong>Medium-stakes outputs:</strong> Brief rationale explaining what the AI considered (e.g., "Based on similar assignments in your curriculum")</p>
+            <p><strong>High-stakes outputs:</strong> Detailed explanations with supporting evidence and confidence breakdown</p>
+            <p>Matching explanation depth to output stakes prevents information overload while ensuring critical outputs receive appropriate scrutiny.</p>
+        </div>
+
+        <h2 id="rollout-pausing">Rollout Pausing and Problem Response</h2>
+
+        <p>
+            Not all rollout pauses indicate failure. Sometimes the right decision is to stop, investigate, and adjust before proceeding.
+        </p>
+
+        <h3 id="pause-triggers">When to Pause</h3>
+
+        <p>
+            There are several conditions that should trigger a pause in rollout. Metric degradation occurs when error rates, latency, or other health metrics exceed thresholds. Unexpected user reactions emerge when feedback patterns indicate confusion or frustration. Support ticket spikes happen when support volume related to AI features increases significantly. Output quality signals appear when production evals show quality degradation or unexpected outputs.
+        </p>
+
+        <h3 id="problem-diagnosis">Diagnosing Rollout Problems</h3>
+
+        <p>
+            When a pause triggers, diagnose before adjusting. First, attempt to reproduce the issue and identify what inputs trigger it. Second, determine the scope by understanding how many users are affected and whether it is concentrated in a specific segment. Third, assess severity by evaluating whether this is a minor annoyance or a critical failure and whether there is user harm. Fourth, identify the root cause by determining if the problem lies in the model, the prompt, the data, or the infrastructure. Fifth, evaluate fix options by considering what changes could address the issue and what is the fastest path to improvement.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: DataForge Dashboard AI Rollout Pause</h4>
+            <p><strong>Who:</strong> DataForge team rolling out AI-powered chart suggestions</p>
+            <p><strong>Situation:</strong> Canary reached 25% rollout when support tickets began increasing</p>
+            <p><strong>Problem:</strong> Users reported AI suggesting charts that did not match their data</p>
+            <p><strong>Diagnosis:</strong> Investigation revealed AI was trained on clean enterprise data but users had messier data with missing values and outliers. The AI assumed data quality it should not have assumed.</p>
+            <p><strong>Decision:</strong> Pause rollout. Add data quality detection and warning before AI suggestions activate.</p>
+            <p><strong>Adjustment:</strong> Implemented data quality scoring that adjusts AI confidence and suppresses suggestions when data quality is low. Added user-visible data quality indicator so users can interpret AI outputs appropriately.</p>
+            <p><strong>Lesson:</strong> <strong>Rollout pauses are learning opportunities, not failures. The pause revealed a real-world condition that training data never captured.</strong></p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-26-1.html">26.1 Canary and Shadow Mode</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-26-3.html">26.3 Expectation Setting and Support Readiness</a>
+        </nav>
+
+        <footer>
+            <p>Section 26.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

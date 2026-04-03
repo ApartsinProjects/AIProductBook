@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6.4 Defining Success for Probabilistic Features - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 6</div>
+        <h1>AI Product Strategy and Value Proposition Design</h1>
+        <p class="chapter-subtitle">6.4 Defining Success for Probabilistic Features</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Help define winning AI-native products with the right strategy and value proposition.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 6.3 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Metrics for Probabilistic Products</div>
+            <p>AI products require fundamentally different success metrics than deterministic software. Traditional metrics like accuracy are insufficient because AI outputs vary. The key is measuring task completion, helpfulness, and trust because these reflect actual user value. Without appropriate metrics, you risk optimizing for technical quality while missing what matters to users.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Weather Predictor</div>
+            <p>Meteorologists have predicted weather with computers for decades. Their metric was not "was the prediction correct" but "was it useful." A 60% chance of rain is not wrong, but it is not actionable. AI products face the same challenge: accuracy and usefulness are different things.</p>
+        </div>
+
+        <h2 id="section-6-4">6.4 Defining Success for Probabilistic Features</h2>
+
+        <p>
+            Defining success for AI products requires fundamentally different thinking than traditional software. Conventional software is <strong>deterministic</strong>: given the same inputs, it produces the same outputs. AI products are <strong>probabilistic</strong>: given the same inputs, they may produce different outputs. This variability is a feature, not a bug, but it requires new frameworks for measuring success. You cannot simply check whether the output is correct; you must measure whether the output is good enough for the user's purpose, and you must account for variability across multiple invocations.
+        </p>
+
+        <h3>Why Traditional Metrics Fail</h3>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Academic Perspective: Evaluation Frameworks from ML Research</div>
+            <p>The challenge of evaluating probabilistic AI systems has deep roots in machine learning research:</p>
+            <ul>
+                <li><strong>F1 Score and Precision/Recall</strong>: Standard ML metrics from information retrieval (van Rijsbergen, 1975) provide balanced measures when accuracy alone is misleading. For AI products, precision measures "of the positive outputs, how many were actually correct" while recall measures "of all actual correct answers, how many did we find."</li>
+                <li><strong>BLEU/ROUGE/LLM-as-Judge</strong>: NLP evaluation has evolved from automated metrics (BLEU for translation, ROUGE for summarization) to human-aligned evaluation frameworks. The LLM-as-judge approach (Zheng et al., 2023) scales evaluation but requires careful calibration against human judgment.</li>
+                <li><strong>A/B Testing for ML</strong>: The challenge of evaluating AI in production draws from bandit algorithms and causal inference (Kohavi et al., 2020). Unlike deterministic features, AI products require larger sample sizes and careful handling of variance in treatment effects.</li>
+            </ul>
+            <p>Key insight: the fundamental challenge is that AI output quality is multi-dimensional. No single metric captures it. Your eval framework must measure multiple dimensions and weight them according to user priorities.</p>
+        </div>
+
+        <p>
+            Traditional software quality metrics assume consistency: if a feature works once, it works every time. AI outputs vary, so you need to measure not just whether the feature works but how often it works, how much variation there is, and whether the variation matters for user outcomes. A feature that works 80% of the time may be more useful than one that works 95% of the time but takes 10x longer.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Deceptive Metric</h4>
+            <p>
+                A company launched an AI writing assistant and tracked "user satisfaction" as their primary success metric. Post-launch, satisfaction was high, but retention was low. Investigation revealed: the AI produced high-quality writing but with unpredictable quality. Users could not trust the AI to produce good output, so they stopped using it. Satisfaction measured at the moment of use did not capture the trust problem.
+            </p>
+        </div>
+
+        <h3>Task Completion Rate</h3>
+
+        <p>
+            Task completion rate measures whether users accomplish what they set out to do when using your AI feature. This is the most important metric for any AI product because it directly measures user value. If users cannot complete their tasks, no amount of sophisticated AI technology matters. Measure task completion by tracking user goals and whether they are achieved, distinguishing between tasks that require AI assistance and tasks that would have been impossible without it.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Measuring True Task Completion</h4>
+            <p>
+                A research AI tracks task completion through a specific framework: when users start a research query, they define their goal (find X information, compare Y and Z, understand topic W). Then they track whether the goal was achieved. This revealed that while the AI answered questions accurately, users often could not find what they needed. The problem: the AI provided accurate answers that were not what users were actually looking for. Accuracy alone was not enough; task completion revealed the real problem.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Measuring Task Completion</h4>
+            <p>
+                <strong>Define task completion for your product:</strong>
+            </p>
+            <ul>
+                <li>What does it mean to complete a task in your product?</li>
+                <li>What is the user trying to accomplish?</li>
+                <li>How do you know if they succeeded?</li>
+            </ul>
+            <p>
+                <strong>Task completion metrics:</strong>
+            </p>
+            <ul>
+                <li>Percentage of user sessions where goal was achieved</li>
+                <li>Time to task completion vs. baseline</li>
+                <li>Tasks that would have been impossible without AI</li>
+                <li>Multi-step task completion rates</li>
+            </ul>
+        </div>
+
+        <h3>Resolution Rate for Customer Support</h3>
+
+        <p>
+            For customer support AI, resolution rate specifically tracks whether issues were resolved without human intervention. This metric is particularly important because support AI is often sold on the promise of cost reduction through automation. Track not just whether issues were resolved but also how many times the user had to repeat information, how many escalations occurred, and how long resolution took compared to human-supported cases. Resolution rate should be measured alongside a secondary metric for quality: even if an issue is technically resolved, if the user is dissatisfied with the solution, the AI has not succeeded.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Resolution Rate Trap</h4>
+            <p>
+                A customer service AI had a 75% resolution rate, meaning 75% of queries were resolved without human help. This looked great. But analysis revealed that "resolved" meant the AI answered the question, not that the user was satisfied. 30% of resolved cases came back within 7 days with the same issue. The true resolution rate (no repeat contact) was only 55%. The company added "repeat contact rate" as a quality metric and improved the AI to handle edge cases better.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Support AI Metrics</h4>
+            <p>
+                <strong>Primary metrics:</strong>
+            </p>
+            <ul>
+                <li>Resolution rate: % resolved without human</li>
+                <li>First contact resolution: % resolved in first interaction</li>
+                <li>Repeat contact rate: % returning within 7 days</li>
+                <li>Escalation rate: % requiring human intervention</li>
+            </ul>
+            <p>
+                <strong>Quality metrics:</strong>
+            </p>
+            <ul>
+                <li>CSAT: Customer satisfaction with AI interaction</li>
+                <li>CES: Customer effort score to resolve issue</li>
+                <li>Resolution time: How long to resolve vs. human</li>
+            </ul>
+        </div>
+
+        <h3>Helpfulness and Trust Metrics</h3>
+
+        <p>
+            Helpfulness score captures user perception of AI value add. Even when tasks are completed, was the AI actually helpful, or did it just do the minimum required? This metric is measured through explicit feedback prompts, surveys, and behavioral signals like whether users ignore AI suggestions. Trust metrics complement helpfulness by measuring whether users believe the AI output is accurate and reliable. Users who do not trust the AI will override its suggestions or ignore its output entirely, negating the value of the AI feature.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Helpful but Ignored AI</h4>
+            <p>
+                An AI code completion tool had high accuracy but low adoption. Users said the suggestions were often helpful, but they did not trust them enough to accept. Analysis showed: users could not easily verify if the suggestion was correct, so they ignored it to avoid potential bugs. The company added "explanation" features that showed why the AI made its suggestion, and adoption increased 40%. Helpfulness was not enough; trust was the barrier.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Measuring Helpfulness and Trust</h4>
+            <p>
+                <strong>Helpfulness measurement:</strong>
+            </p>
+            <ul>
+                <li>Explicit feedback: Thumbs up/down, ratings</li>
+                <li>Behavioral: Acceptance rate, edit rate, ignore rate</li>
+                <li>Comparative: Do users prefer AI to alternatives?</li>
+            </ul>
+            <p>
+                <strong>Trust measurement:</strong>
+            </p>
+            <ul>
+                <li>Override rate: How often users change AI output</li>
+                <li>Verification behavior: Do users check AI output?</li>
+                <li>Reliance level: How much do users trust without checking?</li>
+            </ul>
+        </div>
+
+        <h3>The Metrics Hierarchy</h3>
+
+        <p>
+            Different metrics matter at different stages of product maturity. Early in development, you need technical metrics to understand if the AI is working. At launch, you need task metrics to understand if users are achieving their goals. As the product matures, you need business metrics to understand if the product is creating value.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Stage</th><th>Primary Metrics</th><th>Why</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Development</td><td>Accuracy, latency, error rate</td><td>Is the AI working?</td></tr>
+                <tr><td>Launch</td><td>Task completion, helpfulness</td><td>Are users achieving goals?</td></tr>
+                <tr><td>Growth</td><td>Retention, engagement, business impact</td><td>Is the product valuable?</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Key Insight</div>
+            <p>
+                Choose metrics that reflect user value, not just AI quality. An AI can produce perfect outputs but still fail if users cannot complete their tasks, do not find the AI helpful, or do not trust the output. The best metrics connect AI performance to user outcomes.
+            </p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Eval-Driven Development Methodology</strong> - building AI products with evaluation at the center.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-6-3.html">6.3 Build/Buy/Bake Frameworks</a>
+            <a class="up" href="index.html">Chapter 6 Index</a>
+            <a class="next" href="section-6-5.html">6.5 Eval-Driven Development Methodology</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 6.4 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

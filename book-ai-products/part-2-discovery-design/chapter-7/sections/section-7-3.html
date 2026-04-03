@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7.3 Jobs-to-Be-Done and Workflow Mining - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-2-discovery-design/index.html">Part II: Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 7.3</div>
+        <h1>Jobs-to-Be-Done and Workflow Mining</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Understanding what users actually do is more reliable than understanding what they say they do. Workflow mining uses AI to analyze behavioral data and reconstruct the real processes users follow to accomplish their goals. Combined with Jobs-to-be-Done thinking, it reveals not just what users do but why they do it that way and where AI could help.
+        </p>
+
+        <h2>AI Analysis of User Behavior</h2>
+
+        <p>User behavior data is abundant in digital products: clickstreams, session recordings, feature usage logs, search queries, and navigation paths. The challenge is not lack of data but lack of insight. AI-assisted behavior analysis can identify patterns that humans miss because the volume is too large or the patterns are too subtle.</p>
+
+        <h3>Behavioral Segmentation</h3>
+
+        <p>Behavioral segmentation divides users into groups based on how they use your product rather than who they are demographically. This is more actionable than demographic segmentation because it directly informs product decisions. AI can identify behavioral segments by clustering users based on their usage patterns.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">RetailMind: Behavioral Segmentation of Store Customers</div>
+            <p>RetailMind analyzed behavioral data from their in-store shopping assistant tablet. Rather than segmenting by demographic such as age or income, they segmented by shopping behavior into four groups. Efficient shoppers at 35 percent of users utilize the assistant for quick price checks and directions, have short sessions, and show high conversion rates. Explorers at 28 percent browse extensively and use the assistant for recommendations, have longer sessions, and generate higher average spend. Deal hunters at 22 percent focus on promotions and use the assistant for deal locations, maintaining moderate session lengths. Support seekers at 15 percent frequently ask about returns, exchanges, and policies.</p>
+            <p>This behavioral segmentation revealed that Explorers had 2.3x higher average spend but only 60% of the conversion rate of Efficient shoppers. The product opportunity: better recommendation UX for Explorers to convert their browsing into purchases without losing the exploration experience.</p>
+        </div>
+
+        <h3>Pattern Detection in Session Data</h3>
+
+        <p>Session data contains patterns that reveal user intentions, frustrations, and success paths. AI can detect these patterns at scale. Success patterns reveal what paths lead to completed goals, showing the optimal routes users follow. Failure patterns identify where users get stuck or abandon the session, indicating problem areas. Workaround patterns reveal how users accomplish goals when features fail, exposing design weaknesses. Discovery patterns show how users find features they did not know existed, indicating opportunities for better feature discovery.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The AI Behavior Analysis Pipeline</div>
+            <p>A workflow for AI-assisted behavioral analysis proceeds through seven stages. First, define the question by determining what behavior you want to understand. Second, gather relevant data including session logs, clickstreams, feature usage, and timestamps. Third, preprocess by cleaning data, handling missing values, and structuring events. Fourth, run AI analysis using pattern detection, clustering, and anomaly identification. Fifth, provide human interpretation by determining what the patterns mean and what causes them. Sixth, develop product hypothesis by asking what change might improve outcomes. Seventh, validate by testing hypothesis with an A/B experiment or usability study.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before building any workflow mining system, define how you will measure whether the insights actually improve outcomes. A micro-<a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval</a> for behavioral analysis tests: pattern detection accuracy (are detected patterns real?), insight action rate (do insights lead to changes?), and outcome improvement (did the changes actually help?). RetailMind's eval-first insight: their AI detected that "efficient shoppers" had 2.3x higher spend but they had been optimizing for "explorers." After measuring the actual ROI of optimizing for each segment, they pivoted to a dual-strategy approach and saw conversion rates improve 18%.
+            </p>
+        </div>
+
+        <h2>Identifying Unmet Needs</h2>
+
+        <p>Unmet needs are the gaps between what users need to accomplish and what current solutions provide. They are the raw material of product discovery. Identifying unmet needs requires looking beyond explicit complaints to the implicit struggles that users work around without complaining.</p>
+
+        <h3>The Struggle Detection Framework</h3>
+
+        <p>Users rarely say "I am struggling with this." Instead, they exhibit struggle through behavior: repeated actions, session abandonment, support contacts, and workaround adoption. AI can detect struggle signals in behavioral data that humans would miss.</p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">AI-Assisted Struggle Detection</div>
+            <pre>
+STRUGGLE SIGNALS TO DETECT:
+
+1. REPEATED ACTIONS
+   - Same action performed 3+ times without success
+   - Pattern: [Action] -> [Same Action] -> [Same Action]
+
+2. ABANDONMENT PATTERNS
+   - Session ends after specific feature or step
+   - Compare: where do successful sessions diverge from abandoned ones?
+
+3. SUPPORT CONTACTS
+   - Questions about features that should be self-service
+   - Confusion indicators in support chat transcripts
+
+4. WORKAROUNDS
+   - Using features in unintended ways to achieve goals
+   - Manual processes replacing automated ones
+   - External tools supplementing in-app features
+
+5. FRICTION DELAYS
+   - Time spent on steps that should be fast
+   - Hesitation patterns (mouse movement, scrolling)
+   - Return visits to same page repeatedly
+</pre>
+            <p class="code-caption">AI can process millions of behavioral events to surface these struggle signals at scale.</p>
+        </div>
+
+        <h3>From Workarounds to Opportunities</h3>
+
+        <p>Workarounds are a goldmine for product discovery because they reveal what users actually need versus what the product was designed to provide. When users consistently work around a feature, it is a signal that either the feature needs redesign or that a new capability is needed.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">EduGen: Workaround-Driven Feature Discovery</div>
+            <p>EduGen's team noticed that many learners were taking screenshots of quiz questions and sharing them in external study groups. At first glance, this looked like engagement. Analysis revealed it was workaround behavior.</p>
+            <p>Human interviews confirmed: learners wanted to discuss quiz questions with peers but could not copy-paste questions into messaging apps because of content protection. The workaround was screenshots.</p>
+            <p>Product opportunity: Build a native "share for discussion" feature that generated a discussion-friendly version of questions without revealing answers. This addressed the underlying job (collaborative learning) without compromising content protection. Usage of the new feature reached 45% of active learners within 2 weeks of launch.</p>
+        </div>
+
+        <h2>Opportunity Sizing</h2>
+
+        <p>Not all unmet needs are worth addressing. Opportunity sizing estimates the potential value of addressing an unmet need, allowing prioritization of discovery investments. AI can assist opportunity sizing by quantifying the frequency and impact of specific problems.</p>
+
+        <h3>The ICE Framework for Opportunity Scoring</h3>
+
+        <p>ICE is a simple framework for scoring potential opportunities: Impact, Confidence, and Ease. Each dimension is rated on a scale, then multiplied to produce a score. AI can help estimate these dimensions from data.</p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">ICE Scoring with AI Assistance</div>
+            <p><strong>Impact</strong> measures how much solving this problem would improve user outcomes. AI can estimate impact from behavioral data on problem frequency, user survey data on pain severity, and correlation with retention and conversion metrics.</p>
+            <p><strong>Confidence</strong> measures how certain we are about the Impact estimate. AI can estimate confidence from data quality, sample size, and consistency across sources.</p>
+            <p><strong>Ease</strong> measures how easy it is to address this problem. AI can estimate ease from technical complexity analysis, historical velocity data, and similar past projects.</p>
+        </div>
+
+        <h3>Quantifying Problem Frequency</h3>
+
+        <p>AI can quantify problem frequency from behavioral data with precision that human estimation cannot match. Rather than asking "how often does this problem occur?" you can measure it directly.</p>
+
+        <p>AI-analyzed behavioral data enables precise opportunity sizing. When users cannot find saved courses, the behavioral signal shows search after login followed by manual browse, occurring in 12 percent of sessions and affecting 34 percent of users with an impact score of 7.2 out of 10. When quiz timers cause anxiety, support contacts about extensions serve as the signal, occurring in 8 percent of quizzes and affecting 22 percent of users with an impact score of 6.8 out of 10. Mobile sync failures appear as repeat actions on desktop after mobile usage, occurring in 4 percent of sessions and affecting 15 percent of users but with a higher impact score of 8.1 out of 10 due to the frustration of lost progress. When users cannot download certificates, support contacts for PDF issues reveal the problem, occurring in 3 percent of completions but affecting 11 percent of users with the highest impact score of 9.3 out of 10 because certificate access is critical for learners.</p>
+
+        <h2>Prioritization Frameworks</h2>
+
+        <p>Discovery produces more opportunities than you can pursue. Prioritization frameworks help you decide which opportunities to pursue first. AI-assisted prioritization does not replace human judgment but augments it with better data about the problems you are prioritizing.</p>
+
+        <h3>The RICE Framework Adapted for AI Products</h3>
+
+        <p>RICE is a common prioritization framework: Reach, Impact, Confidence, Effort. For AI products, you should add two dimensions specific to AI: Technical Risk and AI Leverage.</p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">AI Product Prioritization Matrix</div>
+            <pre>
+STANDARD RICE DIMENSIONS:
+   Reach: How many users does this affect?
+   Impact: How much does it improve outcomes per user?
+   Confidence: How certain are we about Reach and Impact?
+   Effort: How long to build and maintain?
+
+ADDITIONAL AI PRODUCT DIMENSIONS:
+   Technical Risk: How uncertain is the AI approach?
+      - Low: Well-established AI pattern
+      - Medium: Novel application of known technique
+      - High: Unproven technical approach
+
+   AI Leverage: Does AI create asymmetric value?
+      - Low: Human solution works nearly as well
+      - Medium: AI meaningfully improves the solution
+      - High: AI enables a solution impossible for humans alone
+
+PRIORITY FORMULA:
+Priority = (Reach x Impact x Confidence x AI Leverage) / (Effort x Technical Risk)
+</pre>
+            <p class="code-caption">Adding AI-specific dimensions to RICE captures factors unique to AI product prioritization.</p>
+        </div>
+
+        <h3>Prioritization That Balances Data and Judgment</h3>
+
+        <p>AI-assisted prioritization is most effective when it augments rather than replaces human judgment. The framework output is an input to team discussion, not a replacement for it. Priorities should emerge from the combination of quantitative scores and qualitative context that the team holds.</p>
+
+            <div class="callout warning">
+                <div class="callout-title">The False Precision Problem</div>
+                <p>AI-generated priority scores feel precise because they are numerical. But they are only as good as the inputs, which are estimates. A score of 8.3 is not meaningfully different from 7.9. Do not over-index on precise scores when making prioritization decisions. Use scores to prompt discussion, not to replace it.</p>
+            </div>
+
+            <div class="callout fun-note">
+                <div class="callout-title">The Prioritization Paradox</div>
+                <p>You spent 3 weeks building a sophisticated AI prioritization system. The output: "Carrier recommendation engine is priority #1." You could have just asked your best engineer what to build. The AI isn't wrong, but it took 3 weeks to tell you what intuition would have gotten in 5 minutes.</p>
+            </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Prioritizing Discovery Opportunities</div>
+            <p>QuickShip's team had 8 potential features identified through discovery. They used AI-assisted prioritization to score each. The carrier recommendation engine received an ICE score of 8.2 with medium technical risk and high AI leverage, making it the top priority. The returns management workflow received an ICE score of 7.8 with low technical risk and medium AI leverage. Real-time tracking improvements scored 6.9 with low technical risk and low AI leverage. Predictive delivery estimates scored 7.1 but with high technical risk and high AI leverage, suggesting potential but uncertainty.</p>
+            <p>The team chose to build the carrier recommendation engine first because of high AI leverage (the core product differentiation) and manageable technical risk. The predictive delivery estimates had higher AI leverage but were deferred due to technical risk. The returns workflow, despite a good ICE score, was recognized as table-stakes (competitors already had it) and deprioritized.</p>
+        </div>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>AI-assisted behavioral analysis can identify patterns at scale that humans miss, including success paths, failure points, and workarounds. Workarounds are high-signal discovery inputs because they reveal what users actually need versus what the product was designed to provide. AI can quantify problem frequency and impact from behavioral data, enabling precise opportunity sizing that informs better prioritization decisions. AI product prioritization should extend standard frameworks such as RICE and ICE with AI-specific dimensions: Technical Risk and AI Leverage. Prioritization scores should prompt team discussion, not replace it, because precision in scores does not equal precision in priorities.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Workflow Mining for Your Product</div>
+            <p>Apply workflow mining to a product you are working on or studying by working through these steps. First, identify 3 key user workflows in the product that represent important user journeys. Second, define success and failure criteria for each workflow to understand what good and bad outcomes look like. Third, identify AI-detectable struggle signals in each workflow such as repeated actions, abandonment patterns, and support contacts. Fourth, quantify the frequency and impact of identified problems to size the opportunity. Fifth, score opportunities using the AI-adapted RICE framework to establish priority. Sixth, identify 1-2 high-priority opportunities that AI could address asymmetrically, where AI creates value that humans cannot match.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 7.4, we explore <strong>Rapid Concept Generation</strong>, examining how to use AI for ideation, expand solution spaces, apply combinatorial innovation, and filter and prioritize generated ideas.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-7-2.html">7.2 Voice of Customer</a>
+            <a class="up" href="../index.html">Chapter 7 Overview</a>
+            <a class="next" href="section-7-4.html">7.4 Concept Generation</a>
+        </nav>
+
+        <footer>
+            <p>Section 7.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

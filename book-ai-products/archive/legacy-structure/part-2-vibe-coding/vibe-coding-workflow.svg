@@ -1,0 +1,109 @@
+<figure class="illustration">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" style="max-width: 100%; margin: 1.5rem auto; display: block;">
+    <defs>
+        <linearGradient id="stepGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#e94560;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#f39c12;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="stepGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#f39c12;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#16a085;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="stepGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#16a085;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#3498db;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="stepGrad4" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#3498db;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#1a1a2e;stop-opacity:1" />
+        </linearGradient>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.15"/>
+        </filter>
+    </defs>
+    
+    <!-- Background -->
+    <rect width="700" height="400" fill="#faf8f5"/>
+    
+    <!-- Title -->
+    <text x="350" y="30" text-anchor="middle" fill="#1a1a2e" font-family="Georgia, serif" font-size="16" font-weight="bold">Vibe Coding Workflow</text>
+    
+    <!-- Phase 1: Idea -->
+    <g transform="translate(30, 60)">
+        <rect width="130" height="80" rx="10" fill="url(#stepGrad1)" filter="url(#shadow)"/>
+        <text x="65" y="30" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="12" font-weight="bold">1. IDEA</text>
+        <text x="65" y="50" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="9">Describe intent</text>
+        <text x="65" y="65" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="9">in plain English</text>
+    </g>
+    
+    <!-- Arrow 1 -->
+    <path d="M165,100 L195,100" fill="none" stroke="#1a1a2e" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- Phase 2: Prototype -->
+    <g transform="translate(200, 60)">
+        <rect width="130" height="80" rx="10" fill="url(#stepGrad2)" filter="url(#shadow)"/>
+        <text x="65" y="30" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="12" font-weight="bold">2. PROTOTYPE</text>
+        <text x="65" y="50" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="9">AI generates code</text>
+        <text x="65" y="65" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="9">Cursor, Claude Code</text>
+    </g>
+    
+    <!-- Arrow 2 -->
+    <path d="M335,100 L365,100" fill="none" stroke="#1a1a2e" stroke-width="2"/>
+    
+    <!-- Phase 3: Eval -->
+    <g transform="translate(370, 60)">
+        <rect width="130" height="80" rx="10" fill="url(#stepGrad3)" filter="url(#shadow)"/>
+        <text x="65" y="30" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="12" font-weight="bold">3. EVAL</text>
+        <text x="65" y="50" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="9">Test against</text>
+        <text x="65" y="65" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="9">quality criteria</text>
+    </g>
+    
+    <!-- Arrow 3 -->
+    <path d="M505,100 L535,100" fill="none" stroke="#1a1a2e" stroke-width="2"/>
+    
+    <!-- Phase 4: Ship -->
+    <g transform="translate(540, 60)">
+        <rect width="130" height="80" rx="10" fill="url(#stepGrad4)" filter="url(#shadow)"/>
+        <text x="65" y="30" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="12" font-weight="bold">4. SHIP</text>
+        <text x="65" y="50" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="9">Production</text>
+        <text x="65" y="65" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="9">deployment</text>
+    </g>
+    
+    <!-- Iteration loop -->
+    <path d="M540,145 Q540,220 350,220 Q160,220 65,220 Q65,180 65,145" fill="none" stroke="#e94560" stroke-width="2" stroke-dasharray="6,3"/>
+    <text x="300" y="240" text-anchor="middle" fill="#e94560" font-family="Georgia, serif" font-size="11">Iteration Loop</text>
+    <text x="300" y="255" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="9">Refine until quality criteria met</text>
+    
+    <!-- Key tools section -->
+    <rect x="30" y="290" width="640" height="90" rx="8" fill="white" stroke="#ddd" stroke-width="1"/>
+    <text x="350" y="310" text-anchor="middle" fill="#1a1a2e" font-family="Georgia, serif" font-size="12" font-weight="bold">Key Tools by Phase</text>
+    
+    <!-- Tool groups -->
+    <g transform="translate(60, 325)">
+        <rect width="140" height="45" rx="6" fill="#fef5f5"/>
+        <text x="70" y="20" text-anchor="middle" fill="#e94560" font-family="Georgia, serif" font-size="9" font-weight="bold">IDE Tools</text>
+        <text x="70" y="35" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">Cursor, Claude Code, Windsurf</text>
+    </g>
+    
+    <g transform="translate(220, 325)">
+        <rect width="140" height="45" rx="6" fill="#fef9e7"/>
+        <text x="70" y="20" text-anchor="middle" fill="#f39c12" font-family="Georgia, serif" font-size="9" font-weight="bold">Context Management</text>
+        <text x="70" y="35" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">Rules, Memory, Reference Files</text>
+    </g>
+    
+    <g transform="translate(380, 325)">
+        <rect width="140" height="45" rx="6" fill="#f0faf8"/>
+        <text x="70" y="20" text-anchor="middle" fill="#16a085" font-family="Georgia, serif" font-size="9" font-weight="bold">Eval Frameworks</text>
+        <text x="70" y="35" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">LLM-as-judge, golden sets</text>
+    </g>
+    
+    <g transform="translate(540, 325)">
+        <rect width="140" height="45" rx="6" fill="#ebf5fb"/>
+        <text x="70" y="20" text-anchor="middle" fill="#3498db" font-family="Georgia, serif" font-size="9" font-weight="bold">Deployment</text>
+        <text x="70" y="35" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">CI/CD, containers, monitoring</text>
+    </g>
+  </svg>
+  <figcaption style="text-align: center; font-style: italic; color: #666; margin-top: 0.5rem;">
+    The vibe coding workflow moves from idea to prototype to eval to ship, with rapid iteration between phases. Each phase uses specific tools and techniques to maximize velocity.
+  </figcaption>
+</figure>

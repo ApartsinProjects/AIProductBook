@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13.3 Orchestration vs Over-Orchestration - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 13.3</div>
+        <h1>Orchestration vs Over-Orchestration</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Orchestration brings order. Over-orchestration brings paralysis. The difference lies in knowing when structure serves the work and when it impedes it.
+        </p>
+
+        <h2>What Orchestration Provides</h2>
+
+        <p>Orchestration in multi-agent systems provides coordination, visibility, and control. It answers questions like: Which agents are working? What are they doing? How do results combine? What happens when something fails?</p>
+
+        <p>These are genuine needs. Without orchestration, multi-agent systems become chaotic and undebuggable. Agents step on each other, context gets lost, and failures cascade silently.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Orchestration Benefits</div>
+            <p>Orchestration provides coordination that ensures agents work in the right order, visibility that shows what the system is doing at any moment, control that enables intervention when things go wrong, and reliability through graceful failure handling that prevents cascading failures.</p>
+        </div>
+
+        <h2>What <a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">Over-Orchestration</a> Costs</h2>
+
+        <p>Over-orchestration adds structure that exceeds the needs of the system. It creates elaborate coordination mechanisms for simple tasks, excessive monitoring for straightforward processes, and complex failure handling for rare edge cases.</p>
+
+        <p>The costs are real: development time spent on orchestration infrastructure, runtime overhead from coordination, and cognitive load from understanding the orchestration layer.</p>
+
+        <h3>Symptoms of Over-Orchestration</h3>
+
+        <p>Several symptoms indicate over-orchestration. Orchestration code exceeds agent code, meaning more development effort goes into coordination than into actual agent functionality. Agent tasks are too small, with individual tasks being trivial so coordination overhead exceeds the actual work. Failure handling targets rare cases with elaborate recovery mechanisms for failures that never actually occur. Monitoring is excessive, with detailed tracking of things that do not matter for system behavior or debugging. Development is slow because adding new agents requires extensive orchestration changes rather than simple additions.</p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">Orchestration Scaling Guide</div>
+            <pre>
+2-3 agents, simple tasks, low stakes:
+  Simple sequential or parallel execution
+  Basic logging
+  Simple retry
+
+4-6 agents, moderate complexity, moderate stakes:
+  Task queue with dependencies
+  Activity tracking
+  Structured retry with escalation
+
+7+ agents, high complexity, high stakes:
+  Full workflow engine
+  Comprehensive monitoring
+  Sophisticated failure handling
+  Human-in-the-loop mechanisms
+            </pre>
+        </div>
+
+        <h2>Orchestration Anti-Patterns</h2>
+
+        <h3>The Micro-Agent Anti-Pattern</h3>
+
+        <p>Creating agents for trivially small tasks. The coordination overhead exceeds the benefit of distribution.</p>
+
+        <p><strong>Example:</strong> One agent to capitalize a string, another to trim whitespace, another to validate email format.</p>
+
+        <h3>The Centralized Brain Anti-Pattern</h3>
+
+        <p>A single orchestrator that controls everything becomes a bottleneck and single point of failure.</p>
+
+        <p><strong>Example:</strong> One master agent that delegates every sub-task, serializing what should be parallel.</p>
+
+        <h3>The Perfect Recovery Anti-Pattern</h3>
+
+        <p>Elaborate failure handling for scenarios that never occur or always escalate anyway.</p>
+
+        <p><strong>Example:</strong> Fifteen different retry strategies for a task that always escalates to human review on third attempt.</p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Orchestration Smell Test</div>
+            <p>Ask: Is this orchestration helping agents do their work, or is it controlling agents for its own sake? Orchestration should be invisible infrastructure that enables work, not a visible layer that IS the work.</p>
+        </div>
+
+        <h2>Letting <a href="../../../part-1-why-ai-changes/chapter-2/sections/section-2-3.html" class="cross-ref">Agents</a> Be Agents</h2>
+
+        <p>The most effective multi-agent systems treat agents as autonomous entities that coordinate through well-defined interfaces rather than controlled entities following rigid scripts.</p>
+
+        <p><a href="../../../part-1-why-ai-changes/chapter-2/sections/section-2-3.html" class="cross-ref">Agents</a> should make decisions within their scope without asking permission for routine matters, handle routine failures autonomously rather than escalating every issue, escalate only when they genuinely cannot proceed, and operate concurrently rather than waiting for central coordination that serializes work. This requires trusting agents with autonomy, which requires confidence in their capabilities built through testing and validation rather than through control mechanisms.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Orchestration provides coordination that ensures proper ordering, visibility into system behavior, control for intervention, and reliability through graceful failure handling. Over-orchestration adds costs without benefits when complexity exceeds actual system needs. Match orchestration complexity to agent count, task complexity, reliability requirements, and debugging needs rather than adding orchestration preemptively. Watch for micro-agent anti-pattern where tasks are too small, centralized brain anti-pattern where a single orchestrator becomes a bottleneck, and perfect recovery anti-pattern where elaborate handling targets rare cases. Let agents be agents with autonomy within their scope, making decisions without permission and escalating only when genuinely unable to proceed. Build trust through testing and validation rather than through control mechanisms.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Evaluating Your Orchestration</div>
+            <p>Evaluate the orchestration in your current or planned system through diagnostic questions. First, consider how many agents you have and whether orchestration complexity is appropriate for that scale. Second, assess what percentage of your code is orchestration versus agent logic, flagging situations where coordination exceeds actual work. Third, identify what orchestration is rarely exercised and consider why it exists, questioning whether rarely-needed mechanisms justify their maintenance cost. Fourth, determine whether agents are autonomous within scope or constantly ask permission for routine decisions, which indicates over-control. Fifth, imagine what simplification would look like and identify specific elements that could be removed without compromising system functionality.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Chapter 14, we examine <strong>From Prototype to Reviewable System</strong>, transitioning from vibe-coded prototypes to production-ready code.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-13-2.html">13.2 Delegation Patterns</a>
+            <a class="up" href="../index.html">Chapter 13 Overview</a>
+            <a class="next" href="../../chapter-14/sections/section-14-1.html">Ch 14: Production Ready</a>
+        </nav>
+
+        <footer>
+            <p>Section 13.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9.2 Eval-First PRDs - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-2-discovery-design/index.html">Part II: Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 9</div>
+        <h1>Requirements for Probabilistic Products</h1>
+        <p class="chapter-subtitle">9.2 Eval-First PRDs</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn to write product requirements documents that prioritize evaluation criteria before feature implementation.
+        </p>
+
+        <blockquote class="epigraph">
+            <p>"If you cannot measure it, you cannot ship it. For AI features, measurement must be designed in, not bolted on."</p>
+            <cite>AI Product Development Principles</cite>
+        </blockquote>
+
+        <div class="callout fun-note">
+            <div class="callout-title">The PRD Time Paradox</div>
+            <p>You spent 3 weeks writing the perfect eval-first PRD with detailed metrics. The engineer built a different feature because "the PRD didn't capture what the user actually needed." The metrics passed. The users hated it. Ship it anyway?</p>
+        </div>
+
+        <h2 id="section-9-2">9.2 Eval-First PRDs</h2>
+
+        <p>
+            Eval-first PRDs (Product Requirements Documents) invert the traditional PRD structure. Instead of starting with features and hoping evaluation follows, eval-first PRDs start with evaluation criteria and let features emerge from the requirements.
+        </p>
+
+        <h3>The Eval-First PRD Structure</h3>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Eval-First PRD Sections</div>
+            <p><strong>1. User Problem and Success Definition</strong></p>
+            <p>What user problem are we solving? How does success look to users?</p>
+            <p><strong>2. Evaluation Criteria (First!)</strong></p>
+            <p>How will we measure success? What metrics, thresholds, and benchmarks define success?</p>
+            <p><strong>3. Evaluation Methodology</strong></p>
+            <p>How will we evaluate against our criteria? What datasets, human evaluation, and automated metrics?</p>
+            <p><strong>4. Feature Requirements</strong></p>
+            <p>What features emerge from the evaluation criteria? How do they map to measurable outcomes?</p>
+            <p><strong>5. Rollout and Monitoring</strong></p>
+            <p>How will we phase rollout? What production monitoring is required?</p>
+        </div>
+
+        <h3>Why Evaluation First?</h3>
+
+        <p>
+            Starting with evaluation ensures agreement on success where the team agrees on <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">metrics</a> before building, prevents scope creep where features must tie to measurable outcomes, enables iteration where clear metrics allow rapid improvement, and reduces risk because teams cannot ship what they cannot measure.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Traditional vs Eval-First PRD</div>
+            <p><strong>Traditional PRD:</strong> A traditional PRD describes a feature such as AI-powered search, provides a description saying to improve search results using AI, and defines success vaguely as better search results without measurable criteria.</p>
+            <p><strong>Eval-First PRD:</strong> An eval-first PRD defines the problem clearly as users cannot find relevant documents, specifies the metric as NDCG@10 greater than 0.85 defined upfront, establishes a baseline of current search NDCG@10 at 0.72, sets a target of NDCG@10 improvement of 10%, and describes evaluation using automated benchmark on held-out queries.</p>
+        </div>
+
+        <h3>Writing Evaluation Criteria</h3>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Good Evaluation Criteria Are:</div>
+            <p>Good evaluation criteria share several key properties. Measurable means criteria can be quantified objectively without subjective judgment. Specific means criteria have precise thresholds rather than vague goals that are open to interpretation. Actionable means teams know exactly what to optimize to meet the criteria. Comprehensive means criteria cover both success and failure modes, not just the happy path. Feasible means criteria are achievable with available resources and constraints.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before writing any eval-first PRD, define how you will measure whether the PRD process itself is working. A micro-<a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval</a> for PRD quality tracks: metric attainment rate (did features meeting eval criteria succeed in production?), false positive rate (did features pass eval but fail in production?), and iteration velocity (how quickly can you iterate based on eval results?). A team's eval-first insight: they measured that features with eval-first PRDs had 40% higher production success rates than features with traditional PRDs, justifying the upfront eval investment.
+            </p>
+        </div>
+
+        <h3>Evaluation Methodology</h3>
+
+        <p>
+            Specify how evaluation will be conducted by defining several components. Automated metrics specify what can be measured automatically without human intervention. Human evaluation specifies what requires human judgment and cannot be captured by automated means. Test datasets specify what data evaluation will use, including how datasets are curated and maintained. Statistical validity specifies what confidence levels are required for results to be considered meaningful.
+        </p>
+
+        <h3>PRD Template</h3>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Eval-First PRD Template</div>
+            <pre>
+# Product Name
+
+## User Problem
+[What problem are we solving?]
+
+## Success Definition
+[How does success look to users?]
+
+## Evaluation Criteria (Priority Order)
+1. Metric: [name]
+   - Target: [threshold]
+   - Baseline: [current value]
+   - Measurement: [how to measure]
+
+2. Metric: [name]
+   - Target: [threshold]
+   [...]
+
+## Evaluation Methodology
+[How will evaluation be conducted?]
+
+## Feature Requirements
+[What features support these metrics?]
+
+## Rollout Criteria
+[What must pass before launch?]
+
+## Monitoring Plan
+[What metrics in production?]
+            </pre>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>LLM-as-Judge for Requirements</strong>, understanding how to use AI itself to evaluate AI outputs.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-9-1.html">9.1 USID.O Framework</a>
+            <a class="up" href="../index.html">Chapter 9 Index</a>
+            <a class="next" href="section-9-3.html">9.3 LLM-as-Judge</a>
+        </nav>
+
+        <footer>
+            <p>Section 9.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

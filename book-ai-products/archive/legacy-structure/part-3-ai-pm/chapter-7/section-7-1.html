@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7.1 AI Product Taxonomy - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 7</div>
+        <h1>AI Product Strategy and Value Proposition Design</h1>
+        <p class="chapter-subtitle">7.1 AI Product Taxonomy</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Help define winning AI-native products with the right strategy and value proposition.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Chapter 1 recommended. Basic product management concepts helpful.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Positioning AI Products</div>
+            <p>Understanding AI product taxonomy is essential for positioning your offering correctly in the market. The autonomy spectrum from copilots to autonomous systems determines user expectations, development priorities, and business models. Choosing the right position on this spectrum is a strategic decision that affects every aspect of product development.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The First Autopilot</div>
+            <p>The first autopilot was invented in 1912 by Lawrence Sperry. It kept planes stable so pilots would not lose control during long flights. The irony: pilots initially distrusted it, preferring to trust their own hands. We are still learning this lesson with AI.</p>
+        </div>
+
+        <h2 id="section-7-1">7.1 AI Product Taxonomy</h2>
+
+        <p>
+            Understanding the types of AI products helps position your offering. The AI product landscape has matured beyond simple chatbots into distinct categories. Each category has different development approaches, success metrics, and user expectations.
+        </p>
+
+        <p>
+            Choosing the right category for your product is a strategic decision. It affects everything from development methodology to go-to-market strategy.
+        </p>
+
+        <p>
+            <strong>Note for readers new to AI products:</strong> If you are unfamiliar with terms like "copilot," "agent," or "autonomous system," do not worry. We will define each category clearly and provide concrete examples. This section is designed to help you understand the landscape so you can make informed decisions about what type of AI product to build.
+        </p>
+
+        <h3>Why Taxonomy Matters</h3>
+
+        <p>
+            The category you choose determines user expectations, development priorities, and business model. A copilot that occasionally produces a wrong suggestion is tolerable; an autonomous agent that makes wrong decisions in the same situation is dangerous. Understanding where your product falls on the autonomy spectrum is essential for setting appropriate expectations with users and building the right capabilities.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">&#128161; Mental Model: The Autonomy Spectrum as Driving Modes</div>
+            <p><strong>Think of the autonomy spectrum like driving modes in a car.</strong> Copilot mode is like cruise control: the car maintains speed but you control steering and can override at any time. Agent mode is like autopilot on an airplane: the system handles more of the flight but pilots monitor and step in for critical phases. Autonomous systems are like a fully self-driving car: you are just a passenger. Each mode has different trust requirements, and the consequences of failure scale with autonomy.</p>
+            <p><em>Where this model breaks down:</em> Unlike cars where the driver is always present and responsible, AI systems may act without humans watching every decision. The "passenger" in autonomous AI has less ability to react quickly to unexpected situations.</p>
+        </div>
+
+        <div class="callout aha-moment">
+            <div class="callout-title">&#128161; Aha Moment: The Escalation Insight</div>
+            <p><strong>The shock:</strong> The best <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> are not the ones that never escalate. They are the ones that know <em>when</em> to escalate. Fin from Intercom handles 50-70% of support queries, but its success comes from knowing exactly when a human needs to take over.</p>
+            <p><strong>What this means:</strong> Building an agent is as much about defining its failure modes as its success cases. If your agent cannot explain why it escalated, it escalated too late.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: Categorizing Healthcare AI</div>
+            <p>HealthMetrics helps hospital administrators analyze patient flow using natural language queries. When they defined their product taxonomy, they realized they had two distinct AI features:</p>
+            <ul>
+                <li><strong>Query Interface (Copilot)</strong>: Administrators type questions in plain English and get analytical insights. The AI suggests answers but humans make decisions. Errors here are inconvenient but not dangerous.</li>
+                <li><strong>Auto-Scheduling (Agent)</strong>: AI suggests staff schedules and patient room assignments. This is closer to an agent because it takes autonomous actions. Errors here can cause operational problems but not patient safety issues (physicians always override AI assignments).</li>
+            </ul>
+            <p>The key insight: HealthMetrics is building both a copilot and an agent in the same product. They apply different development rigor, different eval criteria, and different human oversight requirements to each. The copilot can be more experimental; the agent requires more stringent testing.</p>
+        </div>
+
+        <h3>Copilots: Augmenting Human Work</h3>
+
+        <p>
+            Copilots represent the most established category, designed to assist human work rather than replace it. These tools augment human capabilities by handling routine tasks, suggesting improvements, and accelerating workflows. The human remains in control and makes final decisions; the AI assists and enhances.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: GitHub Copilot</h4>
+            <p>
+                GitHub Copilot suggests code completions and entire functions while the developer remains in full control. The developer can accept, modify, or ignore suggestions. This model works because developers maintain authority over their code while benefiting from AI acceleration. The success of Copilot depends on its ability to integrate seamlessly into existing workflows without disrupting developer habits. Studies show Copilot can reduce coding time by 25-55% depending on the task.
+            </p>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Claude Code</h4>
+            <p>
+                Claude Code operates as a terminal assistant, handling tasks at human direction while providing intelligent suggestions and automated execution. Unlike code completion, Claude Code can execute multi-step tasks like running tests, refactoring code, or navigating project structures. The human provides direction; the AI executes with intelligence. This represents a more advanced copilot capability where the AI can handle complex multi-step workflows while remaining under human control.
+            </p>
+        </div>
+
+        <h4>Key Characteristics of Copilots</h4>
+
+        <ul>
+            <li><strong>Human in control:</strong> User makes final decisions, AI assists</li>
+            <li><strong>Seamless integration:</strong> Fits into existing workflows</li>
+            <li><strong>Transparent assistance:</strong> User sees AI suggestions, chooses what to accept</li>
+            <li><strong>Forgiving errors:</strong> Wrong suggestions can be ignored, no lasting harm</li>
+        </ul>
+
+        <h3>Agents: Autonomously Completing Tasks</h3>
+
+        <p>
+            <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> represent a more autonomous category, designed to complete tasks with minimal human oversight. The AI takes action rather than just suggesting. This category spans a wide spectrum: some <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> require significant human guidance, others operate nearly independently. The key difference from copilots is that <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> execute tasks to completion, not just assist with individual steps.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Intercom Fin</h4>
+            <p>
+                Intercom Fin handles customer support conversations autonomously, making decisions about when to resolve issues and when to escalate. Fin can answer questions, provide support, and resolve issues without human intervention. It knows when it cannot help and escalates to human <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>. The success of Fin depends on its ability to handle the majority of support queries while recognizing its limits. Companies using Fin report 50-70% reduction in support agent workload.
+            </p>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Perplexity</h4>
+            <p>
+                Perplexity conducts research and synthesizes answers from multiple sources. Unlike a search engine that returns links, Perplexity reads sources and produces synthesized answers. Users can trust the answers without verification in many cases because Perplexity cites its sources. This represents a research agent that can complete complex information retrieval tasks autonomously. The evaluation approach for Perplexity is fundamentally different from copilots: you measure overall task completion (did the user get their question answered?) rather than individual suggestion quality.
+            </p>
+        </div>
+
+        <h4>Key Characteristics of <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></h4>
+
+        <ul>
+            <li><strong>Autonomous execution:</strong> Completes tasks without step-by-step guidance</li>
+            <li><strong>Decision making:</strong> Makes choices about how to accomplish goals</li>
+            <li><strong>Task completion:</strong> Responsible for end-to-end outcome</li>
+            <li><strong>Escalation:</strong> Knows when to involve humans</li>
+        </ul>
+
+        <h3>Autonomous Systems: Full Automation</h3>
+
+        <p>
+            Autonomous systems represent the frontier of AI product development, encompassing self-driving vehicles, robotics, and fully automated business processes. These systems operate with human oversight rather than direct control, making safety and reliability the primary concerns. The development methodology for autonomous systems differs fundamentally from other AI products, with extensive simulation, safety testing, and regulatory compliance considerations.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Autonomous Vehicles</h4>
+            <p>
+                Self-driving cars must operate in the physical world where errors can cause injury or death. The development methodology involves millions of miles of simulation, closed-course testing, and supervised operation before any commercial deployment. The evaluation framework is extremely rigorous: you must demonstrate safety metrics far exceeding human drivers before deployment. This category requires fundamentally different development and safety processes than software AI products.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Choosing the Right Category</h4>
+            <p>
+                Ask these questions to determine your product category:
+            </p>
+            <ol>
+                <li>Does the AI take actions or just make suggestions?</li>
+                <li>How harmful is a wrong decision?</li>
+                <li>Can the user easily override AI decisions?</li>
+                <li>What level of reliability is required?</li>
+                <li>What are regulatory requirements?</li>
+            </ol>
+            <p>
+                <strong>If suggestions that can be ignored:</strong> Copilot
+                <strong>If autonomous action with escalation:</strong> Agent
+                <strong>If full automation with oversight:</strong> Autonomous system
+            </p>
+        </div>
+
+        <h3>Multimodal: Beyond Text</h3>
+
+        <p>
+            Multimodal AI products process and generate multiple types of content: text, images, audio, and video. This is not a separate category from the autonomy spectrum but an additional dimension that affects product design. A multimodal copilot works differently than a text-only one: it can see what you see, hear what you hear, or generate images alongside text.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: GPT-4o and Claude 4</h4>
+            <p>
+                GPT-4o and Claude 4 can process images, understand audio input, and generate text outputs that reference visual content. A user can show Claude a diagram and ask questions about it. The AI sees what the user sees and can discuss it intelligently. This capability expands the range of possible products: visual assistants that help with design, document understanding, and real-time visual guidance all become possible.
+            </p>
+        </div>
+
+        <h3>Product Taxonomy Overview</h3>
+
+        <table>
+            <thead>
+                <tr><th>Type</th><th>Description</th><th>Examples</th><th>Key Success Metrics</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Copilots</strong></td><td>Assist human work, augment capabilities</td><td>GitHub Copilot, Claude Code</td><td>Suggestion acceptance rate, time saved</td></tr>
+                <tr><td><strong>Agents</strong></td><td>Autonomously complete tasks</td><td>Intercom Fin, Perplexity</td><td>Task completion rate, escalation rate</td></tr>
+                <tr><td><strong>Autonomous Systems</strong></td><td>Full automation with human oversight</td><td>Self-driving, robotics</td><td>Safety metrics, reliability</td></tr>
+                <tr><td><strong>Multimodal</strong></td><td>Text, image, audio, video</td><td>GPT-4o, Claude 4</td><td>Cross-modal accuracy</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Key Insight</div>
+            <p>
+                Your product likely falls on a spectrum rather than into a single category. A product might start as a copilot and evolve toward agent capabilities over time. The key is to be deliberate about where you are on the spectrum and build appropriate capabilities for that position.
+            </p>
+        </div>
+
+        <div class="callout exercise">
+            <div class="callout-title">Exercise: Categorize Your AI Product</div>
+            <p><strong>Task:</strong> Think of an AI product you want to build (or any real product).</p>
+            <ol>
+                <li>Where does it fall on the autonomy spectrum: copilot, agent, or autonomous system?</li>
+                <li>What are the three most important success metrics for this product type?</li>
+                <li>What would need to be true for this product to move one level up the autonomy spectrum?</li>
+            </ol>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">EduGen: First 100 Users and Feedback Gathering</div>
+            <p>EduGen founder Maria Chen gathered her first 100 users through a combination of Reddit communities for electricians and plumbers, LinkedIn posts about vocational training, and cold outreach to trade schools. Her approach:</p>
+            <p><strong>User Interview Synthesis:</strong></p>
+            <p>After 20 user interviews, Maria identified three consistent themes:</p>
+            <ol>
+                <li><strong>Time poverty</strong>: "I work 10-hour days. I cannot spend 2 hours on coursework after work." Learners needed bite-sized content, not full courses.</li>
+                <li><strong>Immediate applicability</strong>: "I need to learn what I will use next week on the job." Learners wanted just-in-time skill building, not long-term career paths.</li>
+                <li><strong>Certification anxiety</strong>: "My boss keeps asking about credentials. I need something that actually counts toward licensing." Learners needed recognized certifications, not just completion certificates.</li>
+            </ol>
+            <p>These insights reshaped EduGen's product from "full courses with quizzes" to "microlearning modules with certification prep." The pivot came from listening, not from building the thing Maria initially imagined.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Problem-First vs Tech-First</strong> - choosing the right approach for your AI product.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Ch 6: Overview</a>
+            <a class="up" href="index.html">Chapter 6 Index</a>
+            <a class="next" href="section-6-2.html">6.2 Problem-First vs Tech-First</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 6.1 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

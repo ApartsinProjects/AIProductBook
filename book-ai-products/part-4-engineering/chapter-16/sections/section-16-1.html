@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16.1 Model Selection Fundamentals - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+    <style>
+        .model-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        .model-comparison th, .model-comparison td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .model-comparison th {
+            background: var(--accent);
+            color: white;
+        }
+        .model-comparison tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .frontier-diagram {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+        .capability-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .capability-high { background: #d4edda; color: #155724; }
+        .capability-medium { background: #fff3cd; color: #856404; }
+        .capability-low { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 16.1</div>
+        <h1>Model Selection Fundamentals</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Choosing the right model is not about picking the most powerful one. It is about matching capability to task in a way that respects your cost constraints while delivering the quality your users need."</p>
+            <cite>An ML Engineer Who Learned Cost Optimization the Hard Way</cite>
+        </blockquote>
+
+        <h2>Introduction</h2>
+        <p>
+            Model selection is one of the highest-leverage decisions in AI product development. The model you choose affects latency, cost, quality, and the overall architecture of your system. Many teams default to the most capable model available, only to discover that a smaller, specialized model would have delivered comparable results at a fraction of the cost and latency.
+        </p>
+        <p>
+            This section covers the fundamentals of model selection: open versus closed models, size versus capability trade-offs, the cost-performance frontier, and task-model matching strategies.
+        </p>
+        <p>
+            This section covers the fundamentals of model selection: open versus closed models, size versus capability trade-offs, the cost-performance frontier, and task-model matching strategies.
+        </p>
+
+        <h2>Open Versus Closed Models</h2>
+        <p>
+            The first major decision in model selection is whether to use open-source or closed (proprietary) models. Each approach has distinct trade-offs that affect your product architecture, cost structure, and operational complexity.
+        </p>
+
+        <h3>Closed Models (API Providers)</h3>
+        <p>
+            Closed models like GPT-4, Claude, and Gemini are accessed through vendor APIs. You pay per token, the vendor manages infrastructure, and you get access to state-of-the-art capabilities without operational overhead.
+        </p>
+        <p>
+            <strong>Benefits:</strong> No infrastructure management, access to frontier capabilities, predictable pay-per-use pricing, rapid model improvements automatically included.
+        </p>
+        <p>
+            <strong>Drawbacks:</strong> Vendor lock-in risk, latency added by network round-trips, data privacy concerns (your data goes to external servers), rate limits and quota restrictions, pricing changes with limited warning.
+        </p>
+
+        <h3>Open Models (Self-Hosted)</h3>
+        <p>
+            Open models like Llama, Mistral, and Falcon can be downloaded and run on your own infrastructure or accessed through hosted services that do not lock you into a single provider.
+        </p>
+        <p>
+            <strong>Benefits:</strong> Data never leaves your infrastructure (critical for healthcare, finance, legal), no vendor lock-in, potential for fine-tuning on your specific data, predictable long-term costs.
+        </p>
+        <p>
+            <strong>Drawbacks:</strong> You manage infrastructure and scaling, frontier capabilities may lag closed models by months or years, operational complexity increases, fine-tuning requires ML expertise.
+        </p>
+
+        <p>
+            <strong>Capability frontier</strong> represents the gap between what closed and open models can achieve. Closed models provide state-of-the-art access where you benefit from continuous vendor improvements without any work on your end. Open models typically lag closed frontier models by six to eighteen months, meaning the most advanced capabilities may not be available in self-hosted options until well after closed model providers have released them.
+        </p>
+        <p>
+            <strong>Data privacy</strong> presents a fundamental distinction between the two approaches. With closed models, your data is sent to the vendor's servers for processing, creating potential exposure concerns that matter significantly for healthcare, finance, and legal applications. Open models give you full control over your data since processing happens entirely within your infrastructure.
+        </p>
+        <p>
+            <strong>Cost structure</strong> differs substantially in its predictability and scaling behavior. Closed models charge pay-per-token pricing where costs scale directly with usage, which can become expensive at high volumes but starts low for low-volume applications. Open models require fixed infrastructure costs plus compute expenses, which can be more predictable at scale but demand upfront capital investment.
+        </p>
+        <p>
+            <strong>Operational burden</strong> falls at opposite ends of the spectrum. Closed models carry low operational burden since the vendor handles all infrastructure management, scaling, and model updates. Open models place high operational burden on your team since you are responsible for infrastructure setup, capacity planning, monitoring, and maintaining model performance.
+        </p>
+        <p>
+            <strong>Customization</strong> options vary in flexibility. Closed models offer customization through prompt engineering and limited fine-tuning options provided by the vendor. Open models provide full fine-tuning control, allowing you to adapt the model to your specific domain and use case with complete flexibility.
+        </p>
+        <p>
+            <strong>Latency</strong> characteristics differ based on architecture. Closed models incur network overhead of fifty to five hundred milliseconds per request due to internet round-trips to vendor servers. Open models running on local compute deliver latency that varies based on hardware but can be significantly lower for optimized deployments.
+        </p>
+
+        <div class="callout key-insight">
+            <h4>The Hybrid Strategy</h4>
+            <p>Many production systems use both closed and open models strategically. Use closed models for complex, sensitive, or low-volume tasks where you need the best quality. Use open models for high-volume, routine tasks where capability margins matter less and cost savings compound at scale.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Misconception</div>
+            <p>
+                The most capable model is not always the best choice. GPT-4-level capability is overkill for simple classification tasks that a 7B model handles at 1/10th the cost. Defaulting to the most powerful model wastes resources and increases latency without proportionate quality gains for tasks within smaller models' capability range. The question is not "what is the most capable model?" but "what is the smallest model that reliably meets my task requirements?"
+            </p>
+        </div>
+
+        <h2>Size Versus Capability Trade-offs</h2>
+        <p>
+            Within any model family, larger models are more capable but slower and more expensive. Understanding where each size class excels helps you make better routing decisions.
+        </p>
+
+        <h3>Model Size Tiers</h3>
+        <p>
+            <strong>Small Models (under 10B parameters):</strong> Models like Llama 3.2 1B, Mistral 7B, and Phi-3-mini excel at simple, repetitive tasks. They handle structured extraction, classification, short generations, and straightforward transformations with remarkable efficiency. Their <a href="../../../part-1-why-ai-changes/chapter-1/sections/section-1-3.html" class="cross-ref">context windows</a> are often sufficient for many product tasks.
+        </p>
+        <p>
+            <span class="capability-badge capability-medium">Medium Capability</span> Best for: Classification, extraction, simple transformations, high-volume simple queries
+        </p>
+
+        <p>
+            <strong>Medium Models (10B-70B parameters):</strong> Models like Llama 3.1 70B and Mistral 8x22B provide strong general-purpose capabilities without frontier pricing. They handle nuanced reasoning, longer generations, multi-step tasks, and moderate complexity.
+        </p>
+        <p>
+            <span class="capability-badge capability-high">High Capability</span> Best for: Complex reasoning, code generation, detailed analysis, longer documents
+        </p>
+
+        <p>
+            <strong>Large Models (100B+ parameters):</strong> Models like GPT-4, Claude 3.5 Sonnet, and Gemini 1.5 Pro represent the capability frontier. They handle the most complex reasoning, longest contexts, and tasks requiring nuanced judgment.
+        </p>
+        <p>
+            <span class="capability-badge capability-high">Highest Capability</span> Best for: Complex multi-step reasoning, creative generation, nuanced judgment calls, frontier tasks
+        </p>
+
+        <h3>The Capability Cliff</h3>
+        <p>
+            A key insight from empirical testing is that capability does not scale linearly with model size. Instead, models exhibit capability cliffs where certain tasks are solved adequately by small models, but the moment a larger model is needed, you often need the largest model available for that specific task. This has implications for routing: simple heuristics often fail, and task-model matching requires careful evaluation.
+        </p>
+
+        <div class="frontier-diagram">
++------------------------------------------------------------------+
+|                  COST-PERFORMANCE FRONTIER                          |
++------------------------------------------------------------------+
+|                                                                     |
+|   Quality                                                          |
+|     ^                                                              |
+|   1.0 |          *********                                        |
+|      |        ***          ***    <-- Frontier models (expensive)  |
+|   0.8 |       *                **                                  |
+|      |      *                   **                                 |
+|   0.6 |     *                     **                               |
+|      |    *                        **                              |
+|   0.4 |   *                          **                             |
+|      |  **                            **                            |
+|   0.2 | **          Sweet spot:          **                        |
+|      |**    Medium models doing           **                       |
+|   0.0 +-------------------------------------------> Cost            |
+|           Small        Medium        Large                         |
+|           (cheap)      (moderate)    (expensive)                   |
+|                                                                     |
++------------------------------------------------------------------+
+        </div>
+
+        <h2>Task-Model Matching</h2>
+        <p>
+            The goal of model selection is to match task requirements to the smallest model that reliably meets those requirements. This requires understanding both your tasks and your models.
+        </p>
+
+        <h3>Task Classification Framework</h3>
+        <p>
+            Classify your tasks along three dimensions to guide model selection:
+        </p>
+        <p>
+            <strong>Complexity:</strong> Does the task require multi-step reasoning, nuanced judgment, or creative generation? Or is it a straightforward transformation, extraction, or classification?
+        </p>
+        <p>
+            <strong>Stakes:</strong> What are the consequences of errors? Low-stakes tasks (internal tools, first-pass drafts) tolerate more errors than high-stakes tasks (medical advice, financial decisions, legal documents).
+        </p>
+        <p>
+            <strong>Volume:</strong> How many requests per day? High-volume tasks magnify cost differences, making smaller models attractive even when quality differences are small.
+        </p>
+
+        <h3>Evaluation-Based Selection</h3>
+        <p>
+            The only reliable way to match tasks to models is through systematic evaluation. Build an evaluation set for each task type, run it against multiple models, and measure quality, latency, and cost together.
+        </p>
+        <p>
+            Chapter 24 covers evaluation frameworks in depth. For model selection specifically, the key is to measure task-specific quality rather than relying on general benchmarks. A model that excels on MMLU may underperform on your specific extraction task.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: HealthMetrics Analytics</div>
+            <p><strong>Who:</strong> A healthcare analytics startup building an AI assistant for hospital administrators</p>
+            <p><strong>Situation:</strong> The HealthMetrics system handles three main task types: patient record extraction (high stakes), report generation (medium stakes), and FAQ answering (low stakes)</p>
+            <p><strong>Problem:</strong> Initially routing all requests to GPT-4 for maximum quality, but costs were unsustainable at scale</p>
+            <p><strong>Solution:</strong> The team built an evaluation framework to measure quality trade-offs:</p>
+            <p>Patient record extraction: Small models failed on complex medical terminology, but medium models achieved 95% accuracy compared to GPT-4 baseline. Report generation: Medium models were indistinguishable from large models for routine reports. FAQ answering: Small models handled 80% of queries at near-identical quality.</p>
+            <p><strong>Result:</strong> After implementing task-based routing, HealthMetrics reduced AI costs by 73% while maintaining 98% of quality as measured by human evaluators.</p>
+        </div>
+
+        <h2>The Cost-Performance Frontier</h2>
+        <p>
+            The cost-performance frontier represents the set of model-task combinations that offer the best quality for a given cost. Understanding where your tasks fall on this frontier guides both model selection and architectural decisions.
+        </p>
+
+        <h3>Building Cost-Performance Curves</h3>
+        <p>
+            For each task type, measure quality (via your evaluation framework) against cost per 1000 requests. Plot these curves to identify the frontier and find sweet spots.
+        </p>
+        <p>
+            The curves often reveal surprising insights. Sometimes a slightly cheaper model delivers nearly identical quality. Sometimes a task you assumed required a large model is adequately served by a medium model. These insights directly inform your routing rules.
+        </p>
+
+        <div class="callout big-picture">
+            <h4>Key Insight: Optimizing the Whole System</h4>
+            <p>Model selection is not independent from routing and architecture. A task that seems to require a large model may be decomposed into subtasks where some can be handled by smaller models. The architecture choices in Chapter 15 directly affect which models can handle which tasks.</p>
+        </div>
+
+        <h2>Cross-References</h2>
+        <p>
+            For architecture patterns that affect model requirements, see <a href="section-15-1.html">Chapter 15.1 Architecture Spectrum</a>. For cost evaluation frameworks, see <a href="../../part-5-evaluation-reliability/chapter-24/index.html">Chapter 24 Evaluation and Benchmarking</a>. For security considerations when selecting models, see <a href="chapter-20.html">Chapter 20 Security</a>.
+        </p>
+
+        <h2>Section Summary</h2>
+        <p>
+            Model selection involves matching tasks to models along dimensions of capability, cost, and latency. Open models offer data control and long-term cost predictability; closed models offer frontier capabilities and operational simplicity. Model size affects capability cliffs and cost curves non-linearly. Task-model matching requires evaluation-based approaches rather than assumptions. The cost-performance frontier reveals sweet spots where quality meets cost constraints.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Chapter 16 Overview</a>
+            <a class="up" href="../index.html">Chapter 16 Overview</a>
+            <a class="next" href="section-16-2.html">16.2 Model Routers</a>
+        </nav>
+
+        <footer>
+            <p>Section 16.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

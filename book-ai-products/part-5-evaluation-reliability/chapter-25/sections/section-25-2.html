@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 25.2: NIST AI RMF and ISO/IEC 42001 - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 25</div>
+        <h1><a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">NIST AI RMF</a> and ISO/IEC 42001</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Frameworks are not compliance checklists. They are maturity guides. Organizations that treat them as checkboxes miss the point entirely."</p>
+            <cite>An AI Governance Consultant</cite>
+        </blockquote>
+
+        <h2 id="frameworks-landscape">AI Governance Frameworks Landscape</h2>
+
+        <p>
+            Several frameworks have emerged as reference standards for AI governance. Understanding their scope and relationships helps organizations choose the right approach.
+        </p>
+
+        <h3 id="framework-comparison">Framework Comparison</h3>
+
+        <p>Several frameworks have emerged as reference standards for AI governance, each with different focus and applicability. The NIST AI RMF published by NIST in the United States focuses on risk management and is applicable to all AI systems with a US government focus. ISO/IEC 42001 published by ISO/IEC focuses on management systems and is globally applicable with certifiable credentials. The EU AI Act published by the European Union focuses on compliance and is legally binding for the EU market. ISO/IEC 24027 published by ISO/IEC provides technical guidance specifically on bias in AI systems.</p>
+
+        <h2 id="nist-ai-rmf">NIST AI Risk Management Framework</h2>
+
+        <p>
+            The NIST AI RMF provides a structured approach to managing AI risk. It organizes AI governance around two core functions: GOVERN and MAP.
+        </p>
+
+        <h3 id="govern-function">GOVERN Function</h3>
+
+        <p>GOVERN covers organizational AI governance with requirements for establishing and maintaining governance structures. Govern 1.1 requires establishing and communicating organizational AI risk governance roles so everyone knows who is responsible for what. Govern 1.2 requires establishing and communicating organizational AI policies so teams understand the rules they must follow. Govern 1.3 requires establishing and maintaining organizational AI inventory so all AI systems are tracked and accountable. Govern 1.4 requires establishing and communicating organizational AI incident identification process so failures are properly identified and addressed.</p>
+
+        <h3 id="map-function">MAP Function</h3>
+
+        <p>MAP covers AI risk mapping with requirements for understanding and characterizing AI risks throughout the organization. MAP 1.1 requires defining and characterizing AI systems so their nature and purpose are clearly understood. MAP 1.2 requires identifying and analyzing AI threats and harms to understand what could go wrong. MAP 1.3 requires assessing and analyzing AI risks to quantify and prioritize them. MAP 1.4 requires determining AI risk response options to decide how each risk will be managed.</p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">NIST AI RMF Structure</h4>
+            <p>The NIST AI RMF uses a tiered approach: Organizational, Sociotechnical, and Individual AI System. Each tier addresses risks at different levels of abstraction. Effective implementation must address all tiers.</p>
+        </div>
+
+        <h2 id="iso-42001">ISO/IEC 42001</h2>
+
+        <p>
+            ISO/IEC 42001 is the international standard for AI management systems. Unlike NIST AI RMF, it provides a certifiable framework for organizations seeking formal AI governance certification.
+        </p>
+
+        <h3 id="iso-structure">Management System Structure</h3>
+
+        <p>ISO 42001 follows the Plan-Do-Check-Act structure common to management system standards, providing a cycle of continuous improvement. Clause 4 addresses the context of the organization, understanding internal and external factors that affect AI governance. Clause 5 addresses leadership, requiring management commitment and policy establishment. Clause 6 addresses planning, requiring identification of risks and opportunities. Clause 7 addresses support, requiring resources, competence, and communication infrastructure. Clause 8 addresses operation, requiring implementation of plans and controls. Clause 9 addresses performance evaluation, requiring monitoring, measurement, and analysis. Clause 10 addresses improvement, requiring correction of nonconformities and continual refinement.</p>
+
+        <h3 id="ai-clauses">AI-Specific Requirements</h3>
+
+        <p>ISO 42001 includes AI-specific requirements that address unique aspects of AI systems beyond generic management requirements. AI organizational oversight establishes processes for AI system accountability to ensure clear ownership and responsibility. AI impact assessment requires systematic evaluation of AI system impacts on people, organizations, and society. AI data governance addresses data quality, lineage, and management for AI systems recognizing that AI outputs depend heavily on data. AI lifecycle management covers the entire lifecycle from development through deployment to retirement. AI risk identification requires systematic identification of AI risks including technical, ethical, and societal risks.</p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: QuickShip Framework Implementation</h4>
+            <p>QuickShip was implementing NIST AI RMF for their routing AI after enterprise customers required NIST AI RMF compliance as part of procurement decisions. The problem was that QuickShip had no formal AI governance framework, creating a dilemma about whether to build to NIST AI RMF or seek ISO 42001 certification instead.</p>
+            <p>The team decided to start with NIST AI RMF and plan for ISO 42001 certification later, taking a phased approach. They established an AI inventory covering all AI features to understand what they had deployed. They defined AI risk tolerance thresholds to establish clear boundaries for acceptable risk. They implemented an AI incident classification system to properly categorize and respond to failures. They built an AI risk assessment process for new features to evaluate risks before deployment. They created an AI governance board with cross-functional representation to provide oversight and decision-making authority.</p>
+            <p>The result was passing the NIST AI RMF assessment, winning three enterprise contracts that required it, and positioning for ISO 42001 certification in year two. The lesson is that frameworks open doors. NIST AI RMF compliance became a competitive advantage that helped win business.</p>
+        </div>
+
+        <h2 id="eu-ai-act">EU AI Act Considerations</h2>
+
+        <p>
+            The EU AI Act establishes legally binding requirements for AI systems operating in the EU market. While focused on EU compliance, it influences global AI governance practices.
+        </p>
+
+        <h3 id="risk-classification">Risk Classification</h3>
+
+        <p>The EU AI Act classifies AI systems by risk level, with different requirements for each tier. Unacceptable risk systems are prohibited entirely, with examples including social scoring systems and real-time biometrics used for surveillance. High risk systems face strict requirements including conformity assessments and ongoing monitoring, with examples including medical devices and critical infrastructure AI. Limited risk systems must meet transparency requirements, with examples including chatbots and emotion recognition systems where users should know they are interacting with AI. Minimal risk systems face no specific requirements, with examples including spam filters and AI games where risks are negligible.</p>
+
+        <h2 id="implementation-roadmap">Framework Implementation Roadmap</h2>
+
+        <h3 id="phase-1">Phase 1: Foundation (Months 1-3)</h3>
+        <p>The first phase focuses on establishing governance foundations over months one through three. The team establishes an AI governance team with clear roles and responsibilities. They create an AI inventory documenting all existing AI systems. They define AI risk tolerance thresholds establishing what levels of risk are acceptable. They draft AI policies that will govern how AI is developed and deployed.</p>
+
+        <h3 id="phase-2">Phase 2: Implementation (Months 4-6)</h3>
+        <p>The second phase focuses on implementing governance processes over months four through six. The team implements a risk assessment process for evaluating new AI features. They build documentation templates that make compliance efficient. They train AI teams on governance requirements so everyone understands their obligations. They establish review processes that operationalize governance in the development workflow.</p>
+
+        <h3 id="phase-3">Phase 3: Operational (Months 7-12)</h3>
+        <p>The third phase focuses on operationalizing governance over months seven through twelve. The team runs their first AI audits to identify gaps. They refine processes based on audit findings. They establish metrics and monitoring to track governance performance. They prepare for external assessment to validate their governance framework.</p>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>Research on "framework harmonization" explores reducing the burden of complying with multiple AI governance frameworks. By building a unified AI governance capability that satisfies multiple frameworks simultaneously, organizations can reduce compliance overhead.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-25-1.html">25.1 Governance Models</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-25-3.html">25.3 Release Review Checklists</a>
+        </nav>
+
+        <footer>
+            <p>Section 25.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11.2 Context Shaping and Repo Scaffolding - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 11.2</div>
+        <h1>Context Shaping and Repo Scaffolding</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            The quality of vibe coding output depends heavily on the context you provide. Context shaping is the discipline of establishing the right foundation for AI to contribute effectively.
+        </p>
+
+        <h2>What Context Does</h2>
+
+        <p>Context enables the AI to make appropriate assumptions. Without context, the AI defaults to the most common interpretation, which is often not the one you want. With rich context, the AI can make assumptions that align with your goals and constraints.</p>
+
+        <p>Context shaping is not about providing more information. It is about providing the right information in a form the AI can use effectively. Verbose context that buries the important parts is worse than no context.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Context Pyramid</div>
+            <p>Think of context as a pyramid with three levels that build upon each other. The foundation encompasses project type, tech stack, and directory structure, establishing the basic technical environment. The domain layer covers what this project does, who uses it, and what problems it solves, providing business context. The specifics layer includes the current task, constraints, and success criteria, which you cannot effectively provide without establishing the foundation and domain first.</p>
+        </div>
+
+        <h2>Establishing Context Across Sessions</h2>
+
+        <p><a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> typically spans multiple sessions. Each session starts fresh with limited context. Context shaping practices ensure continuity across sessions.</p>
+
+        <h3>The Context Document Pattern</h3>
+
+        <p>Maintain a <code>CONTEXT.md</code> file in the project root that captures project overview and purpose, tech stack and architecture decisions, key conventions and patterns, current state and next steps, and known constraints and considerations. This document serves as a reference at the start of each session. Opening a session with "Read CONTEXT.md and then help me implement the email classification feature" produces better results than jumping straight into implementation because the AI understands the full context.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Context Document Example</div>
+            <pre>
+# QuickShip Exception Handler - Context
+
+## Project Overview
+AI-powered email exception handling for operations team.
+Replaces manual email triage with GPT-4 classification.
+
+## Tech Stack
+- Frontend: React + TypeScript
+- Backend: FastAPI + Python
+- AI: OpenAI GPT-4 via API
+- Email: Gmail API integration
+- Deployment: Vercel (frontend), Railway (backend)
+
+## Architecture
+- Email ingestion via Gmail API
+- Classification via GPT-4
+- Results stored in PostgreSQL
+- Real-time updates via WebSocket
+
+## Key Patterns
+- Error handling: Log and continue, never crash
+- Classification: Return structured JSON with confidence scores
+- UI updates: Optimistic with fallback to server state
+
+## Current State (as of Week 2)
+- Core classification working at 87% accuracy
+- Email ingestion tested with 1000 emails
+- UI shows classified emails in queue view
+- Next: Email response generation
+
+## Constraints
+- Must process within 5 seconds
+- No PII logged or stored
+- Operations team = 8 users, no more for MVP
+            </pre>
+        </div>
+
+        <h2>Repo Scaffolding</h2>
+
+        <p>Repo scaffolding establishes the project structure and configuration that enable effective vibe coding. Well-scaffolded repos reduce friction at the start of each session.</p>
+
+        <h3>Essential Scaffolding Elements</h3>
+
+        <h4>Directory Structure</h4>
+
+        <p>Establish a clear directory structure that reflects the architecture. This makes it easy for the AI to understand where new code belongs and reduces generation of misplaced files.</p>
+
+        <h4>Configuration Files</h4>
+
+        <p>Include all necessary configuration files: <code>package.json</code>, <code>tsconfig.json</code>, <code>.env.example</code>, linter configs. This prevents the AI from generating configurations from scratch and potentially creating inconsistencies.</p>
+
+        <h4>Entry Points</h4>
+
+        <p>Define clear entry points: main application file, API routes, component exports. The AI can understand the application boundaries better when entry points are explicit.</p>
+
+        <h4>Base Components</h4>
+
+        <p>Include minimal base components that demonstrate patterns: a sample API route, a sample component, a sample test. These serve as reference for the AI to understand your conventions.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">The Scaffolding Template</div>
+            <p>Create a reusable scaffolding template for new projects:</p>
+            <pre>
+project/
+  src/
+    components/
+    pages/
+    api/
+    lib/
+    types/
+  tests/
+  configs/
+  docs/
+  CONTEXT.md
+  README.md
+  .env.example
+            </pre>
+            <p>Customize this template for your stack but keep it consistent across projects. The AI learns your patterns through repeated structure.</p>
+        </div>
+
+        <h2>Context for Different Task Types</h2>
+
+        <p>Different task types require different context emphasis. For new features, emphasize feature purpose, integration points, and existing patterns so the AI understands how the new element fits. For bug fixes, focus on expected behavior, actual behavior, and recent changes to help the AI diagnose the problem. For refactoring, provide target structure, constraints, and dependencies to guide the restructuring. For testing, specify what is being tested, test patterns in use, and coverage targets. For documentation, clarify the audience, existing docs, and desired depth.</p>
+
+        <h2>Context Loading Patterns</h2>
+
+        <h3>Initial Context Load</h3>
+
+        <p>At the start of each session, establish context in a specific order for maximum effectiveness. First, reference the project context document to provide the AI with the broader project picture. Second, summarize the current state and immediate goal so the AI understands where you are and where you are heading. Third, identify any constraints for this session, such as technology choices or deadlines. Fourth, state success criteria for this session to define what a successful outcome looks like.</p>
+
+        <h3>Mid-Session Context Updates</h3>
+
+        <p>When the project state changes significantly, update the context document. This preserves context for future sessions. Mark significant changes explicitly.</p>
+
+        <div class="callout warning">
+            <div class="callout-title">Context Staleness</div>
+            <p>Outdated context is worse than no context because it leads the AI astray. Audit your context document regularly. Remove information that is no longer accurate. Mark the date of last review. If the context document is more than two weeks old without review, assume it is stale.</p>
+        </div>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Context enables appropriate AI assumptions, and without it the AI defaults to common interpretations that may not match your needs. The Context Pyramid has three levels: Foundation at the base, Domain in the middle, and Specifics at the top, each building on the previous level. Maintain a CONTEXT.md document for continuity across sessions so each conversation starts with full context rather than rebuilding it. Repo scaffolding establishes structure that reduces friction and enables the AI to learn your patterns. Essential scaffolding elements include directory structure, configuration files, entry points, and base components. Different task types require different context emphasis, so adjust your context provision accordingly. Update context documents when project state changes significantly to keep them accurate and useful.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Auditing Your Current Context Practices</div>
+            <p>Audit your current context practices by asking several diagnostic questions. First, consider whether you currently maintain a context document for your projects or if context is rebuilt each session. Second, examine how you establish context when starting a new vibe coding session, whether through explicit reference or implicit assumption. Third, assess how stale your current project context is and whether it accurately reflects the current state. Fourth, sketch what a CONTEXT.md for your current project would look like if you were to create one, identifying the key elements that should be documented.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 11.3, we examine <strong>Spec-Prototype-Critique-Revise Loops</strong>, exploring iterative refinement patterns for AI-native prototyping.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-11-1.html">11.1 Concept to Prototype</a>
+            <a class="up" href="../index.html">Chapter 11 Overview</a>
+            <a class="next" href="section-11-3.html">11.3 Spec-Prototype-Critique</a>
+        </nav>
+
+        <footer>
+            <p>Section 11.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

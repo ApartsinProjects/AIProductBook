@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.1 Visual Model of the Human-AI Stack - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
+        <div class="chapter-label">Chapter 3</div>
+        <h1>The Human-AI Product Stack</h1>
+        <p class="chapter-subtitle">3.1 Visual Model of the Human-AI Stack</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Understand the layered architecture that describes how human judgment and AI capabilities combine in successful AI products.
+        </p>
+
+        <blockquote class="epigraph">
+            <p>"The best AI products do not replace human judgment. They create a system where human and AI strengths complement each other."</p>
+            <cite>The Human-AI Collaboration Handbook</cite>
+        </blockquote>
+
+        <h2 id="section-3-1">3.1 Visual Model of the Human-AI Stack</h2>
+
+        <p>
+            The Human-AI Product Stack is a framework for understanding how AI capabilities and human judgment interact in successful AI products. Rather than viewing AI as an autonomous agent or a simple tool, the stack perspective helps product teams think about the appropriate roles for human and machine at each level of product functionality.
+        </p>
+
+        <h3>The Five Layers of the Stack</h3>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Human-AI Product Stack</div>
+            <p><strong>Layer 5: Human Judgment (Strategy and Meaning)</strong></p>
+            <p>Humans define goals, evaluate outcomes, and determine what matters. AI cannot replace human values or strategic direction.</p>
+            <p><strong>Layer 4: Human Decision (Selection Among Options)</strong></p>
+            <p>Humans choose between AI-generated options, approve AI recommendations, and make final calls on high-stakes decisions.</p>
+            <p><strong>Layer 3: AI Decision (Autonomous AI Action)</strong></p>
+            <p>AI makes decisions within defined parameters, taking actions that do not require human approval for every instance.</p>
+            <p><strong>Layer 2: AI Recommendation (AI Suggests)</strong></p>
+            <p>AI generates suggestions, options, or analysis that humans review and decide whether to act upon.</p>
+            <p><strong>Layer 1: AI Automation (Background Processing)</strong></p>
+            <p>AI handles routine tasks invisibly, without presenting options or requiring human input.</p>
+        </div>
+
+        <h3>Understanding the Layers</h3>
+
+        <h4>Layer 1: AI Automation (Background Processing)</h4>
+        <p>
+            At the lowest layer, AI operates invisibly, handling tasks that do not require human attention. Users may not even know AI is involved. Examples include spam filtering in email systems, auto-correction in text input, fraud detection that flags transactions, and content recommendation in feeds.
+        </p>
+
+        <p>
+            Moving up the stack, we encounter layers that increasingly involve human-AI interaction.
+        </p>
+
+        <h4>Layer 2: AI Recommendation</h4>
+        <p>
+            AI presents options or suggestions that humans can accept or reject. The key characteristic is that AI proposes but humans decide. Examples include reply suggestions in email, code completion suggestions in IDEs, product recommendations during shopping, and route suggestions in navigation apps.
+        </p>
+
+        <h4>Layer 3: AI Decision</h4>
+        <p>
+            AI makes decisions autonomously within defined boundaries. Humans set the parameters and monitor outcomes, but do not review every individual decision. Examples include adaptive pricing in real-time, automated content moderation, self-driving features in vehicles, and automated inventory reordering.
+        </p>
+
+        <p>
+            At higher stakes, the balance shifts back toward human judgment.
+        </p>
+
+        <h4>Layer 4: Human Decision</h4>
+        <p>
+            AI generates options or analysis, but humans make the actual decision. This layer is appropriate when decisions have high stakes or irreversible consequences, when legal or regulatory requirements mandate human judgment, when trust is not yet established for AI to decide autonomously, or when decisions require contextual understanding that AI cannot access.
+        </p>
+
+        <p>
+            At the top of the stack, human judgment provides strategic direction that AI cannot replicate.
+        </p>
+
+        <h4>Layer 5: Human Judgment</h4>
+        <p>
+            Humans define strategic direction, values, and evaluation criteria. AI cannot determine what goals are important or assess whether outcomes are meaningful. This layer sets the context for all other layers.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: QuickShip Logistics</div>
+            <p>QuickShip's routing system demonstrates the layered stack. Layer 1 (Automation) handles background tracking of package locations and routine address verification. Layer 2 (Recommendation) provides AI-suggested optimal routes and driver offers delivery time estimates. Layer 3 (AI Decision) has the AI select carrier for each package within pricing parameters set by humans. Layer 4 (Human Decision) involves customer service reps approving exception handling for damaged packages. Layer 5 (Human Judgment) has business leaders defining service level priorities and customer promises.</p>
+        </div>
+
+        <p>Real products move across these layers as trust is established and capabilities evolve.</p>
+
+        <h3>Moving Between Layers</h3>
+
+        <p>
+            Products can move between layers as trust is established and reliability is proven. The natural progression is:
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Layer Progression Principles</div>
+            <p>Products should start conservative, since new AI features typically begin at Layer 2 (Recommendation) or Layer 3 (Decision) with narrow scope. They should earn trust through reliability by moving to higher autonomy only after demonstrating consistent accuracy. Products should allow user control by letting users choose their preferred layer based on their trust and context. They should consider stakes and reversibility, since higher stakes and less reversible actions warrant higher layers.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>Before deciding which layer your AI should operate at, define how you will measure appropriate layer assignment. In Human-AI stack design, this means establishing <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval criteria</a> for each layer transition. A micro-eval for layer assignment: given 50 diverse user tasks, what percentage require human judgment versus routine processing? Without this <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval-first</a> analysis, products default to unsafe autonomy or excessive human involvement.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>AI as Amplifier, Not Replacement</strong>, examining how AI best augments human capabilities rather than attempting to replace human judgment entirely.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 3: Overview</a>
+            <a class="up" href="../index.html">Chapter 3 Index</a>
+            <a class="next" href="section-3-2.html">3.2 AI as Amplifier</a>
+        </nav>
+
+        <footer>
+            <p>Section 3.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

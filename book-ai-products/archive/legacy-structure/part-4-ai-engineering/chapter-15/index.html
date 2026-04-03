@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 15: Inference Serving - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 15</div>
+        <h1>Inference Serving and LLMOps</h1>
+        <p class="chapter-subtitle">Fast and Cost-Effective AI Systems</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Make systems fast and cost-effective with proper serving and LLMOps.
+        </p>
+
+        <figure class="illustration">
+            <img src="../../images/illustrations/chapter-15-opener.png"
+                 alt="Inference Serving: Server infrastructure with optimization layers"
+                 style="max-width: 100%; border-radius: 12px; margin: 1.5rem auto; display: block;">
+            <figcaption>
+                Production AI requires optimized serving infrastructure.
+            </figcaption>
+        </figure>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter covers inference serving and operationalizing AI systems. You will learn 
+                serving options like vLLM, Triton, and cloud services, CI/CD practices for prompts and 
+                models, cost optimization strategies that can save 60-70%, and hybrid cloud/edge 
+                architectures. These skills are essential for running AI systems at 
+                scale profitably.
+            </p>
+            <p>
+                The economics of AI products often depend more on inference cost than model cost. 
+                Optimized serving can reduce your costs by half while improving latency. This chapter 
+                provides the practical knowledge needed to achieve those optimizations.
+            </p>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Choose the right serving infrastructure for your needs</li>
+                <li>Implement CI/CD for prompts and models</li>
+                <li>Apply cost optimization strategies (routing, caching, distillation)</li>
+                <li>Design hybrid cloud/edge architectures</li>
+                <li>Understand the rise of local-first and edge AI</li>
+            </ul>
+        </div>
+
+        <div class="prerequisites">
+            <h3>Prerequisites</h3>
+            <p>
+                Readers should have completed Chapters 11-14 on AI engineering fundamentals. Experience 
+                with cloud infrastructure and basic DevOps concepts is expected. If you are new to 
+                serving, Section 15.1 provides an overview of options.
+            </p>
+        </div>
+
+        <blockquote class="epigraph">
+            "Premature optimization is the root of all evil." <cite>– Donald Knuth</cite>
+        </blockquote>
+
+        <div class="sections-list">
+            <h2>Chapter Sections</h2>
+            <ul>
+                <li><a href="section-15-1.html">15.1 Serving Options</a></li>
+                <li><a href="section-15-2.html">15.2 CI/CD for Prompts/Models</a></li>
+                <li><a href="section-15-3.html">15.3 Cost Optimization</a></li>
+                <li><a href="section-15-4.html">15.4 Hybrid Cloud/Edge</a></li>
+                <li><a href="section-15-5.html">15.5 Containerization and Kubernetes</a></li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-16/index.html">Chapter 16: Scaling, Reliability, and Observability</a> 
+                to learn how to production-harden AI systems for scale and reliability. This chapter 
+                covers guardrails, observability tools like LangSmith and Langfuse, and security compliance.
+            </p>
+        </div>
+
+        <div class="bibliography">
+            <h3>Books</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title">Structured Programming with go-to Statements</p>
+                <p class="bib-authors">Knuth, D. (1974)</p>
+                <p class="bib-annotation">Why this is relevant: Classic paper on programming best practices; relevant for understanding code quality in AI engineering contexts.</p>
+            </div>
+
+            <h3>Tools</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://github.com/vllm-project/vllm">vLLM Documentation</a></p>
+                <p class="bib-authors">vLLM Project</p>
+                <p class="bib-annotation">Why this is relevant: Critical tool for production LLM serving with optimized throughput; essential for cost-effective AI product scaling.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://developer.nvidia.com/triton">Triton Inference Server</a></p>
+                <p class="bib-authors">NVIDIA</p>
+                <p class="bib-annotation">Why this is relevant: NVIDIA's inference serving solution for optimized GPU utilization; important for production AI product deployments.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://huggingface.co">Text Generation Inference</a></p>
+                <p class="bib-authors">Hugging Face</p>
+                <p class="bib-annotation">Why this is relevant: Open-source inference server for Hugging Face models; popular for self-hosted LLM serving in AI products.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://docs.langchain.com">LLM Observability Platform</a></p>
+                <p class="bib-authors">LangSmith</p>
+                <p class="bib-annotation">Why this is relevant: Comprehensive observability platform for LLM applications; essential for debugging and monitoring production AI products.</p>
+            </div>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-14/index.html">Ch 14: Model Selection</a>
+            <a class="up" href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a>
+            <a class="next" href="chapter-16/index.html">Ch 16: Scaling</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 15 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

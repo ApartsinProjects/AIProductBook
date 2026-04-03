@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.5 Multi-Agent Orchestration - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <div class="chapter-label">Chapter 3</div>
+        <h1>Understanding Vibe Coding in 2026</h1>
+        <p class="chapter-subtitle">3.5 Multi-Agent Orchestration</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Demystify the shift from prompt engineering to agentic intent steering.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Basic programming knowledge helpful but not required. Completion of Sections 3.1-3.4 recommended.
+        </div>
+
+        <h2 id="section-3-5">3.5 Multi-Agent Orchestration</h2>
+
+        <p>
+            For complex projects, a single agent has inherent limitations. It can only do one thing at a time, its context grows as the task grows (leading to potential degradation), and it lacks the specialized expertise that different aspects of a complex project require. Multi-agent orchestration solves these problems by coordinating multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, each with specific roles, working together on complex tasks that would overwhelm a single agent. This is one of the most significant advances in AI-assisted development in 2026, enabling projects that were previously impossible for individual developers or small teams.
+        </p>
+
+        <h3>The Case for Multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></h3>
+
+        <p>
+            To understand why multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> help, consider how human teams work. A software project typically needs frontend experts, backend experts, DevOps engineers, and QA specialists. Each brings deep knowledge in their domain that would be impossible for a generalist to match. The same principle applies to AI <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>: an agent specialized in frontend code generation produces better results than a generalist agent asked to handle both frontend and backend.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Specialization Principle</div>
+            <p>Just as human teams benefit from specialization, AI agent systems benefit from assigning different <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> different roles. A research agent can search and analyze without worrying about code generation. A coding agent can implement without distraction from research tasks. A review agent can evaluate without the pressure of generation. This division of labor improves both quality and efficiency.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Bumblebee's Flight</div>
+            <p>Early aerodynamicists calculated that bumblebees should not be able to fly. They were wrong about the bumblebee, but right that their model was insufficient. Similarly, single-agent limitations seem prohibitive until you add orchestration. The whole exceeds what simple models predict.</p>
+        </div>
+
+        <p>
+            The economic argument is compelling: if one agent takes X hours to do everything, two specialized <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> might take X/3 hours total (including coordination overhead) while producing better results. The coordination overhead is real but smaller than the gains from specialization. As agent capabilities improve and orchestration tools mature, this trade-off increasingly favors multi-agent approaches.
+        </p>
+
+        <h3>How Multi-Agent Systems Work</h3>
+
+        <p>
+            Multi-agent orchestration involves three key components: the <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> themselves (each with their role and capabilities), the orchestration layer (which coordinates agent activities), and the communication protocol (how <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> share information and results). Understanding these components helps you design effective multi-agent systems.
+        </p>
+
+        <h4>Agent Roles</h4>
+
+        <p>
+            In a typical multi-agent setup, you might have:
+        </p>
+
+        <p>
+            <strong>Research Agent:</strong> Gathers information, searches documentation, analyzes existing code. Its job is to understand the problem space thoroughly before implementation begins.
+        </p>
+
+        <p>
+            <strong>Implementation Agent:</strong> Generates code based on research and specifications. It focuses on writing correct, maintainable code without worrying about the broader context.
+        </p>
+
+        <p>
+            <strong>Review Agent:</strong> Evaluates generated code against requirements, checks for bugs, security issues, and style violations. It provides quality assurance without being responsible for generation.
+        </p>
+
+        <p>
+            <strong>Orchestrator:</strong> Coordinates the other <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, assigning tasks, collecting results, and managing the overall workflow. It might be another agent or might be a simple script that sequences activities.
+        </p>
+
+        <h4>Orchestration Patterns</h4>
+
+        <p>
+            Several patterns exist for how <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> work together:
+        </p>
+
+        <p>
+            <strong>Sequential:</strong> Agent A does its work, then passes results to Agent B, which does its work, and so on. Simple to implement but doesn't allow parallelization.
+        </p>
+
+        <p>
+            <strong>Parallel:</strong> Multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> work on different aspects simultaneously, then their results are combined. Faster but requires careful result merging.
+        </p>
+
+        <p>
+            <strong>Hierarchical:</strong> An orchestrator agent coordinates specialist <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, assigning work and synthesizing results. Most flexible but most complex to design.
+        </p>
+
+        <p>
+            <strong>Debate:</strong> Multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> work on the same task, then compare results and converge on the best. Good for high-stakes decisions where multiple perspectives improve quality.
+        </p>
+
+        <h3>Multi-Agent Tools in 2026</h3>
+
+        <p>
+            Several tools have emerged to make multi-agent orchestration practical:
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Tool</th><th>Philosophy</th><th>Best For</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>OpenCastle</td><td>Multi-IDE orchestration</td><td>Coordinating multiple AI tools</td></tr>
+                <tr><td>Canopy</td><td>Command center</td><td>Run <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> side-by-side</td></tr>
+                <tr><td>CrewSwarm</td><td>Multi-engine</td><td>Parallel agent execution</td></tr>
+                <tr><td>Swarmify</td><td>Integrated <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> Environment</td><td>VS Code/Cursor orchestration</td></tr>
+            </tbody>
+        </table>
+
+        <h4>OpenCastle: Multi-IDE Orchestration</h4>
+
+        <p>
+            OpenCastle specializes in coordinating multiple AI tools, allowing you to use different AI capabilities for different parts of a task. Its strength is flexibility: you can use Claude for research, Cursor for implementation, and have them work together through OpenCastle's orchestration. This is particularly valuable when different tools have different strengths.
+        </p>
+
+        <h4>Canopy: Command Center</h4>
+
+        <p>
+            Canopy provides a command center approach, running multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> side-by-side with clear visibility into what each is doing. The appeal is transparency - you can see the full picture of what's happening across your agent team. This helps with debugging when things go wrong and with optimization when you want to improve throughput.
+        </p>
+
+        <h4>CrewSwarm: Parallel Execution</h4>
+
+        <p>
+            CrewSwarm focuses on parallel execution, launching multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> simultaneously to tackle different aspects of a problem. Its strength is speed: when tasks can be done in parallel, CrewSwarm coordinates them efficiently. The challenge is that not all tasks can be parallelized - some have dependencies that require sequential execution.
+        </p>
+
+        <h4>Swarmify: VS Code/Cursor Integration</h4>
+
+        <p>
+            Swarmify brings multi-agent capabilities directly into the VS Code/Cursor environment, enabling agent orchestration without leaving your development environment. This integration-focused approach means lower switching costs and more natural workflows for developers already using Cursor.
+        </p>
+
+        <h3>When to Use Multi-Agent Systems</h3>
+
+        <p>
+            Multi-agent orchestration adds complexity. The coordination overhead, debugging challenges, and resource requirements all increase. This complexity is only worth it when the task is complex enough to benefit. For simple tasks, a single agent is faster and easier. For complex tasks, the benefits of specialization outweigh the costs.
+        </p>
+
+        <p>
+            Use multi-agent systems when: the project has clearly separable components (like frontend and backend), the quality bar is high enough that specialized review is valuable, the task is complex enough that a single agent loses context, or you need to do research and implementation in parallel to save time.
+        </p>
+
+        <p>
+            Don't use multi-agent systems when: the task is simple enough for one agent, you don't have the infrastructure to run multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, you're prototyping and need to move fast without setup overhead, or the coordination overhead exceeds the specialization benefit.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Complexity Tax</div>
+            <p>Multi-agent systems introduce new failure modes: <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> can conflict with each other, results can be difficult to merge, debugging becomes harder when problems span multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and the orchestration logic itself can have bugs. These are real challenges that require expertise to manage. Don't adopt multi-agent approaches for the novelty - adopt them when the complexity is justified by the benefits.</p>
+        </div>
+
+        <h3>Building Effective Multi-Agent Systems</h3>
+
+        <p>
+            Several principles guide effective multi-agent design:
+        </p>
+
+        <p>
+            <strong>Clear role definition:</strong> Each agent should have a clear, specific role with well-defined boundaries. Overlapping responsibilities lead to conflicts and confusion.
+        </p>
+
+        <p>
+            <strong>Robust communication protocols:</strong> <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> need clear ways to share information and results. What format should results be in? How does one agent know when another is done? What happens when <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> disagree?
+        </p>
+
+        <p>
+            <strong>Centralized coordination:</strong> Someone or something needs to be in charge. Without a coordinator, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> can work at cross-purposes. The coordinator assigns tasks, collects results, and manages the overall workflow.
+        </p>
+
+        <p>
+            <strong>Failure handling:</strong> What happens when one agent fails? The system should handle failures gracefully, either by retrying, by reassigning, or by failing safely with clear error reporting.
+        </p>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we provide a <strong>Getting Started Checklist</strong> to set up your first vibe coding environment. This gives you practical steps to begin using these tools and techniques immediately.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-3-4.html">3.4 Cursor Deep Dive (2026)</a>
+            <a class="up" href="index.html">Ch 3: Overview</a>
+            <a class="next" href="section-3-6.html">3.6 Getting Started Checklist</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 3.5 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

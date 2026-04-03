@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13.4 When to Go Beyond <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 13</div>
+        <h1>Knowledge Retrieval and Advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></h1>
+        <p class="chapter-subtitle">13.4 When to Go Beyond <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Build reliable knowledge systems with advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> techniques.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 13.3 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Choosing Your Knowledge Strategy</div>
+            <p>This section covers the critical decision between <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, fine-tuning, and hybrid approaches for knowledge-intensive AI products. In the context of AI product development, this decision affects your entire architecture, costs, and long-term maintenance. The key insight is that fine-tuning teaches patterns, not facts.</p>
+        </div>
+
+        <h2 id="section-13-4">13.4 When to Go Beyond <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></h2>
+
+        <p>
+            Choosing between <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, fine-tuning, or a hybrid approach is one of the most consequential architectural decisions for AI products. Each approach has distinct strengths and tradeoffs, and the right choice depends on your specific requirements.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            This decision affects your entire system architecture, operational costs, and long-term maintenance. Choosing <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> when you need fine-tuning leads to inconsistent outputs. Choosing fine-tuning when you need <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> leads to outdated knowledge. The wrong choice can set your project back months.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Fine-Tuning Doesn't Add Knowledge</div>
+            <p>A critical misunderstanding is that fine-tuning "teaches" the model new facts. Fine-tuning teaches the model <em>patterns</em>, not facts. If you need the model to know specific information, <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> is the answer. Fine-tuning is for teaching how to respond, not what to respond with. Don't use fine-tuning as a substitute for a knowledge base.</p>
+        </div>
+
+        <h3>Option 1: <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> (Retrieval-Augmented Generation)</h3>
+
+        <p>
+            <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> is the right choice when your knowledge changes frequently or when you need verifiable citations for outputs. <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> allows you to update knowledge without retraining, making it ideal for products that work with dynamic information like current events, changing policies, or growing knowledge bases.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: News Q&A Application</div>
+            <p>A news organization built a Q&A system for their articles. Key requirements:</p>
+            <ul>
+                <li>Must have access to latest news (changes daily)</li>
+                <li>Must cite sources for fact-checking</li>
+                <li>Must handle millions of articles</li>
+            </ul>
+            <p>RAG was the clear choice because:</p>
+            <ul>
+                <li>New articles can be indexed immediately without retraining</li>
+                <li>Retrieval provides exact citations</li>
+                <li>Scales to large document collections</li>
+            </ul>
+            <p>The tradeoff is that <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> introduces retrieval latency and can miss relevant context if retrieval quality is poor.</p>
+        </div>
+
+        <h4>When <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Works Best</h4>
+        <ul>
+            <li>Knowledge changes frequently (daily/weekly updates)</li>
+            <li>You need source citations</li>
+            <li>Large document collections that don't fit in context</li>
+            <li>Regulated industries requiring audit trails</li>
+        </ul>
+
+        <h3>Option 2: Fine-Tuning</h3>
+
+        <p>
+            Fine-tuning is the right choice when you need consistent output behavior rather than dynamic knowledge. If your product requires a specific tone, format, or reasoning pattern that does not change frequently, fine-tuning can embed those patterns directly into the model.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Customer Support Voice</div>
+            <p>A company wanted their AI to always respond in a specific style:</p>
+            <ul>
+                <li>Empathetic but professional tone</li>
+                <li>Specific formatting with "Situation", "Action", "Next Steps" sections</li>
+                <li>Never use certain phrases (e.g., "as an AI")</li>
+                <li>Always acknowledge the user's feelings first</li>
+            </ul>
+            <p>This is behavior that should be baked into the model through fine-tuning, not prompt engineering. Fine-tuning ensures the model follows these patterns consistently across millions of requests without per-call prompt overhead.</p>
+        </div>
+
+        <h4>When Fine-Tuning Works Best</h4>
+        <ul>
+            <li>Consistent output format/tone required</li>
+            <li>Domain-specific reasoning patterns</li>
+            <li>Cost optimization for high-volume inference</li>
+            <li>Knowledge is stable (doesn't change often)</li>
+        </ul>
+
+        <h3>Option 3: Hybrid Approach</h3>
+
+        <p>
+            A hybrid approach combining <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> with fine-tuning gives you the best of both worlds in some scenarios. Use fine-tuning to improve how the model reasons over retrieved context, and <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> to provide up-to-date knowledge.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Hybrid Architecture</div>
+            <pre class="code-block">class HybridKnowledgeSystem:
+    """
+    Combines fine-tuned model with <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> for best of both worlds.
+    """
+    
+    def __init__(self, fine_tuned_llm, retriever):
+        self.llm = fine_tuned_llm  # Fine-tuned for reasoning patterns
+        self.retriever = retriever
+    
+    def answer(self, question):
+        # Get relevant context via <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>
+        docs = self.retriever.invoke(question)
+        context = format_docs(docs)
+        
+        # Fine-tuned model reasons over context
+        # The fine-tuning teaches it to:
+        # - Weight different types of evidence appropriately
+        # - Follow domain-specific reasoning patterns
+        # - Output in the required format
+        
+        prompt = f"""Based on the following context, answer the question.
+        
+Context:
+{context}
+
+Question: {question}
+
+Remember to follow the format guidelines you were trained on."""
+
+        return self.llm.invoke(prompt)
+
+# Example: A medical system where
+# - Fine-tuning ensures proper medical reasoning and caution
+# - <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> provides latest research and drug information</pre>
+            <p>This approach requires more infrastructure but can deliver both dynamic knowledge and consistent behavior. Evaluate whether your use case truly needs both; for most applications, one approach is sufficient.</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Criteria</th><th>RAG</th><th>Fine-Tuning</th><th>Hybrid</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Dynamic knowledge</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+                <tr><td>Consistent behavior</td><td>Prompt-dependent</td><td>Built-in</td><td>Yes</td></tr>
+                <tr><td>Cost at scale</td><td>Higher (per-call)</td><td>Lower (run once)</td><td>Medium</td></tr>
+                <tr><td>Implementation</td><td>Simple</td><td>Complex</td><td>Complex</td></tr>
+                <tr><td>Source citations</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Decision Framework</div>
+            <p>Start with <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> unless you have a clear reason not to. Fine-tuning adds significant cost and complexity. Only invest in fine-tuning when: (1) you have clear, stable requirements that won't change, (2) you have enough data to train effectively, (3) the cost savings at inference time justify the training cost.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-14/index.html">Chapter 14: Model Selection, Customization, and Evaluation</a> 
+                to learn how to choose and improve models wisely.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-13-3.html">13.3 Advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Patterns</a>
+            <a class="up" href="index.html">Chapter 13 Index</a>
+            <a class="next" href="section-13-5.html">13.5 Evaluating <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Systems</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 13.4 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

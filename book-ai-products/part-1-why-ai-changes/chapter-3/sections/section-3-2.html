@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.2 AI as Amplifier, Not Replacement - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
+        <div class="chapter-label">Chapter 3</div>
+        <h1>The Human-AI Product Stack</h1>
+        <p class="chapter-subtitle">3.2 AI as Amplifier, Not Replacement</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn to identify where AI amplifies human capabilities and where human judgment remains essential for successful AI products.
+        </p>
+
+        <blockquote class="epigraph">
+            <p>"AI is like a power tool: it amplifies what you point it at. Point it at the wrong problem and you amplify the mistake. Point it at the right problem and you achieve something remarkable."</p>
+            <cite>Product Leadership in the AI Era</cite>
+        </blockquote>
+
+        <h2 id="section-3-2">3.2 AI as Amplifier, Not Replacement</h2>
+
+        <p>
+            The most successful AI products do not replace human judgment. They amplify human capabilities, enabling people to achieve outcomes that would be impossible without AI assistance. Understanding this distinction is fundamental to designing AI products that users trust and value.
+        </p>
+
+        <h3>The Amplification Principle</h3>
+
+        <p>
+            AI amplifies what it touches. This seemingly simple insight has profound implications for product design:
+        </p>
+
+        <p>AI amplifies judgment, meaning good judgment combined with AI produces exceptional outcomes. AI amplifies errors, so poor judgment combined with AI produces catastrophic outcomes faster. AI amplifies scale, enabling a skilled person with AI to do what previously required a large team. AI amplifies bias, which means biased systems cause more harm as they scale.</p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">What AI Amplifies Well</div>
+            <p><strong>Speed and Scale</strong></p>
+            <p>AI excels at processing large volumes of information and generating options quickly. Where a human might take hours to review 100 candidate resumes, AI can do it in minutes. This amplification of speed and scale is valuable when the task is well-defined enough for AI to evaluate, when human judgment can efficiently review AI outputs, and when the volume of work exceeds human capacity.</p>
+            <p><strong>Consistency</strong></p>
+            <p>AI applies the same criteria to every decision, without fatigue or inconsistency. This amplification of consistency helps when human reviewers would apply variable standards, when fairness and equal treatment are required, and when quality must be uniform across many decisions.</p>
+            <p><strong>Memory and Recall</strong></p>
+            <p>AI can access and synthesize information from vast repositories. This amplification of memory helps when relevant information is scattered across many sources, when human experts would need to consult references, and when context from past interactions matters.</p>
+        </div>
+
+        <p>Understanding what AI amplifies helps you identify where human capabilities remain irreplaceable.</p>
+
+        <h3>What Human Judgment Provides</h3>
+
+        <p>
+            Certain capabilities remain distinctly human and essential for quality outcomes:
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Irreplaceable Human Capabilities</div>
+            <p>Several capabilities remain distinctly human and essential for quality outcomes. Humans understand social context, organizational culture, and situational nuance that AI cannot access, providing contextual understanding. Humans determine what outcomes are desirable and why, exercising value judgment. Humans navigate trade-offs between competing values through ethical reasoning. Humans set creative vision and evaluate whether outputs achieve it in creative direction. Humans build trust and rapport that AI cannot replicate for relationship building. Humans handle unprecedented scenarios that do not fit training patterns when facing novel situations.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>Before designing AI amplification, define how you will measure amplification effectiveness. In Human-AI collaboration, this means building evals that compare human-only output quality versus AI-assisted output quality. A micro-eval for amplification: measure task completion time and quality score for 20 tasks with AI assistance, versus the same tasks without. If AI does not measurably amplify human performance, the amplification claim is marketing, not product.</p>
+        </div>
+
+        <h3>The Amplification Matrix</h3>
+
+        <p>
+            Product teams should map tasks to the appropriate human-AI combination:
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Task Type</th>
+                    <th>Best Approach</th>
+                    <th>Why</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Routine evaluation against clear criteria</td>
+                    <td>AI-led with human oversight</td>
+                    <td>AI scales consistently; humans catch edge cases</td>
+                </tr>
+                <tr>
+                    <td>Creative exploration</td>
+                    <td>Human-led with AI augmentation</td>
+                    <td>Human vision guides; AI expands possibilities</td>
+                </tr>
+                <tr>
+                    <td>High-stakes decisions</td>
+                    <td>Human decision with AI analysis</td>
+                    <td>Human accountability; AI provides information</td>
+                </tr>
+                <tr>
+                    <td>Volume processing with quality review</td>
+                    <td>AI automation with human exception handling</td>
+                    <td>AI handles volume; humans handle exceptions</td>
+                </tr>
+                <tr>
+                    <td>Relationship-intensive interactions</td>
+                    <td>Human-led, AI-assisted</td>
+                    <td>Human connection primary; AI provides information</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: Amplifying Clinical Judgment</div>
+            <p>HealthMetrics designed their clinical decision support system as an amplifier of physician judgment, not a replacement. AI analyzes patient data, retrieves relevant literature, and suggests possible diagnoses. Physicians evaluate suggestions in context, consider patient preferences, and make final decisions. They combine by having AI present options with evidence while physicians select and refine. This approach earned physician trust because it made their jobs easier without threatening their professional judgment.</p>
+        </div>
+
+        <h3>Avoiding the Replacement Trap</h3>
+
+        <div class="callout warning">
+            <div class="callout-title">Signs You Are Designing for Replacement</div>
+            <p>Several warning signs indicate a replacement rather than amplification design. You may be designing for replacement if you are trying to eliminate human roles entirely, if your success metric is "fewer humans needed," if users feel their judgment is being second-guessed, if you are hiding AI involvement rather than clarifying it, or if your product removes human oversight rather than augmenting it.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Feedback Loops Between Human and AI</strong>, understanding how human feedback improves AI systems and how AI can learn from human guidance.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-3-1.html">3.1 Human-AI Stack Model</a>
+            <a class="up" href="../index.html">Chapter 3 Index</a>
+            <a class="next" href="section-3-3.html">3.3 Feedback Loops</a>
+        </nav>
+
+        <footer>
+            <p>Section 3.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

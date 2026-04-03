@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>32.2 RetailMind Customer Support - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></div>
+        <div class="chapter-label">Chapter 32, Section 32.2</div>
+        <h1>AI Customer Support/Ops Workflow Case: RetailMind</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            RetailMind replaced 60% of tier-1 support volume with an AI system that handled 2 million conversations per month. The system was not perfect, but it was good enough to transform the economics of their customer service operation.
+        </p>
+
+        <div class="epigraph">
+            <p>We did not build an AI that could solve every problem. We built one that knew when to escalate, and that made all the difference.</p>
+            <cite>Marcus Chen, CPO at RetailMind</cite>
+        </div>
+
+        <h2>32.2.1 The Problem Space</h2>
+
+        <p>
+            RetailMind is an omnichannel retailer with $2 billion in annual revenue, operating across e-commerce, mobile app, and 400 physical stores. Their customer service operation handled 3.5 million contacts per month, with a cost-per-contact of $8.50. Peak season required hiring 500 seasonal agents, and even then, service levels suffered.
+        </p>
+
+        <p>
+            The support team had a clear problem: tier-1 contacts were dominated by a small set of repeatable issues that did not require deep problem-solving. Yet handling them consumed 70% of agent capacity and created long wait times that degraded customer satisfaction across all tiers.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Support Pyramid Problem</div>
+            <p>Most support volume sits at the bottom: simple, repeatable questions. But agents trained to handle complex issues were spending most of their time on routine matters. This created burnout, high turnover, and poor service during peaks.</p>
+        </div>
+
+        <h2>32.2.2 Discovery and Product Design</h2>
+
+        <p>
+            The product team analyzed 6 months of support transcripts and identified the top 20 issue categories that accounted for 80% of volume. Order status and tracking represented 28% of volume. Returns and refunds accounted for 22%. Product availability comprised 15%. Promo codes and discounts represented 10%. Account management issues made up 8%. The remaining issues totaled 17% of volume.
+        </p>
+
+        <p>
+            They made a critical insight: the top 5 categories all shared a common pattern. They required accessing the same data sources (order database, inventory system, customer profile) and executing a limited set of actions (refund order, apply discount, update address). This was an automation problem, not a general AI problem.
+        </p>
+
+        <h2>32.2.3 Architecture Approach</h2>
+
+        <p>
+            RetailMind's architecture combined four key components. Intent classification used a fine-tuned model that mapped free-text input to one of thirty-five discrete intents with ninety-four percent accuracy, chosen because it handles high volume with low latency and produces explainable results. Action execution used deterministic code paths for each intent, executing API calls to backend systems, because this approach is reliable, auditable, and correct. Response generation used an LLM with guardrails to convert action results into natural language responses, providing natural and consistent tone. Escalation logic used a rule-based system combined with confidence detection to hand off to human agents when appropriate, ensuring safe and predictable behavior.
+        </p>
+
+        <h2>32.2.4 Evaluation Strategy</h2>
+
+        <p>
+            The team invested heavily in evaluation because the cost of errors was high: a wrong refund could cost money, and a wrong shipping address could create a logistics nightmare.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Eval-First Commitment</div>
+            <p>The team spent 3 months building their <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval suite</a> before writing production code. They collected 10,000 labeled examples from historical transcripts and created automated tests for accuracy, safety, and tone. This let them iterate rapidly once development began.</p>
+        </div>
+
+        <p>
+            Their evaluation framework had three dimensions. Task completion measured whether the system correctly resolved the customer issue with a target of 92%. Safety measured whether the system avoided harmful actions or incorrect data modifications with a target of 99.9%. Customer satisfaction measured whether the customer would be satisfied with this interaction with a target of 85%.
+        </p>
+
+        <h2>32.2.5 Rollout and Results</h2>
+
+        <p>
+            RetailMind launched in three phases over nine months. Phase 1 during months one through three had AI handle email inquiries only at a volume of 200,000 per month, with human agents reviewing all responses before sending. Phase 2 during months four through six expanded AI to handle both chat and email, going direct-to-customer for low-risk actions while maintaining human review for high-risk actions like refunds over $100. Phase 3 during months seven through nine achieved full automation for tier-1 where AI handled 60% of volume without human review and 40% escalated seamlessly.
+        </p>
+
+        <p>
+            After nine months, RetailMind measured substantial improvements. Monthly contacts handled by AI grew from zero to 2.1 million, representing full adoption of the AI system. Cost per contact dropped from $8.50 to $2.20, a seventy-four percent reduction that transformed the economics of customer service. Customer satisfaction measured by CSAT increased from seventy-two percent to seventy-eight percent, a six point improvement. Average resolution time fell from twelve minutes to three minutes, a seventy-five percent improvement that customers noticed immediately. Agent turnover dropped from forty-five percent annually to twenty-eight percent annually, a thirty-eight percent reduction as agents no longer had to handle monotonous tier-1 issues.
+        </p>
+
+        <h2>32.2.6 Key Lessons</h2>
+
+        <div class="callout tip">
+            <div class="callout-title">What RetailMind Learned</div>
+            <p>RetailMind learned that hybrid architecture outperformed pure LLM because deterministic action handlers for known intents were more reliable than trusting an LLM to figure it out. Escalation UX mattered more than AI quality because customers tolerated imperfect AI when escalation was seamless, and a bad escalation experience was worse than a wrong answer. Agent job satisfaction improved because removing tier-1 monotony let agents focus on interesting problems and turnover dropped significantly. Phased rollout reduced risk because each phase built confidence and identified gaps, and by the time they reached full automation, the team trusted the system. Volume data improved AI faster because real customer interactions revealed edge cases that lab testing missed, and they continuously retrained on live data.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-32-1.html">32.1 DataForge</a>
+            <a class="up" href="../index.html">Chapter 32</a>
+            <a class="next" href="section-32-3.html">32.3 QuickShip Case Study</a>
+        </nav>
+
+        <footer>
+            <p>32.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

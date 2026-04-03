@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 6.4: MCP Connectors and Integrations - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <h1>Chapter 6: Claude Code Skills</h1>
+        <p class="chapter-subtitle">6.4 MCP Connectors and Integrations</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn to connect Claude Code to external services via MCP connectors.
+        </p>
+
+        <div class="prerequisites">
+            <h3>Prerequisites</h3>
+            <p>
+                This section builds on Section 6.3 (Building Your Own Skills). You should understand how to define tools and execute commands before connecting to external services.
+            </p>
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: MCP as AI Connectivity Standard</div>
+            <p>MCP standardizes how AI assistants connect to external services, creating an ecosystem where connectors are reusable across different AI tools. This breaks down the barrier between local development environments and production infrastructure, enabling AI to work across your entire stack. MCP is to AI what APIs were to web services: a transformative connectivity standard.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: USB-C for AI</div>
+            <p>USB-C unified charging cables in 2016 after decades of proprietary solutions. MCP is attempting the same for AI integrations, though the number of proprietary AI connector formats suggests we are still in the "mini-USB era."</p>
+        </div>
+
+        <h2 id="section-6-4">6.4 MCP Connectors and Integrations</h2>
+
+        <p>
+            While skills extend Claude Code's capabilities through prompts, MCP (Model Context Protocol) connectors extend its reach to external services. MCP is an open protocol that lets AI assistants connect to databases, APIs, and tools that live outside your local environment. Think of MCP as USB-C for AI, providing a standardized way to connect any service to any AI tool.
+        </p>
+
+        <p>
+            The power of MCP lies in its standardization. Before MCP, each AI assistant had to build custom integrations for every service. A database integration for Claude Code was completely different from one for ChatGPT. MCP changes this: you build the integration once, and any AI tool that supports MCP can use it. This creates an ecosystem where connectors are reusable and composable.
+        </p>
+
+        <h3>What is MCP?</h3>
+
+        <p>
+            The Model Context Protocol (MCP) is a standardized interface for connecting AI assistants to external resources. Rather than each AI tool implementing custom integrations for every service, MCP provides a common protocol. When you connect an MCP server, Claude Code gains new capabilities without needing to understand the specifics of each service.
+        </p>
+
+        <p>
+            MCP servers are separate processes that expose resources and tools via the MCP protocol. Claude Code connects to these servers and can then read from resources (like files or database queries) and call tools (like creating issues or sending messages). This architecture keeps your AI environment secure while enabling powerful integrations.
+        </p>
+
+        <h4>How MCP Works</h4>
+
+        <pre><code># The MCP Architecture
+
+┌─────────────────┐       MCP Protocol       ┌─────────────────┐
+│                 │ ◄───────────────────────► │                 │
+│  Claude Code    │                          │   MCP Server    │
+│                 │   Resources (read)       │                 │
+│  - Local files  │ ◄───────────────────────► │  - Database    │
+│  - Your code    │                          │  - APIs         │
+│  - Shell        │   Tools (execute)         │  - Services     │
+│                 │ ◄───────────────────────► │                 │
+└─────────────────┘                          └─────────────────┘
+
+# What Claude Code sees:
+- New "resources" it can read (database tables, API responses)
+- New "tools" it can call (create_issue, query_database)
+- All standardized through MCP</code></pre>
+
+        <h4>Why This Matters</h4>
+
+        <p>
+            Without MCP, connecting Claude Code to your production database would require custom code. With MCP, you install a server, configure it once, and your AI assistant can query databases, create tickets, send notifications, and more. The difference is like the difference between writing a custom API client versus using a standard library.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Key Insight</div>
+            <p>
+                MCP enables a new workflow: AI that acts across your entire stack. Your AI assistant can now query production databases, create Jira tickets, deploy to Kubernetes, and send Slack notifications, all within a single conversation. This breaks down the wall between your local development environment and the rest of your infrastructure.
+            </p>
+        </div>
+
+        <h3>Popular MCP Connectors</h3>
+
+        <p>
+            The MCP ecosystem has grown rapidly, with connectors for almost every service developers use. Here are the most essential connectors that will transform your workflow.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>mcp-k8s-go (378 stars)</h4>
+            <p>
+                <strong>What it does:</strong> Connects Claude Code to Kubernetes. You can query cluster status, inspect pods, view logs, and even apply configurations directly from your AI assistant.
+            </p>
+            <p>
+                <strong>Installation:</strong>
+            </p>
+            <pre><code># Install the Kubernetes MCP server
+go install github.com/anomalyco/mcp-k8s-go@latest
+
+# Add to Claude Code config (~/.claude.json):
+{
+  "mcpServers": {
+    "kubernetes": {
+      "command": "mcp-k8s-go",
+      "env": {
+        "KUBECONFIG": "~/.kube/config"
+      }
+    }
+  }
+}</code></pre>
+            <p>
+                <strong>Use case:</strong> Developers managing Kubernetes deployments. Debug production issues, check pod status, or deploy new versions without leaving your AI workflow.
+            </p>
+        </div>
+
+        <h4>Case Study: Debugging Production via AI</h4>
+
+        <pre><code># Instead of SSH'ing into servers and manually checking:
+
+User: "Check if there are any errors in the payment-service pods"
+MCP Server: Returns pod list with status and recent events
+
+User: "Show me the logs from the last 5 minutes"
+MCP Server: Streams recent log output
+
+User: "The payments are failing. What's the error?"
+MCP Server: Shows the error message from the logs
+
+User: "Scale the payment-service to 3 replicas and check if it helps"
+MCP Server: Executes kubectl scale, confirms new replicas running
+
+User: "Now check if payments are succeeding"
+MCP Server: Queries logs for successful payment processing</code></pre>
+
+        <p>
+            This workflow that used to require multiple terminal sessions, kubectl configurations, and constant context switching now happens in a single conversation.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>mcp-atlassian-server (52 stars)</h4>
+            <p>
+                <strong>What it does:</strong> Connects Claude Code to Jira and Confluence. Create issues, update status, search documents, and more.
+            </p>
+            <p>
+                <strong>Installation:</strong>
+            </p>
+            <pre><code># Install via npm
+npm install -g @atlassian/mcp-server
+
+# Configure with your Atlassian credentials
+export JIRA_URL="yourcompany.atlassian.net"
+export JIRA_EMAIL="you@company.com"
+export JIRA_API_TOKEN="your-api-token"
+
+# Add to Claude Code config:
+{
+  "mcpServers": {
+    "atlassian": {
+      "command": "mcp-atlassian-server"
+    }
+  }
+}</code></pre>
+            <p>
+                <strong>Use case:</strong> Teams using Atlassian tools. Automate issue creation from code reviews, update project status, or search documentation without switching context.
+            </p>
+        </div>
+
+        <h4>Practical Example: Automating Project Management</h4>
+
+        <pre><code># After completing a feature:
+
+User: "Create a Jira ticket for the payment integration we just completed"
+MCP Server: Creates ticket with title, description, and links to PR
+
+# During standup:
+User: "What's the status of all tickets assigned to me?"
+MCP Server: Queries Jira, returns list of tickets with status
+
+# During code review:
+User: "Create a bug ticket for this issue with high priority"
+MCP Server: Creates ticket with appropriate labels and priority
+
+# Searching documentation:
+User: "Find the Confluence page about our deployment process"
+MCP Server: Searches and returns relevant document</code></pre>
+
+        <div class="callout practical-example">
+            <h4>mcp-vercel (66 stars)</h4>
+            <p>
+                <strong>What it does:</strong> Connects Claude Code to Vercel. Deploy projects, check deployment status, manage domains, and configure settings.
+            </p>
+            <p>
+                <strong>Installation:</strong>
+            </p>
+            <pre><code># Install via npm
+npm install -g @vercel/mcp-server
+
+# Add to Claude Code config:
+{
+  "mcpServers": {
+    "vercel": {
+      "command": "mcp-vercel",
+      "env": {
+        "VERCEL_TOKEN": "your-vercel-token"
+      }
+    }
+  }
+}</code></pre>
+            <p>
+                <strong>Use case:</strong> Vercel users. Deploy and manage frontend projects directly from your AI assistant.
+            </p>
+        </div>
+
+        <div class="callout practical-example">
+            <h4>mcp-server-llamacloud (86 stars)</h4>
+            <p>
+                <strong>What it does:</strong> Connects to LlamaCloud for document indexing and retrieval. Enables <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>-style queries over your documents.
+            </p>
+            <p>
+                <strong>Use case:</strong> Knowledge management. Query your internal documentation and wikis through Claude Code.
+            </p>
+        </div>
+
+        <div class="callout practical-example">
+            <h4>whatsapp-mcp (10 stars)</h4>
+            <p>
+                <strong>What it does:</strong> Connects Claude Code to WhatsApp. Send and read messages, manage contacts, and more.
+            </p>
+            <p>
+                <strong>Use case:</strong> Notification systems. Send alerts, status updates, or trigger workflows via WhatsApp.
+            </p>
+        </div>
+
+        <h4>Additional Essential Connectors</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Connector</th>
+                    <th>Stars</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>mcp-server-postgres</td>
+                    <td>200+</td>
+                    <td>Query and modify PostgreSQL databases</td>
+                </tr>
+                <tr>
+                    <td>mcp-server-github</td>
+                    <td>150+</td>
+                    <td>Manage GitHub repos, issues, PRs</td>
+                </tr>
+                <tr>
+                    <td>mcp-server-slack</td>
+                    <td>80+</td>
+                    <td>Send messages and manage channels</td>
+                </tr>
+                <tr>
+                    <td>mcp-server-aws-kb</td>
+                    <td>50+</td>
+                    <td>Query AWS knowledge bases</td>
+                </tr>
+                <tr>
+                    <td>mcp-server-sentry</td>
+                    <td>40+</td>
+                    <td>Query error tracking and monitoring</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Configuring MCP Connectors</h3>
+
+        <p>
+            MCP connectors are configured in Claude Code's settings. The configuration specifies the server command and any required environment variables. Each MCP server has its own setup process, but the general pattern involves installing the server package and adding configuration to your Claude Code config file.
+        </p>
+
+        <h4>Configuration File Location</h4>
+
+        <pre><code># Claude Code config location
+# macOS/Linux: ~/.claude.json
+# Windows: %USERPROFILE%\.claude.json
+
+# Example configuration
+{
+  "mcpServers": {
+    "kubernetes": {
+      "command": "mcp-k8s-go",
+      "env": {
+        "KUBECONFIG": "~/.kube/config"
+      }
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "postgresql://user:pass@localhost:5432/mydb"
+      }
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "ghp_xxxxx"
+      }
+    }
+  }
+}</code></pre>
+
+        <h4>Installation Patterns</h4>
+
+        <pre><code># Pattern 1: Go-based servers
+go install github.com/user/mcp-server@latest
+
+# Pattern 2: npm-based servers
+npm install -g @org/mcp-server
+# or
+npx -y @org/mcp-server
+
+# Pattern 3: Python-based servers
+pip install mcp-server-package
+mcp-server-package --help
+
+# Pattern 4: Docker-based servers
+docker run -it --rm -e API_KEY=xxx org/mcp-server:latest</code></pre>
+
+        <div class="callout warning">
+            <div class="callout-title">Security Consideration</div>
+            <p>
+                MCP connectors can access external services on your behalf. Only connect to services you trust, and review what data the connector can access. Many connectors require read/write access to significant resources.
+            </p>
+        </div>
+
+        <h4>Security Best Practices</h4>
+
+        <pre><code># 1. Use environment variables for secrets, never hardcode
+{
+  "mcpServers": {
+    "github": {
+      "command": "...",
+      "env": {
+        // Good: Reference env var
+        "GITHUB_TOKEN": "env:GITHUB_TOKEN"
+      }
+    }
+  }
+}
+
+# 2. Limit connector access to what's needed
+// Instead of full admin access, create dedicated tokens
+// with minimal permissions for each connector
+
+# 3. Review what resources the connector can access
+// Some connectors can read everything - be intentional
+
+# 4. Disconnect connectors when not in use
+// Especially for production databases</code></pre>
+
+        <h3>Building Custom MCP Servers</h3>
+
+        <p>
+            If you need to connect to a service without an existing MCP server, you can build your own. MCP servers can be written in any language and expose resources and tools via the protocol. The MCP specification defines how to structure your server and what messages to exchange.
+        </p>
+
+        <h4>When to Build Custom Connectors</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Build Custom MCP If</th>
+                    <th>Use Existing Connector If</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Service has no existing MCP server</td>
+                    <td>MCP server already exists</td>
+                </tr>
+                <tr>
+                    <td>Need custom logic or transformations</td>
+                    <td>Default functionality meets your needs</td>
+                </tr>
+                <tr>
+                    <td>Internal/proprietary service</td>
+                    <td>Public service with community support</td>
+                </tr>
+                <tr>
+                    <td>Highly specific workflow needs</td>
+                    <td>General-purpose functionality is sufficient</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Python MCP Server Example</h4>
+
+        <pre><code># Example: A simple custom MCP server in Python
+# Using the MCP SDK
+
+from mcp.server import Server
+from mcp.server.stdio import stdio_server
+from mcp.types import Tool, TextResource
+import asyncio
+
+app = Server("my-custom-server")
+
+@app.list_tools()
+async def list_tools() -> list[Tool]:
+    return [
+        Tool(
+            name="query_database",
+            description="Query the internal analytics database",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "sql": {"type": "string", "description": "SQL query to execute"}
+                },
+                "required": ["sql"]
+            }
+        ),
+        Tool(
+            name="get_dashboard_url",
+            description="Get the URL for a specific dashboard",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "dashboard_id": {"type": "string"}
+                },
+                "required": ["dashboard_id"]
+            }
+        )
+    ]
+
+@app.call_tool()
+async def call_tool(name: str, arguments: dict) -> str:
+    if name == "query_database":
+        # Custom logic to query your database
+        result = await query_analytics(arguments["sql"])
+        return format_result(result)
+    elif name == "get_dashboard_url":
+        return f"https://analytics.company.com/d/{arguments['dashboard_id']}"
+    
+async def main():
+    async with stdio_server() as streams:
+        await app.run(
+            streams[0],
+            streams[1],
+            app.create_initialization_options()
+        )
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre>
+
+        <p>
+            Building a custom MCP server is beyond the scope of this chapter, but the pattern is straightforward: implement the MCP protocol to expose your service's capabilities as resources and tools that Claude Code can consume.
+        </p>
+
+        <h4>Real-World Scenario: Connecting to Internal Systems</h4>
+
+        <pre><code># A fintech company needed to connect Claude Code to their
+# proprietary trading platform that had no existing integrations
+
+# They built a custom MCP server that exposed:
+
+# Resources:
+- account_balances: Current account states
+- recent_transactions: Last 100 transactions
+- market_data: Real-time price feeds
+- risk_limits: Current risk exposure
+
+# Tools:
+- execute_trade: Submit a trade to the system
+- get_position: Check current position for a symbol
+- cancel_order: Cancel a pending order
+- get_risk_report: Generate risk analysis
+
+# The AI can now have conversations like:
+User: "What's our current exposure to tech stocks?"
+MCP Server: Queries position data, returns summary
+
+User: "Show me any risk breaches"
+MCP Server: Checks risk limits against positions
+
+User: "Close our position in AAPL"
+MCP Server: Executes the trade via the trading API</code></pre>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Section 6.5 covers how to organize skills at scale for teams. Learn best practices for managing skill libraries, versioning, and sharing across your organization. This is crucial for teams that want to standardize their AI workflows and ensure consistency across projects.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-6-3.html">6.3: Building Your Own Skills</a>
+            <a class="up" href="index.html">Ch 6: Skills Overview</a>
+            <a class="next" href="section-6-5.html">6.5: Skill Organization for Teams</a>
+        </nav>
+
+        <footer>
+            <p>Section 6.4 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>31.5 Governance to Metrics - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></div>
+        <div class="chapter-label">Chapter 31, Section 31.5</div>
+        <h1>Governance to Metrics: Phases 8-10</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Shipping an AI product is not the end. It is the beginning of an ongoing responsibility to govern its behavior, ensure compliance, and measure its impact. These final phases before the postmortem complete the lifecycle.
+        </p>
+
+        <h2>Phase 8: <a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">Governance</a> and Trust Plan (Week 11)</h2>
+
+        <h3>31.5.1 Policy Development</h3>
+
+        <p>
+            Establish clear policies for AI behavior beginning with an acceptable use policy that defines what the AI should and should not do, a data handling policy that specifies how user data is used, stored, and deleted, an escalation policy for when to involve humans in AI decisions, a feedback policy explaining how user feedback influences AI behavior, and an update policy covering how and when AI models are updated.
+        </p>
+
+        <p>
+            <strong>Running Example - FraudFinder:</strong> The FraudFinder team developed policies requiring human review for any transaction flagged above a $10,000 threshold. The AI could decline transactions under $100 automatically but had to involve a human for larger amounts.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title"><a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">Governance</a> Policy Template</div>
+            <p><strong>Policy name:</strong> [Name]<br/>
+            <strong>Scope:</strong> [Who/what it applies to]<br/>
+            <strong>Requirements:</strong> [What must be done]<br/>
+            <strong>Exceptions:</strong> [When to deviate]<br/>
+            <strong>Owner:</strong> [Who is accountable]<br/>
+            <strong>Review frequency:</strong> [When it will be revisited]</p>
+        </div>
+
+        <h3>31.5.2 Compliance Checklist</h3>
+
+        <p>
+            Depending on your industry and region, you may need to comply with various regulations. The EU AI Act applies in the European Union and requires risk classification, transparency measures, and human oversight for AI systems. GDPR also applies in the EU and mandates data protection, consent mechanisms, and the right to explanation for automated decisions. CCPA governs California in the USA and focuses on consumer data rights and privacy notices. HIPAA applies to healthcare in the USA and requires healthcare data protection. ISO 42001 is an international standard for AI management system certification. NIST AI RMF provides an AI risk management framework for organizations in the USA. Identify which regulations apply to your product based on your industry and user base.
+        </p>
+
+        <div class="callout tip">
+            <div class="callout-title">Compliance Self-Assessment</div>
+            <p>Conduct a compliance self-assessment by first identifying applicable regulations based on your industry and user base, then documenting how your AI system meets each requirement. Identify gaps and create remediation plans to address them. Obtain legal review for high-risk compliance areas and schedule regular compliance reviews to maintain ongoing adherence.</p>
+        </div>
+
+        <h3>31.5.3 Audit Trail Setup</h3>
+
+        <p>
+            AI systems must maintain comprehensive audit trails that serve multiple purposes. Input logging records what queries were made after sanitizing personally identifiable information to protect user privacy while maintaining debugging capability. Output logging captures what responses were given to track AI behavior over time. Decision logging aims to capture why the AI made specific choices, which helps with debugging and accountability. Human overrides track when humans changed AI decisions, providing insight into where AI and human judgment differ. System changes document when models, prompts, or configurations changed, creating a traceable history of the system's evolution.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">Audit Trail Warning</div>
+            <p>Do not log raw user queries containing PII. Sanitize or hash identifying information before logging. This protects users and reduces your compliance burden.</p>
+        </div>
+
+        <h3>31.5.4 Accountability Definition</h3>
+
+        <p>
+            Define who is accountable for AI outcomes by assigning specific roles to ensure clear ownership. The AI Product Owner holds accountability for product decisions and outcomes, including whether the product delivers value and meets user needs. The AI Engineer is accountable for technical implementation, ensuring the system is built correctly and reliably. The Compliance Lead is accountable for regulatory compliance, making sure the product meets all applicable laws and regulations. The On-call Engineer is accountable for production incidents, responding to outages and issues when they occur.
+        </p>
+
+        <div class="callout note">
+            <div class="callout-title">Accountability RACI Template</div>
+            <p><strong>AI Decision:</strong> [What AI decides]<br/>
+            <strong>Human Review:</strong> [Required for which cases]<br/>
+            <strong>R (Responsible):</strong> [Who does the work]<br/>
+            <strong>A (Accountable):</strong> [Who is answerable]<br/>
+            <strong>C (Consulted):</strong> [Who provides input]<br/>
+            <strong>I (Informed):</strong> [Who is notified]</p>
+        </div>
+
+        <h2>Phase 9: Metrics Dashboard (Weeks 11-12)</h2>
+
+        <h3>31.5.5 Key Metrics Selection</h3>
+
+        <p>
+            Select metrics that matter for your AI product across five categories. Quality metrics include eval scores, user satisfaction, and task completion, answering whether the AI is doing its job well. Reliability metrics track uptime, error rate, and latency at the fiftieth, ninety-fifth, and ninety-ninth percentiles, answering whether the system is available and fast. Adoption metrics measure daily active users, monthly active users, and feature activation, answering whether users are actually using the product. Business metrics include cost per query, revenue impact, and Net Promoter Score, answering whether the product is delivering value to the organization. Safety metrics track escalation rate, override rate, and complaint rate, answering whether the AI is causing harm or creating problems for users.
+        </p>
+
+        <p>
+            <strong>Running Example - FraudFinder:</strong> The FraudFinder team tracked fraud detection rate (did we catch the fraud?), false positive rate (did we block legitimate transactions?), and analyst review time (how much manual work remains?).
+        </p>
+
+        <h3>31.5.6 Dashboard Design</h3>
+
+        <p>
+            Build a dashboard that different stakeholders can use, with an executive view showing high-level metrics, trends, and anomalies. The product manager view displays quality metrics, user feedback, and feature adoption. The engineering view shows system metrics, error rates, and latency distributions. The compliance view provides audit logs, policy adherence, and risk indicators.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Dashboard Implementation</div>
+            <p>When implementing a dashboard, start with the three most important metrics for each stakeholder to avoid overwhelming them with data. Use a tool that supports real-time updates such as Grafana or Datadog so the team can see current status at a glance. Create a single source of truth that everyone trusts by ensuring data consistency across all views. Include context by showing baselines, targets, and historical trends so metrics have meaning beyond raw numbers. Finally, establish a practice of reviewing the dashboard in weekly team syncs to keep everyone aligned on product performance.</p>
+        </div>
+
+        <h3>31.5.7 Alert Thresholds</h3>
+
+        <p>
+            Configure alerts that surface problems before they become incidents. Static thresholds define clear boundaries like error rate exceeding five percent or latency at the ninety-fifth percentile exceeding two seconds. Dynamic thresholds use anomaly detection based on historical patterns to identify unusual behavior that deviates from normal. Trend alerts catch gradual degradation that unfolds over days rather than appearing suddenly. Business metric alerts notify you when conversion rates drop or unusual user behavior patterns emerge. Configure each alert type based on what matters most for your specific product and user experience.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Alert Philosophy</div>
+            <p><strong>"Alert on outcomes, not activities. Every alert should require a decision or action. If you do not know what to do when an alert fires, it is not a good alert."</strong></p>
+        </div>
+
+        <h3>31.5.8 Review Cadence</h3>
+
+        <p>
+            Establish a regular review schedule at multiple cadences to ensure appropriate oversight at each level. Daily reviews consist of a system health check performed by the on-call engineer to catch immediate issues. Weekly reviews cover metrics review and AI quality trends with product and engineering teams to track progress against goals. Monthly reviews examine business impact and compliance status with leadership and compliance teams to ensure the product remains aligned with organizational priorities and regulatory requirements. Quarterly reviews involve strategy review and model evaluation by the executive team to assess long-term direction and performance.
+        </p>
+
+        <div class="callout key-takeaway">
+            <div class="callout-title">Phase 8-10 Checklist</div>
+            <p>Completing phases eight through ten requires that AI governance policies have been documented, compliance requirements have been identified and addressed, audit trail logging has been implemented, accountability has been defined with RACI, a metrics dashboard has been built and is accessible, alert thresholds have been configured, a review cadence has been established, and dashboards are reviewed in weekly syncs.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-31-4.html">31.4 Engineering to Launch</a>
+            <a class="up" href="../index.html">Chapter 31</a>
+            <a class="next" href="section-31-6.html">31.6 Final Reflection</a>
+        </nav>
+
+        <footer>
+            <p>31.5 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

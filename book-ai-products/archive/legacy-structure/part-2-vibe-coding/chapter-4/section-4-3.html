@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.3 Transitioning to Testable Code - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <div class="chapter-label">Chapter 4</div>
+        <h1>Vibe Coding Workflows That Deliver Production-Ready Code</h1>
+        <p class="chapter-subtitle">4.3 Transitioning to Testable Code</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Teach practical, repeatable workflows for moving from vibe to production.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 4.2 recommended. Basic understanding of testing concepts.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: From Prototype to Production</div>
+            <p>This section covers the transformation from AI-generated code to production-ready, testable code. In the context of vibe coding, this transition is essential because initial AI outputs often lack the type safety, error handling, and testability that production requires. These patterns transform prototyping into genuine development.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Javadoc Conspiracy</div>
+            <p>Sun Microsystems invented Javadoc in 1994, believing developers would never write documentation voluntarily. They were right. AI has revived this tradition: developers now generate documentation at scale, even if they never would have written it themselves.</p>
+        </div>
+
+        <h2 id="section-4-3">4.3 Transitioning to Testable Code</h2>
+
+        <p>
+            Vibe-generated code often needs refinement to be production-ready. While AI excels at generating code that follows patterns, it sometimes produces code that is difficult to test, maintain, or extend. These issues are not apparent in initial generation but become problematic over time as the codebase grows. This section covers the specific transformations that make AI-generated code ready for production deployment.
+        </p>
+
+        <p>
+            The gap between "works on my machine" and "production-ready" is often invisible during initial development. Your AI assistant generates code that executes correctly for the happy path, but production environments expose weaknesses that development testing misses. Network failures, unexpected data formats, edge cases in user input, and concurrent operations all stress code in ways that initial generation does not anticipate. Transitioning to testable code is not about adding tests after the fact; it is about writing code that can be tested reliably and refactored confidently.
+        </p>
+
+        <h3 id="type-safety-first">4.3.1 Type Safety: The Foundation of Production Code</h3>
+
+        <p>
+            Adding TypeScript types is often the first priority because type safety catches bugs at compile time rather than runtime. AI-generated code may have implicit types that work but are not explicitly declared, leading to potential errors when the code is modified. Go through the generated code and ensure full type safety with explicit interfaces for all data structures, proper generics where appropriate, and strict null checks enabled. This investment pays dividends in maintainability and refactoring safety.
+        </p>
+
+        <div class="key-concept">
+            <strong>Why This Matters:</strong> Type errors in production cause runtime failures that affect real users. A missing null check that works in development may crash your application when a database query returns empty. TypeScript catches these issues before deployment, saving hours of debugging and preventing customer-facing incidents.
+        </div>
+
+        <p>
+            Consider a typical AI-generated function that processes user data. The AI might generate something that works but lacks explicit typing:
+        </p>
+
+        <div class="code-example">
+            <div class="example-header">Before: Implicit Types (Difficult to Test)</div>
+<pre><code class="language-typescript">// AI-generated code - works but lacks type safety
+function processUserData(users) {
+    return users.map(user => ({
+        id: user.id,
+        displayName: user.name || user.email,
+        initials: user.name.split(' ').map(n => n[0]).join(''),
+        createdAt: new Date(user.created)
+    }));
+}
+</code></pre>
+        </div>
+
+        <p>
+            This code has multiple failure points. If <code>user.name</code> is null, the code crashes. If <code>user.created</code> is missing, the Date constructor fails. The function signature does not tell callers what input it expects or what it returns. Here is the transformed version:
+        </p>
+
+        <div class="code-example">
+            <div class="example-header">After: Explicit Types (Testable and Maintainable)</div>
+<pre><code class="language-typescript">interface UserRecord {
+    id: string;
+    name?: string | null;
+    email: string;
+    created?: string | null;
+}
+
+interface ProcessedUser {
+    id: string;
+    displayName: string;
+    initials: string;
+    createdAt: Date;
+}
+
+/**
+ * Processes raw user records into display-ready user objects.
+ * @param users - Array of raw user records from the database
+ * @returns Array of processed users with computed fields
+ * @throws Error if user record has invalid email
+ */
+function processUserData(users: UserRecord[]): ProcessedUser[] {
+    return users.map(user => {
+        if (!user.email) {
+            throw new Error(`User ${user.id} has no email address`);
+        }
+
+        const displayName = user.name?.trim() || user.email;
+        const initials = displayName
+            .split(' ')
+            .filter(part => part.length > 0)
+            .map(part => part[0].toUpperCase())
+            .join('');
+
+        return {
+            id: user.id,
+            displayName,
+            initials,
+            createdAt: user.created ? new Date(user.created) : new Date()
+        };
+    });
+}
+</code></pre>
+        </div>
+
+        <p>
+            The typed version is longer, but it provides several advantages. The interface documents the expected shape of input and output. The function signature tells TypeScript what it accepts and returns, enabling autocomplete and compile-time error detection. The error handling makes failure cases explicit rather than letting them propagate as cryptic runtime errors. This code can now be unit tested with confidence.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill Demonstration: Adding Type Safety to AI Code</h4>
+            <p>Follow these steps when refining AI-generated code:</p>
+            <ol>
+                <li><strong>Identify data boundaries.</strong> Find where your code interacts with external systems: API inputs, database results, configuration files. These are where type mismatches cause production bugs.</li>
+                <li><strong>Define interfaces first.</strong> Before refactoring functions, write interfaces that describe your data. This forces you to think about what data you actually have versus what you assume you have.</li>
+                <li><strong>Enable strict mode.</strong> In your TypeScript config, set <code>strict: true</code> and <code>noImplicitAny: true</code>. This prevents the AI from generating code that falls back to implicit <code>any</code> types.</li>
+                <li><strong>Add generic types.</strong> For functions that work with multiple data types, use generics to maintain type safety while preserving flexibility.</li>
+                <li><strong>Test at boundaries.</strong> Write tests that verify your type assertions match reality. If a test fails because the actual data shape differs from your interface, your interface was wrong.</li>
+            </ol>
+        </div>
+
+        <h3 id="extracting-testable-functions">4.3.2 Extracting Logic: From Components to Pure Functions</h3>
+
+        <p>
+            Extracting logic from large components into testable functions improves both testability and reusability. AI often generates code as a single block that is difficult to unit test because the logic is tangled with presentation. Extract business logic into pure functions that take inputs and return outputs without side effects, making them trivial to test. Similarly, add error handling to make edge cases explicit rather than implicit. Document interfaces with JSDoc comments so that future developers (and AI) can understand the contract each function fulfills.
+        </p>
+
+        <div class="key-concept">
+            <strong>Why This Matters:</strong> tangled logic inside UI components cannot be unit tested in isolation. You must render the entire component to test business logic, which is slow and brittle. Pure functions can be tested in milliseconds without any framework. This separation also enables code reuse across components and even across projects.
+        </div>
+
+        <p>
+            AI frequently generates React components or similar UI frameworks with business logic embedded directly in the component. While this works for initial development, it creates testing challenges. Consider this AI-generated component:
+        </p>
+
+        <div class="code-example">
+            <div class="example-header">Before: Business Logic Entangled in Component</div>
+<pre><code class="language-typescript">function UserDashboard({ userIds }) {
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        async function loadUsers() {
+            setLoading(true);
+            setError(null);
+            try {
+                const results = await Promise.all(
+                    userIds.map(id => fetch(`/api/users/${id}`).then(r => r.json()))
+                );
+                
+                const processed = results.map(user => {
+                    // Business logic buried in component
+                    const isPremium = user.subscription === 'pro' || 
+                                      user.subscription === 'enterprise';
+                    const renewalDate = new Date(user.renewal);
+                    const daysUntilRenewal = Math.ceil(
+                        (renewalDate - new Date()) / (1000 * 60 * 60 * 24)
+                    );
+                    
+                    return {
+                        ...user,
+                        isPremium,
+                        daysUntilRenewal,
+                        needsAttention: daysUntilRenewal <= 30 && !user.hasPaymentMethod
+                    };
+                });
+                
+                setUsers(processed);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        loadUsers();
+    }, [userIds]);
+
+    if (loading) return &lt;Spinner /&gt;;
+    if (error) return &lt;ErrorMessage message={error} /&gt;;
+    
+    return (
+        &lt;div&gt;
+            {users.map(user => (
+                &lt;UserCard key={user.id} user={user} /&gt;
+            ))}
+        &lt;/div&gt;
+    );
+}
+</code></pre>
+        </div>
+
+        <p>
+            The business logic for calculating premium status, renewal dates, and attention flags is embedded in the useEffect callback. To test this logic, you must render the entire component, mock the fetch API, and wait for effects to complete. Here is the refactored version with extracted pure functions:
+        </p>
+
+        <div class="code-example">
+            <div class="example-header">After: Extracted Pure Functions</div>
+<pre><code class="language-typescript">// Pure function - completely testable without any framework
+interface RawUser {
+    id: string;
+    name: string;
+    subscription: string;
+    renewal: string;
+    hasPaymentMethod: boolean;
+}
+
+interface UserWithFlags {
+    id: string;
+    name: string;
+    isPremium: boolean;
+    daysUntilRenewal: number;
+    needsAttention: boolean;
+}
+
+/**
+ * Determines if a user has a premium subscription.
+ * @param subscription - The subscription tier
+ * @returns true if user has pro or enterprise subscription
+ */
+function isPremiumUser(subscription: string): boolean {
+    return subscription === 'pro' || subscription === 'enterprise';
+}
+
+/**
+ * Calculates days until subscription renewal.
+ * @param renewalDate - ISO date string of renewal date
+ * @returns Number of days until renewal (negative if past due)
+ */
+function calculateDaysUntilRenewal(renewalDate: string): number {
+    const renewal = new Date(renewalDate);
+    const now = new Date();
+    const msPerDay = 1000 * 60 * 60 * 24;
+    return Math.ceil((renewal.getTime() - now.getTime()) / msPerDay);
+}
+
+/**
+ * Determines if a user's subscription needs attention.
+ * @param daysUntilRenewal - Days until renewal (can be negative)
+ * @param hasPaymentMethod - Whether user has a payment method on file
+ * @returns true if renewal is within 30 days and no payment method
+ */
+function needsAttention(daysUntilRenewal: number, hasPaymentMethod: boolean): boolean {
+    return daysUntilRenewal <= 30 && !hasPaymentMethod;
+}
+
+/**
+ * Processes raw user data into display-ready format with computed flags.
+ * @param users - Raw user records from API
+ * @returns Processed users with computed fields
+ */
+function processUserData(users: RawUser[]): UserWithFlags[] {
+    return users.map(user => {
+        const daysUntilRenewal = calculateDaysUntilRenewal(user.renewal);
+        return {
+            id: user.id,
+            name: user.name,
+            isPremium: isPremiumUser(user.subscription),
+            daysUntilRenewal,
+            needsAttention: needsAttention(daysUntilRenewal, user.hasPaymentMethod)
+        };
+    });
+}
+
+// Component now focuses only on UI concerns
+function UserDashboard({ userIds }: { userIds: string[] }) {
+    const [users, setUsers] = useState&lt;UserWithFlags[]&gt;([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState&lt;string | null&gt;(null);
+
+    useEffect(() => {
+        async function loadUsers() {
+            setLoading(true);
+            setError(null);
+            try {
+                const results = await Promise.all(
+                    userIds.map(id => fetch(`/api/users/${id}`).then(r => r.json()))
+                );
+                setUsers(processUserData(results));
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Failed to load');
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        loadUsers();
+    }, [userIds]);
+
+    if (loading) return &lt;Spinner /&gt;;
+    if (error) return &lt;ErrorMessage message={error} /&gt;;
+    
+    return (
+        &lt;div&gt;
+            {users.map(user => (
+                &lt;UserCard key={user.id} user={user} /&gt;
+            ))}
+        &lt;/div&gt;
+    );
+}
+</code></pre>
+        </div>
+
+        <p>
+            The extracted functions (<code>isPremiumUser</code>, <code>calculateDaysUntilRenewal</code>, <code>needsAttention</code>, <code>processUserData</code>) are now completely testable without any React testing infrastructure. You can write simple unit tests:
+        </p>
+
+        <div class="code-example">
+            <div class="example-header">Unit Tests for Extracted Functions</div>
+<pre><code class="language-typescript">import { describe, it, expect } from 'vitest';
+import { 
+    isPremiumUser, 
+    calculateDaysUntilRenewal, 
+    needsAttention,
+    processUserData 
+} from './userProcessing';
+
+describe('isPremiumUser', () => {
+    it('returns true for pro subscription', () => {
+        expect(isPremiumUser('pro')).toBe(true);
+    });
+    
+    it('returns true for enterprise subscription', () => {
+        expect(isPremiumUser('enterprise')).toBe(true);
+    });
+    
+    it('returns false for free subscription', () => {
+        expect(isPremiumUser('free')).toBe(false);
+    });
+});
+
+describe('calculateDaysUntilRenewal', () => {
+    it('calculates positive days for future renewal', () => {
+        const futureDate = new Date();
+        futureDate.setDate(futureDate.getDate() + 15);
+        expect(calculateDaysUntilRenewal(futureDate.toISOString())).toBe(15);
+    });
+    
+    it('returns negative days for past renewal', () => {
+        const pastDate = new Date();
+        pastDate.setDate(pastDate.getDate() - 5);
+        expect(calculateDaysUntilRenewal(pastDate.toISOString())).toBe(-5);
+    });
+});
+
+describe('needsAttention', () => {
+    it('returns true when renewal within 30 days and no payment method', () => {
+        expect(needsAttention(15, false)).toBe(true);
+    });
+    
+    it('returns false when renewal more than 30 days away', () => {
+        expect(needsAttention(60, false)).toBe(false);
+    });
+    
+    it('returns false when payment method exists', () => {
+        expect(needsAttention(15, true)).toBe(false);
+    });
+});
+
+describe('processUserData', () => {
+    it('processes multiple users with computed flags', () => {
+        const rawUsers: RawUser[] = [
+            {
+                id: '1',
+                name: 'Alice',
+                subscription: 'pro',
+                renewal: new Date(Date.now() + 20 * 86400000).toISOString(),
+                hasPaymentMethod: true
+            },
+            {
+                id: '2',
+                name: 'Bob',
+                subscription: 'free',
+                renewal: new Date(Date.now() + 10 * 86400000).toISOString(),
+                hasPaymentMethod: false
+            }
+        ];
+        
+        const result = processUserData(rawUsers);
+        
+        expect(result[0].isPremium).toBe(true);
+        expect(result[0].needsAttention).toBe(false);
+        expect(result[1].isPremium).toBe(false);
+        expect(result[1].needsAttention).toBe(true);
+    });
+});
+</code></pre>
+        </div>
+
+        <p>
+            These tests run in milliseconds and provide confidence that the business logic is correct. You can run them on every commit, giving you immediate feedback when logic changes break expected behavior.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: E-Commerce Order Processing</h4>
+            <p>A team building an e-commerce platform used vibe coding to generate order processing logic. Their initial AI-generated code calculated discounts, applied tax, and generated confirmation emails all in a single function nested inside a checkout component.</p>
+            
+            <p>When they attempted to add unit tests, they realized they could not test the discount calculation without rendering the entire checkout flow, including payment processing. This made tests slow and flaky.</p>
+            
+            <p>After refactoring using the extraction pattern described above, they separated discount calculation, tax computation, and email generation into pure functions. The test suite went from 3 integration tests taking 45 seconds to run to 47 unit tests taking 400ms. More importantly, they caught a critical bug in their discount logic during development that would have resulted in incorrect pricing for bulk orders.</p>
+        </div>
+
+        <h3 id="error-handling-patterns">4.3.3 Explicit Error Handling</h3>
+
+        <p>
+            AI-generated code often assumes the happy path. It handles expected inputs but may not anticipate malformed data, network failures, or race conditions. Making edge cases explicit transforms implicit failures into testable, handleable scenarios.
+        </p>
+
+        <div class="key-concept">
+            <strong>Why This Matters:</strong> Unhandled errors crash your application and create poor user experiences. When your code fails in production, you need to know why and handle it gracefully. Explicit error handling turns mysterious crashes into logged, handleable events.
+        </div>
+
+        <p>
+            Consider an AI-generated function that fetches and processes data:
+        </p>
+
+        <div class="code-example">
+            <div class="example-header">Before: Implicit Error Handling</div>
+<pre><code class="language-typescript">async function fetchUserOrders(userId: string) {
+    const response = await fetch(`/api/users/${userId}/orders`);
+    const data = await response.json();
+    return data.orders;
+}
+</code></pre>
+        </div>
+
+        <p>
+            This code will throw if the network fails, if the user does not exist, if the response is not valid JSON, or if the response structure differs from expectations. The caller has no idea what could go wrong. Here is the transformed version:
+        </p>
+
+        <div class="code-example">
+            <div class="example-header">After: Explicit Error Handling</div>
+<pre><code class="language-typescript">class UserOrdersError extends Error {
+    constructor(
+        message: string,
+        public readonly code: string,
+        public readonly userId: string,
+        public readonly statusCode?: number
+    ) {
+        super(message);
+        this.name = 'UserOrdersError';
+    }
+}
+
+interface Order {
+    id: string;
+    total: number;
+    status: string;
+    items: Array&lt;{ productId: string; quantity: number }&gt;;
+}
+
+type FetchResult&lt;T&gt; = 
+    | { success: true; data: T }
+    | { success: false; error: UserOrdersError };
+
+/**
+ * Fetches orders for a specific user.
+ * @param userId - The user ID to fetch orders for
+ * @returns Result containing orders or error details
+ */
+async function fetchUserOrders(userId: string): Promise&lt;FetchResult&lt;Order[]&gt;&gt; {
+    if (!userId || userId.trim() === '') {
+        return { 
+            success: false, 
+            error: new UserOrdersError('User ID is required', 'INVALID_INPUT', userId) 
+        };
+    }
+
+    try {
+        const response = await fetch(`/api/users/${userId}/orders`);
+        
+        if (response.status === 404) {
+            return {
+                success: false,
+                error: new UserOrdersError(
+                    `User ${userId} not found`,
+                    'USER_NOT_FOUND',
+                    userId,
+                    404
+                )
+            };
+        }
+        
+        if (!response.ok) {
+            return {
+                success: false,
+                error: new UserOrdersError(
+                    `API returned ${response.status}`,
+                    'API_ERROR',
+                    userId,
+                    response.status
+                )
+            };
+        }
+        
+        const data = await response.json();
+        
+        if (!data.orders || !Array.isArray(data.orders)) {
+            return {
+                success: false,
+                error: new UserOrdersError(
+                    'Invalid response format',
+                    'INVALID_RESPONSE',
+                    userId
+                )
+            };
+        }
+        
+        return { success: true, data: data.orders };
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        return {
+            success: false,
+            error: new UserOrdersError(message, 'NETWORK_ERROR', userId)
+        };
+    }
+}
+
+// Usage with explicit error handling
+async function displayUserOrders(userId: string) {
+    const result = await fetchUserOrders(userId);
+    
+    if (!result.success) {
+        switch (result.error.code) {
+            case 'INVALID_INPUT':
+                console.error('Please provide a valid user ID');
+                return;
+            case 'USER_NOT_FOUND':
+                console.error('User not found. They may have been deleted.');
+                return;
+            case 'NETWORK_ERROR':
+                console.error('Network error. Please check your connection.');
+                return;
+            default:
+                console.error('Failed to load orders:', result.error.message);
+                return;
+        }
+    }
+    
+    const orders = result.data;
+    console.log(`Found ${orders.length} orders for user ${userId}`);
+    // Render orders...
+}
+</code></pre>
+        </div>
+
+        <p>
+            The result type makes all possible outcomes explicit. Callers know exactly what to handle. Each error type has a code that enables conditional handling. The error class carries context (userId, statusCode) that helps with debugging. You can write tests for each error condition:
+        </p>
+
+        <div class="code-example">
+            <div class="example-header">Testing Error Handling</div>
+<pre><code class="language-typescript">describe('fetchUserOrders', () => {
+    it('returns error for empty userId', async () => {
+        const result = await fetchUserOrders('');
+        expect(result.success).toBe(false);
+        expect(result.error.code).toBe('INVALID_INPUT');
+    });
+    
+    it('returns error for non-existent user', async () => {
+        // Mock fetch to return 404
+        global.fetch = vi.fn().mockResolvedValue({
+            status: 404,
+            ok: false
+        } as Response);
+        
+        const result = await fetchUserOrders('nonexistent');
+        expect(result.success).toBe(false);
+        expect(result.error.code).toBe('USER_NOT_FOUND');
+    });
+    
+    it('returns orders for valid user', async () => {
+        global.fetch = vi.fn().mockResolvedValue({
+            status: 200,
+            ok: true,
+            json: async () => ({ orders: [{ id: '1', total: 100 }] })
+        } as Response);
+        
+        const result = await fetchUserOrders('user-123');
+        expect(result.success).toBe(true);
+        expect(result.data).toHaveLength(1);
+    });
+});
+</code></pre>
+        </div>
+
+        <h3 id="documentation-matters">4.3.4 Documentation: Contracts for Humans and AI</h3>
+
+        <p>
+            Document interfaces with JSDoc comments so that future developers (and AI) can understand the contract each function fulfills. This documentation serves multiple purposes: it helps human developers understand intent, enables IDE autocomplete, and provides context for AI assistants that continue working on the codebase.
+        </p>
+
+        <div class="key-concept">
+            <strong>Why This Matters:</strong> Code is read far more often than it is written. Good documentation accelerates debugging, refactoring, and feature development. It also helps AI assistants generate better code because they have clear specifications to work with.
+        </div>
+
+        <p>
+            Effective documentation goes beyond repeating what the code does. It explains why the function exists, what assumptions it makes, and what behavior callers should expect:
+        </p>
+
+        <div class="code-example">
+            <div class="example-header">Comprehensive JSDoc Documentation</div>
+<pre><code class="language-typescript">/**
+ * Calculates the total price for a shopping cart with applicable discounts and taxes.
+ * 
+ * This function handles the complete pricing calculation pipeline:
+ * 1. Sums item totals
+ * 2. Applies bulk discounts (see pricing rules)
+ * 3. Adds tax based on shipping destination
+ * 4. Applies promotional codes if valid
+ * 
+ * @param cart - The shopping cart with items and quantities
+ * @param shippingAddress - Used for tax calculation (state determines tax rate)
+ * @param promoCode - Optional promotional code for discounts
+ * @returns The final calculated price in cents
+ * @throws {InvalidCartError} If cart is empty or has invalid items
+ * @throws {InvalidAddressError} If shipping address is incomplete
+ * 
+ * @example
+ * const cart = { items: [{ productId: 'SKU123', quantity: 2, price: 1999 }] };
+ * const address = { state: 'CA', country: 'US' };
+ * const total = calculateCartTotal(cart, address, 'SAVE20');
+ * // Returns 3598 (2 * 1999 + tax - 20% discount)
+ * 
+ * @pricingRules
+ * - Bulk discount: 10% off for 5+ items, 15% off for 10+ items
+ * - Tax rates: CA=8.75%, NY=8.0%, TX=6.25%, other=5.0%
+ * - Promo codes: SAVE20=20% off, FREESHIP=free shipping (handled separately)
+ */
+function calculateCartTotal(
+    cart: Cart,
+    shippingAddress: Address,
+    promoCode?: string
+): number {
+    // Implementation...
+}
+</code></pre>
+        </div>
+
+        <p>
+            Notice the documentation includes:
+        </p>
+        <ul>
+            <li><strong>What the function does.</strong> Clear description of the calculation pipeline.</li>
+            <li><strong>Input parameters.</strong> What each parameter represents and its purpose.</li>
+            <li><strong>Return value.</strong> The type and units of the return value (cents, not dollars).</li>
+            <li><strong>Thrown errors.</strong> What can go wrong and under what conditions.</li>
+            <li><strong>Examples.</strong> Concrete usage showing expected inputs and outputs.</li>
+            <li><strong>Business rules.</strong> Domain-specific information that affects behavior.</li>
+        </ul>
+
+        <h3 id="integration-testing">4.3.5 Integration: Connecting Extracted Functions</h3>
+
+        <p>
+            Once you have extracted pure functions with proper typing and error handling, the final step is connecting them into your application. The component layer should be thin, focusing on user interaction while delegating business logic to the extracted functions.
+        </p>
+
+        <p>
+            This pattern relates to concepts in other chapters. Section 4.4 covers testing and iteration loops, where the testable functions you create here become the foundation for comprehensive test coverage. The state management patterns from Section 4.2 work better with pure functions because you can update state based on predictable function outputs. The AI prompting strategies in Chapter 3 become more effective when your codebase has clear interfaces that AI can understand and extend.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill Demonstration: The Complete Refactoring Workflow</h4>
+            <p>Here is the step-by-step workflow for transforming AI-generated code into production-ready, testable code:</p>
+            
+            <ol>
+                <li><strong>Run the code.</strong> Verify the AI-generated code works for the happy path before refactoring.</li>
+                <li><strong>Identify boundaries.</strong> Find where data enters your application (API calls, form inputs, configuration).</li>
+                <li><strong>Add types.</strong> Define interfaces for all data structures at these boundaries.</li>
+                <li><strong>Extract pure functions.</strong> Pull business logic out of components into testable functions.</li>
+                <li><strong>Add error handling.</strong> Make failure cases explicit with result types or thrown errors.</li>
+                <li><strong>Document.</strong> Add JSDoc comments explaining intent, not just implementation.</li>
+                <li><strong>Write tests.</strong> Create unit tests for the extracted functions.</li>
+                <li><strong>Verify.</strong> Run tests and verify the refactored code produces the same results.</li>
+            </ol>
+            
+            <p>This workflow transforms the vibe coding output into code that is maintainable, testable, and ready for production deployment.</p>
+        </div>
+
+        <h3 id="relationships-to-other-concepts">4.3.6 Relationships to Other Concepts</h3>
+
+        <p>
+            The testable code patterns in this section connect to several other topics in this book:
+        </p>
+        
+        <ul>
+            <li><strong>Section 4.2 (Advanced Techniques):</strong> The state management patterns discussed there work better with pure functions. When state updates are based on predictable function outputs, debugging becomes much simpler.</li>
+            <li><strong>Section 4.4 (Testing and Iteration Loops):</strong> The extracted functions here become the foundation for the test-first workflow in that section. You cannot test effectively what you cannot isolate.</li>
+            <li><strong>Chapter 3 (AI Prompting):</strong> Well-typed, well-documented code becomes easier for AI to understand and extend. When you prompt AI to add features, it can read your interfaces and generate code that fits your patterns.</li>
+            <li><strong>Chapter 5 (Production Deployment):</strong> Production environments demand code that handles errors gracefully and can be debugged when things go wrong. The patterns here directly address those requirements.</li>
+            <li><strong>Chapter 7 (AI as a Teammate):</strong> The documentation patterns here make AI assistants more effective collaborators. Clear interfaces and contracts give AI the context it needs to generate appropriate code.</li>
+        </ul>
+
+        <div class="key-concept">
+            <strong>Key Takeaway:</strong> The investment in making code testable pays dividends throughout the development lifecycle. Type safety catches errors at compile time. Pure functions enable fast, reliable tests. Explicit error handling prevents mysterious crashes. Documentation ensures both humans and AI can understand and extend the code. These patterns transform vibe coding from a prototyping approach into a production-ready development methodology.
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Testing and Iteration Loops</strong> - integrating testing into your vibe coding workflow. You will learn how to build a testing practice that catches bugs early, enables confident refactoring, and keeps your AI-assisted development moving forward.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-4-2.html">4.2 Advanced Techniques</a>
+            <a class="up" href="index.html">Chapter 4 Index</a>
+            <a class="next" href="section-4-4.html">4.4 Testing and Iteration Loops</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 4.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

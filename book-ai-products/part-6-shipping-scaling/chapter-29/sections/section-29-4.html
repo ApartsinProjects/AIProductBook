@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 29.4: Skills Repositories and Organizational Memory - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 29</div>
+        <h1>Skills Repositories and Organizational Memory</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Organizational memory is not what happened last quarter. It is what survives when the people who did it have moved on."</p>
+            <cite>Engineering Director Who Joined a New Team</cite>
+        </blockquote>
+
+        <h2 id="organizational-memory-problem">The Organizational Memory Problem</h2>
+
+        <p>
+            AI product organizations face a unique memory challenge. AI capabilities, limitations, and implementation patterns evolve faster than in traditional software. Knowledge that teams develop through experimentation and production experience often resides in individual heads or scattered across project wikis.
+        </p>
+
+        <p>
+            When team members leave or projects transition, this knowledge evaporates. New teams repeat mistakes that previous teams already learned. Good ideas from one project do not reach other projects that could benefit.
+        </p>
+
+        <p>
+            Skills repositories and organizational memory systems capture and preserve this knowledge, making it accessible to the organization.
+        </p>
+
+        <h2 id="skills-repository">Building a Skills Repository</h2>
+
+        <p>
+            A skills repository is a searchable catalog of organizational capabilities, learnings, and expertise. It serves multiple audiences: team leads planning projects, individuals seeking to develop skills, and new hires onboarding into the organization.
+        </p>
+
+        <h3 id="skills-repository-content">Content Types</h3>
+
+        <p>
+            A skills repository is a searchable catalog of organizational capabilities, learnings, and expertise. It serves multiple audiences: team leads planning projects, individuals seeking to develop skills, and new hires onboarding into the organization. Populate the repository with diverse content types including patterns as documented solutions to recurring AI problems such as prompt patterns, eval approaches, and deployment strategies, case studies as detailed accounts of what worked and what did not in specific projects, templates as starting points for common tasks such as eval frameworks, model cards, and launch checklists, guidelines as organizational standards and best practices, and anti-patterns as documented approaches that do not work and why.
+        </p>
+
+        <h3 id="skills-repository-structure">Repository Structure</h3>
+
+        <p>
+            Organize content for discoverability. By capability maps content to the capability taxonomy from Section 29.1. By project organizes case studies and lessons learned by product or feature. By role curates content for specific roles such as PM, designer, and engineer. By stage organizes content by development stage such as discovery, development, launch, and monitoring.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Making Repository Content Useful</h4>
+            <p><strong>Searchability:</strong> Content must be findable. Use consistent terminology, tags, and clear titles.</p>
+            <p><strong>Actionability:</strong> Content should enable someone to apply the knowledge. Include concrete steps, code examples, and decision criteria.</p>
+            <p><strong>Currency:</strong> Outdated content is worse than no content. Include review dates and update processes.</p>
+            <p><strong>Attribution:</strong> Credit the people and projects that generated the knowledge. This encourages contribution and enables follow-up questions.</p>
+        </div>
+
+        <h2 id="prompt-library">Prompt Library</h2>
+
+        <p>
+            Prompt engineering represents significant organizational investment. A prompt library captures this investment, enabling reuse and improvement.
+        </p>
+
+        <h3 id="prompt-library-contents">What to Catalog</h3>
+
+        <p>
+            Prompt engineering represents significant organizational investment. A prompt library captures this investment, enabling reuse and improvement. Include prompts that have demonstrated value. Production prompts are prompts currently deployed in products. Evals prompts are prompts used to test and evaluate AI outputs. Research prompts are prompts explored during discovery that did not reach production.
+        </p>
+
+        <h3 id="prompt-library-metadata">Prompt Documentation</h3>
+
+        <p>
+            For each prompt, document context and provenance. Intent describes what the prompt is trying to achieve. Context describes what user or system context the prompt assumes. Variations describe what alternative phrasings have been tried. Performance describes how well the prompt works and what eval scores it achieves. Limitations describe when the prompt fails or produces unexpected outputs.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: HealthMetrics Prompt Library</h4>
+            <p><strong>Who:</strong> HealthMetrics team building organizational prompt library</p>
+            <p><strong>Situation:</strong> Multiple teams were developing similar prompts independently, with no sharing of learnings</p>
+            <p><strong>Problem:</strong> Duplicate effort across teams, inconsistent prompt quality, no organizational learning from prompt iterations</p>
+            <p><strong>Solution:</strong> Created centralized prompt library with structured documentation. Required teams to contribute prompts as part of feature launch.</p>
+            <p><strong>Result:</strong> 40% reduction in prompt development time as teams built on existing work. Prompt quality improved as teams iterated on proven approaches rather than starting fresh. Onboarding time for new ML engineers reduced as they could study production prompts.</p>
+            <p><strong>Lesson:</strong> <strong>Making contribution the path of least resistance ensures the library grows. Integrate contribution into existing workflows rather than adding overhead.</strong></p>
+        </div>
+
+        <h2 id="eval-case-studies">Eval Case Studies</h2>
+
+        <p>
+            Evaluation case studies capture the reasoning behind eval design decisions. They document what was evaluated, why those metrics were chosen, and what was learned.
+        </p>
+
+        <h3 id="case-study-structure">Case Study Structure</h3>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Eval Case Study Template</h4>
+            <p><strong>Context:</strong> What AI feature was being evaluated? What were the success criteria?</p>
+            <p><strong>Approach:</strong> What eval framework was used? What metrics were selected and why?</p>
+            <p><strong>Findings:</strong> What did the eval reveal? What failure modes were discovered?</p>
+            <p><strong>Decisions:</strong> How did eval findings influence design and development decisions?</p>
+            <p><strong>Retrospective:</strong> In hindsight, what would you do differently? What would you evaluate that you did not?</p>
+        </div>
+
+        <h2 id="lessons-learned">Lessons Learned Systems</h2>
+
+        <p>
+            Capture learnings from both successes and failures:
+        </p>
+
+        <h3 id="post-mortem-culture">AI Post-Mortem Culture</h3>
+
+        <p>
+            Capture learnings from both successes and failures. Foster a culture where post-mortems are learning opportunities, not blame exercises. Blameless analysis focuses on systemic factors rather than individual errors. Action orientation derives specific, actionable improvements from findings. Broad distribution shares learnings organization-wide, not just within teams. Follow-through tracks implementation of post-mortem recommendations.
+        </p>
+
+        <h3 id="success-documentation">Success Documentation</h3>
+
+        <p>
+            Document successes with the same rigor as failures. What worked describes specific practices that contributed to success. Context describes what conditions made this approach effective. Transferability describes how other teams could apply this approach.
+        </p>
+
+        <h2 id="knowledge-transfer">Knowledge Transfer Mechanisms</h2>
+
+        <p>
+            Repositories capture static knowledge. Effective organizations also transfer knowledge through active mechanisms. Internal talks are regular sessions where teams present what they have learned. Pairing programs rotate team members across projects to spread expertise. Guilds and communities are cross-team groups organized around specific capabilities. Mentorship connects experienced AI practitioners with those developing skills.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-29-3.html">29.3 Internal Standards</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="../../chapter-30/index.html">Ch 30: Strategic Positioning</a>
+        </nav>
+
+        <footer>
+            <p>Section 29.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 5: Finding Problems Worth Solving with AI - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-discovery-design/index.html">Part II: AI-Native Product Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 5</div>
+        <h1>Finding Problems Worth Solving with AI</h1>
+        <p class="chapter-subtitle">Systematic approaches to identifying AI-appropriate opportunities</p>
+    </header>
+
+    <main class="content">
+        <div class="epigraph">
+            <p>The problem with most AI products is not that they use AI. It is that they use AI to solve problems that did not need solving, or solve real problems in ways that create new, worse problems.</p>
+            <cite>Raj Raghavan, Former Head of AI Product, Stripe</cite>
+        </div>
+
+        <div class="opening-hook">
+            <strong>Why this chapter matters:</strong> The graveyard of failed AI products is filled with technically impressive solutions to problems nobody had. Meanwhile, transformative AI opportunities go unnoticed because teams lack frameworks for identifying where AI genuinely adds value. This chapter gives you systematic approaches to finding problems that are worth solving with AI and recognizing when simpler solutions win.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-5-opener.png"
+                 alt="Chapter 5 opener illustration">
+            <figcaption>
+                Finding the right problem to solve with AI is the first critical step in product development.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Workflow Probes</div>
+            <p>Use vibe coding to probe workflows before committing to problem definitions. Rapidly prototype AI-assisted versions of current workflows to discover where AI actually helps versus where it adds friction. Vibe coding lets you experience workflow bottlenecks firsthand, helping you identify which problems genuinely warrant AI solutions rather than forcing AI onto problems that simpler tools could solve.</p>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Apply problem-first thinking to avoid tech-first traps</li>
+                <li>Decompose problems into AI-appropriate units</li>
+                <li>Map workflows and identify friction points and AI intervention points</li>
+                <li>Apply leverage point analysis for prioritization</li>
+                <li>Recognize when not to use AI</li>
+            </ul>
+        </div>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                Finding problems worth solving with AI requires distinguishing between problems that AI can address effectively and problems where AI creates more complexity than it resolves. This chapter covers problem-first versus tech-first thinking, task decomposition methods, workflow analysis using the Jobs-to-be-Done framework, identifying leverage points for AI intervention, and knowing when simpler solutions win.
+            </p>
+            <p>
+                We will examine two running examples throughout this chapter. QuickShip is a logistics startup exploring AI opportunities in package routing. HealthMetrics is a healthcare analytics company seeking AI use cases for hospital operations. These examples ground abstract frameworks in concrete product decisions.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> Which problems are genuinely worth solving with AI versus which can be solved more effectively with simpler approaches.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> A problem decomposition exercise mapping your team's top candidate AI use case to AI-appropriate task units.</li>
+                <li><strong>What would count as success or failure?</strong> A clear framework for distinguishing high-leverage AI opportunities from low-value complexity, including explicit kill criteria for bad ideas.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Problem-first thinking prevents the tech-first trap that leads teams to build impressive AI solutions to problems nobody had.</li>
+            </ol>
+        </div>
+
+        <div class="prereqs">
+            <h3>Prerequisites</h3>
+            <p>This chapter builds on foundational concepts from earlier chapters. You should be familiar with:</p>
+            <ul>
+                <li><a href="../../part-1-why-ai-changes/chapter-1/index.html">Chapter 1: AI Capabilities and Limitations</a> for understanding what AI can and cannot do reliably</li>
+                <li><a href="../../part-1-why-ai-changes/chapter-2/index.html">Chapter 2: The Synergy Triangle Framework</a> for human-AI collaboration patterns</li>
+            </ul>
+        </div>
+
+        <div class="role-specific">
+            <h3>Role-Specific Lenses</h3>
+            
+            <div class="callout key-insight">
+                <div class="callout-title">Why PMs Should Care</div>
+                <p>Product managers must resist the seductive pull of technology-first thinking. The most successful AI products solve genuine user problems that happen to be AI-solvable. PMs who master problem identification frameworks avoid investing in solutions looking for problems and instead find high-impact opportunities that justify AI complexity and cost.</p>
+            </div>
+
+            <div class="callout key-insight">
+                <div class="callout-title">Why Designers Should Care</div>
+                <p>Designers bring crucial perspective to problem identification through user research and empathy. Understanding where AI adds value helps designers advocate for users against technology-driven feature requests and identify friction points that product teams may overlook.</p>
+            </div>
+
+            <div class="callout key-insight">
+                <div class="callout-title">Why Engineers Should Care</div>
+                <p>Engineers often spot AI opportunities first because they understand technical feasibility. However, technical feasibility is the wrong starting point. Engineers who learn to think problem-first build AI products with higher impact because they focus on user needs rather than technical elegance.</p>
+            </div>
+
+            <div class="callout key-insight">
+                <div class="callout-title">Why Leaders and Strategists Should Care</div>
+                <p>Strategic investment in AI requires disciplined opportunity identification. Leaders who understand leverage point analysis and kill criteria avoid costly missteps and build portfolios of AI initiatives that compound rather than fragment.</p>
+            </div>
+        </div>
+
+        <div class="section-break"></div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul class="sections-list">
+                <li>
+                    <a class="section-card" href="sections/section-5-1.html">
+                        <span class="section-num">5.1</span>
+                        <span class="section-title">Problem-First vs Tech-First</span>
+                        <span class="section-desc">Why starting with technology leads to weak products and problem decomposition methods</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="section-card" href="sections/section-5-2.html">
+                        <span class="section-num">5.2</span>
+                        <span class="section-title">Task Decomposition for AI</span>
+                        <span class="section-desc">Breaking problems into AI-appropriate units and identifying where AI adds value</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="section-card" href="sections/section-5-3.html">
+                        <span class="section-num">5.3</span>
+                        <span class="section-title">Workflow Analysis and Jobs-to-be-Done</span>
+                        <span class="section-desc">Mapping current workflows, identifying friction points, finding AI intervention points</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="section-card" href="sections/section-5-4.html">
+                        <span class="section-nnum">5.4</span>
+                        <span class="section-title">Identifying Leverage Points</span>
+                        <span class="section-desc">High-frequency vs high-impact tasks, bottleneck analysis, quick wins vs strategic investments</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="section-card" href="sections/section-5-5.html">
+                        <span class="section-num">5.5</span>
+                        <span class="section-title">When Not to Use AI</span>
+                        <span class="section-desc">Cost-quality trade-offs, regulatory constraints, trust requirements, simpler solutions</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../../toc.html">Table of Contents</a>
+            <a class="up" href="../../part-2-discovery-design/index.html">Part II Overview</a>
+            <a class="next" href="sections/section-5-1.html">5.1 Problem-First vs Tech-First</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 5 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

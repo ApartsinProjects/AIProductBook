@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6.3 Build/Buy/Bake Frameworks - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 6</div>
+        <h1>AI Product Strategy and Value Proposition Design</h1>
+        <p class="chapter-subtitle">6.3 Build/Buy/Bake Frameworks</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Help define winning AI-native products with the right strategy and value proposition.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 6.2 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Strategic Component Decisions</div>
+            <p>The build/buy/bake decision is fundamental to AI product strategy, affecting cost, differentiation, time-to-market, and competitive advantage. Understanding when to build custom AI versus buy versus partner requires analyzing your data sensitivity, customization needs, team capabilities, and timeline. This decision compounds over time, making it crucial to get Right early.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The 2000 Mile Tow</div>
+            <p>In the early automotive industry, some companies built everything themselves while others bought parts. Henry Ford famously said about his suppliers: "I will let you make the wheel, but I will make the car." Sometimes building is pride; sometimes it is foolishness.</p>
+        </div>
+
+        <h2 id="section-6-3">6.3 Build/Buy/Bake Frameworks</h2>
+
+        <p>
+            Every AI product decision involves build vs. buy vs. partner (bake). Building gives you maximum control and differentiation but requires significant investment. Buying gives you quick access to capabilities but creates dependency and may not fit your exact needs. Partnering (or using existing platforms) gives you capabilities while sharing development burden. Understanding when to choose which approach is essential for building competitive AI products.
+        </p>
+
+        <h3>The Build Decision</h3>
+
+        <p>
+            Building your own AI components makes sense when you have unique data, need deep customization, or the AI capability is core to your competitive advantage. Building requires significant investment in ML talent, infrastructure, and time, but gives you control that no vendor can match.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Building for Differentiation</h4>
+            <p>
+                A healthcare company built their own medical AI rather than using a general-purpose AI. They had proprietary medical data that no public model could access, and they needed the AI to follow strict medical protocols that generic models would not understand. The build decision took 18 months and required a team of 15 ML engineers, but the resulting product was uniquely capable and defensible.
+            </p>
+        </div>
+
+        <div name="skill-demonstration">
+            <h4>Skill: When to Build</h4>
+            <p>
+                <strong>Build makes sense when:</strong>
+            </p>
+            <ul>
+                <li>You have proprietary data that creates a moat</li>
+                <li>The AI capability is core to your competitive advantage</li>
+                <li>You need deep customization that APIs cannot provide</li>
+                <li>You have strong ML engineering team and time</li>
+                <li>You need to control costs at high scale</li>
+            </ul>
+            <p>
+                <strong>Build costs to consider:</strong>
+            </p>
+            <ul>
+                <li>ML engineering talent (scarce and expensive)</li>
+                <li>Training compute and data preparation</li>
+                <li>Ongoing model maintenance and updates</li>
+                <li>Infrastructure for serving at scale</li>
+            </ul>
+        </div>
+
+        <h3>The Buy Decision</h3>
+
+        <p>
+            Buying AI capabilities through APIs or off-the-shelf products makes sense when you need fast time-to-market, the capability is not core to your differentiation, or you lack ML engineering resources. The trade-off is dependency: you are relying on another company for a critical component of your product.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Buying for Speed</h4>
+            <p>
+                A startup built a consumer app in 3 months using GPT-4 for the AI component. Building their own model would have taken 18 months and required expertise they did not have. By buying the AI capability, they could focus on the user experience and business model, which were their differentiators. They used AI as a utility, not as their core technology.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: When to Buy</h4>
+            <p>
+                <strong>Buy makes sense when:</strong>
+            </p>
+            <ul>
+                <li>Fast time-to-market is critical</li>
+                <li>The AI is not your core differentiation</li>
+                <li>You lack ML engineering resources</li>
+                <li>The capability is well-served by available APIs</li>
+                <li>You want to test hypotheses before committing to build</li>
+            </ul>
+            <p>
+                <strong>Buy risks to manage:</strong>
+            </p>
+            <ul>
+                <li>Vendor lock-in and price increases</li>
+                <li>API changes breaking your product</li>
+                <li>Limited customization options</li>
+                <li>Data privacy concerns with third parties</li>
+            </ul>
+        </div>
+
+        <h3>The Bake (Partner) Decision</h3>
+
+        <p>
+            Baking (partnering) involves using platforms or collaborative arrangements that give you capabilities without full build or buy. This includes using open-source models, platform partnerships, or co-development arrangements. This approach offers a middle ground between control and speed.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Open-Source Path</h4>
+            <p>
+                A company built an AI product using open-source models (Llama, Mistral) deployed on their own infrastructure. They fine-tuned the open-source models on their proprietary data, getting the benefits of customization without training from scratch. This approach cost 40% less than buying API access at scale, while maintaining control over their data and giving them fine-tuning capability that pure buy could not match.
+            </p>
+        </div>
+
+        <h3>Decision Framework by Factor</h3>
+
+        <table>
+            <thead>
+                <tr><th>Factor</th><th>Build</th><th>Buy</th><th>Bake (Partner)</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Data sensitivity</td><td>High (proprietary)</td><td>Low</td><td>Moderate</td></tr>
+                <tr><td>Customization</td><td>High needed</td><td>Low OK</td><td>Co-development</td></tr>
+                <tr><td>Team capabilities</td><td>Strong ML team</td><td>Limited ML</td><td>Some ML</td></tr>
+                <tr><td>Time to market</td><td>Slow (12+ months)</td><td>Fast (weeks)</td><td>Medium (months)</td></tr>
+                <tr><td>Cost model</td><td>High upfront, low ongoing</td><td>Low upfront, high ongoing</td><td>Moderate both</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Inference Cost Modeling</h3>
+
+        <p>
+            Whether you build or buy, understanding <strong>inference</strong> costs is essential for AI product economics. <strong>Inference</strong> means running the model to generate outputs (as opposed to training, which is how the model learns). Inference is the main ongoing cost of AI products because every user request triggers inference. Understanding cost structure helps you make build/buy decisions and price your product appropriately.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Modeling AI Inference Costs</h4>
+            <p>
+                <strong>Cost formula:</strong>
+            </p>
+            <pre><code>Monthly Cost = (API Cost per 1K tokens × Monthly Tokens) + 
+                 (Infrastructure × Users) +
+                 (Engineering Hours × Rate)</code></pre>
+            <p>
+                <strong>Example calculation:</strong>
+            </p>
+            <ul>
+                <li>10,000 monthly active users</li>
+                <li>Average 500 interactions per user per month</li>
+                <li>Average 100 input tokens + 200 output tokens per interaction</li>
+                <li>API cost: $0.003/1K input, $0.015/1K output</li>
+                <li>Total tokens = 10,000 × 500 × 300 = 1.5B tokens/month</li>
+                <li>API cost = (500K input × $0.001) + (1M output × $0.003) = $3,500/month</li>
+                <li>Plus infrastructure, engineering = ~$5,000/month total</li>
+            </ul>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: The Cost Surprise</h4>
+            <p>
+                A company built an AI customer service product and priced it at $29/user/month, expecting healthy margins. They discovered that heavy users generated 50,000 API calls monthly, costing $75/user to serve. They were losing money on every heavy user while barely breaking even on light users. They had to redesign pricing to charge based on usage, not just seat count.
+            </p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Key Insight</div>
+            <p>
+                AI economics are different from traditional software. Model your costs realistically before setting prices. Include not just API costs but infrastructure, engineering, and support costs. The key is to understand your cost structure well enough to price appropriately and make build/buy decisions.
+            </p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Defining Success for Probabilistic Features</strong> - measuring AI product success.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-6-2.html">6.2 Problem-First vs Tech-First</a>
+            <a class="up" href="index.html">Chapter 6 Index</a>
+            <a class="next" href="section-6-4.html">6.4 Defining Success for Probabilistic Features</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 6.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

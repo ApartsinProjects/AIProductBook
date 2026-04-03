@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>33.4 Week-by-Week Content - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-7-practice-teaching/index.html">Part VII: End-to-end Practice and Teaching Kit</a></div>
+        <div class="chapter-label">Chapter 33</div>
+        <h1>Teaching the Material as a Course</h1>
+    </header>
+
+    <main class="content">
+        <nav class="section-nav">
+            <a href="section-33-1.html">33.1 Course Design Philosophy</a>
+            <a href="section-33-2.html">33.2 12-Week Course Structure</a>
+            <a href="section-33-3.html">33.3 14-Week Extended Structure</a>
+            <a href="section-33-4.html">33.4 Week-by-Week Content</a>
+            <a href="section-33-5.html">33.5 Assessment and Resources</a>
+        </nav>
+
+        <h2>33.4 Week-by-Week Content</h2>
+
+        <p class="opening-hook">
+            Detailed content, activities, and guidance for each week of the course.
+        </p>
+
+        <h3>Week 1: Why AI Changes Products</h3>
+        <p>
+            This opening week establishes the fundamental shift that AI introduces to product development. Students examine how AI changes the economics of features, enables new interaction paradigms, and requires different quality assurance approaches.
+        </p>
+        <p>
+            <strong>Core concepts:</strong> AI as a new substrate, capability-driven vs. requirement-driven development, the concept of AI-native product thinking.
+        </p>
+        <p>
+            <strong>Lab activity:</strong> Product teardown. Students select an existing product and identify where AI could enhance or replace current functionality. They document findings in a short presentation.
+        </p>
+        <p>
+            <strong>Discussion prompts:</strong> What features in your favorite apps feel "AI-native"? What would need to change if AI were removed from products you use daily?
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Week 1: Key Insight</div>
+            <p>AI changes the economics of features: what was expensive becomes cheap, what was impossible becomes routine. Students leave week 1 seeing products differently.</p>
+        </div>
+
+        <h3>Week 2: AI Capabilities, Limits, and Mental Models</h3>
+        <p>
+            Students develop accurate mental models for what AI can and cannot do. The week covers large language models, image generation, speech recognition, and other common AI capabilities alongside their failure modes.
+        </p>
+        <p>
+            <strong>Core concepts:</strong> Stochastic processes, hallucination, context windows, token limits, emergent behaviors, prompting as programming.
+        </p>
+        <p>
+            <strong>Lab activity:</strong> Capability mapping. Students create a matrix of AI capabilities vs. product features they might build, identifying where AI adds value and where it introduces risk.
+        </p>
+        <p>
+            <strong>Discussion prompts:</strong> Why do language models sometimes give confident wrong answers? How should product managers think about AI failures?
+        </p>
+
+        <div class="callout note">
+            <div class="callout-title">Week 2: Hallucination Focus</div>
+            <p>The reliability spectrum (reliable -> moderate -> unreliable) is the key mental model. Students should leave able to classify any AI task by reliability.</p>
+        </div>
+
+        <h3>Week 3: AI-Native Discovery and Product Strategy</h3>
+        <p>
+            Discovery in AI products requires different techniques than traditional product discovery. Students learn to identify AI-native opportunities through constraint analysis, capability matching, and user workflow redesign.
+        </p>
+        <p>
+            <strong>Core concepts:</strong> Opportunity identification, constraint analysis, build-measure-learn for AI products, defining the AI MVP.
+        </p>
+        <p>
+            <strong>Lab activity:</strong> Opportunity workshop. Students use the AI opportunity canvas to identify and rank three potential opportunities for their course project.
+        </p>
+        <p>
+            <strong>Discussion prompts:</strong> How do you validate demand for an AI feature that did not exist before? What makes an AI opportunity "AI-native" vs. an AI enhancement of an existing feature?
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Week 3: AI Opportunity Canvas</div>
+            <p>Students fill out a canvas with:</p>
+            <p><strong>Constraint:</strong> What prevents users from achieving their goal today?</p>
+            <p><strong>Capability:</strong> What AI capability addresses this?</p>
+            <p><strong>Value:</strong> How does AI uniquely enable this?</p>
+            <p><strong>Risk:</strong> What AI failure modes matter here?</p>
+        </div>
+
+        <h3>Week 4: AI UX and <a href="../../../part-1-why-ai-changes/chapter-4/sections/section-4-6.html" class="cross-ref">Trust</a> Design</h3>
+        <p>
+            User experience design changes fundamentally when products contain probabilistic AI components. Students learn to design for trust, handle AI uncertainty visibly, and create appropriate user expectations.
+        </p>
+        <p>
+            <strong>Core concepts:</strong> <a href="../../../part-1-why-ai-changes/chapter-4/sections/section-4-6.html" class="cross-ref">Trust</a> design, uncertainty communication, expectation-setting, graceful degradation, human-AI interaction patterns.
+        </p>
+        <p>
+            <strong>Lab activity:</strong> <a href="../../../part-1-why-ai-changes/chapter-4/sections/section-4-6.html" class="cross-ref">Trust</a> audit. Students conduct a trust audit of an existing AI product, identifying trust-building features and trust-breaking failure modes.
+        </p>
+        <p>
+            <strong>Discussion prompts:</strong> When should an AI product tell users it is an AI? How do you design for trust when the AI will sometimes fail?
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Week 4: Trust Design Principle</div>
+            <p>Trust is earned through transparency about limitations, consistency of behavior, and easy recovery when AI fails. Design for failure as much as success.</p>
+        </div>
+
+        <h3>Week 5: <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Eval</a>-First Requirements</h3>
+        <p>
+            Eval-first thinking defines success criteria before implementation. Students learn to write evalable requirements that make success measurable and failure diagnosable.
+        </p>
+        <p>
+            <strong>Core concepts:</strong> Evalable requirements, success metrics vs. vanity metrics, failure mode analysis, acceptance criteria for AI outputs.
+        </p>
+        <p>
+            <strong>Lab activity:</strong> <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Eval</a> writing lab. Students write evals for their product concept, then refine them based on peer feedback.
+        </p>
+        <p>
+            <strong>Discussion prompts:</strong> Why is it harder to write requirements for AI than traditional software? How do you define "good enough" for a generative AI feature?
+        </p>
+
+        <div class="callout note">
+            <div class="callout-title">Week 5: Eval Definition</div>
+            <p>An eval answers: "How would we know if this AI feature is working?" Not user satisfaction surveys, but automated tests that measure AI output quality.</p>
+        </div>
+
+        <h3>Week 6: <a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> and Prototyping</h3>
+        <p>
+            Rapid prototyping with AI tools lets teams test product concepts before committing to full development. Students learn vibe coding techniques that maximize learning while minimizing investment.
+        </p>
+        <p>
+            <strong>Core concepts:</strong> Prototype fidelity levels, <a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">vibe coding</a> principles, prototype-to-production gap, rapid iteration, stakeholder demos.
+        </p>
+        <p>
+            <strong>Lab activity:</strong> Prototype session. Students build a functional prototype of their core feature using AI coding tools within a constrained time box.
+        </p>
+        <p>
+            <strong>Discussion prompts:</strong> When is a prototype "good enough" to learn from? How do you prevent prototype code from becoming production debt?
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Week 6: Time-Boxed Prototype</div>
+            <p><strong>Goal:</strong> Build the core AI feature working end-to-end</p>
+            <p><strong>Time:</strong> 2 hours vibe coding + 30 min testing</p>
+            <p><strong>Success criteria:</strong> Can demonstrate the key user flow with real AI</p>
+            <p><strong>No-goals:</strong> Production quality, edge cases, error handling</p>
+        </div>
+
+        <h3>Week 7: Retrieval, Memory, and Orchestration</h3>
+        <p>
+            Real AI products typically combine language models with retrieval systems, memory stores, and orchestration layers. Students learn to architect these components for their product concepts.
+        </p>
+        <p>
+            <strong>Core concepts:</strong> <a href="../../../part-4-engineering/chapter-17/sections/section-17-1.html" class="cross-ref">RAG</a> architecture, vector databases, memory patterns, agent orchestration, tool use and function calling.
+        </p>
+        <p>
+            <strong>Lab activity:</strong> <a href="../../../part-4-engineering/chapter-17/sections/section-17-1.html" class="cross-ref">RAG</a> implementation. Students implement a basic retrieval-augmented generation system for their product, connecting a knowledge base to a language model.
+        </p>
+        <p>
+            <strong>Discussion prompts:</strong> When should an AI product retrieve information vs. rely on training data? How do you design memory that respects user privacy?
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Week 7: RAG Decision Framework</div>
+            <p>Use RAG when: domain knowledge is proprietary, information changes frequently, or accuracy on specific facts matters. Skip RAG when: general knowledge suffices and creative generation is the goal.</p>
+        </div>
+
+        <h3>Week 8: Models, Routing, and <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Architecture</a></h3>
+        <p>
+            Model selection involves trade-offs across capability, cost, latency, and privacy. Students learn to make informed routing decisions and architect for model portability.
+        </p>
+        <p>
+            <strong>Core concepts:</strong> Model comparison, cost-latency trade-offs, model routing, multi-model architectures, vendor lock-in mitigation.
+        </p>
+        <p>
+            <strong>Lab activity:</strong> Model comparison. Students compare multiple models on their specific use case, measuring quality, cost, and latency to inform architecture decisions.
+        </p>
+        <p>
+            <strong>Discussion prompts:</strong> Should you use the most capable model available? How do you design for model switching if your vendor changes pricing?
+        </p>
+
+        <div class="callout note">
+            <div class="callout-title">Week 8: Model Selection Criteria</div>
+            <p><strong>Quality:</strong> Does it reliably do your task?</p>
+            <p><strong>Cost:</strong> Per-query cost within budget?</p>
+            <p><strong>Latency:</strong> Meets your response time requirements?</p>
+            <p><strong>Privacy:</strong> Data handling meets your requirements?</p>
+        </div>
+
+        <h3>Week 9: <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Evals</a> and Observability</h3>
+        <p>
+            Comprehensive eval suites enable confident iteration. Students learn to build eval suites that catch regressions, measure improvement, and provide early warning of quality drift.
+        </p>
+        <p>
+            <strong>Core concepts:</strong> <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Eval</a> suite design, automated evals, sampling strategies, observability patterns, alerting and dashboards.
+        </p>
+        <p>
+            <strong>Lab activity:</strong> <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Eval</a> suite build. Students build a comprehensive eval suite for their product that covers happy paths, edge cases, and known failure modes.
+        </p>
+        <p>
+            <strong>Discussion prompts:</strong> How many evals does a production AI product need? When should you prioritize recall vs. precision in your evals?
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Week 9: Eval Suite Structure</div>
+            <p><strong>Happy path evals:</strong> Does the main user journey work?</p>
+            <p><strong>Edge case evals:</strong> Does it handle unusual inputs?</p>
+            <p><strong>Known failure mode evals:</strong> Has the bug we fixed stayed fixed?</p>
+            <p><strong>Regression evals:</strong> Has quality changed since last release?</p>
+        </div>
+
+        <h3>Week 10: <a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">Governance</a>, Security, and <a href="../../../part-1-why-ai-changes/chapter-4/sections/section-4-6.html" class="cross-ref">Trust</a></h3>
+        <p>
+            AI products require governance frameworks that address data privacy, model security, bias detection, and regulatory compliance. Students learn to build governance into their products from the start.
+        </p>
+        <p>
+            <strong>Core concepts:</strong> AI <a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">governance</a> frameworks, data retention and privacy, bias detection and mitigation, regulatory compliance (GDPR, AI Act), security hardening.
+        </p>
+        <p>
+            <strong>Lab activity:</strong> Risk assessment. Students conduct a comprehensive risk assessment of their product, identifying governance measures needed before launch.
+        </p>
+        <p>
+            <strong>Discussion prompts:</strong> What governance measures should every AI product implement? How do you balance user privacy with personalization?
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Week 10: Governance Non-Negotiables</div>
+            <p>Every AI product needs: data retention limits, bias testing protocol, incident response plan, human oversight mechanism, and transparency documentation.</p>
+        </div>
+
+        <h3>Week 11: Launch, Metrics, and Post-Launch Learning</h3>
+        <p>
+            Launching AI products requires different metrics and monitoring than traditional software. Students learn to define launch criteria, set up monitoring, and establish post-launch learning loops.
+        </p>
+        <p>
+            <strong>Core concepts:</strong> Launch criteria, feature flags, shadow mode deployment, A/B testing for AI, behavioral analytics, incident response.
+        </p>
+        <p>
+            <strong>Lab activity:</strong> Launch simulation. Students create a launch plan with staged rollout, monitoring dashboard, and incident response procedures.
+        </p>
+        <p>
+            <strong>Discussion prompts:</strong> How do you know when an AI product is "ready" to launch? What metrics matter more than accuracy for AI products?
+        </p>
+
+        <div class="callout note">
+            <div class="callout-title">Week 11: AI Launch Metrics</div>
+            <p><strong>Beyond accuracy:</strong> Task completion rate, time-to-value, trust indicators, override frequency, user sentiment</p>
+            <p><strong>Watch:</strong> Quality drift over time, failure mode emergence, demographic performance gaps</p>
+        </div>
+
+        <h3>Week 12: Capstone Demos and Postmortems</h3>
+        <p>
+            The final week showcases student work and facilitates reflection on the product development journey. Students present functional products and conduct postmortem analysis.
+        </p>
+        <p>
+            <strong>Core concepts:</strong> Demo preparation, storytelling for technical products, retrospective techniques, knowledge transfer.
+        </p>
+        <p>
+            <strong>Lab activity:</strong> Final presentations. Students present 15-minute demos of their products, followed by peer Q&A and instructor evaluation.
+        </p>
+        <p>
+            <strong>Discussion prompts:</strong> What would you do differently if you started this project today? What surprised you most about building with AI?
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Week 12: Capstone Demo Format</div>
+            <p><strong>5 min:</strong> Problem and approach (why this, why AI)</p>
+            <p><strong>7 min:</strong> Live demo of working product</p>
+            <p><strong>3 min:</strong> What you learned and what is next</p>
+            <p><strong>5 min:</strong> Q&A from peers and instructor</p>
+        </div>
+
+        <h3>Slide Recommendations</h3>
+        <p>
+            Each week includes suggested slide decks available in the instructor resources. Week one offers twenty slides covering AI paradigm shift. Week two provides twenty-five slides on AI capabilities and limitations. Week three contains twenty-two slides on AI-native discovery. Week four has twenty-eight slides on trust design patterns. Week five includes eighteen slides on eval-first requirements. Week six offers twenty slides on prototyping techniques. Week seven provides thirty slides on RAG and memory. Week eight contains twenty-four slides on model selection. Week nine has twenty-six slides on observability. Week ten offers twenty-two slides on governance. Week eleven provides twenty slides on launch planning. Week twelve includes ten slides for capstone presentations.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-33-3.html">33.3 14-Week Extended Structure</a>
+            <a class="up" href="../../../part-7-practice-teaching/index.html">Part VII Overview</a>
+            <a class="next" href="section-33-5.html">33.5 Assessment and Resources</a>
+        </nav>
+
+        <footer>
+            <p>Section 33.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

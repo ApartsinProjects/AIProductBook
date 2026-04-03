@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 26.1: Canary and Shadow Mode Deployments - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 26</div>
+        <h1>Canary and Shadow Mode Deployments</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Ship slowly, learn fast. The cost of a failed canary is a few affected users. The cost of no canary at all is a full production incident.</p>
+            <cite>Site Reliability Engineer Who Has Seen Both</cite>
+        </blockquote>
+
+        <div class="callout fun-note">
+            <div class="callout-title">The Canary Migration</div>
+            <p>Miners used canaries because they were more sensitive to poison than humans. AI teams use canary deployments because users are more sensitive to broken AI than traditional software. The modern canary: a Slack channel that gets notified first. "It's live for engineering. How bad is it?"</p>
+        </div>
+
+        <h2 id="why-staged-launch">Why Staged AI Launch Matters</h2>
+
+        <p>
+            Traditional software deployment follows predictable paths: code either works or it does not. AI systems behave differently. A model that performs well in testing may drift in production, behave unexpectedly on edge cases, or interact with real user behavior in ways your test suite never anticipated. Staged deployment strategies acknowledge this uncertainty and provide guardrails.
+        </p>
+
+        <p>
+            Chapter 27 covers production evals and learning loops in depth. This section focuses on the deployment mechanisms that enable those learning loops: canary releases and shadow mode deployments. These operational foundations make safe AI rollout possible.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The AI Deployment Spectrum</h4>
+            <p>AI deployment strategies exist on a spectrum from most conservative to most aggressive: Shadow mode observes without acting. Canary releases affect a small percentage. Gradual rollouts increase exposure. Full deployment commits completely. The right point on this spectrum depends on AI consequence severity, model confidence, and organizational risk tolerance.</p>
+        </div>
+
+        <h2 id="shadow-mode-deep-dive">Shadow Mode Deployments</h2>
+
+        <p>
+            Shadow mode runs your new AI system in parallel with production traffic, capturing inputs and generating outputs without returning those outputs to users. The production system responds as before; the shadow system watches and learns.
+        </p>
+
+        <h3 id="shadow-mode-purpose">When Shadow Mode Applies</h3>
+
+        <p>
+            Shadow mode serves several purposes. It enables validation before exposure by testing a new model or prompt with real inputs before any user sees it. It supports benchmark comparison by running candidate systems against production traffic to compare with baseline performance. It facilitates data collection by gathering production inputs for future training or evaluation. It also allows for calibration by adjusting confidence thresholds or output filters based on real traffic patterns.
+        </p>
+
+        <h3 id="shadow-architecture">Shadow Mode Architecture</h3>
+
+        <p>
+            Implementing shadow mode requires request duplication at the routing layer. When an incoming request enters the system, the routing layer copies it to both the production AI and shadow AI systems simultaneously. The production AI generates a response that is returned to the user as normal, while the shadow AI processes the same request and logs its output for analysis. A critical constraint is that the latency overhead must remain below threshold, typically around 20ms, to avoid impacting user experience.
+        </p>
+
+        <div class="callout warning">
+            <h4 class="callout-title">Shadow Mode Infrastructure Requirements</h4>
+            <p>Shadow mode requires non-blocking execution to avoid latency impact, isolated logging that does not affect production systems, clock synchronization for accurate request matching, a storage strategy for shadow outputs whether through full capture or sampling, and an analysis pipeline to process shadow outputs against baselines.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Misconception</div>
+            <p>
+                Shadow mode is not zero-risk. Some teams assume that because shadow AI outputs are not shown to users, no harm can occur. But shadow mode has real risks: storage of sensitive inputs for later analysis may create data compliance issues, the overhead of running shadow systems can degrade production performance if not isolated, and teams may develop false confidence from seeing shadow outputs without systematic comparison to baselines. Shadow mode reduces user-facing risk; it does not eliminate all risk.
+            </p>
+        </div>
+
+        <h3 id="shadow-analysis">Analyzing Shadow Output</h3>
+
+        <p>
+            Shadow mode generates data, but data without analysis is just storage cost. Before launching shadow mode, establish comparison metrics that measure output divergence (how often the shadow produces materially different output from production), confidence correlation (whether shadow confidence tracks with actual correctness when verifiable), edge case frequency (what percentage of inputs trigger concerning behaviors), and latency comparison (whether the shadow system has materially different latency characteristics).
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: EduGen Assignment Generation Shadow</h4>
+            <p><strong>Who:</strong> EduGen team validating a new prompt strategy for assignment generation</p>
+            <p><strong>Situation:</strong> New prompt performed well in offline evals but team worried about rare edge cases with sensitive topics</p>
+            <p><strong>Problem:</strong> How to validate with real teacher inputs without risking student experience?</p>
+            <p><strong>Decision:</strong> 4-week shadow mode before any teacher-facing rollout</p>
+            <p><strong>How:</strong> Shadow system processed all assignment generation requests alongside production. Outputs logged with teacher metadata. Weekly analysis compared shadow to production outputs for divergence. Automated alerts triggered when shadow produced outputs flagged by content classifiers.</p>
+            <p><strong>Result:</strong> Shadow mode identified 3 categories of inputs where new prompt produced less appropriate content: historical events involving violence, religious topics requiring neutral framing, and age-inappropriate content requests. Team refined prompt before any teacher exposure.</p>
+            <p><strong>Lesson:</strong> <strong>Shadow mode lets you discover production edge cases without production consequences.</strong></p>
+        </div>
+
+        <h2 id="canary-releases-ai">Canary Releases for AI Systems</h2>
+
+        <p>
+            Canary releases gradually shift production traffic from old to new AI system. Unlike shadow mode where the new system observes without acting, canary releases actually serve users, starting small and scaling up based on observed behavior.
+        </p>
+
+        <h3 id="canary-stages-ai">AI Canary Stages</h3>
+
+        <p>
+            Canary releases for AI require more stages than traditional software canary because AI behavioral changes are harder to detect than code changes. The progression begins with an internal canary at 1-5% where only employees see the new AI, allowing monitoring of health metrics with no user-visible impact for a minimum of 24-48 hours. This expands to an alpha canary at 5-10% with trusted external users or beta users, where statistical monitoring of output distributions begins, lasting 3-7 days. The beta canary stage at 10-25% provides broader user access with segmented monitoring by user characteristics, watching for differential impact across segments over 1-2 weeks. A staged rollout follows at 25-50-75% using standard rollout progression with hold points at each percentage while continuing statistical monitoring, typically taking 2-4 weeks total. Finally, full deployment at 100% commits completely with ongoing monitoring, recognizing that canary never truly ends.
+        </p>
+
+        <h3 id="canary-metrics-ai">AI-Specific Canary Metrics</h3>
+
+        <p>
+            Standard canary metrics (error rate, latency, conversion) apply to AI, but they miss AI-specific failure modes:
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Metrics That Catch AI Behavior Changes</h4>
+            <p><strong>Output distribution shift:</strong> Has the distribution of AI output categories changed significantly? Use statistical tests (KL divergence, earth mover's distance) on output embeddings.</p>
+            <p><strong>Confidence trajectory:</strong> Are AI confidence scores trending up or down over time? Could indicate drift.</p>
+            <p><strong>Error category changes:</strong> Are you trading one failure type for another? Track error taxonomy separately.</p>
+            <p><strong>User correction rate:</strong> Are users needing to override or correct AI outputs more frequently?</p>
+            <p><strong>Help request spikes:</strong> Do help desk tickets mentioning AI behavior increase during rollout?</p>
+        </div>
+
+        <h2 id="rollback-decisions">Rollback Decisions and Triggers</h2>
+
+        <p>
+            Canary releases require pre-defined rollback triggers. Establish these before launching the canary:
+        </p>
+
+        <h3 id="rollback-thresholds">Threshold-Based Rollback</h3>
+
+        <p>
+            Threshold-based rollback triggers include error rate increases of more than 2x baseline, p95 latency increases of more than 50ms, output divergence rates exceeding the defined threshold such as 10%, and negative feedback rates exceeding the threshold.
+        </p>
+
+        <h3 id="rollback-process">Rollback Process for AI</h3>
+
+        <p>
+            Rolling back an AI system requires the same considerations as rollout. The process begins by identifying the rollback trigger and confirming it is not transient noise, then alerting the team and declaring rollback intent. Traffic shifts back to the previous AI system, which may require percentage reduction rather than an instant cutover. Preserve the canary system state for post-mortem analysis, communicate to stakeholders with an impact assessment, and begin investigation while the canary remains available for comparison.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: HealthMetrics Vitals Monitor Rollback</h4>
+            <p><strong>Who:</strong> HealthMetrics team monitoring AI vitals analysis during staged rollout</p>
+            <p><strong>Situation:</strong> Canary reached 25% rollout with metrics looking healthy</p>
+            <p><strong>Problem:</strong> Statistical monitoring detected subtle output distribution shift at 30% rollout</p>
+            <p><strong>Detection:</strong> Output embedding distribution showed statistically significant shift (p &lt; 0.01). However, traditional metrics (error rate, latency) showed no change.</p>
+            <p><strong>Decision:</strong> Pause rollout at 25% and investigate before proceeding</p>
+            <p><strong>Investigation:</strong> Analysis revealed new model was handling a specific vital combination differently. The combination occurred in 3% of patients but was clinically significant for those patients.</p>
+            <p><strong>Lesson:</strong> <strong>Statistical monitoring of output distributions catches failures that traditional metrics miss. Establish these before launch.</strong></p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 26: Launching AI</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-26-2.html">26.2 Staged Rollouts and User Education</a>
+        </nav>
+
+        <footer>
+            <p>Section 26.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

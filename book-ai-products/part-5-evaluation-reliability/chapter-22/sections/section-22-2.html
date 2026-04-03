@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 22.2: Prompt and Tool-Call Inspection - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 22</div>
+        <h1>Prompt and Tool-Call Inspection</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"When an AI makes a mistake, the first question should not be 'why is the AI broken?' It should be 'what exactly did we ask the AI to do?' Prompt inspection is the most direct path to understanding AI behavior."</p>
+            <cite>A Prompt Engineer Who Traces Everything</cite>
+        </blockquote>
+
+        <h2 id="prompt-inspection-fundamentals">Prompt Inspection Fundamentals</h2>
+
+        <p>
+            Every AI response originates from a prompt. Before debugging model behavior, verify what the model actually received. Prompt inspection captures the fully assembled prompt including system instructions, context documents, conversation history, and user input.
+        </p>
+
+        <p>
+            The assembled prompt often differs from what developers expect. Whitespace handling, truncation behaviors, and context management policies can produce prompts that diverge significantly from the original design.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The Inspection Principle</h4>
+            <p>Never assume what the prompt is. Verify. The gap between intended prompt and actual prompt is a primary source of AI behavior surprises. Build inspection into your system at the point of prompt assembly.</p>
+        </div>
+
+        <h2 id="what-to-inspect">What to Capture During Inspection</h2>
+
+        <h3 id="system-prompt">System Prompt Components</h3>
+
+        <p>For systems with layered instructions, capture each component to fully understand what the model received. The base system prompt contains core instructions defining model behavior that apply to all interactions. Domain-specific instructions provide specialized guidance tailored to your particular use case. Output format specifications define JSON schemas, formatting rules, and other requirements for structured responses. Safety guidelines establish content boundaries and refusal behaviors that prevent the model from producing harmful outputs. Few-shot examples provide in-context demonstrations that help the model understand the desired behavior through patterns rather than explicit instruction.</p>
+
+        <h3 id="context-assembly">Context Assembly</h3>
+
+        <p>For RAG and agentic systems, document how context is assembled to understand what information the model has available. Retrieved documents include full content or snippets with source IDs so you can trace which documents contributed to the response. Retrieval metadata captures relevance scores and document freshness to assess the quality of the retrieval process. Context ordering records the sequence in which context appears, since position can affect how models weight different information. Truncation decisions document what was omitted due to length limits, as this can significantly affect model behavior when important context is dropped.</p>
+
+        <h3 id="conversation-history">Conversation History</h3>
+
+        <p>For multi-turn interactions, capturing conversation history provides essential context for understanding model behavior. Message structure includes role labels and content for each turn, showing how the conversation evolved. Turn count tracks how many exchanges have occurred, which can affect model behavior as contexts grow long. Historical summaries capture when conversation is summarized for context management, as these summarizations can introduce gaps or distortions in the conversation record.</p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Token Budget as a Inspection Signal</h4>
+            <p>When context approaches token limits, understanding what gets truncated is essential. A system that drops the most recent context might produce different behavior than one that drops the oldest. Knowing your truncation strategy helps interpret failures.</p>
+        </div>
+
+        <h2 id="tool-call-inspection">Tool-Call Inspection</h2>
+
+        <p>
+            Tool-augmented AI systems add complexity to inspection. Tool calls involve two stages that both require examination: the model's decision to invoke a tool, and the tool's actual execution.
+        </p>
+
+        <h3 id="tool-call-decisions">Tool-Call Decision Inspection</h3>
+
+        <p>Capture the model's reasoning about when and how to use tools to understand its decision-making process. Function name indicates which tool was selected from the available options. Argument construction shows the parameters passed to the tool, revealing how the model structured its request. Reasoning trace captures the model's justification for the call when available, providing insight into its chain of thought. Alternative considered documents other tools that were not selected, helping you understand whether the model made the right choice among available options.</p>
+
+        <h3 id="tool-execution">Tool Execution Inspection</h3>
+
+        <p>Tool results feed back into model behavior, so inspecting execution provides critical diagnostic information. Execution latency measures how long the tool took to respond, which affects overall response time and can reveal performance issues in tool infrastructure. Result content captures what the tool returned, allowing you to verify that the tool produced the expected output. Error handling examines how errors in tool execution are communicated to the model, which can significantly affect subsequent behavior. Result formatting checks whether tool results match model expectations, as mismatched formats can cause the model to misinterpret tool outputs.</p>
+
+        <pre><code class="language-python">
+@dataclass
+class ToolCallInspection:
+    """Complete inspection record for a tool call"""
+    call_id: str
+    timestamp: datetime
+    
+    # Decision phase
+    function_name: str
+    arguments: dict
+    reasoning: Optional[str]
+    
+    # Execution phase
+    execution_start: datetime
+    execution_end: datetime
+    execution_latency_ms: float
+    raw_result: Any
+    result_size_bytes: int
+    
+    # Integration phase
+    result_format: str  # raw, parsed, error
+    integration_latency_ms: float
+    final_input_to_model: str  # How result was fed back
+
+# Instrumenting tool calls for inspection
+class InstrumentedToolExecutor:
+    def __init__(self, base_executor: ToolExecutor, inspection_store: InspectionStore):
+        self.base = base_executor
+        self.inspector = inspection_store
+    
+    async def execute(self, tool_name: str, arguments: dict, reasoning: str) -> ToolCallInspection:
+        inspection = ToolCallInspection(
+            call_id=str(uuid4()),
+            timestamp=datetime.utcnow(),
+            function_name=tool_name,
+            arguments=arguments,
+            reasoning=reasoning
+        )
+        
+        inspection.execution_start = datetime.utcnow()
+        try:
+            raw_result = await self.base.execute(tool_name, arguments)
+            inspection.raw_result = raw_result
+            inspection.execution_end = datetime.utcnow()
+        except Exception as e:
+            inspection.raw_result = {"error": str(e)}
+            inspection.execution_end = datetime.utcnow()
+        
+        inspection.execution_latency_ms = (
+            inspection.execution_end - inspection.execution_start
+        ).total_seconds() * 1000
+        
+        await self.inspector.store(inspection)
+        return inspection
+        </code></pre>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: DataForge Document Processing</h4>
+            <p>The DataForge team was debugging incorrect entity extraction from contracts after a legal tech customer reported that party names were being extracted incorrectly for LLC entities. The model returned "ABC LLC" but the system stored only "ABC", raising the question of whether this was a model failure, a prompt problem, or a parsing issue.</p>
+            <p>The team enabled comprehensive prompt and tool-call inspection to diagnose the problem. They captured the full prompt including retrieved contract text, tool-call arguments, and parsed results. Inspection revealed that the model correctly identified "ABC LLC" but the extraction tool schema was truncating "LLC" from the entity type field during parsing.</p>
+            <p>The fix required changing the schema definition rather than modifying the model. No model changes were needed. The lesson is that inspection showed the model was working correctly all along. The bug was in how tool results were interpreted.</p>
+        </div>
+
+        <h2 id="inspection-storage">Inspection Storage and Retrieval</h2>
+
+        <h3 id="log-structured-storage">Log-Structured Storage</h3>
+
+        <p>Store inspections in a queryable format that supports both real-time debugging and historical analysis to maximize the value of inspection data. Object storage provides full prompt and response archival capabilities using systems like Amazon S3 or Google Cloud Storage, preserving complete records for compliance and deep debugging. A searchable index enables finding specific inspections through systems like Elasticsearch or OpenSearch, which is essential when investigating particular issues or patterns. Time-series metrics support aggregate analysis through tools like Prometheus or InfluxDB, enabling trend detection and alerting on inspection data over time.</p>
+
+        <h3 id="privacyconsiderations">Privacy Considerations</h3>
+
+        <p>Prompts often contain user data, so inspection storage requires the same privacy controls as production data to protect sensitive information. Data classification involves labeling prompts by sensitivity level so you can apply appropriate controls based on content type. Redaction automatically removes PII from stored inspections to prevent personal information from appearing in logs or analytics. Retention policies define how long inspections are kept, balancing debugging needs with storage costs and privacy regulations. Access controls restrict inspection access to authorized personnel only, ensuring that sensitive prompt data is not visible to everyone in the organization.</p>
+
+        <div class="callout warning">
+            <h4 class="callout-title">PII in Prompts</h4>
+            <p>Prompts frequently contain user queries with personal information. Never store raw prompts without PII scanning and redaction. The inspection system is only as privacy-safe as its weakest component.</p>
+        </div>
+
+        <h2 id="real-time-inspection">Real-Time Inspection Tools</h2>
+
+        <h3 id="prompt-playground">Prompt Playground Integration</h3>
+
+        <p>
+            Development environments like the AI SDK playground allow you to inspect prompts before deployment. Connect playground sessions to production inspection systems to compare expected versus actual prompt behavior.
+        </p>
+
+        <h3 id="shadow-mode">Shadow Mode Inspection</h3>
+
+        <p>
+            Run parallel inspection alongside production requests without affecting user-facing behavior. Shadow mode captures the same data as live inspection but does not act on findings.
+        </p>
+
+        <pre><code class="language-python">
+class ShadowModeInspector:
+    """
+    Captures inspection data without affecting production flow.
+    Useful for testing prompt changes before full deployment.
+    """
+    def __init__(self, production_chain: Chain, inspector: Inspector):
+        self.production = production_chain
+        self.inspector = inspector
+    
+    async def invoke(self, input_data: dict) -> dict:
+        # Run production chain
+        result = await self.production.invoke(input_data)
+        
+        # Simultaneously capture inspection data
+        shadow_input = self.capture_input(input_data)
+        shadow_output = self.capture_output(result)
+        
+        # Store but do not block on inspection
+        asyncio.create_task(self.inspector.store_async(shadow_input, shadow_output))
+        
+        return result  # Return production result, not shadow
+        </code></pre>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>Emerging research explores "automatic prompt diffing" that automatically identifies what changed between two prompts and predicts whether the change will affect output quality. This could enable automated regression testing for prompt changes.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-22-1.html">22.1 Traces and Spans</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-22-3.html">22.3 Retrieval Debugging</a>
+        </nav>
+
+        <footer>
+            <p>Section 22.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

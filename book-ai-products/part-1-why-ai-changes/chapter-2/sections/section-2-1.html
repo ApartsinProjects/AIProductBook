@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.1 Foundation Model Capabilities and Limits - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
+        <div class="chapter-label">Chapter 2</div>
+        <h1>What AI Can and Cannot Reliably Do</h1>
+        <p class="chapter-subtitle">2.1 Foundation Model Capabilities and Limits</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Develop a shared vocabulary for AI capabilities and limitations that your entire team can use when making product decisions.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Basic familiarity with LLMs and AI concepts from Chapter 1. No engineering background required.
+        </div>
+
+        <blockquote class="epigraph">
+            <p>"The model can do amazing things, but it cannot do everything. Knowing the difference is the key to building products that work."</p>
+            <cite>The Pragmatic AI Product Guide</cite>
+        </blockquote>
+
+        <h2 id="section-2-1">2.1 Foundation Model Capabilities and Limits</h2>
+
+        <p>
+            Foundation models have transformed what AI can do, but they have specific boundaries that product teams must understand. This section provides a practical framework for thinking about what AI can reliably do, organized around the capabilities that matter most for product development.
+        </p>
+
+        <h3>The Reliability Spectrum</h3>
+
+        <p>
+            Not all AI capabilities are created equal. Some tasks AI performs reliably, others it handles inconsistently, and some it cannot do at all without significant scaffolding. Understanding this spectrum is essential for making good product decisions.
+        </p>
+
+        <p>
+            In the reliable zone, AI can summarize documents within its context window, classify text with clear categories, translate between major languages, complete code within a single file, and extract structured data from unstructured text.
+        </p>
+
+        <p>
+            In the moderate reliability zone, AI performance drops with complexity: multi-step reasoning becomes less reliable, code requiring external API calls can fail, questions about recent events may have outdated answers, creative writing with specific constraints varies, and mathematical calculations depend heavily on the model.
+        </p>
+
+        <p>
+            In the unreliable zone, AI requires significant scaffolding: precise factual recall is hallucination-prone, long-horizon planning exceeds current capabilities, real-time information retrieval needs external tools, benchmarking against specific ground truth requires careful validation, and consistent formatting across many generations remains challenging.
+        </p>
+
+        <h3>What Foundation Models Do Reliably</h3>
+
+        <p>
+            Foundation models are exceptionally good at recognizing patterns and transforming inputs into outputs. This is the core capability that makes them useful: given text in one format, they can produce text in another format. This includes summarizing long documents into concise versions, extracting key information and structuring it, translating between languages while preserving meaning, classifying text into predefined categories, and generating variations of existing content.
+        </p>
+
+        <p>
+            Beyond pattern recognition, foundation models demonstrate strong natural language understanding capabilities. They can determine the intent behind user queries even when phrased unclearly, follow complex instructions that specify behavior through examples, maintain coherence across long conversations, and understand implied meaning, sarcasm, and ambiguity. Modern foundation models can also write, read, and modify code with reasonable reliability, especially for common patterns and well-documented APIs. They can generate boilerplate code from specifications, explain what existing code does, suggest fixes for bugs when given error messages, translate code between programming languages, and complete partial code based on context.
+        </p>
+
+        <h3>The Limits That Matter for Products</h3>
+
+        <p>
+            Understanding AI limitations is just as important as understanding capabilities. Several fundamental limits affect how you should design AI products.
+        </p>
+
+        <h4>Knowledge Cutoffs and Retrieval Limitations</h4>
+        <p>
+            Foundation models have a fixed knowledge cutoff. They cannot answer questions about events after their training data was collected, and they may produce outdated information for questions about historical events if their training data is incomplete or contains errors.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">HealthMetrics: The Knowledge Cutoff Problem</div>
+            <p>HealthMetrics initially built a clinical decision support feature assuming the AI had current medical knowledge. During testing, they discovered the model would sometimes recommend treatment protocols that had been superseded. The model was not "wrong" in a general sense, but it lacked recent updates to clinical guidelines. This led HealthMetrics to implement a mandatory RAG pipeline connecting to a medical literature database that is updated in real-time, ensuring recommendations reflect current best practices.</p>
+        </div>
+
+        <h4>Hallucination: The Persistent Challenge</h4>
+        <p>
+            Foundation models can generate plausible-sounding but incorrect information. This phenomenon, called hallucination, occurs because models are optimized to produce coherent text, not necessarily accurate text. The model learns patterns from training data and generates outputs that match those patterns, even when the underlying facts are wrong.
+        </p>
+
+        <p>
+            Hallucination is not a bug that can be fixed with better engineering. It is a fundamental characteristic of how transformer-based language models work. The model generates the most likely continuation of the input, not the most accurate response. For product teams, this means designing systems that assume hallucination will occur and mitigate its impact.
+        </p>
+
+        <p>
+            Teams should address hallucination at multiple levels. First, prompt design structures prompts to encourage factual responses and explicit uncertainty. Second, retrieval-augmented generation grounds model responses in retrieved documents. Third, output validation uses secondary models or rules to check outputs. Fourth, human review routes sensitive outputs through human verification. Fifth, user interface design creates UIs that help users identify potential errors.
+        </p>
+
+        <p>
+            Foundation models can only process a limited amount of text at once because their <a href="../../../part-1-why-ai-changes/chapter-1/sections/section-1-3.html" class="cross-ref">context window</a> limits the length of documents that can be summarized, the amount of relevant context that can be included in a prompt, and the complexity of multi-step reasoning before the model forgets early context. Current frontier models support <a href="../../../part-1-why-ai-changes/chapter-1/sections/section-1-3.html" class="cross-ref">context windows</a> of 200K to 1M tokens, though performance degrades for information placed in the middle of very long contexts due to the lost in the middle problem. For product design, this means chunking large documents and designing retrieval systems that surface the most relevant content first.
+        </p>
+
+        <h4>Inconsistent Reliability Across Domains</h4>
+        <p>
+            AI reliability varies significantly across domains. A model that reliably handles general conversation may struggle with specialized domains like medical terminology, legal language, or technical code from specific frameworks.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">DataForge: Domain-Specific Reliability Challenges</div>
+            <p>DataForge initially deployed their ETL pipeline generator using a general-purpose foundation model. The model handled general Python programming reliably, but when users asked it to generate pipelines using company-specific coding conventions or internal frameworks, reliability dropped significantly. DataForge solved this by fine-tuning the model on their enterprise codebases, which improved domain-specific reliability from 40% to 85% acceptance rates.</p>
+        </div>
+
+        <h3>The Calibration Problem</h3>
+
+        <p>
+            Foundation models often express high confidence even when they are wrong, and moderate confidence even when they are correct. This miscalibration between confidence and accuracy is a significant challenge for product design.
+        </p>
+
+        <p>
+            In traditional software, you can trust that a function returns correct output or you can detect when it fails. With AI, you often cannot tell from the output alone whether it is correct. A confident wrong answer looks identical to a confident correct answer.
+        </p>
+
+        <p>
+            Products should never present AI outputs as absolute truth without verification, should use uncertainty signals like confidence scores and uncertainty indicators in the UI, should provide provenance by showing sources for factual claims, should make correction easy so users can override AI easily, and should monitor accuracy over time by tracking when AI is wrong.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Core Vocabulary for AI Product Teams</div>
+            <p><strong>Hallucination</strong> refers to when an AI model generates plausible-sounding but incorrect or fabricated information. Unlike errors in traditional software, hallucinated output is often syntactically correct and contextually appropriate, making it harder to detect.</p>
+            <p><strong>Context window</strong> is the maximum amount of text (measured in tokens) that a model can process in a single prompt. Information outside this window cannot influence the model's response.</p>
+            <p><strong>Calibration</strong> describes the alignment between a model's expressed confidence and its actual accuracy. Well-calibrated models express high confidence when they are correct and low confidence when they are uncertain.</p>
+            <p><strong>Grounding</strong> is the practice of connecting model outputs to external, verifiable sources like documents, databases, and APIs to reduce hallucination and ensure accuracy.</p>
+            <p><strong>Reliability spectrum</strong> is a framework for categorizing AI capabilities by consistency: reliable (works consistently), moderate (works variably), and unreliable (requires additional scaffolding).</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>Before deploying AI capabilities, define how you will measure reliability. In capability planning, this means building an <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval dataset</a> before building the feature. A <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">micro-eval</a> for AI capabilities: collect 100 representative inputs, manually label expected outputs, test model accuracy before promising reliability. Without this eval-first approach, deployment becomes a confidence game without a scoreboard.</p>
+        </div>
+
+        <h3>Building Shared Vocabulary</h3>
+
+        <p>
+            For teams to make good AI product decisions, everyone needs shared vocabulary. The following terms should become part of your team's common language.
+        </p>
+
+        <div class="glossary-list">
+            <div class="glossary-entry">
+                <div class="glossary-term">Hallucination</div>
+                <div class="glossary-def">When an AI model generates plausible-sounding but incorrect or fabricated information. Unlike errors in traditional software, hallucinated output is often syntactically correct and contextually appropriate, making it harder to detect.</div>
+            </div>
+            <div class="glossary-entry">
+                <div class="glossary-term"><a href="../../../part-1-why-ai-changes/chapter-1/sections/section-1-3.html" class="cross-ref">Context Window</a></div>
+                <div class="glossary-def">The maximum amount of text (measured in tokens) that a model can process in a single prompt. Information outside this window cannot influence the model's response.</div>
+            </div>
+            <div class="glossary-entry">
+                <div class="glossary-term">Calibration</div>
+                <div class="glossary-def">The alignment between a model's expressed confidence and its actual accuracy. Well-calibrated models express high confidence when they are correct and low confidence when they are uncertain.</div>
+            </div>
+            <div class="glossary-entry">
+                <div class="glossary-term">Grounding</div>
+                <div class="glossary-def">The practice of connecting model outputs to external, verifiable sources (documents, databases, APIs) to reduce hallucination and ensure accuracy.</div>
+            </div>
+            <div class="glossary-entry">
+                <div class="glossary-term">Reliability Spectrum</div>
+                <div class="glossary-def">A framework for categorizing AI capabilities by consistency: reliable (works consistently), moderate (works variably), and unreliable (requires additional scaffolding).</div>
+            </div>
+        </div>
+
+        <div class="callout exercise">
+            <div class="callout-title">Exercise: Classify AI Capabilities</div>
+            <p>For each of the following AI tasks, classify them as Zone 1 (Reliable), Zone 2 (Moderate), or Zone 3 (Unreliable) on the reliability spectrum. Then, for each task, propose one product feature that leverages this capability and one failure mode to design against: translating user-generated content into multiple languages, providing medical diagnosis recommendations, generating code to call a specific API documented in the prompt, answering questions about your company's return policy, and writing creative marketing copy.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Multimodal Abilities and Their Boundaries</strong>, understanding how AI systems that can see, hear, and process other modalities compare to text-only models in terms of reliability and product design implications.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 2: Overview</a>
+            <a class="up" href="../index.html">Chapter 2 Index</a>
+            <a class="next" href="section-2-2.html">2.2 Multimodal Abilities and Their Boundaries</a>
+        </nav>
+
+        <footer>
+            <p>Section 2.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

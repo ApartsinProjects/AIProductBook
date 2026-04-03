@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 21.3: Building Effective Evals - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 21</div>
+        <h1>Building Effective Evals</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"A poorly designed eval is worse than no eval. It gives you false confidence while measuring the wrong thing with high precision."</p>
+            <cite>A Measurement Skeptic With a Point</cite>
+        </blockquote>
+
+        <h2 id="measurable-criteria">Defining Measurable Criteria</h2>
+
+        <p>
+            The first step in building an effective eval is defining what you are measuring and how you will measure it. Vague requirements like "the system should be helpful" do not translate into evals. Precise criteria like "the system should extract the correct diagnosis code from patient notes with 95% accuracy" do.
+        </p>
+
+        <h3 id="criteria-characteristics">Characteristics of Good Eval Criteria</h3>
+
+        <p>Good eval criteria are specific, meaning they are unambiguous about what constitutes success so there is no room for interpretation. They are measurable and can be quantified with a number rather than relying on subjective judgment. The criteria are achievable, based on realistic expectations for the technology rather than aspirational goals. They are relevant, tied to actual product value and user needs rather than vanity metrics that look good but do not matter. Finally, they are time-bound, making clear the timeframe over which measurement occurs.</p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">The SMART Criteria for Evals</h4>
+            <p>Apply SMART criteria to your eval metrics: Specific (what exactly is being measured), Measurable (what numbers constitute success), Achievable (is this realistic given current technology), Relevant (does this matter to users), and Time-bound (over what period?).</p>
+        </div>
+
+        <h2 id="test-datasets">Creating Test Datasets</h2>
+
+        <p>
+            An eval is only as good as its test dataset. The test dataset defines the scope of your evaluation and determines whether your eval results generalize to real-world performance.
+        </p>
+
+        <h3 id="dataset-representativeness">Dataset Representativeness</h3>
+
+        <p>
+            Your test dataset must represent the distribution of inputs your system will encounter in production. If your production queries are 70% short questions and 30% complex analysis tasks, your test dataset should match this distribution.
+        </p>
+
+        <div class="callout warning">
+            <h4 class="callout-title">Sampling Bias Danger</h4>
+            <p>If you build your test dataset from early user feedback, you will over-sample the queries that early users found important. These may not represent the full range of queries that matter as you scale.</p>
+        </div>
+
+        <h3 id="dataset-size">Dataset Size Considerations</h3>
+
+        <p>
+            The size of your test dataset depends on the precision you need and the variance in your system behavior. For high-stakes evaluations where you need to detect small differences, you need larger datasets. For exploratory evaluations where approximate answers suffice, smaller datasets work.
+        </p>
+
+        <p>The appropriate dataset size depends on your use case and the precision you need. For exploratory analysis where qualitative understanding is the goal, a minimum of twenty to fifty examples typically suffices. During development iteration when you need to detect major differences between approaches, aim for one hundred to three hundred examples. For release validation where you need confidence in your release decision, three hundred to one thousand examples provide adequate coverage. Regulatory submission requires the largest datasets, typically exceeding one thousand examples, because statistical significance is required to satisfy compliance requirements.</p>
+
+        <h2 id="golden-sets">Golden Sets and Ground Truth</h2>
+
+        <p>
+            Golden sets are curated test datasets where the correct output is known and documented. They provide the ground truth against which your system is evaluated.
+        </p>
+
+        <h3 id="golden-set-construction">Constructing Golden Sets</h3>
+
+        <p>Constructing golden sets involves five key steps. First, define the scope by determining what types of inputs the golden set will cover. Second, collect inputs by sampling real inputs from production or creating realistic synthetic inputs. Third, establish ground truth by having experts label the correct outputs. Fourth, document consensus by recording inter-annotator agreement for ambiguous cases to make clear where experts disagree. Fifth, validate coverage by ensuring the golden set covers edge cases as well as common cases, not just the scenarios that occur most frequently.</p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: Building a Golden Set for Intent Classification</h4>
+            <p>A conversational AI team building a customer service chatbot needed to evaluate whether their intent classifier worked across different customer demographics. The problem they faced was that their initial golden set was built by the internal team and was missing many real-world phrasings that actual customers use. They faced a dilemma: building a comprehensive golden set was expensive, so they needed to determine how much was enough.</p>
+            <p>The team decided to build a tiered golden set consisting of two hundred core examples with high agreement, one hundred edge cases requiring expert consensus, and fifty adversarial examples representing known failure modes. They used iterative refinement, starting with fifty examples, evaluating performance, identifying gaps, and adding examples to cover those gaps. Their final golden set of three hundred fifty examples detected three major failure modes that were not caught by the smaller initial set.</p>
+            <p>The lesson here is that the quality of a golden set matters more than quantity. Focus on coverage and edge cases rather than simply accumulating more examples.</p>
+        </div>
+
+        <h2 id="adversarial-testing">Adversarial and Stress Testing</h2>
+
+        <p>
+            Adversarial testing evaluates your system on inputs designed to cause failure. These tests identify the boundaries of your system and ensure graceful degradation when boundaries are exceeded.
+        </p>
+
+        <h3 id="adversarial-strategies">Adversarial Testing Strategies</h3>
+
+        <p>Adversarial testing strategies include known failure mode injection, where you create test cases based on documented failure modes to verify they are fixed. Edge case exploration tests the boundaries of valid input, including very long inputs, unusual characters, and ambiguous queries that might cause unexpected behavior. Adversarial user simulation involves having team members intentionally try to break the system using their knowledge of where it might fail. Model-based fuzzing uses AI to generate inputs that are likely to cause failures, leveraging machine learning to discover edge cases that human testers might miss.</p>
+
+        <h2 id="red-teaming">Red Teaming for AI</h2>
+
+        <p>
+            Red teaming applies adversarial testing in a structured, ongoing process. A red team is tasked with finding failures, and their findings feed directly into eval improvements.
+        </p>
+
+        <h3 id="red-team-structure">Structuring Red Team Exercises</h3>
+
+        <p>Structuring red team exercises involves five steps that ensure thorough and productive testing. Begin by defining objectives, clarifying what specific behaviors the red team is trying to elicit failures in. Grant the team full access to the system and documentation so they can conduct comprehensive testing. Establish rules of engagement that define what constitutes acceptable testing and what boundaries must not be crossed, such as avoiding production disruption. Document findings so each discovered issue becomes a test case in the eval suite for future regression testing. Finally, remediate and verify by fixing identified issues and running targeted evals to confirm they are resolved.</p>
+
+        <div class="callout tip">
+            <h4 class="callout-title">Red Team Rotation</h4>
+            <p>Rotate red team membership to prevent blind spots. Team members who build a system develop intuitions about where it will fail. New members approach with fresh perspectives.</p>
+        </div>
+
+        <h2 id="eval-metrics-scoring">Eval Metrics and Scoring</h2>
+
+        <p>
+            The metrics you choose determine what your evals measure. Different metrics suit different eval types and product requirements.
+        </p>
+
+        <h3 id="accuracy-precision-recall">Accuracy, Precision, and Recall for AI</h3>
+
+        <p>Standard classification metrics apply to AI evaluation, but with important nuances that affect which metric matters most. Accuracy measures the fraction of all predictions that are correct and works well when classes are balanced. Precision measures the fraction of positive predictions that are correct and matters when false positives are costly, such as in spam detection where marking legitimate email as spam causes real problems. Recall measures the fraction of actual positives that are predicted correctly and matters when false negatives are costly, such as in medical diagnosis where missing a condition could have serious consequences.</p>
+
+        <h3 id="task-completion-rates">Task Completion Rates</h3>
+
+        <p>For agent and system evals, task completion rate is often the most important metric, and it must be defined precisely. A task is only truly complete when the agent accomplished the user goal, the output was in the correct format, all required steps were completed, and the result was verified against user expectations. These four criteria ensure that task completion is measured holistically rather than just checking whether something was produced.</p>
+
+        <h3 id="error-categorization">Error Categorization</h3>
+
+        <p>Not all errors are equal, so it is important to categorize errors by type and severity to prioritize fixes appropriately. Critical errors cause harm or result in complete task failure, requiring immediate attention. Major errors noticeably degrade output quality even though some useful work gets done. Minor errors slightly reduce quality but the task remains useful to the user. Cosmetic errors have no meaningful impact on utility and can typically be deprioritized.</p>
+
+        <h3 id="composite-scoring">Composite Scoring</h3>
+
+        <p>
+            Composite scores combine multiple metrics into a single evaluation score. Use them when you need an overall signal, but be aware that they can obscure details.
+        </p>
+
+        <div class="callout algorithm">
+            <h4 class="callout-title">Composite Score Formula</h4>
+            <p>Creating a composite score involves four steps. First, define weights for each component metric where weights should reflect product priorities and sum to 1.0 across all components. Second, normalize each metric to a zero to one scale using min-max scaling or target-based thresholds. Third, compute the weighted sum by multiplying each normalized metric by its weight and summing the results. Fourth, report both the composite and component scores, using the composite for quick comparison between systems and the components for diagnostic purposes when you need to understand what drives the score.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Metrics That Matter</h4>
+            <p>The best metrics are those that correlate with actual user satisfaction and business outcomes. If a metric improves but user satisfaction does not, the metric is misleading you.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-21-2.html">21.2 Types of Evaluations</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-21-4.html">21.4 Human Evaluation</a>
+        </nav>
+
+        <footer>
+            <p>Section 21.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

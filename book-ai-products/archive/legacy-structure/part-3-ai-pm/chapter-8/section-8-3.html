@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7.3 Experimentation Methods - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 7</div>
+        <h1>The AI PM Toolkit</h1>
+        <p class="chapter-subtitle">7.3 Experimentation Methods</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Equip PMs with AI-specific tools including <a href="../../part-3-ai-pm/chapter-8/sections/section-8-2.html">eval-first</a> PRDs, LLM-as-judge, and experimentation methods.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 7.2 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Experimentation for Probabilistic Products</div>
+            <p>AI products require structured experimentation methods because the probabilistic nature of outputs makes it difficult to predict how changes will perform in production. A/B testing, canary deployments, interleaved testing, and shadow testing provide frameworks for measuring impact while managing variability. The key insight is using layered experimentation methods together for confidence at each stage.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Canary Miners</div>
+            <p>Canary testing got its name from coal miners who brought canaries into mines. If the bird died, toxic gases were present. In software, we still use the canary metaphor even though nobody uses actual birds anymore.</p>
+        </div>
+
+        <h2 id="section-7-3">7.3 Experimentation Methods</h2>
+
+        <p>
+            In Section 7.2, we covered <a href="../../part-3-ai-pm/chapter-8/sections/section-8-2.html">eval-first</a> PRDs and LLM-as-judge evaluation techniques. A key insight from that section was that AI outputs are probabilistic and can vary even with the same inputs. This variability makes it challenging to predict how changes will perform in production, which is why we need structured experimentation methods. Controlled experimentation is essential for AI products because the probabilistic nature of outputs makes it difficult to predict how changes will perform in production. Unlike traditional software where a code change produces deterministic results, an AI system may produce different outputs for the same input at different times. Experimentation methods provide frameworks for measuring the impact of changes while managing this variability.
+        </p>
+
+        <h3>A/B Testing for AI Products</h3>
+
+        <p>
+            A/B testing for AI products involves splitting traffic between two versions of the system and comparing outcomes. The key challenge is determining what to measure: are you optimizing for task completion rate, user satisfaction, or some other metric? A/B testing works well when you have sufficient traffic to achieve statistical significance and when the difference between versions is large enough to detect. For AI products with high variance in outputs, you may need much larger sample sizes than for traditional software experiments.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The A/B Test That Changed Everything</h4>
+            <p>
+                A company tested two versions of their AI assistant: one that provided concise answers and one that provided detailed answers. They expected concise would win because users would save time. Instead, detailed answers won with 20% higher task completion. Users said they trusted the detailed answers more because they could see the reasoning. This insight changed their product strategy entirely: they optimized for thoroughness over brevity.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Designing AI A/B Tests</h4>
+            <p>
+                <strong>What to test in AI products:</strong>
+            </p>
+            <ul>
+                <li>Prompt variations: Different instructions to the AI</li>
+                <li>Model versions: New vs. old models</li>
+                <li>Temperature settings: Creativity vs. consistency</li>
+                <li>Output format: Short vs. long, structured vs. free-form</li>
+                <li>UI variations: How AI is presented to users</li>
+            </ul>
+            <p>
+                <strong>Key considerations:</strong>
+            </p>
+            <ul>
+                <li><strong>Sample size:</strong> AI outputs have higher variance, requiring larger samples</li>
+                <li><strong>Metrics:</strong> Choose metrics that reflect user value, not just AI quality</li>
+                <li><strong>Duration:</strong> Run tests long enough to capture usage patterns</li>
+                <li><strong>Segmentation:</strong> Analyze results by user type, not just aggregate</li>
+            </ul>
+        </div>
+
+        <h3>Canary Deployment</h3>
+
+        <p>
+            Canary deployment rolls out a new version to a small percentage of users before full deployment. This approach allows you to detect issues with real traffic before they affect all users. For AI products, canary deployments are particularly valuable because subtle quality issues may not appear in testing but become apparent with production traffic. The canary percentage is typically 5-10% initially, increasing if no issues are detected. Monitoring during the canary phase should include both technical metrics (latency, error rate) and quality metrics (task completion, user satisfaction).
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Silent Quality Regression</h4>
+            <p>
+                A company deployed a model update to their AI chatbot. The technical metrics looked fine: latency, error rates, and throughput were all within normal ranges. However, canary deployment to 5% of users revealed a problem: user satisfaction scores dropped from 4.2 to 3.8. Further investigation showed the new model was producing slightly less helpful responses. If they had deployed to everyone at once, they would have degraded the experience for all users without immediately realizing why.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Canary Deployment for AI</h4>
+            <p>
+                <strong>Canary process:</strong>
+            </p>
+            <ol>
+                <li>Deploy to 5% of users</li>
+                <li>Monitor technical metrics: latency, errors, throughput</li>
+                <li>Monitor quality metrics: task completion, user feedback</li>
+                <li>If metrics are healthy, increase to 25%</li>
+                <li>Continue monitoring, increase to 50%, then 100%</li>
+                <li>If issues appear, rollback to previous version</li>
+            </ol>
+            <p>
+                <strong>Key metrics to monitor:</strong>
+            </p>
+            <ul>
+                <li>p50/p95 response time</li>
+                <li>Error rate by type</li>
+                <li>Task completion rate</li>
+                <li>User satisfaction (explicit and implicit feedback)</li>
+                <li>Helpful/unhelpful ratio</li>
+            </ul>
+        </div>
+
+        <h3>Interleaved Testing</h3>
+
+        <p>
+            Interleaved testing presents results from both versions mixed together, allowing direct comparison without requiring users to commit to one version. This method is particularly useful for search and recommendation systems where you can show results from both versions in a single interface. Users implicitly vote by which results they click on, providing immediate feedback on relative quality. Interleaved testing requires careful implementation to avoid confusing users, but it provides faster feedback than traditional A/B testing.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Fast Feedback for Ranking</h4>
+            <p>
+                A search company wanted to test a new ranking algorithm. Traditional A/B testing would take weeks to get statistical significance. Instead, they implemented interleaved results: when users searched, they saw a mix of results from both the old and new algorithms. Users clicked on results from both algorithms, and the company could measure which algorithm won based on click-through rates. They got statistically significant results in days instead of weeks.
+            </p>
+        </div>
+
+        <h3>Shadow Testing</h3>
+
+        <p>
+            Shadow testing runs the new model in parallel with the production system without serving the new outputs to users. This approach lets you collect extensive comparison data with zero risk to users. Shadow testing is ideal for evaluating major model upgrades where you want to understand performance differences before exposing users to any risk. The limitation is that shadow traffic may not perfectly replicate production traffic patterns, so results are indicative rather than definitive.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Major Model Upgrade</h4>
+            <p>
+                A company wanted to upgrade from GPT-4 to a newer model. Rather than risking user experience, they ran shadow mode for two weeks: the new model processed all requests but its outputs were not shown to users. They compared outputs on hundreds of dimensions: accuracy, helpfulness, latency, cost. The analysis revealed the new model was faster and cheaper but slightly less accurate on technical questions. They used this insight to implement a hybrid approach: use the new model for most queries, but fall back to the old model for technical questions.
+            </p>
+        </div>
+
+        <h3>Experimentation Method Comparison</h3>
+
+        <table>
+            <thead>
+                <tr><th>Method</th><th>Risk</th><th>Speed</th><th>Data Quality</th><th>Best For</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>A/B Testing</td><td>Medium</td><td>Slow</td><td>High</td><td>Measuring user outcomes</td></tr>
+                <tr><td>Canary</td><td>Low</td><td>Medium</td><td>Medium</td><td>Detecting regressions</td></tr>
+                <tr><td>Interleaved</td><td>Low</td><td>Fast</td><td>Medium</td><td>Ranking comparisons</td></tr>
+                <tr><td>Shadow</td><td>None</td><td>Fast</td><td>Lower</td><td>Major model changes</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Experimentation Best Practice</div>
+            <p>
+                Use multiple experimentation methods together. Run shadow tests before canary deployments. Use interleaved testing for rapid iteration on ranking. Use A/B testing for final validation. This layered approach gives you confidence at each stage while minimizing risk to users.
+            </p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>AI Tools for PMs</strong> - leveraging AI to accelerate product management work.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-7-2.html">7.2 <a href="../../part-3-ai-pm/chapter-8/sections/section-8-2.html">eval-first</a> PRDs</a>
+            <a class="up" href="index.html">Chapter 7 Index</a>
+            <a class="next" href="section-7-4.html">7.4 AI Tools for PMs</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 7.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

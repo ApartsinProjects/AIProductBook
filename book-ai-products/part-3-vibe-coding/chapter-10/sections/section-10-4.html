@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10.4 Prototype Classes and Fidelity Levels - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 10.4</div>
+        <h1>Prototype Classes and Fidelity Levels</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Not all prototypes serve the same purpose. Matching the prototype class to the question you are asking prevents over-investment in disposable artifacts and under-investment in critical explorations.
+        </p>
+
+        <h2>The Purpose-Directed Prototype</h2>
+
+        <p>Prototypes exist to answer questions, not to produce artifacts. Before building any prototype, clarify the question you are answering. Different questions require different prototype classes and fidelity levels. Building the wrong fidelity for the question wastes resources or produces misleading answers.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Prototype Question Alignment</div>
+            <p>Before building any prototype, ask yourself several essential questions. What question does this prototype answer? What would change if the answer is yes? What would change if the answer is no? Is there a cheaper way to answer this question? These questions ensure you build the right prototype for the right reason.</p>
+        </div>
+
+        <h2>Prototype Classes</h2>
+
+        <h3>Class 1: Feasibility Prototypes</h3>
+
+        <p>Feasibility prototypes answer: "Can we do this at all?" They explore technical boundaries and identify unknown unknowns. They require minimum fidelity: enough to determine whether a technical approach is viable.</p>
+
+        <p>Characteristics of feasibility prototypes include minimal or absent user interface, core algorithm implementation only without peripheral features, edge cases left unexplored, and the understanding that the prototype can be discarded after use. Investment level remains low at days rather than weeks.</p>
+
+        <p>Investment level: Low. Days, not weeks.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Feasibility Prototype</div>
+            <p>QuickShip needed to determine whether they could automatically extract delivery exception reasons from customer emails. They built a minimal feasibility prototype in two days: a Python script that ingested sample emails and outputted extracted reasons using GPT-4. No UI, no error handling, no persistence.</p>
+            <p>Result: Confirmed that 85% accuracy was achievable with current models. This justified investing in a production system.</p>
+        </div>
+
+        <h3>Class 2: Desirability Prototypes</h3>
+
+        <p>Desirability prototypes answer: "Will users want this?" They explore user experience and value proposition. They require moderate fidelity: enough for users to evaluate the core experience.</p>
+
+        <p>Characteristics of desirability prototypes include a functional core experience that users can evaluate, mock data being acceptable for testing purposes, secondary flows remaining incomplete, and performance not yet optimized for production. Investment level sits at medium, typically requiring one to two weeks of effort.</p>
+
+        <h3>Class 3: Viability Prototypes</h3>
+
+        <p>Viability prototypes answer: "Can we build a business around this?" They explore economic and operational viability. They require higher fidelity: enough to model unit economics and operational requirements.</p>
+
+        <p>Characteristics of viability prototypes include complete core flows that demonstrate the full user journey, realistic data volumes that enable economic modeling, basic error handling that prevents obvious failures, and integration points stubbed but not fully connected. Investment level is medium-high, typically requiring two to four weeks.</p>
+
+        <h3>Class 4: Implementation Prototypes</h3>
+
+        <p>Implementation prototypes answer: "How should we build this?" They explore architecture and implementation approaches. They produce artifacts that may graduate to production.</p>
+
+        <p>Characteristics of implementation prototypes include production-quality core functionality that can ship with minimal changes, secondary flows stubbed or minimal, performance at acceptable levels for production use, and security and observability partially implemented but not complete. Investment level is high, typically requiring four to eight weeks of focused development.</p>
+
+        <h2>Fidelity Dimensions</h2>
+
+        <p>Prototype fidelity varies across multiple dimensions. Understanding these dimensions helps you invest appropriately for the prototype class:</p>
+
+        <p>Prototype fidelity varies across five key dimensions. In visual design, low fidelity means wireframes and sketches while high fidelity means polished UI with brand elements. In data, low fidelity uses mock data and static responses whereas high fidelity uses realistic data and live connections. In interactions, low fidelity provides clickable mockups with limited flows while high fidelity offers full interactions with edge cases handled. In performance, low fidelity accepts slow response times without optimization, but high fidelity requires production-like performance. In integration, low fidelity uses stubbed and simulated connections while high fidelity uses real integrations.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">The Minimum Viable Fidelity Rule</div>
+            <p>For each prototype, identify the minimum fidelity that would produce a definitive answer to your question. Invest in fidelity only on the dimensions that affect the answer. Everything else can be low fidelity.</p>
+            <p>A feasibility prototype testing an algorithm does not need visual polish. A desirability prototype testing user experience needs functional interactions but can use mock data.</p>
+        </div>
+
+        <h2>Vibe Coding Across Prototype Classes</h2>
+
+        <p><a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> is most effective for Class 1 and Class 2 prototypes. It can contribute to Class 3 and 4 but requires more careful management to avoid the failure modes discussed earlier.</p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Vibe Coding Appropriate by Class</div>
+            <p>Vibe coding appropriateness varies by prototype class. Feasibility prototypes show very high appropriateness because they are low risk by definition since they are throwaway artifacts. Desirability prototypes show high appropriateness but require a caution: verify that user reaction is to the concept rather than just the novelty of the AI-generated interface. Viability prototypes show medium appropriateness and require monitoring for architectural drift with planning for refactoring. Implementation prototypes also show medium appropriateness and require architectural guidance; do not rely on vibe alone for production-quality output.</p>
+        </div>
+
+        <h2>Prototype Graduation</h2>
+
+        <p>Sometimes a prototype should graduate from one class to another. A feasibility prototype that proves technical viability may deserve investment to become a desirability prototype. Understanding graduation criteria prevents under- and over-investment.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Graduation Criteria</div>
+            <p><strong>Feasibility to Desirability:</strong> Technical approach works; user value proposition is compelling enough to warrant user testing</p>
+            <p><strong>Desirability to Viability:</strong> Users respond positively; economic model is plausible; operational requirements are understood</p>
+            <p><strong>Viability to Implementation:</strong> Unit economics validated; operational processes defined; team ready for production development</p>
+        </div>
+
+        <h2>The QuickShip Graduation Story</h2>
+
+        <p>QuickShip's exception handling feature demonstrates prototype graduation:</p>
+
+        <p><strong>Week 1 (Feasibility):</strong> Python script demonstrated that GPT-4 could extract exception reasons from emails at 85% accuracy. Two days of vibe coding, throwaway code.</p>
+
+        <p><strong>Weeks 2-3 (Desirability):</strong> Interactive prototype with mock UI showed operations team how the feature would work. Team excitement was high, but this was not real user testing.</p>
+
+        <p><strong>Weeks 4-6 (Viability):</strong> Working prototype with real email integration and simulated responses. Modeling showed potential for 40% reduction in handling time. Operations team validated the workflow.</p>
+
+        <p><strong>Weeks 7-10 (Implementation):</strong> Production-quality build with proper error handling, monitoring, and integration with existing systems. This phase required more directive coding and architectural oversight than earlier phases.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Prototypes exist to answer questions, so you must match the prototype class and fidelity to the specific question being asked. The four classes are Feasibility, Desirability, Viability, and Implementation, each requiring different investment levels and producing different outputs. Fidelity varies across dimensions including visual design, data, interactions, performance, and integration, so you should apply minimum viable fidelity to each dimension and avoid over-investment. Vibe coding is most effective for Class 1 and 2 prototypes but requires careful management for Class 3 and 4 to avoid the failure modes discussed earlier. Establish clear graduation criteria to determine when prototypes should move between classes and receive appropriate investment levels.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Classifying Your Current Prototype</div>
+            <p>Evaluate a prototype you are currently building or considering by working through several diagnostic steps. First, determine what question this prototype answers, ensuring it has a clear purpose. Second, identify what class it belongs to based on whether it tests feasibility, desirability, viability, or implementation readiness. Third, consider what minimum fidelity would actually answer the question, avoiding over-investment in unnecessary detail. Fourth, assess what fidelity you are currently investing and whether it matches the appropriate level for the class. Fifth, determine what graduation to the next class would require, establishing clear criteria for when and how to escalate investment.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Chapter 11, we explore the <strong>AI-Native Prototyping Workflow</strong>, examining how to structure the full lifecycle from concept to runnable prototype using vibe coding effectively.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-10-3.html">10.3 Where It Misleads</a>
+            <a class="up" href="../index.html">Chapter 10 Overview</a>
+            <a class="next" href="../../chapter-11/sections/section-11-1.html">Ch 11: Prototyping Workflow</a>
+        </nav>
+
+        <footer>
+            <p>Section 10.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

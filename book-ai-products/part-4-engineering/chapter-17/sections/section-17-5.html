@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17.5 When NOT to Use RAG - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+    <style>
+        .diagram-block {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .decision-tree {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .alternative-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        .alternative-card h4 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .pro-con {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .pro-con-item {
+            padding: 0.75rem;
+            border-radius: 6px;
+        }
+        .pro-item {
+            background: #e8f5e9;
+            border-left: 4px solid #43a047;
+        }
+        .con-item {
+            background: #ffebee;
+            border-left: 4px solid #e53935;
+        }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 17.5</div>
+        <h1>When NOT to Use RAG</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"The most expensive mistake in AI product development is adding RAG when you do not need it. Complex retrieval pipelines are not free. They introduce latency, maintenance burden, and new failure modes. Know when to use them and when simpler approaches win."</p>
+            <cite>Principal Engineer, DataForge</cite>
+        </blockquote>
+
+        <h2>Introduction</h2>
+        <p>
+            This chapter focused on building sophisticated retrieval systems. But the most important engineering skill is knowing when NOT to add complexity. RAG is powerful when you need dynamic, up-to-date information or proprietary knowledge grounding. But for many use cases, simpler alternatives deliver better results with less engineering overhead. This section provides frameworks for making that decision correctly.
+        </p>
+
+        <h2>The RAG Complexity Tax</h2>
+        <p>
+            Every RAG system you add to your architecture incurs a complexity tax. Understanding this tax is the first step toward making informed build-or-skip decisions.
+        </p>
+
+        <h3>Components That Add Complexity</h3>
+        <p>
+            A production RAG system is not just a vector database and an LLM. It includes chunking pipelines, embedding models, retrieval ranking, context window management, relevance filtering, source citation, cache invalidation, index updates, monitoring, and evaluation infrastructure. Each component is a potential failure point and maintenance burden.
+        </p>
+
+        <div class="diagram-block">
++------------------------------------------------------------------+
+|                    RAG COMPLEXITY STACK                              |
++------------------------------------------------------------------+
+|                                                                      |
+|   Monitoring & Evaluation Layer                                      |
+|   +----------------------------------------------------------------+  |
+|   | Retrieval Metrics | Generation Metrics | Latency Tracking    |  |
+|   +----------------------------------------------------------------+  |
+|                                                                      |
+|   Context Management Layer                                            |
+|   +----------------------------------------------------------------+  |
+|   | Relevance Filtering | Source Citation | Context Window Mgmt  |  |
+|   +----------------------------------------------------------------+  |
+|                                                                      |
+|   Retrieval Layer                                                    |
+|   +----------------------------------------------------------------+  |
+|   | Vector Search | Keyword Search | Hybrid Retrieval | Reranking |  |
+|   +----------------------------------------------------------------+  |
+|                                                                      |
+|   Indexing Layer                                                     |
+|   +----------------------------------------------------------------+  |
+|   | Chunking Pipeline | Embedding Model | Index Updates | Cache   |  |
+|   +----------------------------------------------------------------+  |
+|                                                                      |
+|   Data Source Layer                                                  |
+|   +----------------------------------------------------------------+  |
+|   | Document Store | Change Detection | Data Quality Validation  |  |
+|   +----------------------------------------------------------------+  |
+|                                                                      |
++------------------------------------------------------------------+
+        </div>
+
+        <h3>Hidden Costs Beyond Development</h3>
+        <p>
+            <strong>Operational costs:</strong> Vector database hosting, embedding API calls, reranking compute, and storage scale with your document corpus. For large knowledge bases, these costs exceed LLM inference costs.
+        </p>
+        <p>
+            <strong>Maintenance costs:</strong> When documents change, your index must update. Change detection, re-chunking, and re-indexing pipelines require ongoing engineering attention. Stale indexes produce wrong answers.
+        </p>
+        <p>
+            <strong>Debugging costs:</strong> When a RAG system produces wrong answers, identifying the cause requires tracing through multiple stages. Is the embedding model failing for a query? Is the chunking splitting critical information? Is the reranker mis-ranking relevant documents? Each failure mode requires different debugging approaches.
+        </p>
+
+        <div class="callout warning">
+            <h4>The 80/20 Trap</h4>
+            <p>Basic RAG gets you 80% of the quality with 20% of the complexity. But stakeholders often demand the remaining 20% of quality, which requires 80% more complexity. Know when "good enough" retrieval is actually good enough for your use case before committing to complex systems.</p>
+        </div>
+
+        <h2>Scenarios Where RAG Is the Wrong Choice</h2>
+        <p>
+            The following scenarios represent cases where RAG adds complexity without proportional benefit. In each case, an alternative approach delivers better results with less engineering effort.
+        </p>
+
+        <h3>Static Knowledge That Fits in Context</h3>
+        <p>
+            If your knowledge base is small enough to fit within the LLM context window, or if it changes infrequently enough that updates are simple, RAG is likely overkill. The entire document can be included in the system prompt.
+        </p>
+
+        <div class="pro-con">
+            <div class="pro-con-item con-item">
+                <strong>RAG Approach</strong><br/>
+                <small>Complex indexing, embedding generation, retrieval logic, context assembly. Latency from retrieval step. Potential for retrieval errors.</small>
+            </div>
+            <div class="pro-con-item pro-item">
+                <strong>Direct Context</strong><br/>
+                <small>Single prompt with all knowledge. No retrieval latency. No retrieval errors. Simpler debugging.</small>
+            </div>
+        </div>
+
+        <div class="callout practical-example">
+            <h4>Practical Example: RetailMind Product FAQ</h4>
+            <p><strong>Situation:</strong> RetailMind initially built a RAG system for their product knowledge base of 500 FAQs about retail operations.</p>
+            <p><strong>Problem:</strong> The FAQ document was 50 pages. RAG retrieval added 200-400ms latency. FAQ answers required precise product codes that were frequently split across chunks, causing inconsistent responses.</p>
+            <p><strong>Solution:</strong> The team switched to a simple key-value lookup approach with 500 pre-defined question-answer pairs embedded directly. A classification model routes incoming questions to the correct FAQ pair.</p>
+            <p><strong>Result:</strong> Latency dropped from 400ms to 50ms. Accuracy improved from 87% to 99%. The entire system became 10 lines of code.</p>
+        </div>
+
+        <h3>When Answers Require Synthesis Across Many Documents</h3>
+        <p>
+            Standard RAG retrieves isolated chunks. If your use case requires synthesizing information across many documents or reasoning about relationships between pieces of information, basic RAG struggles. Multi-hop questions like "How did product launch timing affect Q3 sales across regions?" require either complex multi-step retrieval or a different architecture altogether.
+        </p>
+
+        <div class="callout note">
+            <h4>Graph RAG Is Not Always the Answer</h4>
+            <p>Section 17.3 covered Graph RAG for relationship-aware retrieval. But graph augmentation adds significant complexity to your indexing pipeline. Only use it when your knowledge has clear entity relationships that are actually exploited by your queries. Adding a knowledge graph because it sounds sophisticated rarely improves results.</p>
+        </div>
+
+        <h3>Highly Structured Query Patterns</h3>
+        <p>
+            If your queries follow highly structured patterns with predictable parameters, RAG is often the wrong tool. SQL databases, search engines, and rule-based systems handle structured queries more reliably and with better latency.
+        </p>
+
+        <div class="alternative-card">
+            <h4>Example: HealthMetrics Reporting Queries</h4>
+            <p>
+                <strong>The pattern:</strong> Hospital administrators asking "Show me patient volume for [department] in [timeframe] filtered by [criteria]"
+            </p>
+            <p>
+                <strong>Why RAG fails:</strong> Numbers and dates in reports get split across chunks. Numeric filters do not match well against semantic embeddings. Aggregation queries require precise data access, not semantic retrieval.
+            </p>
+            <p>
+                <strong>Better approach:</strong> A structured query interface with a domain-specific language. Natural language interfaces to structured data (NLIDB) or simple intent classification routing to SQL generators outperform RAG for this pattern.
+            </p>
+        </div>
+
+        <h3>Real-Time Dynamic Data</h3>
+        <p>
+            RAG indexes represent a snapshot of your data at indexing time. If your data changes in real-time and queries must reflect current values, RAG introduces a staleness problem. Stock prices, inventory counts, user-specific data, and live system statuses are poor fits for standard RAG.
+        </p>
+
+        <div class="callout warning">
+            <h4>The Staleness Problem</h4>
+            <p>Even with streaming index updates, there is always a window between when data changes and when the index reflects that change. For high-stakes real-time decisions, this window is unacceptable. Your RAG system will confidently retrieve outdated information.</p>
+        </div>
+
+        <h3>Low-Value, High-Volume Queries</h3>
+        <p>
+            RAG adds cost and latency to every query. For high-volume, low-stakes queries where approximate answers are acceptable, this overhead may not be justified. Simple few-shot prompting or even base model generation may suffice.
+        </p>
+
+        <div class="diagram-block">
++------------------------------------------------------------------+
+|                    QUERY VALUE vs RAG COMPLEXITY DECISION MATRIX      |
++------------------------------------------------------------------+
+|                                                                       |
+|                            HIGH VALUE                                 |
+|                    (accuracy critical)                               |
+|         +---------------------------+-----------------------------+   |
+|         |                           |                             |   |
+|         |   Use RAG                 |   Use RAG + Evaluation      |   |
+|         |   (if data dynamic)       |   (if data static)          |   |
+|         |                           |                             |   |
+|         +---------------------------+-----------------------------+   |
+|                                                                       |
+| QUERY                                         QUERY                    |
+| VALUE                                         VALUE                    |
+|                                                                       |
+|         +---------------------------+-----------------------------+   |
+|         |                           |                             |   |
+|         |   Use fine-tuned model    |   Use base model or         |   |
+|         |   or few-shot prompting   |   simple classification     |   |
+|         |                           |                             |   |
+|         +---------------------------+-----------------------------+   |
+|                                                                       |
+|                            LOW VALUE                                  |
+|                    (accuracy not critical)                            |
+|                                                                       |
++------------------------------------------------------------------+
+|                                                                       |
+| LEGEND:                                                               |
+| [Static Data] = Use direct context or simple RAG                      |
+| [Dynamic Data] = Use live retrieval with proper freshness guarantees  |
+| [Structured Queries] = Use SQL/NLIDB instead of RAG                  |
+| [Synthesis Required] = Use agentic workflows (Ch 13)                  |
+|                                                                       |
++------------------------------------------------------------------+
+        </div>
+
+        <h2>Alternative Patterns Worth Considering</h2>
+
+        <h3>Fine-Tuned Models</h3>
+        <p>
+            If your task requires consistent behavior on a bounded set of patterns, fine-tuning often outperforms RAG with less complexity. A model fine-tuned on your specific domain will handle related queries without any retrieval infrastructure.
+        </p>
+
+        <div class="callout key-insight">
+            <h4>The Fine-Tuning vs RAG Decision</h4>
+            <p><strong>Use fine-tuning when:</strong> Knowledge is relatively static, query patterns are predictable and bounded, consistency matters more than covering edge cases, you have training data for the desired behavior.</p>
+            <p><strong>Use RAG when:</strong> Knowledge changes frequently, query patterns are open-ended, you need to cite sources, you need to handle queries about specific documents users provide.</p>
+        </div>
+
+        <h3>Structured Data Interfaces</h3>
+        <p>
+            For queries that map to structured operations, build structured interfaces. NLIDB (Natural Language to SQL/Query) systems, API-based function calling, and intent-classification routing to specific handlers often outperform semantic retrieval.
+        </p>
+
+        <h3>Hybrid Approaches</h3>
+        <p>
+            Sometimes the right answer is a hybrid. Use RAG for open-ended knowledge queries while maintaining structured interfaces for common query patterns. The routing logic determines which path a query takes.
+        </p>
+
+        <h3>Agentic Architectures</h3>
+        <p>
+            For complex tasks requiring multiple steps, tool use, and dynamic planning, agentic architectures covered in Chapter 13 may be more appropriate than pure RAG. Agents can decide when to retrieve, what to retrieve, and how to synthesize information.
+        </p>
+
+        <div class="callout big-picture">
+            <h4>Context: Orchestration Matters</h4>
+            <p>The decision of whether to use RAG connects to orchestration patterns covered in Chapter 13. Multi-agent systems can incorporate RAG as one tool among many, using retrieval when appropriate and other approaches when retrieval adds unnecessary complexity.</p>
+        </div>
+
+        <h2>Making the Build-RAG Decision</h2>
+        <p>
+            Use this checklist to evaluate whether your use case actually needs RAG:
+        </p>
+
+        <div class="callout algorithm">
+            <h4>RAG Necessity Checklist</h4>
+            <p>Ask yourself whether your data changes frequently enough that retraining or fine-tuning would be impractical, whether your user queries are unpredictable enough that hardcoding responses is impossible, whether users or compliance requirements need to see which documents informed the answer, whether the knowledge is not in the LLM training set, whether you have measured the total cost of retrieval infrastructure and confirmed it is acceptable for your query volume, whether you have evaluated whether direct context or structured interfaces would meet requirements, and whether the retrieval latency budget accommodates your SLA requirements.</p>
+            <p><strong>If you answered "no" to 3 or more questions, reconsider RAG.</strong></p>
+        </div>
+
+        <h2>Section Summary</h2>
+        <p>
+            RAG is a powerful tool but not a universal solution. The complexity tax of production RAG includes operational costs, maintenance burden, and debugging difficulty. RAG is likely wrong when data fits in context, when queries are highly structured, when data changes in real-time, when answers require multi-document synthesis without proper multi-hop support, or when query volume is high but value is low. Alternative patterns including fine-tuning, structured query interfaces, and agentic architectures may deliver better results with less complexity. Always evaluate simpler alternatives before committing to RAG infrastructure.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-17-4.html">17.4 Evaluation of Retrieval Quality</a>
+            <a class="up" href="../index.html">Chapter 17 Overview</a>
+            <a class="next" href="../../chapter-18/index.html">Ch 18: State and Memory</a>
+        </nav>
+
+        <footer>
+            <p>Section 17.5 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6.2 Problem-First vs Tech-First - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 6</div>
+        <h1>AI Product Strategy and Value Proposition Design</h1>
+        <p class="chapter-subtitle">6.2 Problem-First vs Tech-First</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Help define winning AI-native products with the right strategy and value proposition.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 6.1 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: The Problem-First Imperative</div>
+            <p>The problem-first approach is essential for AI product success because users do not want AI, they want their problems solved. Tech-first products often fail not because the technology does not work but because nobody wanted the solution in the first place. Starting with problems ensures you build something users actually value, regardless of the underlying technology.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Segway Paradox</div>
+            <p>Dean Kamen invented the Segway expecting to revolutionize personal transport. He spent over a decade perfecting the technology. It sold poorly because people did not want a standing scooter; they wanted to sit while commuting. Great technology solved no problem people actually had.</p>
+        </div>
+
+        <h2 id="section-6-2">6.2 Problem-First vs Tech-First</h2>
+
+        <p>
+            The most successful AI products start with problems, not technology. A problem-first approach identifies a painful problem, determines if AI is the right solution, designs the product experience, and then selects the right AI approach. This contrasts with tech-first development, which starts with available technology and looks for problems to solve.
+        </p>
+
+        <h3>The Problem-First Approach</h3>
+
+        <p>
+            Problem-first product development begins by deeply understanding user pain. You identify a problem that is significant enough that users would pay to solve it, frequent enough that they encounter it regularly, and difficult enough that existing solutions fall short. Only after thoroughly understanding the problem do you consider whether AI is the right solution.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Problem-First Success</h4>
+            <p>
+                A company noticed that their users spent 3 hours weekly on data entry tasks that were tedious and error-prone. Rather than building "AI for data entry," they deeply studied the data entry workflow: what caused errors, what took time, what users wanted instead. This research revealed that 70% of errors came from inconsistent formatting and 80% of time was spent copying between systems. With this problem understanding, they built an AI that learned each user's formatting preferences and automated cross-system transfers. Users loved it because it solved a real pain, not because it used AI.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Problem-First Product Development</h4>
+            <p>
+                <strong>Step 1: Identify a painful problem</strong>
+            </p>
+            <ul>
+                <li>What do users complain about most?</li>
+                <li>What tasks take the most time?</li>
+                <li>What errors occur most frequently?</li>
+                <li>What would users pay to have solved?</li>
+            </ul>
+            <p>
+                <strong>Step 2: Determine if AI is the right solution</strong>
+            </p>
+            <ul>
+                <li>Does the problem involve pattern recognition?</li>
+                <li>Would human-level performance be valuable?</li>
+                <li>Is there data to train or ground the AI?</li>
+                <li>Would automation improve over human performance?</li>
+            </ul>
+            <p>
+                <strong>Step 3: Design the product experience</strong>
+            </p>
+            <ul>
+                <li>How should users interact with the AI?</li>
+                <li>What does the ideal workflow look like?</li>
+                <li>How do you handle AI errors?</li>
+                <li>How do you build trust?</li>
+            </ul>
+            <p>
+                <strong>Step 4: Select the right AI approach</strong>
+            </p>
+            <ul>
+                <li>Rule-based if patterns are well-defined</li>
+                <li>Fine-tuned model if style matters</li>
+                <li>RAG if knowledge access matters</li>
+                <li>Agentic if complex multi-step tasks</li>
+            </ul>
+        </div>
+
+        <h3>Why Problem-First Works</h3>
+
+        <p>
+            Starting with the problem ensures you build something users actually want. Tech-first products often fail because they solve problems that either do not exist or are not important enough to drive adoption. Users care about their problems being solved, not about the technology used to solve them.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Tech-First Failure</h4>
+            <p>
+                A company built an impressive AI that could analyze any document and extract insights. They marketed it as "AI-powered document analysis." The product flopped. Why? The problem they solved (reading documents manually) was not painful enough for users to change their workflow. The company had a sophisticated technology looking for a problem.
+            </p>
+            <p>
+                <strong>The lesson:</strong> The most sophisticated AI is worthless if it solves no problem people care about.
+            </p>
+        </div>
+
+        <h3>The Tech-First Pitfalls</h3>
+
+        <p>
+            Tech-first product development has three common failure modes:
+        </p>
+
+        <h4>1. Building Technology Looking for Problems</h4>
+
+        <p>
+            When you have a technology hammer, everything looks like a nail. You build impressive capabilities that users do not need because you never deeply understood their problems. The technology may be cutting-edge, but the product does not create value.
+        </p>
+
+        <h4>2. Overestimating AI Capabilities</h4>
+
+        <p>
+            Tech-first teams often assume AI can do more than it actually can. They believe that since AI can generate text, it can answer any question. Since AI can recognize images, it can understand any visual content. The reality is that AI capabilities are bounded and often fail in unexpected ways. Problem-first teams discover these limitations while solving real problems.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Overconfident Assumption</h4>
+            <p>
+                A company built an AI customer service bot assuming it could handle 80% of customer queries. After launch, they discovered that while the AI could answer questions, it could not understand context well enough to handle complex issues. 40% of interactions required human handoff, not because the AI could not answer, but because it could not understand the full context of the problem. The team had overestimated AI capabilities by assuming pattern matching was understanding.
+            </p>
+        </div>
+
+        <h4>3. Ignoring User Needs and Workflows</h4>
+
+        <p>
+            Tech-first products often require users to change their behavior to fit the technology. Problem-first products adapt to how users already work. Users resist changing their workflow for new products, so tech-first products often fail to achieve adoption even when the technology works.
+        </p>
+
+        <div class="callout aha-moment">
+    <div class="callout-title">&#128161; Aha Moment: The Technology Trap</div>
+    <p><strong>The shock:</strong> The most sophisticated AI is worthless if it solves no problem people care about. Tech-first products fail not because the technology does not work, but because nobody wanted the solution in the first place.</p>
+    <p><strong>What this means:</strong> Users do not want AI; they want to complete a task faster, more accurately, or with less effort. If your AI solves a problem they do not care about, it does not matter how impressive the technology is.</p>
+</div>
+
+        <h3>When Tech-First Makes Sense</h3>
+
+        <p>
+            There are situations where tech-first is appropriate. If you are building infrastructure or developer tools, users come to you specifically because they want your technology. If you are exploring new AI capabilities to understand what becomes possible, tech-first research makes sense. The key is to be honest with yourself about whether you are doing research or building a product.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Approach</th><th>Best For</th><th>Risks</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Problem-First</strong></td><td>User-facing products, solutions to real pain</td><td>May miss technology opportunities</td></tr>
+                <tr><td><strong>Tech-First</strong></td><td>Infrastructure, developer tools, research</td><td>May build solutions looking for problems</td></tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Build/Buy/Bake Frameworks</strong> - making strategic component decisions.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-6-1.html">6.1 AI Product Taxonomy</a>
+            <a class="up" href="index.html">Chapter 6 Index</a>
+            <a class="next" href="section-6-3.html">6.3 Build/Buy/Bake Frameworks</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 6.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

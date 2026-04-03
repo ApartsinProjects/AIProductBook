@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 6.3: Building Your Own Skills - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <h1>Chapter 6: Claude Code Skills</h1>
+        <p class="chapter-subtitle">6.3 Building Your Own Skills</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn to create custom skills for your team's specific workflows.
+        </p>
+
+        <div class="prerequisites">
+            <h3>Prerequisites</h3>
+            <p>
+                This section builds on Sections 6.1 and 6.2. You should be comfortable with the skill architecture and have used several community skills before creating your own.
+            </p>
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Custom Skills as Competitive Advantage</div>
+            <p>Building custom skills codifies your team's expertise into reusable automation, creating a competitive advantage that compounds over time. While community skills provide generic capabilities, custom skills capture your specific workflows, conventions, and business logic. The investment in skill development pays dividends across every subsequent project.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The \$3 Million Prompt</div>
+            <p>In 2026, a single well-crafted prompt sold for $3 million at auction. It was a skill that automated the entire mortgage approval process. The buyer said they had spent $40 million trying to build it traditionally. Sometimes the shortest code is worth the most.</p>
+        </div>
+
+        <h2 id="section-6-3">6.3 Building Your Own Skills</h2>
+
+        <p>
+            Building a skill is essentially writing a well-structured prompt, but there is an art to it. This section walks you through creating a complete skill from scratch, including defining the skill's purpose, writing the instruction block, adding tools, and testing the skill. By the end, you will have a reusable skill you can share with your team.
+        </p>
+
+        <p>
+            The skills you've installed from the community are great, but they are generic. Your team's specific workflows, coding conventions, and business logic require custom skills. Building your own skills is not just about automation, it is about codifying your team's expertise into a format that Claude Code can use repeatedly.
+        </p>
+
+        <h3>Skill Design Process</h3>
+
+        <p>
+            Before writing any code (or prompts), start with a clear design. What problem does your skill solve? Who is the target user? What inputs does the skill expect? What outputs should it produce? Answering these questions first will save you significant iteration time.
+        </p>
+
+        <h4>Design Worksheet</h4>
+
+        <pre><code>Answer these questions before creating your skill:
+
+1. What problem does this skill solve?
+   Example: "I waste 30 minutes every time I set up a new 
+   feature branch with the right labels and PR template"
+
+2. Who is the target user?
+   Example: "Our frontend team members who frequently create 
+   new features"
+
+3. What inputs does the skill expect?
+   Example: "Feature name, description, and whether it's 
+   a bug fix or new feature"
+
+4. What outputs should it produce?
+   Example: "Created branch, PR with template, assigned 
+   reviewers, added project board card"
+
+5. How often will this be used?
+   Example: "10+ times per day across the team"
+
+6. What's the simplest version that provides value?
+   Start minimal, iterate based on usage</code></pre>
+
+        <h4>Case Study: Designing a Team-Specific Skill</h4>
+
+        <p>
+            A team at a fintech startup identified a pain point: setting up new microservices took 2 hours each time because they needed to create the same 15 files with their company's specific patterns. They designed a skill to automate this:
+        </p>
+
+        <pre><code>Skill Design: microservice-scaffold
+
+Problem: Creating new microservices takes 2 hours due to 
+repetitive setup tasks
+
+Solution: A skill that generates a complete microservice 
+template with company-specific patterns
+
+Inputs:
+- Service name (e.g., "payment-service")
+- Service type (REST, GraphQL, gRPC)
+- Database (PostgreSQL, MongoDB)
+
+Outputs:
+- Complete project structure
+- Standard config files
+- Base authentication code
+- Company-specific logging setup
+- CI/CD pipeline config
+- Kubernetes deployment manifests
+- README with company documentation patterns
+
+Time saved: 2 hours → 15 minutes</code></pre>
+
+        <p>
+            By designing the skill first, they avoided building features nobody would use and focused on the 20% of setup that took 80% of the time.
+        </p>
+
+        <h3>Anatomy of a SKILL.md File</h3>
+
+        <p>
+            Every skill needs a well-structured SKILL.md file. Here is the anatomy of an effective skill file. The header contains metadata: skill name, description, and triggers. The instruction block is the main content that defines what the skill does. The examples section shows ideal inputs and outputs. The tools section (optional) defines custom capabilities.
+        </p>
+
+        <h4>Complete SKILL.md Example</h4>
+
+        <pre><code># Skill Name: api-docs-generator
+
+## Description
+Generates API documentation from code comments and route definitions.
+Converts Express routes, FastAPI endpoints, and similar patterns
+into beautifully formatted Markdown documentation.
+
+## Triggers
+- "document api"
+- "generate docs"
+- "create documentation"
+- "docs for"
+- Trigger file: Any file matching **/*routes*.js or **/*api*.py
+
+## Persona
+You are a technical writer specializing in API documentation.
+You have 10 years of experience creating developer-friendly
+documentation for SaaS products.
+
+## Instructions
+When activated, follow this process:
+
+### Phase 1: Discovery
+1. Identify the API framework used (Express, FastAPI, etc.)
+2. Extract all route definitions with their HTTP methods
+3. Find associated controller functions
+4. Locate request/response type definitions
+
+### Phase 2: Analysis
+1. Parse JSDoc comments for endpoint descriptions
+2. Identify request/response schemas
+3. Extract validation rules
+4. Find authentication/authorization requirements
+
+### Phase 3: Generation
+1. Create Markdown with the following structure:
+   - Overview section
+   - Authentication section
+   - Endpoints section (grouped by resource)
+   - Error codes section
+   - Examples section
+
+2. Include request/response examples in JSON format
+3. Add cURL examples for each endpoint
+4. Link to related endpoints
+
+### Output Format
+Always output valid Markdown. Use proper heading hierarchy.
+Include code blocks with syntax highlighting.
+
+## Examples
+
+### Example 1: Basic Usage
+Input: "Document the auth routes in /src/api/auth"
+Output:
+```markdown
+# Authentication API
+
+## Overview
+...
+
+## POST /api/auth/login
+...
+```
+
+### Example 2: Full API Documentation
+Input: "Generate docs for the entire /src/api directory"
+Output: Complete multi-section API documentation
+
+## Available Tools
+
+### Tool: extract_routes
+Extracts all route definitions from a file.
+
+Parameters:
+- file_path: path to the source file
+
+Action:
+1. Parse file for route patterns
+2. Return array of {method, path, handler}
+
+### Tool: parse_comments
+Extracts JSDoc comments from functions.
+
+Parameters:
+- file_path: path to the source file
+
+Action:
+1. Parse file for JSDoc blocks
+2. Return array of {function, description, params}
+
+## State
+- last_documented_path: stores the last path processed
+- documentation_cache: cached docs for incremental updates</code></pre>
+
+        <h3>Writing Effective Instructions</h3>
+
+        <p>
+            The key to effective skill instructions is specificity without being rigid. Your instructions should guide the AI's behavior while allowing flexibility for different situations. Use clear, action-oriented language. Define the persona if relevant. Specify output format explicitly. Include edge case handling.
+        </p>
+
+        <h4>The Anatomy of Good Instructions</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Purpose</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Clear goal</td>
+                    <td>What the skill should accomplish</td>
+                    <td>"Generate API documentation"</td>
+                </tr>
+                <tr>
+                    <td>Persona</td>
+                    <td>How the AI should approach the task</td>
+                    <td>"You are a senior technical writer"</td>
+                </tr>
+                <tr>
+                    <td>Process steps</td>
+                    <td>How to accomplish the goal</td>
+                    <td>"1. Discover, 2. Analyze, 3. Generate"</td>
+                </tr>
+                <tr>
+                    <td>Output format</td>
+                    <td>What the final output should look like</td>
+                    <td>"Valid Markdown with code blocks"</td>
+                </tr>
+                <tr>
+                    <td>Edge cases</td>
+                    <td>What to do in unusual situations</td>
+                    <td>"If no docs found, ask for clarification"</td>
+                </tr>
+                <tr>
+                    <td>Examples</td>
+                    <td>Concrete demonstrations of expected behavior</td>
+                    <td>Input/Output pairs</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Golden Rule</div>
+            <p>
+                Write instructions you would give a competent human assistant. Be clear about what you want, but do not over-specify every detail. Trust the AI to handle reasonable variations.
+            </p>
+        </div>
+
+        <h4>Why This Matters</h4>
+
+        <p>
+            Poorly written instructions lead to unpredictable results. You might get documentation that looks good but is missing critical information, or code that works but doesn't follow your team's conventions. By investing time in writing clear instructions, you get consistent, high-quality results every time the skill runs.
+        </p>
+
+        <h4>Common Instruction Mistakes</h4>
+
+        <pre><code># Bad: Too vague
+"Document the API"
+
+# Better: More specific  
+"Generate API documentation in Markdown format from route files"
+
+# Bad: Too rigid
+"Always use H1 for the title, H2 for endpoints, code blocks for examples"
+
+# Better: Flexible with guidelines
+"Use proper heading hierarchy. Include code blocks with syntax highlighting."
+
+# Bad: Missing context
+"Validate the input"
+
+# Better: With context
+"Validate the input. If validation fails, explain what is wrong and 
+suggest how to fix it. Do not proceed with invalid input."</code></pre>
+
+        <h3>Adding Custom Tools</h3>
+
+        <p>
+            Skills can define custom tools that extend Claude Code's capabilities. Tools can run shell commands, read/write files, make HTTP requests, or interact with external services. Define tools in the SKILL.md with clear descriptions of what each tool does and when to use it.
+        </p>
+
+        <p>
+            Tools are defined in a tools section that specifies the command to run and its parameters. Be careful with tool definitions, as they have significant power over what the skill can do. Always consider security implications before adding file access or command execution capabilities.
+        </p>
+
+        <h4>Practical Example: Custom Tool Definitions</h4>
+
+        <pre><code>## Available Tools
+
+### Tool: run_linter
+Runs the configured linter on specified files and returns results.
+
+Parameters:
+- files: array of file paths to lint
+- fix: boolean, whether to auto-fix issues (default: false)
+
+Action:
+1. Detect project type from package.json or pyproject.toml
+2. Run appropriate linter (ESLint, Pylint, etc.)
+3. Parse output and categorize issues by severity
+4. Return formatted results with file:line:message
+
+When to use:
+- Before committing code
+- When user asks "lint this"
+- During code review
+
+### Tool: create_pr
+Creates a GitHub pull request with proper formatting.
+
+Parameters:
+- title: PR title
+- body: PR description (supports Markdown)
+- branch: source branch
+- base: target branch (default: "main")
+- reviewers: array of GitHub usernames
+
+Action:
+1. Check current git status
+2. Create branch if needed
+3. Push changes
+4. Create PR via GitHub API
+5. Return PR URL
+
+When to use:
+- When user says "create a PR"
+- After completing a feature branch</code></pre>
+
+        <div class="callout warning">
+            <div class="callout-title">Security Best Practice</div>
+            <p>
+                Only include tools that are necessary for your skill's purpose. Avoid tools that can execute arbitrary commands unless absolutely required. Review tool definitions carefully before sharing your skill.
+            </p>
+        </div>
+
+        <h4>Real-World Scenario: Building a Deployment Skill</h4>
+
+        <p>
+            A team needed to standardize their deployment process across projects. They built a custom skill with specific tools:
+        </p>
+
+        <pre><code>## Custom Tools for deployment-skill
+
+### Tool: verify_environment
+Checks that the deployment environment is properly configured.
+
+Action:
+1. Check .env file exists and has required variables
+2. Verify database connection
+3. Confirm CI/CD credentials are available
+4. Check for unsaved changes in git
+
+Returns: {ready: boolean, issues: string[]}
+
+### Tool: deploy_service
+Deploys a service to the specified environment.
+
+Parameters:
+- service: name of the service
+- environment: "staging" | "production"
+- tag: Docker image tag or git commit SHA
+
+Action:
+1. Build Docker image
+2. Push to registry
+3. Update Kubernetes manifests
+4. Apply changes with kubectl
+5. Wait for rollout
+6. Run health checks
+
+### Tool: rollback_deployment
+Rolls back to the previous deployment if issues are detected.
+
+Parameters:
+- service: name of the service to rollback
+- reason: reason for rollback (required)
+
+Action:
+1. Get previous deployment revision
+2. Rollback to that revision
+3. Run smoke tests
+4. Notify team in Slack</code></pre>
+
+        <p>
+            Now any team member can deploy consistently by saying "Deploy the payment service to production" without needing to remember all the steps.
+        </p>
+
+        <h3>Testing Your Skill</h3>
+
+        <p>
+            Testing a skill is different from testing code. You need to verify that the skill produces the expected outputs for various inputs. Create a test suite of prompts that exercise different scenarios. Check that the skill activates when triggered. Verify output quality. Iterate on your instructions based on test results.
+        </p>
+
+        <p>
+            A good testing workflow: Start with simple inputs and verify basic functionality. Then add edge cases and complex inputs. Finally, test in a real project context with actual data. Document any issues you find and update your SKILL.md accordingly.
+        </p>
+
+        <h4>Testing Framework Example</h4>
+
+        <pre><code># Create a test file: tests/skill-tests.md
+
+## Test 1: Basic Activation
+Prompt: "document the auth endpoints"
+Expected: Skill activates and begins discovery
+Status: PASS/FAIL
+
+## Test 2: Trigger Word Activation
+Prompt: "generate docs for the user routes"
+Expected: Skill activates automatically
+Status: PASS/FAIL
+
+## Test 3: Output Format
+Prompt: "create documentation for /src/api/auth"
+Expected: Valid Markdown with proper headings
+Status: PASS/FAIL
+
+## Test 4: Edge Case - No Routes Found
+Prompt: "document /src/empty-folder"
+Expected: Helpful message explaining no routes found
+Status: PASS/FAIL
+
+## Test 5: Complex Project
+Prompt: "Generate docs for /src"
+Expected: Complete docs for all APIs found
+Status: PASS/FAIL
+
+## Test 6: Real Project Context
+Prompt: (In actual project directory) "Document all our API routes"
+Expected: Complete, accurate documentation
+Status: PASS/FAIL</code></pre>
+
+        <h4>Practical Testing Workflow</h4>
+
+        <pre><code># Step 1: Simple test
+cd ~/
+mkdir test-project
+echo 'app.get("/api/users", (req, res) => res.json([]))' > index.js
+
+# In Claude Code with skill:
+"document the API in this project"
+
+# Verify: Did it find and document the route?
+
+
+# Step 2: Add edge cases
+echo 'app.post("/api/users", createUser)' >> index.js
+echo '// Create a new user' >> index.js
+
+# Test again - should now find two routes
+
+
+# Step 3: Test in production project
+cd ~/my-actual-project
+"document our auth API"
+
+# Verify quality of output
+# - Are endpoints correctly identified?
+# - Is the format correct?
+# - Are examples accurate?</code></pre>
+
+        <h4>Iterating on Your Skill</h4>
+
+        <pre><code># Document your test results and iterate:
+
+## Test Results - Round 1
+✓ Basic activation works
+✓ Trigger words work
+✗ Output missing authentication section
+✗ Examples not included
+
+## Changes Made to SKILL.md
+- Added requirement to document auth requirements
+- Added instruction to include request/response examples
+- Added example JSON for each endpoint
+
+## Test Results - Round 2
+✓ All basic tests pass
+✓ Authentication section included
+✓ Examples included
+
+## Edge Case Tests - Round 2
+✗ Large codebase causes timeout
+✗ Binary files crash skill
+
+## Changes Made to SKILL.md
+- Added file size limit handling
+- Added skip for binary files
+- Added timeout handling
+
+## Final Results
+All tests passing. Skill ready for use.</code></pre>
+
+        <h3>Publishing Your Skill</h3>
+
+        <p>
+            Once you have a working skill, consider sharing it with the community. Publishing is as simple as creating a GitHub repository with your skill files and a clear README. Include installation instructions, usage examples, and any prerequisites. Add a license (MIT is common for skills). Share in the Claude Code community to help others.
+        </p>
+
+        <h4>Repository Structure</h4>
+
+        <pre><code>your-skill-name/
+├── SKILL.md           # Required: The skill definition
+├── README.md          # Required: Documentation
+├── LICENSE            # Required: MIT is common
+├── tests/             # Optional: Test suite
+│   └── test-cases.md
+├── scripts/           # Optional: Helper scripts
+│   └── helper.sh
+├── examples/          # Optional: Example outputs
+│   └── sample-output.md
+└── config.json        # Optional: Skill configuration</code></pre>
+
+        <h4>README Template</h4>
+
+        <pre><code># Your Skill Name
+
+One-paragraph description of what the skill does.
+
+## Features
+
+- Feature 1
+- Feature 2
+- Feature 3
+
+## Installation
+
+```bash
+cd ~/.claude/skills
+git clone https://github.com/username/your-skill-name.git
+```
+
+## Usage
+
+### Trigger Word
+The skill activates when you say:
+- "your trigger phrase"
+- "another trigger"
+
+### Examples
+
+**Example 1:**
+```
+Input: Your prompt here
+Output: What the skill produces
+```
+
+## Requirements
+
+- Node.js 18+
+- Claude Code installed
+
+## Custom Tools
+
+This skill provides these tools:
+- tool_name: What it does
+
+## License
+
+MIT
+
+## Contributing
+
+PRs welcome! See CONTRIBUTING.md for details.</code></pre>
+
+        <h4>Case Study: From Internal Tool to Community Skill</h4>
+
+        <p>
+            One team built an internal skill for generating commit messages based on their git diff patterns. It analyzed changes and wrote conventional commit messages automatically. Other teams in the company started asking for it, so they polished it and published it to GitHub. Within 3 months, it had 2,000 stars and was being used by hundreds of development teams.
+        </p>
+
+        <pre><code># What made it successful:
+1. Clear README with installation steps
+2. Examples showing before/after
+3. Configurable to different commit conventions
+4. Worked with multiple languages
+5. The team responded to issues quickly
+
+# Lessons learned:
+- Solve a common problem
+- Make it configurable
+- Document everything
+- Respond to feedback
+- Don't publish too early - test internally first</code></pre>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Section 6.4 explores MCP connectors and integrations that extend Claude Code beyond the local environment to connect with external services. You will learn how to connect to databases, APIs, and other systems that your skills can interact with.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-6-2.html">6.2: Top Community Skills</a>
+            <a class="up" href="index.html">Ch 6: Skills Overview</a>
+            <a class="next" href="section-6-4.html">6.4: MCP Connectors</a>
+        </nav>
+
+        <footer>
+            <p>Section 6.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

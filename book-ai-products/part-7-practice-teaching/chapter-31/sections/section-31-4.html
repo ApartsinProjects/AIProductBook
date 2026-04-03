@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>31.4 Engineering to Launch - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></div>
+        <div class="chapter-label">Chapter 31, Section 31.4</div>
+        <h1>Engineering to Launch: Phases 6-7</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Moving from prototype to production is where many AI projects fail. The prototype proved the concept; now you must build a system that is reliable, scalable, secure, and maintainable.
+        </p>
+
+        <h2>Phase 6: System <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Architecture</a> (Weeks 8-9)</h2>
+
+        <h3>31.4.1 Reference <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Architecture</a> Selection</h3>
+
+        <p>
+            Choose an architecture pattern that matches your AI product's complexity and requirements. The Direct API pattern works well for single model, simple use cases with low volume and represents the lowest complexity option. The RAG Pipeline pattern suits knowledge-intensive applications that require retrieval-augmented generation and has medium complexity. Agentic Workflow is appropriate for multi-step reasoning, tool use, and iterative refinement, carrying high complexity. Ensemble patterns involve combining multiple models or approaches and represent the highest complexity option. Select the pattern that matches your actual needs rather than over-engineering for hypothetical future requirements.
+        </p>
+
+        <p>
+            <strong>Running Example - SupportFlow:</strong> The SupportFlow team selected a RAG pipeline architecture for their AI support system. User queries are embedded and matched against a vector database of support documentation. Retrieved context is combined with the query and sent to the LLM for response generation.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title"><a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Architecture</a> Decision Framework</div>
+            <p>When selecting an architecture, answer five key questions. First, determine the primary capability whether classification, generation, retrieval, or reasoning. Second, clarify whether the system needs real-time or batch processing. Third, establish the latency and throughput requirements. Fourth, determine whether the system needs to maintain state across interactions. Fifth, identify what data sources the system needs to access. These questions guide you toward the appropriate architecture pattern for your use case.</p>
+        </div>
+
+        <h3>31.4.2 Component Design</h3>
+
+        <p>
+            Design each component with clear responsibilities: input processing handles validation, sanitization, and format conversion. The routing layer manages model selection, fallback logic, and load balancing. The AI core handles prompt management, context handling, and response parsing. The integration layer manages API calls, tool execution, and data retrieval. Output processing handles response validation, formatting, and logging.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Component Design Template</div>
+            <p><strong>Component name:</strong> [Name]<br/>
+            <strong>Responsibility:</strong> [What it does]<br/>
+            <strong>Inputs:</strong> [What it receives]<br/>
+            <strong>Outputs:</strong> [What it produces]<br/>
+            <strong>Dependencies:</strong> [What it relies on]<br/>
+            <strong>Failure modes:</strong> [What can go wrong]</p>
+        </div>
+
+        <h3>31.4.3 Scalability Planning</h3>
+
+        <p>
+            Plan for scale from the beginning by considering five key dimensions. Horizontal scaling determines whether you can run multiple instances of your system behind a load balancer. Rate limiting protects against traffic spikes and abuse that could overwhelm your resources. Caching stores frequent queries and responses to reduce redundant AI calls. Async processing offloads heavy work to background jobs so users do not wait for complex operations. Queue management handles bursts without dropping requests, ensuring reliability during traffic surges.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">The 10x Load Test</div>
+            <p>Before shipping, stress test at 10x your expected normal load. Many AI systems fail not because of AI quality issues but because they were not designed for production traffic patterns.</p>
+        </div>
+
+        <h3>31.4.4 Security Considerations</h3>
+
+        <p>
+            AI products have unique security concerns that differ from traditional software. Prompt injection occurs when malicious inputs are designed to manipulate AI behavior, requiring input sanitization and validation. Data privacy is critical because user data in prompts may be sensitive and must be handled accordingly. Model extraction involves adversaries attempting to reverse-engineer your model, which requires monitoring and protection measures. Output validation ensures AI outputs do not contain harmful, sensitive, or inappropriate content. API security encompasses authentication, authorization, and encryption for all model interactions.
+        </p>
+
+        <div class="callout tip">
+            <div class="callout-title">Security Review Checklist</div>
+            <p>Before launching, verify that input validation prevents injection attacks by sanitizing all user inputs. User data must not be persisted in logs to protect privacy. API endpoints require authentication to prevent unauthorized access. Output filtering prevents sensitive data leakage from AI responses. Rate limiting prevents abuse and ensures fair resource allocation. Finally, the security team should review the architecture before any launch.</p>
+        </div>
+
+        <h2>Phase 7: Rollout Plan (Week 10)</h2>
+
+        <h3>31.4.5 Launch Strategy</h3>
+
+        <p>
+            Choose a launch strategy based on risk tolerance and product maturity. Private beta involves early validation with trusted users and carries the lowest risk. Gradual rollout proceeds incrementally from five percent to twenty-five percent to one hundred percent over several weeks and carries low risk. Feature flags allow toggling the AI feature on or off without requiring deployment and carry medium risk. Big bang launches the full product to all users simultaneously and carries the highest risk. For AI products, gradual rollout is typically recommended to catch issues before they affect the entire user base.
+        </p>
+
+        <p>
+            <strong>Running Example - SupportFlow:</strong> The team launched via gradual rollout, starting with 5% of support tickets AI-assisted, then increasing to 25% after one week, with human agents able to override or ignore AI suggestions throughout.
+        </p>
+
+        <h3>31.4.6 Monitoring Setup</h3>
+
+        <p>
+            Establish monitoring before launch across four categories. System metrics track latency, throughput, error rates, and resource utilization to ensure the infrastructure is performing properly. AI quality metrics monitor eval scores, user feedback signals, and escalation rates to understand whether the AI is meeting quality standards. Business metrics measure task completion, user satisfaction, and cost per query to determine whether the product is delivering business value. Anomaly detection provides automatic alerts when any metric deviates significantly from baseline, enabling rapid response to issues.
+        </p>
+
+        <div class="callout note">
+            <div class="callout-title">Monitoring Requirements</div>
+            <p>Establish monitoring before launch by ensuring a dashboard is visible to the entire team in real-time, alerts are configured for P95 latency exceeding threshold, an alert is set for error rate above 5%, an alert triggers for eval score drop exceeding 10%, and an on-call rotation has been established.</p>
+        </div>
+
+        <h3>31.4.7 Support Readiness</h3>
+
+        <p>
+            Prepare support for AI-specific issues by developing AI behavior explainers that provide scripts for common AI questions, establishing override procedures for how to disable AI for specific cases, defining escalation paths for when to involve engineering, and creating user communication templates for explaining AI limitations.
+        </p>
+
+        <h3>31.4.8 Rollback Plan</h3>
+
+        <p>
+            Always have a rollback plan:
+        </p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">Rollback Decision Tree</div>
+            <p>When a metric alert triggers for latency, error rate, or quality issues, the on-call engineer should acknowledge within fifteen minutes. If the issue is limited to an AI feature, consider disabling AI while keeping the rest of the system up. If the issue is system-wide, a feature flag off returns to the previous state. If the issue is severe, execute a full rollback to the previous deployment. A post-mortem should follow within forty-eight hours.</p>
+        </div>
+
+        <div class="callout key-takeaway">
+            <div class="callout-title">Phase 6-7 Checklist</div>
+            <p>Completing phases six and seven requires that the architecture pattern has been selected and documented, components have been designed with clear responsibilities, scalability requirements have been met, security review has been completed, load testing has passed at ten times expected load, launch strategy has been defined with gradual rollout recommended, the monitoring dashboard is live with alerts configured, the support team has been trained on AI-specific issues, and the rollback plan has been documented and tested.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-31-3.html">31.3 Prototype to Eval</a>
+            <a class="up" href="../index.html">Chapter 31</a>
+            <a class="next" href="section-31-5.html">31.5 Governance to Metrics</a>
+        </nav>
+
+        <footer>
+            <p>31.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

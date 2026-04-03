@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8.5 Workflow Redesign, Not Just Screen Redesign - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-2-discovery-design/index.html">Part II: Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 8.5</div>
+        <h1>Workflow Redesign, Not Just Screen Redesign</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            The most common mistake in AI product design is bolt-on AI. Teams add AI to existing workflows without rethinking how work should flow when AI is available. The result is AI features that feel awkward, add friction, or go unused. True AI UX mastery means redesigning workflows from the ground up to leverage AI strengths.
+        </p>
+
+        <h2>Thinking in Workflows, Not Screens</h2>
+
+        <p>Traditional UX design focuses on screens and interfaces. Users navigate from screen to screen, filling forms, clicking buttons. AI changes this paradigm. When AI can understand intent, generate content, and take actions, the screen-by-screen model becomes limiting.</p>
+
+        <h3>The Workflow-First Mindset</h3>
+
+        <p>Workflow-first design asks fundamental questions about the user's journey. Teams should ask what the user is trying to accomplish, what decisions must be made along the way, what information is needed to make those decisions, what actions are available at each step, and where AI can help without disrupting the natural flow of the work.</p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Screen-First vs. Workflow-First</div>
+            <p><strong>Screen-First Thinking:</strong> Screen-first thinking involves designing screens for each function, where users navigate between screens to accomplish tasks. AI appears as a feature on relevant screens, and users must learn the system structure to be effective.</p>
+            <p><strong>Workflow-First Thinking:</strong> Workflow-first thinking involves designing the ideal flow from user intent to desired outcome, where screens emerge from workflow needs rather than driving them. AI participates naturally where it adds value, and users can focus on their work rather than learning system structure.</p>
+        </div>
+
+        <h2>Identifying Where AI Adds Value vs. Friction</h2>
+
+        <p>Not all tasks benefit from AI. Adding AI where it does not add value creates friction. Effective AI UX means ruthlessly identifying where AI genuinely helps.</p>
+
+        <h3>Where AI Adds Value</h3>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The VSD Framework for AI Value</div>
+            <p>The VSD framework helps identify where AI adds genuine value. Volume applies when the task is repetitive and time-consuming, making it well-suited for AI automation. Speed applies when AI can complete the task significantly faster than a human. Consistency applies when human performance varies but AI delivers consistent results. Cognition applies when the task requires processing large information sets that overwhelm human cognitive capacity. Availability applies when the task requires 24/7 execution without the limitations of human fatigue.</p>
+        </div>
+
+        <h3>Where AI Adds Friction</h3>
+
+        <p>AI tends to add friction in several categories of tasks. Novel situations challenge AI because it performs poorly on unprecedented cases that fall outside its training data. Emotional labor including tasks requiring empathy and judgment of feelings is better handled by humans who can genuinely connect emotionally. Stakeholder management involves political situations that require human relationships and nuanced understanding of organizational dynamics. Accountability matters for tasks where a human must take responsibility for decisions and their consequences. Creative direction requires a human vision to lead, setting the strategic direction that AI cannot originate.</p>
+
+        <h3>The Value-Friction Matrix</h3>
+
+        <p>Different task types map to different AI integration approaches based on their value and friction profiles. For draft generation, AI value is high and friction is low, so an AI-first approach with human editing works well. For scheduling meetings, AI value is high and friction is low, so AI can handle the task with human approval before finalization. For customer negotiations, AI value is low and friction is high, so humans should handle the task while AI provides background information. For code review, AI value is high and friction is medium, so AI flags issues and human makes final decisions. For performance reviews, AI value is medium and friction is high, so AI assists with analysis but humans deliver the feedback.</p>
+
+        <h3>HealthMetrics: Workflow Redesign for Patient Flow</h3>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: Before and After AI Workflow</div>
+            <pre>
+BEFORE AI WORKFLOW:
+1. Nurse reviews patient list (15 minutes)
+2. Nurse checks EHR for each patient (30 minutes)
+3. Nurse consults with doctor on discharge candidates (20 min)
+4. Doctor reviews and approves (15 minutes)
+5. Discharge paperwork initiated (10 minutes)
+6. Bed assignment coordinated (10 minutes)
+
+Total time: 85 minutes for one discharge decision cycle
+Error rate: 23% (missed discharge opportunities)
+
+AFTER AI WORKFLOW:
+1. AI reviews patient list and EHR continuously
+2. AI surfaces recommendations with confidence (2 minutes)
+3. Nurse verifies key factors and approves (5 minutes)
+4. Doctor reviews only flagged cases (10 minutes)
+5. Discharge paperwork auto-initiated
+6. Bed assignment suggested by AI
+
+Total time: 17 minutes
+Error rate: 8% (AI catches what humans miss)
+
+Key insight: AI doesn't just speed up the old workflow.
+It changes who needs to be involved and when.
+            </pre>
+        </div>
+
+        <h2>Redesigning Jobs-to-Be-Done for AI</h2>
+
+        <p>The Jobs-to-Be-Done (JTBD) framework focuses on what users are trying to accomplish. When AI enters the picture, the job itself may change.</p>
+
+        <h3>Expanding the Job</h3>
+
+        <p>AI can expand what is possible, allowing users to accomplish more than before:</p>
+
+        <pre>
+Original Job: "Help me write a report"
+AI expands to: "Help me write a better report faster"
+                "Help me write about topics I don't know well"
+                "Help me write in different styles"
+
+Original Job: "Help me understand my customers"
+AI expands to: "Help me understand customers in real-time"
+                "Help me predict customer behavior"
+                "Help me personalize at scale"
+            </pre>
+
+        <h3>Clarifying the Job</h3>
+
+        <p>AI can help users articulate what they actually want:</p>
+
+        <pre>
+User says: "Help me make this document better"
+AI asks: "What aspect would you like to improve?
+         - Readability
+         - Professional tone
+         - Conciseness
+         - Persuasiveness"
+
+This helps users articulate their actual job,
+which might be different from what they initially said.
+            </pre>
+
+        <h3>Splitting the Job</h3>
+
+        <p>AI can separate parts of a job that were previously combined:</p>
+
+        <pre>
+Original Job: "Schedule a meeting with the team"
+(One task requiring coordination)
+
+AI enables:
+- "Find times that work" (AI handles)
+- "Get buy-in from attendees" (Human handles, AI facilitates)
+- "Send the invite" (AI handles)
+- "Prepare the agenda" (AI assists)
+
+Each subtask can use appropriate autonomy level.
+            </pre>
+
+        <h2>AI-Augmented Workflow Patterns</h2>
+
+        <p>Several workflow patterns have proven effective for AI augmentation:</p>
+
+        <h3>The AI-First Draft Pattern</h3>
+
+        <p>AI generates a first draft; human refines and approves.</p>
+
+        <pre>
+1. Human provides direction and context
+2. AI generates complete first draft
+3. Human reviews and edits
+4. Human approves or iterates
+
+Use when: Draft is easier to refine than create from scratch
+
+Example: Email responses, document drafting, code snippets
+        </pre>
+
+        <h3>The AI-Suggest Pattern</h3>
+
+        <p>AI suggests next actions; human decides and executes.</p>
+
+        <pre>
+1. AI analyzes current state
+2. AI surfaces suggestions with reasoning
+3. Human reviews, selects, or dismisses
+4. Human takes action (or delegates to AI)
+
+Use when: Human should maintain control and agency
+
+Example: Route planning, content recommendations, next steps
+        </pre>
+
+        <h3>The AI-Execute Pattern</h3>
+
+        <p>AI handles routine cases; human handles exceptions.</p>
+
+        <pre>
+1. AI handles straightforward cases autonomously
+2. AI flags ambiguous cases for human review
+3. Human reviews flagged cases
+4. Human decisions train AI for future cases
+
+Use when: Most cases are routine, few are complex
+
+Example: Spam filtering, fraud detection, customer routing
+        </pre>
+
+        <h3>The AI-Augment Pattern</h3>
+
+        <p>AI provides information and capabilities mid-task.</p>
+
+        <pre>
+1. Human works on task
+2. AI provides relevant information at decision points
+3. Human incorporates AI insights
+4. Human completes task
+
+Use when: Human should lead, AI should support
+
+Example: Writing with grammar/style suggestions, coding with completions
+        </pre>
+
+        <h3>EduGen: Multiple AI Workflow Patterns</h3>
+
+        <div class="callout practical-example">
+            <div class="callout-title">EduGen: Adaptive Learning Workflow</div>
+            <pre>
+EduGen uses different AI patterns at different workflow stages:
+
+STAGE 1: ASSESSMENT (AI-Execute Pattern)
+AI: Administers adaptive quiz, handles routine 
+    learner questions, only escalates confusion
+Human: Reviews aggregate performance data
+
+STAGE 2: CURRICULUM GENERATION (AI-First Draft)
+AI: Generates initial learning path and content
+Human: Reviews, adjusts learning objectives
+Human: Adds human-designed case studies
+
+STAGE 3: LEARNING (AI-Augment Pattern)
+AI: Suggests resources at decision points
+AI: Provides hints when learner struggles
+Human: Facilitates discussions, provides feedback
+
+STAGE 4: EVALUATION (AI-Suggest Pattern)
+AI: Suggests assessment questions
+AI: Flags at-risk learners for intervention
+Human: Makes final promotion decisions
+
+Each workflow stage uses the AI pattern that
+maximizes value and minimizes friction.
+            </pre>
+        </div>
+
+        <h2>Measuring UX Quality for Probabilistic Outputs</h2>
+
+        <p>Traditional UX metrics assume deterministic behavior. When AI is involved, metrics must account for variability and probability.</p>
+
+        <h3>Key Metrics for AI UX</h3>
+
+        <div class="callout tip">
+            <div class="callout-title">The TRUST Framework for AI UX Metrics</div>
+            <p>The TRUST framework provides metrics for evaluating AI UX quality. Task success measures whether the user accomplished their goal. Regret rate measures whether the user wishes they had done something differently after relying on AI. Understanding measures whether the user understood what the AI did and why it made the recommendations it did. Scrutiny measures whether the user appropriately checked AI output rather than blindly accepting or rejecting it. Trust trajectory measures whether trust is increasing or decreasing over time, indicating the long-term health of the user-AI relationship.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before shipping any AI UX redesign, define how you will measure whether the redesign improved outcomes. A micro-<a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval</a> for workflow redesign tracks: task completion rate (should increase), time-on-task (should decrease), user effort score (should decrease), and trust trajectory (should increase or stabilize appropriately). EduGen's eval-first insight: their adaptive learning workflow redesign increased task completion 23% but decreased trust trajectory 8%. They had optimized for efficiency at the expense of user agency. After adding more human override points, trust recovered and efficiency gains held.
+            </p>
+        </div>
+
+        <h3>Traditional Metrics with AI Modifications</h3>
+
+        <p>Traditional UX metrics require adaptation when AI is involved. Time on task should be lower with AI assistance, but teams should watch for time spent correcting AI errors which can offset efficiency gains. Error rate should be lower with AI, but teams must count both human errors and AI errors to get an accurate picture. Task completion should be higher with AI assistance, indicating that AI helps users accomplish more. User satisfaction should be higher, but teams should watch for satisfaction with AI even when outcomes are poor, as users may be inappropriately trusting AI.</p>
+
+        <h3>AI-Specific Metrics</h3>
+
+        <p>AI-specific metrics capture aspects unique to AI-augmented experiences. AI acceptance rate measures how often users accept AI suggestions, indicating trust in AI capabilities. AI rejection rate measures how often users override AI, which can signal either appropriate calibration or overtrust. Calibration error measures the gap between AI confidence and actual accuracy, revealing whether the AI knows what it knows. Recovery time measures how long it takes to recover from AI errors, indicating the quality of failure handling. Trust score measures periodic user survey responses about AI trust, providing direct feedback on user sentiment.</p>
+
+        <h3>Measuring Trust Trajectory</h3>
+
+        <pre>
+Trust Trajectory Analysis:
+
+Week 1: Acceptance 95%, Rejection 5%
+Week 2: Acceptance 88%, Rejection 12%
+Week 3: Acceptance 85%, Rejection 15%
+Week 4: Acceptance 80%, Rejection 20%
+→ Trust declining despite high initial acceptance
+→ Investigate: What changed? Did AI quality drop?
+→ Did specific incidents damage trust?
+
+If acceptance stabilizes at 85%, rejection 15%:
+→ User trust calibrated appropriately
+→ This may be the healthy steady state
+            </pre>
+
+        <h3>DataForge: Measuring Pipeline Creation UX</h3>
+
+        <div class="callout practical-example">
+            <div class="callout-title">DataForge: Multi-Metric AI UX Dashboard</div>
+            <pre>
+DataForge measures AI UX across multiple dimensions:
+
+1. CONVERSION FUNNEL
+   Users start conversation: 100%
+   Users complete pipeline spec: 78%
+   Users accept AI draft: 82%
+   Users deploy pipeline: 95%
+   
+2. QUALITY METRICS
+   First-draft acceptance rate: 67%
+   Drafts requiring major revision: 18%
+   Deployed pipelines succeeding first run: 72%
+   
+3. TRUST METRICS
+   Users who enable auto-deploy: 34%
+   Average time to first AI suggestion review: 45 sec
+   Escalations to human support: 2.3%
+   
+4. EFFICIENCY GAINS
+   Average time to first pipeline: 12 min (vs. 3 hours manual)
+   Pipelines created per week: +156%
+   Support tickets about pipeline creation: -67%
+
+Dashboard shows trends over time, flagging anomalies:
+┌─────────────────────────────────────────┐
+│ [Alert: Acceptance rate dropped from    │
+│  70% to 58% in past week]              │
+│                                         │
+│ Likely cause: New model deployment     │
+│ on Tuesday. Investigating.             │
+└─────────────────────────────────────────┘
+            </pre>
+        </div>
+
+        <h2>The AI UX Design Process</h2>
+
+        <p>Designing AI UX requires a structured process that accounts for the unique challenges of probabilistic systems.</p>
+
+        <h3>AI UX Design Process</h3>
+
+        <div class="callout algorithm">
+            <div class="callout-title">The AI UX Design Process</div>
+            <pre>
+PHASE 1: DISCOVER
+- Identify user jobs-to-be-done
+- Map current workflow with pain points
+- Identify where AI could add value
+- Assess AI readiness (data, accuracy, integration)
+
+PHASE 2: DESIGN
+- Select AI interaction mode (invisible to autonomous)
+- Design for failure and recovery
+- Create conversation flows and fallback paths
+- Define trust calibration approach
+
+PHASE 3: PROTOTYPE
+- Create paper prototypes of AI interactions
+- Design for different confidence states
+- Test error recovery flows
+- Include non-AI baseline experience
+
+PHASE 4: TEST
+- Usability testing with representative tasks
+- Test failure scenarios, not just happy path
+- Measure trust, not just task completion
+- Collect qualitative feedback on AI behavior
+
+PHASE 5: REFINEMENT
+- Adjust AI confidence calibration
+- Refine error messages and recovery flows
+- Tune autonomy levels based on user behavior
+- Iterate on personality and tone
+
+PHASE 6: MONITOR
+- Track trust metrics in production
+- Monitor for negative feedback loops
+- Gather ongoing user feedback
+- Plan for AI capability evolution
+            </pre>
+        </div>
+
+        <h2>Common AI UX Failure Modes</h2>
+
+        <div class="callout warning">
+            <div class="callout-title">Failure Mode 1: Bolt-On AI</div>
+            <p><strong>Problem</strong>: AI added to existing workflow without rethinking flow</p>
+            <p><strong>Symptom</strong>: AI features go unused; users continue old habits</p>
+            <p><strong>Solution</strong>: Start with ideal workflow, then determine if and how AI participates</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Failure Mode 2: Overtrust by Default</div>
+            <p><strong>Problem</strong>: AI operates with too much autonomy too soon</p>
+            <p><strong>Symptom</strong>: High-profile failures damage product reputation</p>
+            <p><strong>Solution</strong>: Start conservative, earn trust through demonstrated accuracy</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Failure Mode 3: Hiding AI</div>
+            <p><strong>Problem</strong>: AI works invisibly without explanation</p>
+            <p><strong>Symptom</strong>: Users are surprised or creeped out by AI behavior</p>
+            <p><strong>Solution</strong>: Be appropriately transparent about AI involvement</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Failure Mode 4: No Recovery Path</div>
+            <p><strong>Problem</strong>: When AI fails, users are stranded</p>
+            <p><strong>Symptom</strong>: Support tickets spike; users abandon product</p>
+            <p><strong>Solution</strong>: Always design fallback and recovery before shipping AI</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Failure Mode 5: Ignoring Trust Trajectory</div>
+            <p><strong>Problem</strong>: Only measuring initial adoption, not trust over time</p>
+            <p><strong>Symptom</strong>: Trust silently degrades; adoption eventually drops</p>
+            <p><strong>Solution</strong>: Track trust metrics continuously; watch for declining trends</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">The Workflow Redesign Reality</div>
+            <p>You spent 6 months redesigning the workflow. The new AI-augmented version saves users 20 minutes per day. Users love it in the demo. In production, 40% use the old manual workflow because "it's faster to just do it myself." User training budget: $0.</p>
+        </div>
+
+        <h2>Decision Checklist: AI Workflow Integration</h2>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Before Shipping Any AI Feature</div>
+            <p>Before shipping any AI feature, teams should pass several critical tests. The value test asks whether the team can clearly articulate how AI adds value in this specific context. The friction test asks whether AI friction has been removed or minimized. The failure test asks whether graceful degradation and recovery paths are in place. The trust test asks whether AI autonomy is appropriate for the stakes involved. The calibration test asks whether users will trust AI appropriately rather than overtrusting or undertrusting. The measurement test asks whether the team can measure AI UX quality in production. The monitoring test asks whether the team will detect trust decline before it becomes critical.</p>
+        </div>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>AI UX requires workflow-first thinking rather than screen-first, starting with the ideal user journey and determining how AI fits naturally. Teams must ruthlessly identify where AI adds value versus where it adds friction, being willing to exclude AI where it does not genuinely help. AI can expand, clarify, and split jobs-to-be-done, fundamentally changing what users can accomplish. Multiple workflow patterns exist including AI-First Draft, AI-Suggest, AI-Execute, and AI-Augment, each suited to different use cases. AI UX requires new metrics including <a href="../../../part-1-why-ai-changes/chapter-4/sections/section-4-6.html" class="cross-ref">trust trajectory</a>, calibration error, and scrutiny rate. Teams should design AI UX through a structured process: Discover, Design, <a href="../../../part-3-vibe-coding/chapter-11/sections/section-11-1.html" class="cross-ref">Prototype</a>, Test, Refine, Monitor. Teams should watch for common failure modes including bolt-on AI, overtrust, hiding AI, no recovery path, and ignoring trust trajectory.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Lab: Redesign a Workflow for AI</div>
+            <p>Redesign an existing workflow to leverage AI by following these steps. First, select a workflow you know well such as expense reporting, customer onboarding, or content creation. Second, map the current workflow by documenting each step, decision, and pain point. Third, identify AI opportunities by determining where AI could add value and where it would add friction. Fourth, redesign the workflow from scratch rather than modifying the current state. Fifth, design for failure by determining what happens when AI is wrong or unavailable. Sixth, define metrics for measuring success. Seventh, create a prototype and gather feedback through testing.</p>
+            <details>
+                <summary>Example: Redesigning Expense Reporting</summary>
+                <div class="answer">
+                    <p><strong>Current Flow</strong>: User submits receipt, finance reviews, approval, reimbursement in a linear sequence that requires significant human effort at each stage.</p>
+                    <p><strong>AI Opportunities</strong>: AI can auto-categorize expenses, detect fraud patterns, auto-fill expense forms from receipt data, and predict approval likelihood.</p>
+                    <p><strong>Redesigned Flow</strong>: AI monitors email and card transactions for receipts automatically, categorizes expenses, and presents them for user review. The user confirms or corrects AI categorization as needed. AI flags exceptions for human review while standard expenses auto-approve and exceptions escalate appropriately.</p>
+                    <p><strong>Key Change</strong>: Instead of the user doing the work of expense reporting, the user reviews AI work. This dramatically reduces user burden for routine expenses while maintaining appropriate human oversight for exceptions.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="bibliography">
+            <h3>References and Further Reading</h3>
+            <div class="bib-entry-card">
+                <p class="bib-ref"><a href="#">Bello, M. (2025). "Trust Calibration in AI Systems." Journal of AI UX Design.</a></p>
+                <p class="bib-annotation">Foundational work on trust calibration principles and measurement approaches.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-ref"><a href="#">Shneiderman, B. (2024). "Human-Centered AI: Integrating Visible AI and Human Control." ACM Interactions.</a></p>
+                <p class="bib-annotation">Explores the balance between AI autonomy and human control in interface design.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-ref"><a href="#">Norman, D. (2023). "The Design of Everyday Things, Revised Edition."</a></p>
+                <p class="bib-annotation">Classic text on design principles, newly updated with chapters on AI interaction.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-ref"><a href="#">Amershi, S., et al. (2024). "Guidelines for Human-AI Interaction." CHI Conference.</a></p>
+                <p class="bib-annotation">Empirical guidelines for designing AI-powered interfaces based on user research.</p>
+            </div>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-8-4.html">8.4 Conversation Design</a>
+            <a class="up" href="../index.html">Chapter 8 Overview</a>
+            <a class="next" href="../../chapter-9/index.html">Ch 9: Requirements</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 8.5 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

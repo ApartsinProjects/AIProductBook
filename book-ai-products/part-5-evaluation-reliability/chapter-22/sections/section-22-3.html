@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 22.3: Retrieval Debugging - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 22</div>
+        <h1>Retrieval Debugging</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Retrieval failures are the silent killers of RAG systems. The model cannot answer correctly if it never sees the right documents. Debug retrieval first, model second."</p>
+            <cite>A RAG Engineer With Many Failures</cite>
+        </blockquote>
+
+        <h2 id="retrieval-failure-modes">Retrieval Failure Modes</h2>
+
+        <p>
+            Retrieval-augmented generation depends on retrieving relevant context before generation. When retrieval fails, the entire system fails, regardless of how capable the language model is. Understanding retrieval failure modes is essential for debugging <a href="../../../part-4-engineering/chapter-17/sections/section-17-1.html" class="cross-ref">RAG</a> systems.
+        </p>
+
+        <h3 id="semantic-mismatch">Semantic Mismatch</h3>
+
+        <p>Semantic mismatch occurs when the query embedding and document embeddings exist in different semantic spaces, preventing relevant documents from being retrieved. This happens when different embedding models are used for indexing and retrieval, creating incompatible vector spaces. It also occurs when query language differs significantly from document language, such as when users ask questions in casual language while documents use formal terminology. Domain-specific terminology interpreted differently across contexts can cause mismatches, as can updating embedding models without re-indexing the corpus, which produces embeddings in a different space than the original indexed documents.</p>
+
+        <h3 id="chunk-boundary">Chunk Boundary Problems</h3>
+
+        <p>Chunk boundary problems occur when relevant information is split across chunks, making it invisible to retrieval because each chunk is indexed independently. Table rows split across chunks cause retrieval to return incomplete information that lacks the context of neighboring rows. Sentences referring to antecedents in previous chunks become incomprehensible when retrieved in isolation. Lists where item ordering provides essential context lose meaning when items are scattered across different chunks. Code snippets where variable definitions are in other chunks become impossible to understand without the full context.</p>
+
+        <h3 id="index-coverage">Index Coverage Gaps</h3>
+
+        <p>Index coverage gaps occur when information exists in the corpus but was not indexed, making it permanently invisible to retrieval. New documents added without re-indexing means the content exists but cannot be retrieved because the index was not updated. Filtered-out document types that still contain relevant content occur when content filtering rules are too aggressive and exclude documents that should be searchable. Metadata filters that accidentally exclude relevant documents can prevent valid content from appearing in results even when queries are well-formed. Time-based filters that exclude stale but relevant documents can remove important historical information from the retrieval scope.</p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The Retrieval Quality Assumption</h4>
+            <p>Many teams assume retrieval quality by default. They test generation extensively but give retrieval a pass because "we get results." The dangerous assumption is that retrieved documents are actually providing the right context. Always verify retrieval quality independently from generation quality.</p>
+        </div>
+
+        <h2 id="retrieval-evaluation">Retrieval Evaluation Metrics</h2>
+
+        <h3 id="recall-at-k">Recall at K</h3>
+
+        <p>
+            What fraction of relevant documents appear in the top K results? For debugging, evaluate recall at small K values (1, 3, 5) because only a few documents can fit in the context window.
+        </p>
+
+        <pre><code class="language-python">
+def recall_at_k(
+    queries: list[str],
+    relevant_docs: dict[str, set[str]],
+    retrieved_docs: dict[str, list[str]],
+    k: int
+) -> float:
+    """
+    Calculate recall@k for retrieval evaluation.
+    
+    Args:
+        queries: List of test queries
+        relevant_docs: Mapping of query to set of relevant document IDs
+        retrieved_docs: Mapping of query to list of retrieved document IDs (ordered)
+        k: Number of top results to consider
+    """
+    recall_scores = []
+    
+    for query in queries:
+        relevant = relevant_docs.get(query, set())
+        retrieved = set(retrieved_docs.get(query, [])[:k])
+        
+        if len(relevant) == 0:
+            continue  # Skip queries with no relevant docs
+            
+        recall = len(relevant & retrieved) / len(relevant)
+        recall_scores.append(recall)
+    
+    return sum(recall_scores) / len(recall_scores) if recall_scores else 0.0
+        </code></pre>
+
+        <h3 id="mean-reciprocal-rank">Mean Reciprocal Rank</h3>
+
+        <p>
+            At what rank does the first relevant document appear? MRR penalizes systems where relevant documents appear at low ranks.
+        </p>
+
+        <h3 id="ndcg">NDCG (Normalized Discounted Cumulative Gain)</h3>
+
+        <p>
+            Considers both relevance and position. A relevant document at rank 3 is worth less than a relevant document at rank 1.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Choosing the Right Metric</h4>
+            <p>Recall@K matters most when all retrieved documents go into context. MRR matters when only the top result affects output. NDCG matters when you care about graded relevance. For RAG systems, start with recall@3 as your primary metric.</p>
+        </div>
+
+        <h2 id="retrieval-debugging-techniques">Debugging Techniques</h2>
+
+        <h3 id="retrieval-inspection">Retrieval Inspection Workflow</h3>
+
+        <p>When a RAG query fails, systematically inspect retrieval by following a structured workflow. First, capture the query by recording the exact text submitted to retrieval for reproduction and analysis. Second, inspect embeddings by verifying the generated query embedding to ensure it was created correctly. Third, examine top results by reviewing the actual retrieved documents to see what the system considered relevant. Fourth, check relevance scores to determine whether they are consistent with expectations or indicate ranking problems. Fifth, verify index coverage by checking whether the relevant document is in the index at all, which rules out index coverage gaps.</p>
+
+        <h3 id="failure-classification">Classifying Retrieval Failures</h3>
+
+        <pre><code class="language-python">
+from enum import Enum
+from dataclasses import dataclass
+
+class RetrievalFailureType(Enum):
+    SEMANTIC_MISMATCH = "semantic_mismatch"
+    CHUNK_BOUNDARY = "chunk_boundary"
+    INDEX_COVERAGE = "index_coverage"
+    METADATA_FILTER = "metadata_filter"
+    RANKING_MODEL = "ranking_model"
+    UNKNOWN = "unknown"
+
+@dataclass
+class RetrievalDebugResult:
+    failure_type: RetrievalFailureType
+    query: str
+    expected_doc_ids: list[str]
+    retrieved_doc_ids: list[str]
+    retrieved_scores: list[float]
+    root_cause: str
+    suggested_fix: str
+
+def diagnose_retrieval_failure(
+    query: str,
+    expected_docs: list[str],
+    retrieved_docs: list[dict]
+) -> RetrievalDebugResult:
+    """
+    Classify why retrieval failed for a specific query.
+    """
+    retrieved_ids = [doc["id"] for doc in retrieved_docs]
+    
+    # Check if relevant docs are in index at all
+    if any(doc_id not in index.document_ids for doc_id in expected_docs):
+        return RetrievalDebugResult(
+            failure_type=RetrievalFailureType.INDEX_COVERAGE,
+            query=query,
+            expected_doc_ids=expected_docs,
+            retrieved_doc_ids=retrieved_ids,
+            retrieved_scores=[doc["score"] for doc in retrieved_docs],
+            root_cause="Expected documents missing from index",
+            suggested_fix="Re-index corpus or check indexing pipeline"
+        )
+    
+    # Check if relevant docs were retrieved but ranked low
+    relevant_in_results = set(expected_docs) & set(retrieved_ids)
+    if relevant_in_results:
+        for doc_id in relevant_in_results:
+            rank = retrieved_ids.index(doc_id)
+            score = retrieved_docs[rank]["score"]
+            if rank > 3:
+                return RetrievalDebugResult(
+                    failure_type=RetrievalFailureType.RANKING_MODEL,
+                    query=query,
+                    expected_doc_ids=expected_docs,
+                    retrieved_doc_ids=retrieved_ids,
+                    retrieved_scores=[doc["score"] for doc in retrieved_docs],
+                    root_cause=f"Document {doc_id} retrieved at rank {rank+1} with score {score}",
+                    suggested_fix="Adjust embedding model or re-ranking strategy"
+                )
+    
+    # If not retrieved at all, likely semantic mismatch
+    return RetrievalDebugResult(
+        failure_type=RetrievalFailureType.SEMANTIC_MISMATCH,
+        query=query,
+        expected_doc_ids=expected_docs,
+        retrieved_doc_ids=retrieved_ids,
+        retrieved_scores=[doc["score"] for doc in retrieved_docs],
+        root_cause="Relevant documents not retrieved - semantic gap likely",
+        suggested_fix="Review query-document embedding alignment"
+    )
+        </code></pre>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: HealthMetrics Medical Guidelines RAG</h4>
+            <p>The HealthMetrics team was debugging a clinical decision support RAG system after physicians reported that the system missed critical drug interaction warnings. The model was confident but wrong because retrieval had failed, leading to a dilemma about whether this was a model hallucination or a retrieval failure.</p>
+            <p>The team decided to build a retrieval debug dashboard that shows retrieved documents alongside queries to investigate systematically. For failing queries, they discovered that drug interaction information existed in a "clinical pharmacology" document set that was excluded from indexing due to a metadata filter error. They also found that chunking had split tables of drug interactions across chunks, making the information invisible to retrieval.</p>
+            <p>After fixing the metadata filter and re-chunking documents using semantic boundaries around tables, Recall@5 improved from 0.62 to 0.94. The lesson is that the model was not hallucinating. It simply never saw the relevant information. Always verify retrieval before blaming the model.</p>
+        </div>
+
+        <h2 id="retrieval-tooling">Retrieval Debugging Tooling</h2>
+
+        <h3 id="retrieval-dashboard">Retrieval Debug Dashboard</h3>
+
+        <p>Build an internal tool that shows query text and embedding alongside retrieval results for any query you want to investigate. The dashboard should display the top ten retrieved documents with their similarity scores so you can see exactly what the system returned. It should show expected documents from your test set and their positions in the results to identify when relevant documents are being missed or poorly ranked. Include recall and MRR metrics for each query to quantify retrieval performance and track improvements over time.</p>
+
+        <h3 id="regression-testing">Retrieval Regression Testing</h3>
+
+        <p>
+            Create a benchmark set of queries with known relevant documents. Run before any index or embedding model change. Alert if recall drops below threshold.
+        </p>
+
+        <pre><code class="language-python">
+class RetrievalRegressionSuite:
+    def __init__(self, benchmark: RetrievalBenchmark, threshold: float = 0.9):
+        self.benchmark = benchmark
+        self.threshold = threshold
+    
+    def run(self, retriever: Retriever) -> RegressionResult:
+        results = []
+        for query_data in self.benchmark.test_cases:
+            retrieved = retriever.search(
+                query_data.query, 
+                k=10
+            )
+            metrics = compute_retrieval_metrics(
+                query_data.relevant_docs,
+                [doc.id for doc in retrieved]
+            )
+            results.append({
+                "query": query_data.query,
+                "recall@5": metrics.recall_at_5,
+                "mrr": metrics.mrr,
+                "passed": metrics.recall_at_5 >= self.threshold
+            })
+        
+        return RegressionResult(
+            total=len(results),
+            passed=sum(1 for r in results if r["passed"]),
+            failed=[r for r in results if not r["passed"]],
+            overall_recall=sum(r["recall@5"] for r in results) / len(results)
+        )
+        </code></pre>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>Research on "retrieval uncertainty" explores methods to identify when the retrieval system is uncertain about its results. By detecting low-confidence retrieval states, systems can either expand retrieval or flag uncertainty for human review before generation.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-22-2.html">22.2 Prompt Inspection</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-22-4.html">22.4 Error Taxonomy</a>
+        </nav>
+
+        <footer>
+            <p>Section 22.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

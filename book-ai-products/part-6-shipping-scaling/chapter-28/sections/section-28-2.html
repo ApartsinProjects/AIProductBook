@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 28.2: Platform Teams - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 28</div>
+        <h1>Platform Teams</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Platform teams do not build features. They build the foundation that makes feature teams unstoppable."</p>
+            <cite>Principal Engineer Who Learned This the Hard Way</cite>
+        </blockquote>
+
+        <h2 id="platform-team-model">The AI Platform Team Model</h2>
+
+        <p>
+            As organizations scale AI product development, repeated work emerges: every team needs model deployment, evaluation infrastructure, data pipelines, and monitoring. Platform teams capture this common infrastructure, enabling product teams to focus on domain-specific AI rather than undifferentiated enabling technology.
+        </p>
+
+        <p>
+            The Team Topologies framework from Skelle and Waguespack provides a useful mental model for thinking about AI organization. Adapted for AI-native products, it identifies four team types that interact in specific ways.
+        </p>
+
+        <h3 id="stream-aligned-teams">Stream-Aligned AI Teams</h3>
+
+        <p>
+            Stream-aligned teams are the primary delivery units. They own a user-facing AI product or feature end-to-end: from understanding user needs through deployment and monitoring. The cross-functional teams described in Section 28.1 are stream-aligned teams.
+        </p>
+
+        <p>
+            Stream-aligned teams are the primary delivery units. They own a user-facing AI product or feature end-to-end from understanding user needs through deployment and monitoring, and the cross-functional teams described in Section 28.1 are stream-aligned teams. Their ownership covers the full lifecycle of specific AI features. Their metrics focus on user-facing outcomes such as task completion, satisfaction, and engagement. Their dependencies consume platform capabilities and request enablement from specialists.
+        </p>
+
+        <h3 id="ai-platform-teams">AI Platform Teams</h3>
+
+        <p>
+            AI platform teams provide the infrastructure that stream-aligned teams depend on. They own the systems that make AI development, deployment, and operations possible at scale.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Platform Team Focus Areas</h4>
+            <p><strong>Model Deployment Infrastructure:</strong> CI/CD pipelines for ML models, A/B testing infrastructure, shadow mode deployment capabilities, canary release tooling.</p>
+            <p><strong>Evaluation Systems:</strong> Shared eval frameworks, evaluation data pipelines, eval result aggregation and visualization.</p>
+            <p><strong>Observability Stack:</strong> Model performance monitoring, drift detection, alerting infrastructure.</p>
+            <p><strong>Feature Store:</strong> Shared feature computation and storage, feature versioning, feature documentation.</p>
+        </div>
+
+        <h3 id="enablement-teams">AI Enablement Teams</h3>
+
+        <p>
+            Enablement teams focus on building capabilities within stream-aligned teams. Unlike platform teams that provide infrastructure, enablement teams provide knowledge, training, and consulting to help teams become more effective with AI.
+        </p>
+
+        <p>
+            Enable teams focus on building capabilities within stream-aligned teams. Unlike platform teams that provide infrastructure, enablement teams provide knowledge, training, and consulting to help teams become more effective with AI. This includes AI literacy programs with training curricula for PMs, designers, and engineers, best practice documentation covering patterns for eval design, prompt engineering, and UX for AI, technical consulting through embedded advisors who help teams solve specific AI challenges, and tool evaluation assessing new AI tools and vendors for organizational fit.
+        </p>
+
+        <h3 id="specialized-teams">Specialized Teams</h3>
+
+        <p>
+            Some AI capabilities are so specialized that they warrant dedicated teams. These teams work on problems that require deep expertise concentrated in one place.
+        </p>
+
+        <p>
+            Some AI capabilities are so specialized that they warrant dedicated teams. These teams work on problems that require deep expertise concentrated in one place. Foundational model teams handle fine-tuning, prompt engineering, and evaluation of foundation models. Responsible AI teams manage bias auditing, fairness testing, and compliance with AI regulations. Research teams explore new AI capabilities for future competitive advantage.
+        </p>
+
+        <h2 id="platform-boundaries">Defining Platform Boundaries</h2>
+
+        <p>
+            The hardest problem in platform design is deciding what belongs in the platform and what belongs in product teams. Get this wrong in either direction and you create problems.
+        </p>
+
+        <h3 id="too-much-platform">The Perils of Over-Platformization</h3>
+
+        <p>
+            If the platform team tries to own too much, they become a bottleneck. Product teams wait for platform features, platform team falls behind on product team needs, and the organization loses agility.
+        </p>
+
+        <div class="callout warning">
+            <h4 class="callout-title">Warning Signs of Over-Platformization</h4>
+            <p>If the platform team tries to own too much, they become a bottleneck. Product teams wait for platform features, platform team falls behind on product team needs, and the organization loses agility. Warning signs include a platform team backlog that is 3 or more months behind product team requests, product teams building workarounds around the platform, platform team measuring success by internal adoption rather than product team outcomes, and teams describing platform as "the gatekeepers" rather than "the enablers".</p>
+        </div>
+
+        <h3 id="too-little-platform">The Perils of Under-Platformization</h3>
+
+        <p>
+            If the platform team does too little, every team reinvents the same infrastructure. You get inconsistent evaluation practices, incompatible deployment pipelines, and inability to share learnings across teams.
+        </p>
+
+        <div class="callout warning">
+            <h4 class="callout-title">Warning Signs of Under-Platformization</h4>
+            <p>If the platform team does too little, every team reinvents the same infrastructure. You get inconsistent evaluation practices, incompatible deployment pipelines, and inability to share learnings across teams. Warning signs include each team having their own model deployment process with different steps and timelines, no shared eval framework with teams using ad-hoc methods, knowledge about AI development being trapped in individual teams, and replacing a vendor or model requiring rewriting infrastructure from scratch.</p>
+        </div>
+
+        <h2 id="shared-models">Shared Models and Tooling</h2>
+
+        <p>
+            AI platform teams often maintain shared models that multiple product teams use. This shared ownership creates both opportunities and challenges.
+        </p>
+
+        <h3 id="shared-foundation-models">Shared Foundation Models</h3>
+
+        <p>
+            Organizations often standardize on one or two foundation model providers across the company. The AI platform team manages these relationships, negotiates pricing, and provides shared infrastructure for prompt engineering and model access.
+        </p>
+
+        <p>
+            Organizations often standardize on one or two foundation model providers across the company. The AI platform team manages these relationships, negotiates pricing, and provides shared infrastructure for prompt engineering and model access. This includes a unified API gateway providing single point of access to model providers with rate limiting, cost tracking, and fallback capabilities, a shared prompt library preserving organizational knowledge about effective prompts for common use cases, and cost allocation tracking and allocating AI spend to product teams.
+        </p>
+
+        <h3 id="shared-training-pipelines">Shared Training Pipelines</h3>
+
+        <p>
+            When multiple products use similar model architectures or training approaches, shared training infrastructure reduces redundant work. The platform team provides data preprocessing pipelines, training infrastructure, and model registry services.
+        </p>
+
+        <h3 id="shared-eval-framework">Shared Evaluation Framework</h3>
+
+        <p>
+            <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Chapter 21</a> introduced evaluation as the core development practice for AI products. A shared <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval framework</a> that all teams use creates common language for AI quality and enables cross-team learning. The platform team maintains this framework and ensures it evolves with organizational needs.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: DataForge MLOps Platform</h4>
+            <p><strong>Who:</strong> DataForge, an enterprise data analytics company</p>
+            <p><strong>Situation:</strong> Growing from 2 AI product teams to 8 in 18 months</p>
+            <p><strong>Problem:</strong> Each team built their own ML infrastructure. Deployment processes varied wildly. No shared evaluation standards. Model registry was a shared Google Sheet.</p>
+            <p><strong>Decision:</strong> Create AI Platform team responsible for shared infrastructure while teams retained product ownership</p>
+            <p><strong>How:</strong> Platform team built: unified model registry with versioning, automated deployment pipelines, shared eval framework with standard test suites, cost tracking dashboard, and shared prompt library. Teams contributed to platform roadmap through steering committee.</p>
+            <p><strong>Result:</strong> Deployment time dropped from 2 weeks average to 2 days. Eval coverage increased from 20% of features to 85%. Shared prompt library saved estimated 40% of prompt engineering effort across teams.</p>
+            <p><strong>Lesson:</strong> <strong>A well-designed platform accelerates all teams. A poorly-designed platform becomes a bureaucratic obstacle. The difference is whether product teams have voice in platform decisions.</strong></p>
+        </div>
+
+        <h2 id="platform-evangelism">Platform Evangelism and Adoption</h2>
+
+        <p>
+            Building platform capabilities is not enough. Platform teams must actively promote adoption and demonstrate value to stream-aligned teams. This requires different skills than engineering.
+        </p>
+
+        <h3 id="champion-program">AI Platform Champion Program</h3>
+
+        <p>
+            Identify and nurture AI advocates within each stream-aligned team. These champions bridge between platform and product, translating platform capabilities into product-relevant terms and feeding product needs back to platform development.
+        </p>
+
+        <h3 id="internal-docs">Internal Documentation and Examples</h3>
+
+        <p>
+            Platform documentation must speak to product team concerns, not just technical specifications. Create guides that start from product problems and show how the platform solves them.
+        </p>
+
+        <h3 id="platform-success-metrics">Platform Success Metrics</h3>
+
+        <p>
+            Platform teams should measure success by product team outcomes, not internal metrics:
+        </p>
+
+        <p>
+            Platform teams should measure success by product team outcomes, not internal metrics. Time to deploy measures how long it takes a product team to deploy a new model. Eval coverage tracks what percentage of AI features have automated evaluation. Platform satisfaction determines whether product teams find the platform valuable and accessible. Shared learning assesses whether teams are using shared eval frameworks and prompt libraries.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-28-1.html">28.1 Cross-Functional Structures</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-28-3.html">28.3 Central AI Enablement</a>
+        </nav>
+
+        <footer>
+            <p>Section 28.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

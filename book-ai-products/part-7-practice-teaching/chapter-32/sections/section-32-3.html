@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>32.3 QuickShip AI Search - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></div>
+        <div class="chapter-label">Chapter 32, Section 32.3</div>
+        <h1>AI Search/Retrieval Product Case: QuickShip</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            QuickShip's logistics platform processed 50,000 shipping requests daily. Their search system returned relevant results 62% of the time. After rebuilding with AI-powered semantic search, they reached 91% relevance and cut developer time for search-related tickets by 80%.
+        </p>
+
+        <div class="epigraph">
+            <p>Keyword search works until it does not. When a user searches for "fragile electronics that need refrigeration," they expect us to understand what they mean, not match exact words.</p>
+            <cite>Yuki Tanaka, Engineering Lead at QuickShip</cite>
+        </div>
+
+        <h2>32.3.1 The Problem Space</h2>
+
+        <p>
+            QuickShip is a B2B logistics platform used by 3,000 businesses to manage freight, warehousing, and last-mile delivery. Their platform hosted 2 million shipping lane records, 500,000 carrier profiles, and extensive regulatory compliance documentation.
+        </p>
+
+        <p>
+            Their existing keyword-based search had fundamental limitations. A search for "cold chain pharmaceuticals" would miss records containing "temperature-controlled medicine shipping" even though both described identical service categories. Users learned to use specific jargon or give up and file support tickets.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Semantic Gap</div>
+            <p>Keyword matching fails when users and data publishers use different vocabulary. In logistics, this is especially acute because domain expertise varies widely and regulations create specialized terminology that evolves frequently.</p>
+        </div>
+
+        <h2>32.3.2 Discovery and Requirements</h2>
+
+        <p>
+            The engineering team analyzed 3 months of search queries and identified three problem patterns. Synonym failures occurred when users searched for "overnight" but records used "express" or "priority," affecting 23% of queries. Concept expansion failures happened when users searched for "Hazmat shipping" and expected results for "dangerous goods," "flammable materials," and "hazardous cargo" to appear, affecting 18% of queries. Implicit constraints failures occurred when users searched "domestic shipping to California" and expected results to exclude international carriers and carriers licensed only for specific routes, affecting 12% of queries.
+        </p>
+
+        <p>
+            They also discovered that 34% of support tickets were search-related, meaning users could not find what they needed and asked for help instead.
+        </p>
+
+        <h2>32.3.3 <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Architecture</a> Design</h2>
+
+        <p>
+            QuickShip built a semantic search system on top of their existing Elasticsearch infrastructure with four architectural layers. Embedding generation encoded all text fields including descriptions, carrier names, route details, and compliance notes using a domain-adapted embedding model called E5, processing records at twelve milliseconds per record. Hybrid retrieval combined vector similarity and keyword matching with a learned reranking step that unified both signals, with the reranker adding twenty-five milliseconds per query latency. The vector database using Pinecone added eight milliseconds average query latency. The business logic layer applied filters for jurisdiction, licensing, cargo type, and service level after semantic retrieval. A feedback loop captured user clicks and conversions to continuously improve relevance. The total end-to-end latency reached approximately one hundred fifty milliseconds at the ninety-fifth percentile.
+        </p>
+
+        <h2>32.3.4 Domain Adaptation</h2>
+
+        <p>
+            The team made a crucial investment: domain adaptation. They collected 50,000 pairs of logistics queries and equivalent relevant records, then fine-tuned the embedding model on this data.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Why Generic Embeddings Failed</div>
+            <p>Off-the-shelf embeddings treated "bill of lading" as unrelated to "shipping documentation" because they lacked domain context. Fine-tuning on logistics data taught the model that these were near-synonyms in context. This single change improved relevance by 22 percentage points.</p>
+        </div>
+
+        <p>
+            They also built a synonym taxonomy that was applied as a preprocessing step. This taxonomy contained 5,000 synonym pairs curated by logistics experts and updated quarterly.
+        </p>
+
+        <h2>32.3.5 Evaluation and Iteration</h2>
+
+        <p>
+            QuickShip measured search quality with three metrics. Relevance rate tracked the percentage of results where the user clicked within the top 10 with a target of 85%. NDCG@10 measured Normalized Discounted Cumulative Gain for ranking quality with a target of 0.80. Zero-result rate captured the percentage of queries returning no results with a target under 5%.
+        </p>
+
+        <p>
+            They built an <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval pipeline</a> with 2,000 manually curated query-result pairs and ran it weekly against their production index. Any regression over 2% blocked deployment.
+        </p>
+
+        <h2>32.3.6 Results</h2>
+
+        <p>
+            QuickShip achieved substantial improvements across all measured dimensions. Top-10 relevance rate improved from sixty-two percent to ninety-one percent, a twenty-nine point improvement. NDCG@10, which measures ranking quality, increased from 0.41 to 0.84, representing a one hundred five percent improvement. Zero-result rate dropped from eighteen percent to three percent, an eighty-three percent reduction meaning far fewer searches failed to find anything. Search-related support tickets decreased from three hundred forty per month to sixty-eight per month, an eighty percent reduction. Meanwhile, search query volume increased from 2.1 million per month to 2.8 million per month, a thirty-three percent increase suggesting users had more confidence in the search system.
+        </p>
+
+        <h2>32.3.7 Key Lessons</h2>
+
+        <div class="callout tip">
+            <div class="callout-title">What QuickShip Learned</div>
+            <p>QuickShip learned that domain fine-tuning was the biggest lever because generic embeddings underperformed significantly and the investment in domain-specific training data paid off dramatically. Hybrid search outperformed pure vector search because some queries benefited from exact keyword matching such as account numbers and tracking IDs, and pure semantic search could not replace keyword search entirely. User behavior signals were invaluable because click data revealed what users actually found relevant, which sometimes differed from expert annotations. Synonym taxonomy required maintenance because logistics terminology evolves with regulations and industry trends, so they built a quarterly review process with domain experts. Latency mattered less than expected because users tolerated 150ms latency if results were good, but poor relevance at any latency drove users to support.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-32-2.html">32.2 RetailMind</a>
+            <a class="up" href="../index.html">Chapter 32</a>
+            <a class="next" href="section-32-4.html">32.4 HealthMetrics Case Study</a>
+        </nav>
+
+        <footer>
+            <p>32.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.2 Advanced Techniques - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <div class="chapter-label">Chapter 4</div>
+        <h1>Vibe Coding Workflows That Deliver Production-Ready Code</h1>
+        <p class="chapter-subtitle">4.2 Advanced Techniques</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Teach practical, repeatable workflows for moving from vibe to production.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 4.1 recommended. Understanding of basic vibe coding workflow.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Scaling Vibe Coding</div>
+            <p>This section covers advanced vibe coding techniques including large-scale refactoring, debugging with <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and parallel sub-agent workflows. In the context of AI-assisted development, these techniques enable teams to handle complex, multi-file projects efficiently. The key insight is that AI excels at pattern-based tasks when given clear specifications.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Robot That Beat the Clock</div>
+            <p>In 2019, MIT built a robot that could assemble a IKEA chair in 20 minutes. The challenge was not the building, it was following the instructions. AI debugging works similarly: finding the problem is often harder than fixing it.</p>
+        </div>
+
+        <h2 id="section-4-2">4.2 Advanced Techniques</h2>
+
+        <p>
+            Once you have mastered the basic workflow, these advanced techniques will help you handle more complex scenarios and scale your vibe coding practice. The key insight behind all of these techniques is that AI models are exceptionally good at pattern-based tasks but struggle with novel situations. You can leverage this by identifying patterns in your codebase and using AI to apply them consistently across many files at once.
+        </p>
+
+        <h3>Refactoring at Scale</h3>
+
+        <p>
+            AI excels at large-scale refactoring, where the same pattern needs to be applied across many files. Manual refactoring of this scale is tedious and error-prone; AI handles it gracefully as long as you provide clear intent. The key is specificity: tell the AI exactly what to change, what to change it to, and what constraints to follow.
+        </p>
+
+        <h4>Case Study: Migrating 200 Components to New Design System</h4>
+
+        <p>
+            A SaaS company needed to migrate their entire component library from custom CSS to a new design system. The team had 200+ React components written over 3 years with inconsistent styling. Manual refactoring was estimated at 3 months of work. Using AI-assisted refactoring, the team completed the migration in 2 weeks.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Refactoring Prompt That Worked</div>
+            <pre><code>Refactor all components in /components to use the new design system:
+
+TARGET:
+- Directory: /components
+- File types: .tsx, .jsx
+- Exclude: components/to-be-deprecated/*
+
+TRANSFORMATIONS:
+1. Replace custom CSS classes with design system tokens:
+   - "text-blue-500" → "ds-text-primary"
+   - "bg-white" → "ds-surface-default"
+   - "p-4" → "ds-spacing-md"
+   
+2. Update PropTypes to TypeScript interfaces:
+   - Convert all PropTypes to proper TypeScript
+   - Remove PropTypes after conversion
+   
+3. Add error boundaries around each component:
+   - Wrap default export with ErrorBoundary component
+   - Import ErrorBoundary from @/components/error-boundary
+
+CONSTRAINTS:
+- Preserve all existing prop names and function signatures
+- Do not change any business logic
+- Do not modify test files
+- Keep existing component file names
+
+APPROACH:
+1. Work in batches of 20 files
+2. After each batch, run tests to verify no regressions
+3. Report any files that cannot be safely refactored</code></pre>
+        </div>
+
+        <h4>Why This Worked</h4>
+
+        <p>
+            The prompt was specific about: the scope (what files to modify), the transformation (exactly what to change to what), the constraints (what not to change), and the approach (batching and testing). This specificity allowed the AI to make consistent changes across all files while avoiding errors that would have occurred with a vague prompt.
+        </p>
+
+        <pre><code># Example Prompt for Pattern-Based Refactoring
+
+# Pattern 1: Naming Convention Standardization
+Convert all file names from kebab-case to PascalCase:
+- "user-profile.tsx" → "UserProfile.tsx"
+- "api-helper.ts" → "ApiHelper.ts"
+- Update all import statements accordingly
+
+# Pattern 2: Error Handling Standardization
+Add try-catch blocks to all async functions:
+- Wrap async operations in try-catch
+- Add logging for errors: console.error('[ModuleName]', error)
+- Return meaningful error types
+
+# Pattern 3: Import Organization
+Organize imports in each file:
+- React imports first
+- Then third-party imports (alphabetical)
+- Then relative imports (alphabetical)
+- Add blank line between groups</code></pre>
+
+        <h3>Debugging with <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></h3>
+
+        <p>
+            Using <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> for debugging transforms one of the most time-consuming aspects of development into a collaborative process where AI does the heavy investigation. The workflow begins with you describing the error and expected behavior as clearly as possible. Then you let the agent explore the codebase to understand how the relevant code works, propose fixes, and test those fixes against the error.
+        </p>
+
+        <h4>Case Study: Debugging a Production Memory Leak</h4>
+
+        <p>
+            A fintech company's React application was experiencing memory leaks in production, causing browser tabs to become unresponsive after extended use. The engineering team spent 2 weeks manually investigating without success. An AI agent Debugger identified the issue in 4 hours.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Debugging Prompt That Identified the Root Cause</div>
+            <pre><code>Investigate a memory leak in our React application.
+
+SYMPTOMS:
+- Browser memory grows continuously during use
+- After 30+ minutes, tab becomes unresponsive
+- Garbage collection does not reduce memory
+- Happens in Chrome and Firefox
+
+CONTEXT:
+- React 18 with TypeScript
+- Large data tables that update every 5 seconds
+- Using Redux for state management
+- WebSocket connection for real-time updates
+
+SPECIFIC BEHAVIOR:
+- Initial load: ~150MB
+- After 10 minutes: ~400MB  
+- After 30 minutes: ~1.2GB
+
+WHAT I TRIED:
+1. React DevTools Profiler - shows components re-rendering excessively
+2. Chrome Memory Timeline - shows DOM nodes not being cleaned up
+3. Removed WebSocket - still leaks, so not the cause
+
+TASK:
+1. Find files that might be causing the leak
+2. Identify the specific code patterns causing it
+3. Suggest fixes with code examples</code></pre>
+        </div>
+
+        <h4>What the Agent Found</h4>
+
+        <p>
+            The agent identified three issues: event listeners on DOM nodes not being cleaned up in useEffect cleanup functions, Redux subscriptions not being unsubscribed in component unmount, and WebSocket message handlers accumulating in memory. The agent provided specific fixes for each issue, which the team applied. Memory stabilized at ~200MB after 1 hour of use.
+        </p>
+
+        <h4>Effective Debugging Prompts</h4>
+
+        <p>
+            Effective debugging prompts for AI <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> should include:
+        </p>
+
+        <ul>
+            <li><strong>The exact error message</strong>: "TypeError: Cannot read property 'id' of undefined"</li>
+            <li><strong>The expected behavior</strong>: "The user profile should display the user's name from the API response"</li>
+            <li><strong>Relevant logs or stack traces</strong>: Include the full stack trace with line numbers</li>
+            <li><strong>A small reproducer</strong>: "This happens when the user visits /profile without being logged in"</li>
+        </ul>
+
+        <div class="callout warning">
+            <div class="callout-title">The Hypothesis Formation Problem</div>
+            <p>AI debugging is different from simple code generation because the agent needs to engage in hypothesis formation: what could cause this error? What have I seen in similar situations? This reasoning process is more prone to mistakes than pattern application. You should always review proposed fixes before applying them. The AI might identify a plausible-sounding cause that is actually wrong.</p>
+        </div>
+
+        <h3>Parallel Sub-<a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></h3>
+
+        <p>
+            For large features that span multiple files and modules, spawning multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> working on different files simultaneously can dramatically speed up development. This technique is particularly effective when the work can be partitioned into relatively independent streams.
+        </p>
+
+        <h4>Case Study: Building a New Feature in Parallel</h4>
+
+        <p>
+            A team needed to build a new "Team Dashboard" feature that involved database schema changes, API endpoint implementation, frontend component creation, and documentation updates. Originally estimated at 3 weeks sequentially, they completed it in 4 days using parallel <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Parallel Agent Setup</div>
+            <pre><code># Agent 1: Database Schema
+Task: Create Prisma schema for Team Dashboard
+Output: /prisma/schema.prisma updated
+
+# Agent 2: Backend API  
+Task: Create API routes for team management
+Files:
+- /app/api/teams/route.ts (GET, POST)
+- /app/api/teams/[id]/route.ts (GET, PUT, DELETE)
+- /app/api/teams/[id]/members/route.ts
+
+# Agent 3: Frontend Components
+Task: Create React components for dashboard
+Files:
+- /components/teams/TeamCard.tsx
+- /components/teams/TeamList.tsx
+- /components/teams/TeamForm.tsx
+- /app/teams/page.tsx
+
+# Agent 4: Documentation
+Task: Update API documentation
+Files:
+- /docs/api/teams.md
+- /docs/guides/team-dashboard.md
+
+COORDINATION:
+- All <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> use shared TypeScript types from /types/team.ts
+- Agent 1 creates types first, others wait
+- Agent 4 waits for Agent 2 to complete API routes</code></pre>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">RetailMind: Prompt Engineering for Retail Persona</div>
+            <p>RetailMind discovered that the shopping assistant persona dramatically affected user engagement. They iterated through dozens of prompts before finding the right tone:</p>
+            <pre>SYSTEM PROMPT: You are "Sage", a friendly retail shopping assistant.
+You help customers find products and provide personalized recommendations.
+
+PERSONA GUIDELINES:
+- Tone: Warm, knowledgeable friend (not salesperson)
+- Language: Conversational, never pushy
+- Recommendations: Based on customer preferences, not margin
+- Honesty: If you are unsure, say "Let me check on that for you"
+- Boundaries: Never recommend products you have not verified are in stock
+
+EXAMPLE INTERACTIONS:
+Customer: "I need something for a formal event"
+Sage: "Great! What type of formal event is it? A wedding, 
+a work function, or a date night? That helps me narrow down 
+the perfect options for you."
+
+Customer: "Is this jacket worth the price?"
+Sage: "That is a fair question. Let me share what customers 
+who bought it have said... and I will also point you toward 
+a couple alternatives at different price points so you can 
+decide what is right for you."</pre>
+            <p>After A/B testing, RetailMind found that the warm, honest persona (Sage) had 40% higher engagement than a more sales-focused assistant. The key insight: customers trust retail AI more when it feels like a helpful friend rather than a vendor pushing products.</p>
+        </div>
+
+        <h4>Key Success Factors</h4>
+
+        <p>
+            The key to successful parallel agent execution is clear partitioning and well-defined interfaces. Each agent needs to understand not just what it is building but what the other <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> are building, so the pieces fit together correctly. Without this clarity, you may end up with multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> building incompatible pieces that require significant rework to integrate.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Interface Contract Pattern</div>
+            <p>Before launching parallel <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, define the interfaces they will communicate through. In the example above, Agent 1 created TypeScript types that all other <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> used. This "interface-first" approach ensures that when <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> produce their outputs, the pieces fit together. Without this, you'd need to spend significant time reconciling incompatible implementations.</p>
+        </div>
+
+        <h4>When Parallel <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> Work Well</h4>
+
+        <p>
+            Use parallel <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> when: the work can be divided into independent streams, interfaces between streams are clear and documented, you have the resources to run multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and you can review outputs before combining them. Don't use parallel <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> when: the streams have complex dependencies, you need a unified architectural vision that emerges during implementation, or the coordination overhead exceeds the time saved.
+        </p>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Transitioning to Testable Code</strong> - making AI-generated code production-ready. This covers testing strategies, code quality patterns, and validation approaches that ensure your vibe-coded code can be maintained long-term.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-4-1.html">4.1 From Idea to Multi-File Implementation</a>
+            <a class="up" href="index.html">Chapter 4 Index</a>
+            <a class="next" href="section-4-3.html">4.3 Transitioning to Testable Code</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 4.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

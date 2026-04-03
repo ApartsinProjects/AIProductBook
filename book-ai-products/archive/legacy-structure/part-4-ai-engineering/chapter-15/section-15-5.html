@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15.5 Containerization and Kubernetes - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 15</div>
+        <h1>Inference Serving and LLMOps</h1>
+        <p class="chapter-subtitle">15.5 Containerization and Kubernetes</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn how to containerize AI workloads and deploy them at scale using Kubernetes.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 15.4 recommended. Familiarity with Docker and basic Kubernetes concepts.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Scale Requires Containerization</div>
+            <p>This section covers containerizing AI workloads and deploying them at scale using Kubernetes. In the context of AI engineering, containers and Kubernetes become essential infrastructure once you need multiple models, custom serving configurations, or auto-scaling. This knowledge enables production-ready deployments.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Kubernetes Secret That Wasted GPU Money</div>
+            <p>A team configured their Kubernetes deployment to request 4 GPUs but their model only needed 2. They paid for 4 GPUs 24/7 for 3 months before someone checked the actual utilization. The model only ever used 2. Always match resource requests to actual usage.</p>
+        </div>
+
+        <h2 id="section-15-5">15.5 Containerization and Kubernetes</h2>
+
+        <p>
+            Production AI serving at scale requires infrastructure that can handle variable load, deploy updates safely, and maintain reliability. Docker containers and Kubernetes have become the standard for this infrastructure, enabling reproducible deployments and operational simplicity.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Managing AI infrastructure without containers means manual configuration on each server, inconsistent environments, and painful scaling. Containers package your model, runtime, and dependencies into a single unit that runs consistently everywhere. Kubernetes adds the orchestration layer that makes scaling and updates automatic.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Containers Are Not Optional at Scale</div>
+            <p>If you are running a single model for a small user base, managed APIs are sufficient. Once you need multiple models, custom serving configurations, or auto-scaling based on demand, containers and Kubernetes become essential infrastructure, not optional complexity.</p>
+        </div>
+
+        <h3>1. Containerizing AI Workloads</h3>
+
+        <p>
+            AI containers must include the model, inference server, runtime dependencies, and any custom preprocessing. The key challenge is minimizing image size while including everything needed for inference.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Dockerfile for vLLM Serving</div>
+            <pre class="code-block"># Base image with CUDA support
+FROM nvidia/cuda:12.1.1-devel-ubuntu22.04 AS base
+
+# Install Python and basic dependencies
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Python version
+RUN lnsf /usr/bin/python3.11 /usr/bin/python
+
+# Install vLLM (smaller than installing all CUDA libraries separately)
+FROM base AS release
+
+# Install vLLM from PyPI
+RUN pip install vllm==0.6.6.post1 --index-url https://wheels.vllm.ai/nightly
+
+# Create application directory
+WORKDIR /app
+
+# Copy serving script
+COPY serve.py .
+
+# Create non-root user for security
+RUN useradd -m -u 1000 modeluser
+USER modeluser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Expose port
+EXPOSE 8000
+
+# Run vLLM server
+CMD ["python", "serve.py"]</pre>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">serve.py for vLLM Container</div>
+            <pre class="code-block">import subprocess
+import os
+
+# Launch vLLM server
+cmd = [
+    "python", "-m", "vllm.entrypoints.openai.api_server",
+    "--model", os.environ.get("MODEL_NAME", "meta-llama/Llama-3.2-7B-Instruct"),
+    "--tensor-parallel-size", os.environ.get("TP_SIZE", "1"),
+    "--gpu-memory-utilization", os.environ.get("GPU_MEM_UTIL", "0.9"),
+    "--port", "8000",
+    "--host", "0.0.0.0",
+    "--max-num-seqs", "256",
+    "--trust-remote-code",
+]
+
+# Optionally load from saved checkpoint
+if os.environ.get("MODEL_WEIGHTS"):
+    cmd.extend(["--download-dir", os.environ["MODEL_WEIGHTS"]])
+
+print(f"Starting vLLM with command: {' '.join(cmd)}")
+subprocess.run(cmd)</pre>
+        </div>
+
+        <h3>2. Kubernetes Deployment for AI</h3>
+
+        <p>
+            Kubernetes deployments for AI workloads require special considerations: GPU scheduling, memory management, and health checks that account for model loading time.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Kubernetes Deployment for AI Model Serving</div>
+            <pre class="code-block">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-model-server
+  labels:
+    app: vllm-model-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vllm-model-server
+  template:
+    metadata:
+      labels:
+        app: vllm-model-server
+    spec:
+      # Schedule to nodes with GPUs
+      nodeSelector:
+        nvidia.com/gpu: "true"
+      
+      # Tolerations for GPU nodes
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+      
+      containers:
+        - name: vllm
+          image: your-registry/vllm-serving:1.0
+          imagePullPolicy: Always
+          
+          ports:
+            - containerPort: 8000
+          
+          # Resource requests for GPU memory
+          resources:
+            requests:
+              nvidia.com/gpu: 1
+              memory: "32Gi"
+            limits:
+              nvidia.com/gpu: 1
+              memory: "64Gi"
+          
+          env:
+            - name: MODEL_NAME
+              value: "meta-llama/Llama-3.2-70B-Instruct"
+            - name: TP_SIZE
+              value: "2"
+            - name: GPU_MEM_UTIL
+              value: "0.9"
+          
+          # Readiness probe with longer initial delay for model loading
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8000
+            initialDelaySeconds: 300  # Wait for model to load
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 6
+          
+          # Liveness probe
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3</pre>
+        </div>
+
+        <h3>3. GPU Scheduling and Resource Management</h3>
+
+        <p>
+            Kubernetes GPU scheduling requires the nvidia.com/gpu resource plugin and proper configuration. Memory management is critical because GPU memory is the primary constraint for AI workloads.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">GPU Memory Is the Bottleneck</div>
+            <p>Unlike CPU workloads where you can overcommit resources, GPU memory cannot be overprovisioned. If your model plus inference batch exceeds GPU memory, the container will be killed or crash. Always request exactly what you need, and leave headroom for CUDA framework overhead.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">GPU Resource Quota and Limits</div>
+            <pre class="code-block"># Calculate GPU memory requirements
+# Example: Running Llama-3.2-70B with tensor parallelism
+
+# Model parameters:
+# - 70B parameters * 2 bytes (bfloat16) = 140GB for weights
+# - KV cache: ~2GB per sequence
+# - Activation memory: ~10GB
+# - Framework overhead: ~10GB
+
+# With TP=2 (2 GPUs):
+# Per GPU: 70GB weights + 5GB KV cache + 5GB activation + 5GB overhead = ~85GB
+
+# Kubernetes resource request: 85GB
+# Kubernetes resource limit: 95GB (10GB headroom)
+
+resources:
+  requests:
+    nvidia.com/gpu: 2
+    memory: "170Gi"  # 2 GPUs * 85GB
+  limits:
+    nvidia.com/gpu: 2
+    memory: "190Gi"  # 2 GPUs * 95GB
+
+# The scheduler uses requests for placement decisions
+# Limits are enforced by the node</pre>
+        </div>
+
+        <h3>4. KEDA: Event-Driven Autoscaling for AI</h3>
+
+        <p>
+            Standard Kubernetes Horizontal Pod Autoscaler scales based on CPU or memory. KEDA (Kubernetes Event-Driven Autoscaling) enables scaling based on queue depth, request rate, or custom metrics. For AI workloads, scaling based on pending requests is more effective.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">KEDA ScaledDeployment for AI Inference</div>
+            <pre class="code-block">apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth
+spec:
+  secretTargetRef:
+    - parameter: apiKey
+      name: openai-credentials
+      key: API_KEY
+
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: vllm-scaler
+  labels:
+    app: vllm-model-server
+spec:
+  scaleTargetRef:
+    name: vllm-model-server  # Reference to the Deployment
+  
+  pollingInterval: 5  # Check every 5 seconds
+  
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  
+  # Scale based on custom metrics from Prometheus
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus:9090
+        metricName: vllm_pending_requests
+        query: sum(vllm_pending_requests{queue="default"})
+        threshold: "10"  # Scale up when >10 pending requests
+    
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus:9090
+        metricName: gpu_utilization
+        query: avg(nvidia_gpu_utilization{gpu!~".*注目.*"})
+        threshold: "80"  # Scale up when avg GPU util > 80%</pre>
+        </div>
+
+        <h3>5. Helm Charts for AI Workloads</h3>
+
+        <p>
+            Helm charts package Kubernetes manifests with configurable values, making it easy to deploy and manage AI serving infrastructure across environments.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Helm values file for vLLM Deployment</div>
+            <pre class="code-block"># values.yaml for vLLM Helm chart
+
+replicaCount: 2
+
+image:
+  repository: your-registry/vllm-serving
+  tag: "1.0"
+  pullPolicy: IfNotPresent
+
+model:
+  name: "meta-llama/Llama-3.2-70B-Instruct"
+  tensorParallelSize: 2
+  gpuMemoryUtilization: 0.9
+
+resources:
+  requests:
+    nvidia.com/gpu: 2
+    memory: "170Gi"
+  limits:
+    nvidia.com/gpu: 2
+    memory: "190Gi"
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetPendingRequests: 10
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: ai.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ai-tls
+      hosts:
+        - ai.example.com
+
+# Environment-specific overrides
+# staging:
+#   replicaCount: 1
+#   model:
+#     name: "meta-llama/Llama-3.2-7B-Instruct"
+#     tensorParallelSize: 1</pre>
+        </div>
+
+        <h3>6. Blue-Green Deployments for Models</h3>
+
+        <p>
+            Updating models in production requires careful orchestration. Blue-green deployments maintain two environments and switch traffic atomically, eliminating downtime and enabling instant rollback.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Blue-Green Deployment Strategy</div>
+            <pre class="code-block"># Deploy new model version alongside current version
+apiVersion: v1
+kind: Service
+metadata:
+  name: vllm-service-bluegreen
+spec:
+  selector:
+    # This label routes to whichever version is "active"
+    version: active
+---
+# Blue deployment (current)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-blue
+  labels:
+    app: vllm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vllm
+      slot: blue
+  template:
+    metadata:
+      labels:
+        app: vllm
+        slot: blue
+        version: "1.0"  # Current active version
+    spec:
+      containers:
+        - name: vllm
+          image: your-registry/vllm-serving:1.0
+
+---
+# Green deployment (new)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-green
+  labels:
+    app: vllm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vllm
+      slot: green
+  template:
+    metadata:
+      labels:
+        app: vllm
+        slot: green
+        version: "2.0"  # New version being deployed
+    spec:
+      containers:
+        - name: vllm
+          image: your-registry/vllm-serving:2.0
+
+---
+# Traffic switch: Update selector to point to green
+# kubectl patch service vllm-service-bluegreen -p '{"spec":{"selector":{"slot":"green"}}}'
+
+# To rollback: kubectl patch service vllm-service-bluegreen -p '{"spec":{"selector":{"slot":"blue"}}}'</pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Component</th><th>Purpose</th><th>AI-Specific Consideration</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Dockerfile</td><td>Reproducible model runtime</td><td>GPU base image, health checks for model loading</td></tr>
+                <tr><td>Deployment</td><td>Manage replica lifecycle</td><td>GPU selectors, readiness delays</td></tr>
+                <tr><td>Service</td><td>Load balancing</td><td>Session affinity for streaming</td></tr>
+                <tr><td>HPA/KEDA</td><td>Autoscaling</td><td>Queue depth triggers, GPU metrics</td></tr>
+                <tr><td>Helm</td><td>Configuration management</td><td>Environment-specific values</td></tr>
+                <tr><td>Blue-Green</td><td>Zero-downtime updates</td><td>Traffic switching for model updates</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Start Simple, Add Complexity When Needed</div>
+            <p>If you are deploying a single model with predictable load, a basic Kubernetes Deployment is sufficient. Add KEDA autoscaling when demand becomes variable. Add blue-green deployments when zero-downtime updates matter. Do not over-engineer from the start, but design your architecture so these additions are straightforward when needed.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="../chapter-16/index.html">Chapter 16: Scaling, Reliability, and Observability</a> 
+                to learn distributed tracing, resilience patterns, and advanced observability for AI systems.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-15-4.html">15.4 Hybrid Cloud/Edge</a>
+            <a class="up" href="index.html">Chapter 15 Index</a>
+            <a class="next" href="../chapter-16/sections/section-16-1.html">16.1 Latency, Throughput, Multi-Tenancy</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 15.5 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</p>
+        </footer>
+    </main>
+</body>
+</html>

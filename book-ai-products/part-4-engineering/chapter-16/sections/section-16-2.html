@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16.2 Model Routers - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+    <style>
+        .routing-diagram {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+        .route-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        .route-comparison th, .route-comparison td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .route-comparison th {
+            background: var(--accent);
+            color: white;
+        }
+        .route-comparison tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .code-block {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .code-block .keyword { color: #c678dd; }
+        .code-block .string { color: #98c379; }
+        .code-block .function { color: #61afef; }
+        .code-block .comment { color: #5c6370; font-style: italic; }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 16.2</div>
+        <h1>Model Routers</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"A router is the traffic cop of your AI system. Done well, it directs each request to exactly the right model. Done poorly, it either overwhelms your budget with unnecessary capability or degrades quality through underprovisioning."</p>
+            <cite>A Platform Engineer Who Watches Costs Like a Hawk</cite>
+        </blockquote>
+
+        <h2>Introduction</h2>
+        <p>
+            A model router decides which model handles each incoming request. The router forms the core of any capability-based allocation system. A well-designed router analyzes incoming requests and routes them to the most appropriate model based on task requirements, cost constraints, and quality targets.
+        </p>
+        <p>
+            This section covers routing strategies from simple rule-based approaches to sophisticated learned routers, cost-aware routing, quality-latency trade-offs, and implementation patterns.
+        </p>
+
+        <h2>Routing Strategies</h2>
+        <p>
+            Routing strategies range from trivial to complex. The right strategy depends on how varied your request distribution is and how much quality variation you can tolerate.
+        </p>
+
+        <h3>Rule-Based Routing</h3>
+        <p>
+            The simplest routing approach uses deterministic rules based on request attributes. Common attributes include:
+        </p>
+        <p>
+            <strong>Request length:</strong> Short prompts (under 500 tokens) can often be handled by smaller models; longer prompts may require larger context windows or more capable models.
+        </p>
+        <p>
+            <strong>Task type:</strong> Classify requests by intent (extraction, summarization, generation, reasoning) and route based on task-model mappings you have empirically validated.
+        </p>
+        <p>
+            <strong>User tier:</strong> Free users get smaller models; paid users get larger models. This business logic is straightforward to implement but must be communicated clearly.
+        </p>
+        <p>
+            <strong>Content flags:</strong> Requests containing code, math, or specific domains may be routed to models known to excel in those areas.
+        </p>
+
+        <div class="routing-diagram">
++------------------------------------------------------------------+
+|                    RULE-BASED ROUTER                               |
++------------------------------------------------------------------+
+|                                                                     |
+|   Incoming Request                                                 |
+|          |                                                         |
+|          v                                                         |
+|   +-------------+                                                  |
+|   |   Analyze   |  Extract: length, task_type, flags               |
+|   +-------------+                                                  |
+|          |                                                         |
+|          v                                                         |
+|   +-------------+                                                  |
+|   |    Route   |                                                  |
+|   +-------------+                                                  |
+|          |                                                         |
+|    +-----+-----+-----+                                             |
+|    |     |     |     |                                             |
+|    v     v     v     v                                             |
+|  Small Medium Large  Specialized                                   |
+|                                                                     |
++------------------------------------------------------------------+
+        </div>
+
+        <h3>Classifier-Based Routing</h3>
+        <p>
+            For more nuanced routing, train a classifier to predict which model will perform best for each request. The classifier can use request features, embedding similarity to training examples, or learned representations.
+        </p>
+        <p>
+            <strong>Advantages:</strong> Handles edge cases better than rules, can learn non-obvious patterns, improves with more data.
+        </p>
+        <p>
+            <strong>Drawbacks:</strong> Requires training data (request-model-quality triplets), adds latency for classification, may behave unpredictably on out-of-distribution requests.
+        </p>
+
+        <h3>LLM-Based Routing</h3>
+        <p>
+            Use an LLM itself to classify requests and recommend routing. A small, fast model can analyze the request and output routing metadata. This approach is flexible and handles diverse request distributions well.
+        </p>
+
+        <div class="routing-diagram">
++------------------------------------------------------------------+
+|                    LLM-BASED ROUTER                                |
++------------------------------------------------------------------+
+|                                                                     |
+|   Incoming Request: "Summarize this document..."                   |
+|          |                                                         |
+|          v                                                         |
+|   +------------------+                                             |
+|   |  Small LLM       |  Analyze request, output:                   |
+|   |  (Classifier)    |  { task: "summarize", complexity: "medium", |
+|   +------------------+    recommended_model: "medium" }           |
+|          |                                                         |
+|          v                                                         |
+|   +------------------+                                             |
+|   |  Route Decision  |  Apply cost/risk modifiers                  |
+|   +------------------+                                             |
+|          |                                                         |
+|          v                                                         |
+|   Recommended Model                                                |
+|                                                                     |
++------------------------------------------------------------------+
+        </div>
+
+        <h2>Cost-Aware Routing</h2>
+        <p>
+            Cost-aware routing explicitly considers the cost of each model when making routing decisions. The goal is to minimize cost while maintaining quality above a threshold.
+        </p>
+
+        <h3>Cost-Performance Ratios</h3>
+        <p>
+            Calculate the cost-performance ratio for each model on each task. This ratio tells you how much quality you get per dollar spent.
+        </p>
+        <p>
+            A model with higher absolute quality but worse cost-performance may not be the right choice unless quality differences are meaningful for your use case.
+        </p>
+
+        <p>
+            <strong>Minimum cost</strong> routing selects the cheapest model that meets a hard quality floor. This strategy works when you have a clear quality threshold that must not be crossed, and you are willing to accept whatever quality the minimum-cost model delivers above that floor. The trade-off is that this approach may sacrifice quality in pursuit of savings, so it is only appropriate when quality differences between models are acceptable for your use case.
+        </p>
+        <p>
+            <strong>Maximum quality</strong> routing always selects the most capable model regardless of cost. This strategy makes sense when quality is the only thing that matters and budget is not a constraint. The trade-off is that it ignores cost differences entirely, potentially spending significantly more than necessary when a cheaper model would have delivered adequate results.
+        </p>
+        <p>
+            <strong>Quality-adjusted cost</strong> routing optimizes for the best quality per dollar spent. This requires measuring quality systematically to compute cost-performance ratios, then routing to the model that maximizes quality while controlling cost. The trade-off is that it requires establishing robust quality measurement before it can work effectively.
+        </p>
+        <p>
+            <strong>Budget-constrained</strong> routing operates within a fixed AI budget, selecting models that deliver the best quality possible within that spending limit. This approach is common for products with predictable AI costs built into their unit economics. The trade-off is that the fixed budget may not cover all quality needs, requiring careful priority setting or acceptance of quality compromises.
+        </p>
+
+        <h3>Bidirectional Routing</h3>
+        <p>
+            For requests where quality is uncertain, use bidirectional routing: try a smaller model first, evaluate the output, and escalate to a larger model only if quality is insufficient. This approach works well for tasks where you can cheaply evaluate outputs (e.g., structural validation, format checking).
+        </p>
+
+        <div class="callout key-insight">
+            <h4>The Escalation Pattern</h4>
+            <p>Bidirectional routing implements an escalation pattern: start with the cheapest model, check if output meets quality bar, escalate if not. This pattern is especially effective for extraction, classification, and transformation tasks where you can cheaply validate outputs. For generation tasks, escalation is harder because quality assessment requires human judgment.</p>
+        </div>
+
+        <h2>Quality-Latency Trade-offs</h2>
+        <p>
+            Different routing strategies affect both quality and latency. Understanding these trade-offs helps you design routers that meet your specific requirements.
+        </p>
+
+        <h3>Fast-Path Architecture</h3>
+        <p>
+            Design your router to have a fast path for common cases. Most request distributions are heavy-tailed: a small number of task types dominate. Identify these common cases and hard-code fast routing for them.
+        </p>
+        <p>
+            For the long tail of requests, use more sophisticated (but slower) classification. This approach keeps average latency low while handling diversity.
+        </p>
+
+        <h3>Cascaded Routing</h3>
+        <p>
+            Cascaded routing tries models in sequence from cheapest to most expensive, stopping when output meets quality threshold. This approach minimizes cost but adds latency when escalation is needed.
+        </p>
+        <p>
+            The key to cascaded routing is fast quality assessment. Build cheap evaluation functions that can quickly determine if an output is sufficient. Without fast assessment, cascaded routing introduces unacceptable latency.
+        </p>
+
+        <h3>Parallel Routing</h3>
+        <p>
+            For latency-critical applications, route to multiple models simultaneously and return the first acceptable response. This approach minimizes latency but wastes compute on rejected outputs.
+        </p>
+        <p>
+            Parallel routing works well when the cost of waiting outweighs the cost of wasted compute, and when you can afford to sometimes pay for multiple models.
+        </p>
+
+        <div class="routing-diagram">
++------------------------------------------------------------------+
+|                    CASCADED ROUTING                                |
++------------------------------------------------------------------+
+|                                                                     |
+|   Request --> Small Model --> Quality Check -->                   |
+|                                  |                                 |
+|                            Pass? Y/N                               |
+|                                  |                                 |
+|                      N             Y                                |
+|                      |             |                               |
+|                      v             |                               |
+|               Medium Model --> Quality Check                       |
+|                                  |                                 |
+|                            Pass? Y/N                               |
+|                                  |                                 |
+|                      N             Y                                |
+|                      |             |                                |
+|                      v             |                                |
+|               Large Model --> Quality Check                        |
+|                                  |                                 |
+|                                  v                                 |
+|                              Final Output                          |
+|                                                                     |
++------------------------------------------------------------------+
+        </div>
+
+        <h2>Implementation Patterns</h2>
+        <p>
+            Implementing a router involves decisions about where routing happens, how routing state is managed, and how routing rules are updated.
+        </p>
+
+        <h3>Routing in API Gateway</h3>
+        <p>
+            The simplest implementation is routing at the API gateway layer. Incoming requests are enriched with routing metadata before being forwarded to the appropriate model endpoint.
+        </p>
+
+        <div class="code-block">
+<span class="comment">// Example: Simple rule-based router</span>
+<span class="keyword">async function</span> <span class="function">routeRequest</span>(request) {
+  <span class="keyword">const</span> taskType = classifyTask(request.prompt);
+  <span class="keyword">const</span> complexity = estimateComplexity(request.prompt);
+  
+  <span class="keyword">if</span> (taskType === <span class="string">'extraction'</span> && complexity === <span class="string">'low'</span>) {
+    <span class="keyword">return</span> { model: <span class="string">'phi-3-mini'</span>, endpoint: endpoints.small };
+  }
+  <span class="keyword">if</span> (taskType === <span class="string">'reasoning'</span> || complexity === <span class="string">'high'</span>) {
+    <span class="keyword">return</span> { model: <span class="string">'gpt-4'</span>, endpoint: endpoints.large };
+  }
+  <span class="keyword">return</span> { model: <span class="string">'claude-3-haiku'</span>, endpoint: endpoints.medium };
+}
+</div>
+
+        <h3>Learning to Route</h3>
+        <p>
+            For more sophisticated routing, collect data on request-model-quality triplets and train a learned model. The training objective is to predict which model will achieve the best quality-cost ratio for each request.
+        </p>
+        <p>
+            Start with a rule-based router, collect data, then gradually shift to learned routing as your data grows. This approach reduces risk during the learning phase.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: DataForge Enterprise</div>
+            <p><strong>Who:</strong> A legal tech startup building a document analysis platform</p>
+            <p><strong>Situation:</strong> DataForge processes thousands of legal documents daily, ranging from simple contracts to complex regulatory filings</p>
+            <p><strong>Problem:</strong> Routing all documents to GPT-4 for analysis cost $50,000/month, unsustainable for the business model</p>
+            <p><strong>Solution:</strong> The team implemented a three-tier router:</p>
+            <p>Tier 1 (Fast path): Simple contracts with standard structure are routed to a fine-tuned Llama model (cost: $0.001/page). Tier 2 (Medium path): Complex contracts with non-standard clauses are routed to Claude 3 Haiku (cost: $0.01/page). Tier 3 (Slow path): Regulatory filings requiring nuanced interpretation are routed to GPT-4 (cost: $0.10/page).</p>
+            <p><strong>Result:</strong> Average cost per document dropped from $0.08 to $0.015, a 81% reduction. Quality monitoring showed 97% of outputs met acceptance thresholds, with the 3% failures concentrated in novel document types now flagged for human review.</p>
+        </div>
+
+        <h2>Monitoring Router Performance</h2>
+        <p>
+            A router is only as good as its feedback loop. Monitor routing decisions to identify systematic quality issues, cost overruns, and opportunities for optimization.
+        </p>
+        <p>
+            Track these metrics per route: quality scores, latency percentiles, cost per request, and escalation rates. A route with high escalation rates may indicate the quality threshold is set too low or the smaller model is underperforming for that task type.
+        </p>
+
+        <div class="callout warning">
+            <h4>Watch for Router Degradation</h4>
+            <p>Model capabilities change over time. A model that was adequate for a task six months ago may be inadequate today as task complexity increases or as the model is updated. Re-evaluate routing rules when model versions change or when you observe quality drift.</p>
+        </div>
+
+        <h2>Cross-References</h2>
+        <p>
+            For architecture patterns that integrate with routing, see <a href="section-15-1.html">Chapter 15.1 Architecture Spectrum</a>. For evaluation frameworks to measure routing quality, see <a href="../../part-5-evaluation-reliability/chapter-24/index.html">Chapter 24 Evaluation</a>. For cost monitoring and optimization, see <a href="section-16-5.html">Section 16.5 Latency, Cost, and Quality Trade-offs</a>.
+        </p>
+
+        <h2>Section Summary</h2>
+        <p>
+            Model routers direct requests to appropriate models based on task requirements, cost constraints, and quality targets. Rule-based routing works well for simple distributions; classifier-based routing handles more complexity. Cost-aware routing explicitly optimizes quality per dollar. Cascaded routing minimizes cost through escalation; parallel routing minimizes latency through simultaneous requests. Router performance must be monitored continuously, and routing rules should evolve as models and tasks change.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Chapter 16 Overview</a>
+            <a class="up" href="../index.html">Chapter 16 Overview</a>
+            <a class="next" href="section-16-3.html">16.3 Ensembles and Specialization</a>
+        </nav>
+
+        <footer>
+            <p>Section 16.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

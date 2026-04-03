@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appendix H: AI Product Anti-Patterns</title>
+    <link rel="stylesheet" href="../../../styles.css">
+</head>
+<body>
+    <chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="appendix-h-anti-patterns">
+        <info>
+            <title>Appendix H</title>
+            <subtitle>AI Product Anti-Patterns</subtitle>
+        </info>
+
+        <introduction>
+            <para>
+                Building AI products requires different thinking than traditional software development.
+                The probabilistic nature of AI systems, the challenge of evaluating generative outputs,
+                and the iterative discovery process all create opportunities for predictable mistakes.
+                This appendix catalogs ten common anti-patterns that teams encounter when developing
+                AI-powered products, along with detection strategies and concrete fixes.
+            </para>
+            <para>
+                Each anti-pattern follows a consistent structure: the failure mode itself, why it
+                tends to occur, how to recognize it in your own process, and what to do instead.
+                Use these as diagnostic tools during retrospectives or as preventive guides when
+                planning new AI features.
+            </para>
+        </introduction>
+
+        <section xml:id="anti-pattern-deterministic-requirements">
+            <title>1. Deterministic Requirements for Probabilistic Systems</title>
+
+            <callout xmlns="http://docbook.org/ns/docbook" type="warning">
+                <title>The Anti-Pattern</title>
+                <para>
+                    Teams write specifications that treat AI outputs as guaranteed results rather than
+                    probabilistic distributions. Phrases like "the model shall always respond with X" or
+                    "output shall match format Y exactly" reflect a fundamental misunderstanding of how
+                    statistical systems behave.
+                </para>
+            </callout>
+
+            <section xml:id="deterministic-why">
+                <title>Why It Happens</title>
+                <para>
+                    Product requirements inherit mental models from deterministic software. Engineers
+                    specify behavior, designers specify exact layouts, and project managers track
+                    completion against concrete deliverables. When AI enters the picture with its
+                    variability, teams either ignore the uncertainty or specify it away with
+                    overconfident requirements that cannot be met.
+                </para>
+                <para>
+                    Stakeholders also pressure teams for guarantees. Saying "the AI will usually do X"
+                    feels uncomfortable in a product review. Requirements become aspirational statements
+                    that the team knows cannot be met reliably, setting up systematic failure from
+                    the start.
+                </para>
+            </section>
+
+            <section xml:id="deterministic-detect">
+                <title>How to Detect It</title>
+                <para>
+                    You are exhibiting this anti-pattern when requirements use words like "always," "shall," "will," and "must" when describing AI outputs. Acceptance criteria focus on exact string matching rather than behavioral boundaries. Nobody can articulate what "good enough" looks like across multiple runs. QA reports failures as bugs when outputs vary across identical inputs. Requirements documents never mention confidence thresholds or fallback behaviors.
+                </para>
+            </section>
+
+            <section xml:id="deterministic-fix">
+                <title>How to Fix It</title>
+                <para>
+                    Define behavioral boundaries instead of exact outputs. Ask: what is the range of
+                    acceptable responses? What constitutes a failure mode? What happens when the model
+                    is uncertain?
+                </para>
+                <programlisting>
+# Instead of: "The summary shall always be exactly 50 words"
+
+# Write: "The summary shall be between 40-60 words. Summaries outside this 
+# range are acceptable if the model determines truncation would harm meaning.
+# Summaries that omit key entities from the source document are failures."
+
+# Define acceptable variation explicitly
+acceptable_ranges = {
+    "word_count": (40, 60),
+    "contains_entities": ["entity1", "entity2"],  # Required mentions
+    "factual_consistency": "high",  # Behavioral standard, not exact match
+    "forbidden_patterns": ["negative_sentiment", "unfounded_opinions"]
+}
+                </programlisting>
+                <para>
+                    Train stakeholders that AI specification is about defining the probability
+                    distribution you want, not controlling every sample. Reliability metrics belong
+                    in your eval framework, not in requirements documents as guaranteed outputs.
+                </para>
+            </section>
+        </section>
+
+        <section xml:id="anti-pattern-demos-validation">
+            <title>2. Demos Mistaken for Validated Products</title>
+
+            <callout xmlns="http://docbook.org/ns/docbook" type="warning">
+                <title>The Anti-Pattern</title>
+                <para>
+                    A single impressive demo leads leadership and stakeholders to conclude that the
+                    underlying problem has been solved. The demo showed it working once, which feels
+                    like proof of concept completion, but leaves critical questions unanswered: How
+                    often does it work? Under what conditions does it fail? Is the failure acceptable?
+                </para>
+            </callout>
+
+            <section xml:id="demos-why">
+                <title>Why It Happens</title>
+                <para>
+                    Demos are memorable. A moment of delight from a working prototype creates
+                    disproportionate confidence. AI demos especially captivate because the behavior
+                    feels magical, and observers fill in gaps with optimistic assumptions about
+                    reliability and generality.
+                </para>
+                <para>
+                    There is also organizational pressure to show progress. Teams demonstrate working
+                    demos to justify continued investment, and success in a demo becomes conflated
+                    with success in product validation. The incentive to show capability outweighs
+                    the incentive to measure it rigorously.
+                </para>
+            </section>
+
+            <section xml:id="demos-detect">
+                <title>How to Detect It</title>
+                <para>
+                    You are exhibiting this anti-pattern when project status reports show demo success as a milestone achievement. Nobody can tell you the success rate of the demonstrated capability. Demo scenarios were hand-picked rather than randomly sampled. Roadmap decisions have been made based on demo performance. The team has not conducted structured evaluation across diverse inputs.
+                </para>
+            </section>
+
+            <section xml:id="demos-fix">
+                <title>How to Fix It</title>
+                <para>
+                    Define validation criteria before any demo. Write down what "good enough"
+                    performance looks like, what sample size you need to trust the measurement,
+                    and what failure modes are acceptable before you show anyone the prototype.
+                </para>
+                <programlisting>
+# Before showing a demo, establish:
+
+validation_criteria = {
+    "capability_name": "entity_extraction",
+    "minimum_viable_performance": {
+        "recall_at_k": 0.85,      # Can find 85% of entities
+        "precision_threshold": 0.9,  # When it finds one, 90% correct
+        "false_positive_rate": "< 5% of extractions are hallucinated"
+    },
+    "validation_sample_size": 500,
+    "required_diversity": "spans 3+ industries, 2+ languages",
+    "acceptable_failure_modes": ["low_confidence_extractions", "missing_nested_entities"],
+    "unacceptable_failure_modes": ["conflicting_entity_types", "complete_hallucination"],
+    "measurement_before_demos": True  # Non-negotiable
+}
+
+# Demo only happens AFTER validation criteria are measured
+</programlisting>
+                <para>
+                    Treat demos as demonstrations of measured capability, not proof of concept.
+                    If you cannot measure it, you have not validated it, no matter how impressive
+                    the demo looked.
+                </para>
+            </section>
+        </section>
+
+        <section xml:id="anti-pattern-premature-architecture">
+            <title>3. Premature Architecture</title>
+
+            <callout xmlns="http://docbook.org/ns/docbook" type="warning">
+                <title>The Anti-Pattern</title>
+                <para>
+                    Teams invest in production-grade infrastructure, scalability patterns, and
+                    enterprise reliability features before evidence exists that the core capability
+                    works. The architecture anticipates scale and complexity that the prototype has
+                    not yet justified, burning development time on infrastructure that may never be
+                    needed or may need to be replaced entirely.
+                </para>
+            </callout>
+
+            <section xml:id="premature-why">
+                <title>Why It Happens</title>
+                <para>
+                    Software engineering culture values good architecture. Teams take pride in
+                    building scalable, maintainable systems, and there is discomfort with what
+                    looks like "hacky" prototype code. When AI is involved, engineers may also
+                    face pressure to make the system "production ready" before the AI behavior
+                    itself is understood.
+                </para>
+                <para>
+                    Organizational incentives compound the problem. Infrastructure investments are
+                    visible and measurable. Demonstrating that you built a robust pipeline feels
+                    like progress even if the underlying AI capability remains unvalidated.
+                </para>
+            </section>
+
+            <section xml:id="premature-detect">
+                <title>How to Detect It</title>
+                <para>
+                    You are exhibiting this anti-pattern when production infrastructure is being built before model behavior is characterized. The team cannot describe what would make them change the architecture. Investment in infrastructure outpaces investment in evaluation. Architecture documents describe systems that do not yet have working prototypes. No evidence exists that the bottleneck is infrastructure rather than AI capability.
+                </para>
+            </section>
+
+            <section xml:id="premature-fix">
+                <title>How to Fix It</title>
+                <para>
+                    Let prototype results drive architecture decisions. Build the simplest thing
+                    that could work for the current evidence, and evolve the architecture only when
+                    data shows why complexity is necessary.
+                </para>
+                <programlisting>
+# Maturity-gated architecture approach
+
+def should_invest_in(architecture_component, prototype_evidence):
+    required_evidence = {
+        "caching_layer": {
+            "metric": "repeated_computation_percentage",
+            "threshold": "> 30% of calls repeat input"
+        },
+        "batch_processing": {
+            "metric": "latency_tolerance",
+            "threshold": "p99 > 5s for single requests"
+        },
+        "model_redundancy": {
+            "metric": "failure_rate_under_load",
+            "threshold": "> 5% requests fail under expected load"
+        },
+        "observability": {
+            "metric": "debug_time_per_incident",
+            "threshold": "> 30 min average to diagnose issues"
+        }
+    }
+    
+    if prototype_evidence[required_evidence[architecture_component]["metric"]] < required_evidence[architecture_component]["threshold"]:
+        return False  # Not yet justified
+    return True  # Evidence warrants investment
+                </programlisting>
+                <para>
+                    Good architecture serves known requirements. When requirements come from
+                    speculation rather than measurement, you are building on quicksand.
+                    Wait for the prototype to tell you what the production system actually needs.
+                </para>
+            </section>
+        </section>
+
+        <section xml:id="anti-pattern-late-evaluation">
+            <title>4. Evaluation Introduced Too Late</title>
+
+            <callout xmlns="http://docbook.org/ns/docbook" type="warning">
+                <title>The Anti-Pattern</title>
+                <para>
+                    Quality metrics, success criteria, and evaluation frameworks are defined after
+                    the product is substantially built. By the time evaluation happens, fixing
+                    fundamental capability problems is expensive or politically impossible. The
+                    team has already committed to an approach that may not be measuring the right
+                    things.
+                </para>
+            </callout>
+
+            <section xml:id="late-eval-why">
+                <title>Why It Happens</title>
+                <para>
+                    Evaluation feels like a polish activity. Teams are under pressure to ship
+                    working code, and measurement infrastructure does not produce visible demos.
+                    It is easy to assume that defining "good" is simple enough to do later, or
+                    that you will figure out metrics once the feature is working.
+                </para>
+                <para>
+                    With AI systems, there is also genuine uncertainty about how to measure
+                    quality. Teams delay evaluation planning because they do not know what good
+                    looks like yet, not realizing that this uncertainty is exactly why eval needs
+                    to start early so it can evolve with understanding.
+                </para>
+            </section>
+
+            <section xml:id="late-eval-detect">
+                <title>How to Detect It</title>
+                <para>
+                    You are exhibiting this anti-pattern when metrics and success criteria are defined in the final sprint or at launch. There is no eval infrastructure when major features are completed. The team cannot run automated checks before each release. Quality is assessed manually and subjectively at the end. Discussion of "how do we measure success" is met with silence or deferral.
+                </para>
+            </section>
+
+            <section xml:id="late-eval-fix">
+                <title>How to Fix It</title>
+                <para>
+                    Establish eval-first from the framing stage. Even when you do not know what
+                    good looks like, commit to figuring it out before you build. Define your
+                    measurement approach early and evolve it as understanding develops.
+                </para>
+                <programlisting>
+# Eval-first workflow
+
+# Phase 1: Framing (before any building)
+eval_plan = {
+    "hypothesis": "Model can extract structured entities from support tickets",
+    "measurement_approach": {
+        "method": "human_eval",  # Start with humans, graduate to automated
+        "sample_size": 100,
+        "raters_needed": 2,
+        "inter_rater_reliability_target": 0.8
+    },
+    "success_threshold": "TBD after baseline measurement",
+    "evolution_plan": "Refine criteria as we learn what 'good' means"
+}
+
+# Phase 2: Baseline measurement
+# Run eval before building, even on a toy prototype
+# This forces clarity about what you are measuring
+
+# Phase 3: Iterative refinement
+# After each iteration, expand the eval with new failure cases discovered
+
+# Phase 4: Automated regression
+# Once criteria stabilize, automate what can be automated
+# Keep humans in the loop for ambiguous cases indefinitely
+</programlisting>
+                <para>
+                    Evaluation is not a test suite you write at the end. It is the compass that
+                    tells you if you are building the right thing. Start measuring as soon as
+                    you have a hypothesis, even if the measurement is rough.
+                </para>
+            </section>
+        </section>
+
+        <section xml:id="anti-pattern-launch-confidence">
+            <title>5. Launch Without Explicit Confidence Boundaries</title>
+
+            <callout xmlns="http://docbook.org/ns/docbook" type="warning">
+                <title>The Anti-Pattern</title>
+                <para>
+                    Products ship without clear understanding of what could go wrong, how likely
+                    different failure modes are, or what monitoring will detect problems. When
+                    issues arise in production, the team scrambles to understand the scope and
+                    root cause, often discovering that they lack the visibility to even diagnose
+                    what happened.
+                </para>
+            </callout>
+
+            <section xml:id="confidence-why">
+                <title>Why It Happens</title>
+                <para>
+                    There is organizational pressure to ship. Explaining that you need to define
+                    failure modes and monitoring before launch feels like adding unnecessary
+                    process. It is tempting to assume that shipped products will reveal their
+                    problems and that monitoring can be added later when user impact demands it.
+                </para>
+                <para>
+                    Teams also overestimate their understanding of their own systems. It feels
+                    obvious what could go wrong because the team built it, but familiarity
+                    with the system creates blind spots to edge cases and interaction effects
+                    that only emerge under real traffic patterns.
+                </para>
+            </section>
+
+            <section xml:id="confidence-detect">
+                <title>How to Detect It</title>
+                <para>
+                    You are exhibiting this anti-pattern when the launch checklist does not include "define failure modes" as a required item. No monitoring dashboards exist for the AI system's key metrics. The team cannot quickly answer "how would we know if X went wrong?" Incident postmortems reveal that the problem was invisible until users complained. Rollback procedures are undefined or untested.
+                </para>
+            </section>
+
+            <section xml:id="confidence-fix">
+                <title>How to Fix It</title>
+                <para>
+                    Define failure modes and monitoring before launch. Make explicit what could
+                    go wrong, how you will detect it, and what you will do about it. This
+                    exercise often reveals gaps in understanding that are better to find now
+                    than during an incident.
+                </para>
+                <programlisting>
+# Pre-launch confidence boundary document
+
+confidence_boundaries = {
+    "capability_name": "AI-powered document classification",
+    
+    "failure_modes": [
+        {
+            "mode": "model_confidence_mismatch",
+            "description": "Model reports high confidence but is wrong",
+            "detection": "Track calibration curve over time; flag drift > 0.1 from baseline",
+            "severity": "high",
+            "response": "Auto-escalate to human review when confidence < 0.7"
+        },
+        {
+            "mode": "distribution_shift",
+            "description": "Input documents change over time (new topics, formats)",
+            "detection": "Monitor input feature distribution; alert on population stability index drop",
+            "severity": "medium",
+            "response": "Retrain trigger: PSI < 0.2 triggers model review"
+        },
+        {
+            "mode": "hallucinated_classifications",
+            "description": "Model assigns classes not present in training or taxonomy",
+            "detection": "Monitor for out-of-vocabulary predictions; unexpected class growth",
+            "severity": "high",
+            "response": "Hard block: classes not in approved taxonomy require human approval"
+        }
+    ],
+    
+    "monitoring_checklist": [
+        "confidence_distribution_p50, p90, p99",
+        "prediction_volume_by_class",
+        "human_review_approval_rate",
+        "user_escalation_rate",
+        "input_distribution_stability"
+    ],
+    
+    "rollback_trigger": "If p95 latency exceeds 5s OR error rate > 2% for 10 minutes"
+}
+</programlisting>
+                <para>
+                    You do not need to monitor everything, but you must monitor enough to know
+                    when the system is behaving outside expected bounds. Know your boundaries
+                    before you need them.
+                </para>
+            </section>
+        </section>
+
+        <section xml:id="anti-pattern-benchmark-trust">
+            <title>6. Product Teams Over-Trusting Benchmark Scores</title>
+
+            <callout xmlns="http://docbook.org/ns/docbook" type="warning">
+                <title>The Anti-Pattern</title>
+                <para>
+                    Product decisions are made based on benchmark leaderboard positions or
+                    standard dataset performance without validating that these metrics correlate
+                    with user satisfaction. The team celebrates reaching state-of-the-art on
+                    benchmarks while real users experience the product as disappointing or broken.
+                </para>
+            </callout>
+
+            <section xml:id="benchmark-why">
+                <title>Why It Happens</title>
+                <para>
+                    Benchmarks are concrete and comparable. A number on a leaderboard feels
+                    objective and rigorous. It is easy to communicate and track over time.
+                    When a new model beats the previous state-of-the-art, it feels like obvious
+                    progress, regardless of whether the benchmark actually measures what matters
+                    for your users.
+                </para>
+                <para>
+                    Product teams often lack the expertise or time to run independent evaluations.
+                    Benchmark scores from model providers come with implied endorsement. Without
+                    resources to validate, teams accept the numbers at face value.
+                </para>
+            </section>
+
+            <section xml:id="benchmark-detect">
+                <title>How to Detect It</title>
+                <para>
+                    You are exhibiting this anti-pattern when roadmap decisions reference benchmark improvements as justification. No user satisfaction metrics are tracked alongside benchmark performance. The team cannot explain why the benchmark predicts user outcomes. Users are complaining while benchmark scores look great. Different models with similar benchmarks produce different user experiences.
+                </para>
+            </section>
+
+            <section xml:id="benchmark-fix">
+                <title>How to Fix It</title>
+                <para>
+                    Always tie benchmarks to user-centered evaluations. Use benchmarks as a
+                    necessary but not sufficient condition. If benchmark improvement does not
+                    move your user satisfaction metrics, the benchmark is not measuring what
+                    matters for your product.
+                </para>
+                <programlisting>
+# Benchmark correlation tracking
+
+evaluation_framework = {
+    "benchmark_metrics": ["accuracy", "f1", "bleu", "rouge"],
+    
+    "user_centered_metrics": [
+        "task_completion_rate",
+        "user_satisfaction_score",  # Direct feedback
+        "support_ticket_rate_for_ai_issues",
+        "retry_rate_after_failure",
+        "override_rate_for_ai_decisions"
+    ],
+    
+    # Establish correlation before trusting benchmarks
+    "correlation_validation": {
+        "method": "Run both during pilot",
+        "required_correlation": "r > 0.6 between benchmark and user metric",
+        "frequency": "Re-validate after major changes"
+    }
+}
+
+# Decision rule
+def use_new_model_candidate(candidate, current):
+    benchmark_improvement = candidate.benchmark_score - current.benchmark_score
+    user_impact = predict_user_impact(candidate)  # Based on correlation model
+    
+    # Benchmark improvement alone is not sufficient
+    if user_impact.confidence_interval_low < 0:
+        return {"decision": "reject", "reason": "Benchmark improvement does not predict user improvement"}
+    
+    return {"decision": "proceed", "reason": f"Benchmark + user metrics both positive"}
+</programlisting>
+                <para>
+                    Benchmarks measure something. Make sure that something matters to your users
+                    before betting your roadmap on it.
+                </para>
+            </section>
+        </section>
+
+        <section xml:id="anti-pattern-hardening-unvalidated">
+            <title>7. Engineering Over-Hardening Ambiguous Workflows</title>
+
+            <callout xmlns="http://docbook.org/ns/docbook" type="warning">
+                <title>The Anti-Pattern</title>
+                <para>
+                    Engineering invests significant effort in making unreliable workflows
+                    robust, adding retries, fallbacks, error handling, and operational
+                    automation to AI systems that have not been validated as solving the
+                    right problem. The result is durable infrastructure around an uncertain
+                    or unsuitable capability.
+                </para>
+            </callout>
+
+            <section xml:id="hardening-why">
+                <title>Why It Happens</title>
+                <para>
+                    Engineers are trained to handle failure modes and build resilient systems.
+                    When faced with an AI system that fails unpredictably, the natural response
+                    is to add protection layers. It feels productive to build something that
+                    handles errors gracefully, even when the core capability has not been proven
+                    reliable enough to warrant the investment.
+                </para>
+                <para>
+                    There is also a coordination problem. Engineers move faster than product
+                    managers can clarify requirements or than evaluators can measure capability.
+                    Rather than wait, engineering builds reliability into whatever exists,
+                    creating infrastructure that may need to be discarded when the workflow
+                    changes.
+                </para>
+            </section>
+
+            <section xml:id="hardening-detect">
+                <title>How to Detect It</title>
+                <para>
+                    You are exhibiting this anti-pattern when significant engineering time is spent on operational robustness before user validation. The workflow being hardened has not been validated against user satisfaction. Retries and fallbacks exist for failure modes that have not been measured. Engineers can tell you the system's uptime but not its usefulness. The team has built monitoring for a workflow that users might not want.
+                </para>
+            </section>
+
+            <section xml:id="hardening-fix">
+                <title>How to Fix It</title>
+                <para>
+                    Wait for evidence before investing in durability. The right time to harden
+                    a workflow is after it has been validated as solving the right problem
+                    reliably enough that the investment in robustness is justified.
+                </para>
+                <programlisting>
+# Evidence-gated hardening
+
+def should_invest_in_durability(workflow_evidence):
+    required_validation = {
+        "user_need_validated": False,       # Do users want this?
+        "capability_validated": False,       # Can the AI do it reliably?
+        "failure_modes_known": False,         # Do we understand what fails?
+        "acceptable_baseline_established": False  # Is current performance good enough to justify investment?
+    }
+    
+    # Check each requirement
+    validated_count = sum(required_validation.values())
+    
+    if validated_count < 3:
+        return {
+            "decision": "wait",
+            "reason": f"Only {validated_count}/4 validation gates passed. Harden after validation."
+        }
+    
+    return {
+        "decision": "invest",
+        "reason": "Sufficient evidence to justify durability investment",
+        "focus_areas": get_top_failure_modes(workflow_evidence)
+    }
+</programlisting>
+                <para>
+                    Building durable infrastructure for an uncertain workflow is building a
+                    robust house on a foundation you have not tested. Validate the foundation
+                    before investing in the structure.
+                </para>
+            </section>
+        </section>
+
+        <section xml:id="anti-pattern-phase-gates">
+            <title>8. Phase Gate Thinking in an Evidence Loop</title>
+
+            <callout xmlns="http://docbook.org/ns/docbook" type="warning">
+                <title>The Anti-Pattern</title>
+                <para>
+                    Teams treat product management, prototyping, and engineering as sequential
+                    phases with formal handoffs between them. PM finishes requirements, then
+                    hands off to prototype, then hands off to engineering. Each phase completes
+                    before the next begins, preventing the continuous feedback loops that
+                    AI product development requires.
+                </para>
+            </callout>
+
+            <section xml:id="phasegate-why">
+                <title>Why It Happens</title>
+                <para>
+                    Traditional software development uses phase gates to manage risk and
+                    coordinate large teams. Requirements freeze before design, design freeze
+                    before implementation. This sequential thinking is deeply embedded in
+                    organizational processes, hiring, and performance evaluation.
+                </para>
+                <para>
+                    AI product development challenges this model because you cannot know if
+                    requirements are achievable until you have built and evaluated prototypes.
+                    The evidence you need to make good product decisions only emerges from
+                    running the full loop, which requires PM, prototyping, and engineering to
+                    operate simultaneously.
+                </para>
+            </section>
+
+            <section xml:id="phasegate-detect">
+                <title>How to Detect It</title>
+                <para>
+                    You are exhibiting this anti-pattern when project plans show PM phase, then prototype phase, then engineering phase. Engineers wait for finalized requirements before starting any technical work. Prototypes are thrown away when moving to production instead of informing it. PM and engineering rarely interact except at formal handoff meetings. The team only evaluates after engineering has built, not during.
+                </para>
+            </section>
+
+            <section xml:id="phasegate-fix">
+                <title>How to Fix It</title>
+                <para>
+                    Run all three simultaneously with constant feedback. Product management,
+                    prototyping, and engineering should overlap throughout development, with
+                    evidence flowing continuously between them.
+                </para>
+                <programlisting>
+# Evidence loop model
+
+class EvidenceLoop:
+    def __init__(self):
+        self.pm = ProductManagement()
+        self.proto = Prototyping()
+        self.eng = Engineering()
+    
+    def run_sprint(self, sprint_duration_weeks=2):
+        """
+        All three tracks run in parallel, sharing evidence continuously.
+        """
+        
+        # Week 1: Overlap and learn
+        proto_results = self.proto.run_experiments(
+            constraints=self.pm.get_current_requirements()  # Soft constraints
+        )
+        
+        self.eng.inform_architecture(
+            from_proto=proto_results  # Real data, not speculation
+        )
+        
+        self.pm.update_requirements(
+            evidence=proto_results + self.eng.feasibility_notes
+        )
+        
+        # Week 2: Continue while validating
+        validation_results = self.proto.validate_on_users(
+            current_requirements=self.pm.get_current_requirements()
+        )
+        
+        self.pm.refine_success_criteria(validation_results)
+        self.eng.continue_build(
+            proto_findings=proto_results,
+            validation=validation_results
+        )
+        
+        return {
+            "requirements": self.pm.get_current_requirements(),
+            "capability": proto_results,
+            "production_path": self.eng.get_current_architecture(),
+            "validated": validation_results
+        }
+</programlisting>
+                <para>
+                    In AI product development, the sequence is not requirements-then-build-then-eval.
+                    It is learn-then-build-then-validate-then-adjust, running continuously.
+                    Organizations that force sequential phases will move slower and build
+                    the wrong things.
+                </para>
+            </section>
+        </section>
+
+        <section xml:id="anti-pattern-prompt-ux">
+            <title>9. Prompt Engineering as UX Design</title>
+
+            <callout xmlns="http://docbook.org/ns/docbook" type="warning">
+                <title>The Anti-Pattern</title>
+                <para>
+                    Teams treat changes to the system prompt as the primary mechanism for
+                    fixing user experience problems. When users encounter confusion, irritation,
+                    or failure, the response is to tweak the prompt, add more instructions, or
+                    rewrite the system message. The underlying interaction design problems remain
+                    unaddressed.
+                </para>
+            </callout>
+
+            <section xml:id="promptux-why">
+                <title>Why It Happens</title>
+                <para>
+                    Prompt changes are fast and reversible. Unlike redesigning an interface,
+                    editing text is cheap and can be tested immediately. When users report
+                    problems, it is tempting to reach for the fastest solution, which is often
+                    a prompt tweak.
+                </para>
+                <para>
+                    Prompting also feels like magic. Small changes sometimes produce dramatic
+                    improvements, reinforcing the belief that the right prompt can solve any
+                    problem. This creates dependency on prompt engineering as the universal
+                    fix, rather than investigating whether the problem lives in the interaction
+                    design itself.
+                </para>
+            </section>
+
+            <section xml:id="promptux-detect">
+                <title>How to Detect It</title>
+                <para>
+                    You are exhibiting this anti-pattern when prompt files are the first place the team looks when addressing user issues. Prompt changes outnumber interface or workflow changes by large margin. The team cannot explain why a prompt instruction works, only that it does. User research is not conducted, and prompt changes substitute for understanding users. Prompts grow over time as new instructions are added to address edge cases. The system relies on elaborate prompting tricks rather than clear UX.
+                </para>
+            </section>
+
+            <section xml:id="promptux-fix">
+                <title>How to Fix It</title>
+                <para>
+                    Treat prompts as system contracts, not user-facing controls. Prompts should
+                    define what the AI system is and what it does, not try to micromanage every
+                    user interaction. Fix interaction design problems with interface changes,
+                    not prompt gymnastics.
+                </para>
+                <programlisting>
+# Clear separation of concerns
+
+# System prompt: Defines identity and boundaries
+SYSTEM_PROMPT = """
+You are a document analysis assistant. Your role is to:
+- Extract structured information from uploaded documents
+- Provide summaries that preserve key facts
+- Decline requests outside your document analysis capabilities
+
+You are NOT:
+- A search engine for general knowledge
+- A coding assistant
+- A creative writing tool
+"""
+
+# Prompts are contracts, not user controls
+# If users need guidance, build it into the interface:
+# - Show examples of good inputs
+# - Offer structured input forms for ambiguous requests  
+# - Provide feedback before submission
+# - Use progressive disclosure
+
+def should_fix_with_prompt(issue):
+    prompt_fixable = [
+        "response_tone_inconsistent",
+        "refusing_valid_requests",
+        "missing_required_output_format"
+    ]
+    
+    not_prompt_fixable = [
+        "users_dont_know_what_to_ask",
+        "interface_is_confusing",
+        "users_cant_find_the_feature",
+        "output_is_hard_to_use"
+    ]
+    
+    if issue in not_prompt_fixable:
+        return False  # Fix the UX, not the prompt
+    
+    return True  # Prompt may be appropriate
+</programlisting>
+                <para>
+                    Prompts are the API between you and the model. They should be stable,
+                    well-understood contracts. User experience lives in the interface layer,
+                    where it can be designed, tested, and improved with standard UX methods.
+                </para>
+            </section>
+        </section>
+
+        <section xml:id="anti-pattern-drift-feedback">
+            <title>10. Ignoring Drift and Feedback Loops</title>
+
+            <callout xmlns="http://docbook.org/ns/docbook" type="warning">
+                <title>The Anti-Pattern</title>
+                <para>
+                    Teams treat launch as the conclusion rather than the beginning. Once the
+                    product ships, there is no systematic process for detecting model
+                    degradation, tracking user behavior changes, or incorporating feedback
+                    into model improvements. The system that launched becomes increasingly
+                    misaligned with reality.
+                </para>
+            </callout>
+
+            <section xml:id="drift-why">
+                <title>Why It Happens</title>
+                <para>
+                    Launch feels like an ending. The project had milestones, and shipping is
+                    the final one. Resources are reallocated to the next initiative. There is
+                    no organizational process for continuous learning after launch, and
+                    maintaining monitoring systems feels like overhead rather than investment.
+                </para>
+                <para>
+                    The delay between cause and effect also blinds teams to drift. User
+                    behavior might change gradually, model performance might degrade slowly,
+                    and the connection between early signs and later problems is hard to see
+                    without systematic tracking. By the time problems are obvious, the root
+                    causes are distant and difficult to investigate.
+                </para>
+            </section>
+
+            <section xml:id="drift-detect">
+                <title>How to Detect It</title>
+                <para>
+                    You are exhibiting this anti-pattern when no monitoring exists for model performance over time. User feedback is collected but not systematically analyzed. There is no process for incorporating production data into training. The team cannot compare current model performance to launch-time performance. Post-launch, nobody owns the system watching the system.
+                </para>
+            </section>
+
+            <section xml:id="drift-fix">
+                <title>How to Fix It</title>
+                <para>
+                    Build monitoring and learning systems from day one. Treat launch as the
+                    start of the learning loop, not the end. The goal is to understand how
+                    the system performs in the real world and continuously improve it.
+                </para>
+                <programlisting>
+# Continuous learning system
+
+class AILearningLoop:
+    def __init__(self, product_name):
+        self.monitoring = ProductionMonitoring(product_name)
+        self.feedback_collection = FeedbackPipeline(product_name)
+        self.model_improvement = ModelIterationPipeline(product_name)
+    
+    def run_continuous_learning(self):
+        while True:
+            # Monitor for degradation
+            performance = self.monitoring.check_model_health()
+            
+            if performance.drift_detected:
+                self.monitoring.alert_team(
+                    metric=performance.drift_metric,
+                    current=performance.current_value,
+                    baseline=performance.baseline_value
+                )
+            
+            # Collect structured feedback
+            user_signals = self.feedback_collection.gather_signals()
+            
+            if user_signals.low_satisfaction_patterns:
+                self.model_improvement.analyze_failure_modes(
+                    patterns=user_signals.low_satisfaction_patterns
+                )
+            
+            # Trigger retraining when evidence supports it
+            if self.model_improvement.should_retrain():
+                self.model_improvement.trigger_retraining(
+                    additional_data=user_signals.production_examples
+                )
+            
+            sleep(interval="daily")  # Run continuously
+</programlisting>
+                <para>
+                    The AI systems you ship today are not the AI systems your users will
+                    need tomorrow. Build the infrastructure to learn from production now,
+                    so you can improve rather than maintain.
+                </para>
+            </section>
+        </section>
+
+        <section xml:id="anti-patterns-summary">
+            <title>Summary: Patterns to Recognize and Avoid</title>
+
+            <para>
+                The ten anti-patterns described in this appendix share common themes. They
+                all reflect a failure to treat AI product development as a distinct discipline
+                with its own principles, or a failure to apply those principles consistently.
+            </para>
+
+            <table frame="all">
+                <title>Anti-Pattern Quick Reference</title>
+                <tgroup cols="3">
+                    <thead>
+                        <row>
+                            <entry>Anti-Pattern</entry>
+                            <entry>Core Mistake</entry>
+                            <entry>Key Fix</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Deterministic requirements</entry>
+                            <entry>Treating AI as exact</entry>
+                            <entry>Define behavioral boundaries</entry>
+                        </row>
+                        <row>
+                            <entry>Demos as validation</entry>
+                            <entry>Showing proves nothing</entry>
+                            <entry>Measure before demonstrating</entry>
+                        </row>
+                        <row>
+                            <entry>Premature architecture</entry>
+                            <entry>Building for imagined scale</entry>
+                            <entry>Let evidence drive decisions</entry>
+                        </row>
+                        <row>
+                            <entry>Late evaluation</entry>
+                            <entry>Testing after building</entry>
+                            <entry>Eval-first from framing</entry>
+                        </row>
+                        <row>
+                            <entry>Launch without boundaries</entry>
+                            <entry>Ignoring failure modes</entry>
+                            <entry>Define and monitor limits</entry>
+                        </row>
+                        <row>
+                            <entry>Benchmark over-trust</entry>
+                            <entry>Numbers are not outcomes</entry>
+                            <entry>Tie to user metrics</entry>
+                        </row>
+                        <row>
+                            <entry>Hardening unvalidated workflows</entry>
+                            <entry>Building durable walls around uncertain ground</entry>
+                            <entry>Wait for validation</entry>
+                        </row>
+                        <row>
+                            <entry>Phase gate thinking</entry>
+                            <entry>Sequential handoffs</entry>
+                            <entry>Run loops simultaneously</entry>
+                        </row>
+                        <row>
+                            <entry>Prompt as UX</entry>
+                            <entry>Text solves interaction problems</entry>
+                            <entry>Separate contracts from controls</entry>
+                        </row>
+                        <row>
+                            <entry>Ignoring drift</entry>
+                            <entry>Launch is the end</entry>
+                            <entry>Launch is the beginning</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+
+            <para>
+                Recognizing these anti-patterns is the first step. Changing the organizational
+                behaviors that produce them is harder. Consider using this appendix as a
+                diagnostic checklist during retrospectives, as a reference when reviewing
+                project plans, or as training material for teams new to AI product development.
+            </para>
+            <para>
+                The patterns that feel most dangerous are the ones that look like good
+                engineering discipline. Premature hardening, sequential phase gates, and
+                benchmark-driven roadmaps all feel responsible and professional. In traditional
+                software development, they often are. In AI product development, the same
+                behaviors can lead you to build the wrong things with unnecessary reliability
+                and measure the wrong things with unjustified confidence.
+            </para>
+            <para>
+                The principles that prevent these anti-patterns are consistent: measure before
+                building, validate before hardening, evaluate before deciding, and never
+                stop learning after launch. AI products that succeed do so because their teams
+                treat every assumption as a hypothesis to be tested, every requirement as a
+                guess to be validated, and every launch as the start of a learning process
+                rather than the end of a development cycle.
+            </para>
+        </section>
+    </chapter>
+</body>
+</html>

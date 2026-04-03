@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13.2 Chunking, Embeddings, Hybrid Search - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 13</div>
+        <h1>Knowledge Retrieval and Advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></h1>
+        <p class="chapter-subtitle">13.2 Chunking, Embeddings, Hybrid Search</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Build reliable knowledge systems with advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> techniques.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 13.1 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Retrieval Quality Starts Here</div>
+            <p>This section covers the three decisions that most impact <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> quality: chunking strategy, embedding model selection, and hybrid search combining dense and sparse retrieval. In the context of AI products, these decisions have a larger impact on results than any other factor. Getting them right enables effective knowledge retrieval.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Chunking Haiku</div>
+            <p>Japanese haiku have 17 syllables arranged in 5-7-5. Somehow, this constraint produces beauty. Chunking is the haiku of AI engineering: finding meaning within artificial boundaries.</p>
+        </div>
+
+        <h2 id="section-13-2">13.2 Chunking, Embeddings, Hybrid Search</h2>
+
+        <p>
+            The quality of your <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> system depends heavily on how you prepare your data before retrieval. Three key decisions shape retrieval quality: how you chunk documents into searchable units, which embedding model you use, and how you combine different retrieval methods.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            These decisions have a larger impact on retrieval quality than any other factor. You can spend weeks optimizing your retrieval pipeline, but if your chunking strategy is wrong, nothing will work. The key insight is that there is no universal optimal solution; the right approach depends on your data characteristics and query patterns.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: There's No Perfect Chunk Size</div>
+            <p>You'll often see recommendations like "use 512 tokens" as if it's universal. This is misleading. The optimal chunk size depends on your data structure, query types, and embedding model. A good starting point exists, but you must test with your actual data. Chunk sizes that work well for one use case can completely fail for another.</p>
+        </div>
+
+        <h3>1. Chunking Strategies</h3>
+
+        <p>
+            Chunking determines the granularity of your search. Too small, and you lose context; too large, and precision suffers. The optimal chunk size typically falls between 256 and 1024 tokens, though this varies by use case.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Chunking for Different Use Cases</div>
+            <p><strong>Q&A Application:</strong></p>
+            <p>For question-answering, smaller chunks (256-512 tokens) work better because they align with the size of answer spans. Users ask specific questions, and the relevant information fits in small chunks.</p>
+            <pre class="code-block">from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=500,
+    chunk_overlap=50,  # Small overlap for Q&A
+    length_function=len,
+)
+chunks = splitter.split_documents(docs)</pre>
+            <p><strong>Document Summarization:</strong></p>
+            <p>For summarization, larger chunks (1024-2048 tokens) preserve more context and allow the model to see the full picture.</p>
+            <pre class="code-block">splitter = RecursiveCharacterTextSplitter(
+    chunk_size=2000,
+    chunk_overlap=200,  # Larger overlap for context
+)</pre>
+        </div>
+
+        <h4>Advanced Chunking Strategies</h4>
+
+        <p><strong>Semantic Chunking:</strong> Split at natural breakpoints rather than fixed sizes. Uses embeddings to find boundaries where meaning changes.</p>
+
+        <pre class="code-block">from langchain_experimental.text_splitter import SemanticChunker
+from langchain_openai import OpenAIEmbeddings
+
+semantic_splitter = SemanticChatGLMTextSplitter(
+    embeddings=OpenAIEmbeddings(),
+    breakpoint_threshold=0.7,  # How different must adjacent chunks be
+)
+chunks = semantic_splitter.split_documents(docs)</pre>
+
+        <p><strong>Hierarchical Chunking:</strong> Create multiple levels of granularity for different query types.</p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Hierarchical Chunking</div>
+            <pre class="code-block">class HierarchicalChunker:
+    """Create multiple chunk sizes for flexible retrieval"""
+    
+    def __init__(self):
+        self.large_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=2000, overlap=200
+        )
+        self.medium_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=500, overlap=50
+        )
+    
+    def chunk(self, documents):
+        results = []
+        for doc in documents:
+            # Create large chunks for context
+            large_chunks = self.large_splitter.split_documents([doc])
+            # Create medium chunks for precision
+            medium_chunks = self.medium_splitter.split_documents([doc])
+            
+            for i, chunk in enumerate(large_chunks):
+                chunk.metadata["chunk_level"] = "large"
+                chunk.metadata["chunk_index"] = i
+                results.append(chunk)
+            
+            for i, chunk in enumerate(medium_chunks):
+                chunk.metadata["chunk_level"] = "medium"
+                chunk.metadata["chunk_index"] = i
+                results.append(chunk)
+        
+        return results
+
+# Now you can retrieve at the appropriate level:
+# - Use large chunks when queries need broad context
+# - Use medium chunks when queries are specific</pre>
+        </div>
+
+        <h3>2. Embedding Model Selection</h3>
+
+        <p>
+            Embedding models convert text into numerical vectors that capture semantic meaning. The choice of embedding model significantly impacts retrieval quality. Modern embedding models like OpenAI's text-embedding-3 series and Cohere's embedding models offer strong performance across use cases.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: Embedding Model Comparison</div>
+            <table>
+                <thead>
+                    <tr><th>Model</th><th>Dims</th><th>Strengths</th><th>Considerations</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>text-embedding-3-small</td><td>1536</td><td>Fast, cheap, good quality</td><td>General purpose</td></tr>
+                    <tr><td>text-embedding-3-large</td><td>3072</td><td>Best quality</td><td>More expensive</td></tr>
+                    <tr><td>Cohere embed-v3</td><td>1024</td><td>Strong multilingual</td><td>Great for global apps</td></tr>
+                    <tr><td>sentence-transformers</td><td>Variable</td><td>Open source, local</td><td>Good for privacy</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            For multilingual applications, consider models specifically trained on cross-lingual data. The key metrics to evaluate are recall (does it retrieve all relevant documents) and precision (does it exclude irrelevant documents).
+        </p>
+
+        <h3>3. Hybrid Search</h3>
+
+        <p>
+            Hybrid search combines multiple retrieval methods for better results than any single method alone. The most common combination is BM25 (a traditional keyword-based method) with dense vector retrieval (semantic similarity).
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Implementing Hybrid Search</div>
+            <pre class="code-block">from langchain.retrievers import EnsembleRetriever
+from langchain_community.retrievers import BM25Retriever
+from langchain_openai import OpenAIEmbeddings
+from langchain_pinecone import PineconeVectorStore
+
+# Dense retriever (semantic)
+vectorstore = PineconeVectorStore.from_existing_index(...)
+dense_retriever = vectorstore.as_retriever(search_kwargs={"k": 10})
+
+# Sparse retriever (keyword-based)
+bm25_retriever = BM25Retriever.from_documents(documents)
+bm25_retriever.k = 10
+
+# Combine with weighting
+ensemble_retriever = EnsembleRetriever(
+    retrievers=[dense_retriever, bm25_retriever],
+    weights=[0.6, 0.4]  # 60% semantic, 40% keyword
+)
+
+# Query
+results = ensemble_retriever.invoke("What is the return policy?")</pre>
+        </div>
+
+        <h4>Why Hybrid Works</h4>
+        <ul>
+            <li><strong>BM25 excels</strong> at finding exact matches and handling rare terms that may not be well-represented in embeddings</li>
+            <li><strong>Dense retrieval excels</strong> at finding semantically similar results even when keywords do not match</li>
+            <li><strong>Combining them</strong> captures both signals, improving recall</li>
+        </ul>
+
+        <h3>4. Reranking</h3>
+
+        <p>
+            After retrieval, reranking with a cross-encoder model reorders the top results based on more accurate relevance assessment, trading some speed for precision on the most important results.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: Adding Reranking</div>
+            <pre class="code-block">from langchain.retrievers import ContextualCompressionRetriever
+from langchain.retrievers.document_compressors import CrossEncoderReranker
+from langchain_community.cross_encoders import CrossEncoder
+
+# Base retriever (whatever you use)
+base_retriever = vectorstore.as_retriever(k=20)
+
+# Cross-encoder for reranking
+cross_encoder = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+
+# Wrap with reranker
+compression_retriever = ContextualCompressionRetriever(
+    base_compressor=CrossEncoderReranker(
+        cross_encoder=cross_encoder,
+        top_n=5  # Return top 5 after reranking
+    ),
+    base_retriever=base_retriever
+)
+
+# Now results are reranked by actual relevance
+results = compression_retriever.invoke("What is the return policy?")</pre>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Patterns</strong> - Graph <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, self-correcting <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, and RAFT.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-13-1.html">13.1 Vector DB Landscape</a>
+            <a class="up" href="index.html">Chapter 13 Index</a>
+            <a class="next" href="section-13-3.html">13.3 Advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Patterns</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 13.4 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

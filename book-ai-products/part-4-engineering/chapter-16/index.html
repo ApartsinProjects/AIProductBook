@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 16: Models, Routing, and Capability Allocation - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 16</div>
+        <h1>Models, Routing, and Capability Allocation</h1>
+    </header>
+
+    <main class="content">
+        <div class="opening-hook">
+            Processing a customer refund requires different capabilities than diagnosing a rare disease. One needs speed and cost efficiency; the other needs precision and reliability. Yet most AI systems route both requests through the same model, paying premium costs for the simple task while potentially underserving the complex one. Model routing, positioned in the Measure-Architect loop, is one of the highest-leverage optimizations in AI engineering: intelligent routing can cut costs by 60% while actually improving output quality.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-16-opener.png"
+                 alt="Chapter 16 opener illustration">
+            <figcaption>
+                Model selection and routing determine which AI capabilities serve which requests.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Model Behavior Testing</div>
+            <p>Vibe-coding lets you test model behavior across different providers and versions before building routing infrastructure. Quickly compare how different models handle your specific task types, edge cases, and failure modes. Vibe-coding model variants reveals which models genuinely excel at your use cases versus which merely seem adequate in theory, enabling data-driven routing decisions rather than guesswork.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">PM Decision Points in Model Routing</div>
+            <p>PM decisions shaped by model routing include: Which tasks require premium model quality versus cost efficiency? How do routing failures affect user experience? What latency guarantees are acceptable for different task types? PMs should define quality thresholds for different task criticality levels and establish budgets that align with user value. The 60% cost reduction from intelligent routing only materializes if product requirements clearly specify where quality can be sacrificed for speed and cost.</p>
+        </div>
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master model selection, routing strategies, and capability-based allocation.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter covers the engineering decisions that determine how models are selected, routed, and allocated to tasks. Model selection involves understanding open versus closed models, size versus capability trade-offs, and task-model matching. Model routers direct requests to appropriate models based on task requirements, cost constraints, and quality targets. Ensembles and specialization combine multiple models for better results than any single model. Structured outputs and tool compatibility enable reliable integration with external systems. The chapter concludes with latency, cost, and quality trade-offs that guide optimization priorities.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> How to match model capabilities to task requirements while optimizing for latency, cost, and quality trade-offs specific to our product.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> A routing experiment sending the same requests to different models and comparing results, cost, and latency.</li>
+                <li><strong>What would count as success or failure?</strong> A routing strategy that consistently sends requests to the cheapest model that can handle them adequately.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Model routing is a high-leverage optimization; intelligent routing can dramatically reduce costs while maintaining quality.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Select appropriate models for specific tasks and constraints</li>
+                <li>Design intelligent routing strategies for multi-model systems</li>
+                <li>Build ensembles and specialized models for improved quality</li>
+                <li>Implement structured outputs and tool calling reliably</li>
+                <li>Optimize for latency, cost, and quality trade-offs</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">16.1</span> <a href="sections/section-16-1.html">Model Selection Fundamentals</a></li>
+                <li><span class="sec-num">16.2</span> <a href="sections/section-16-2.html">Model Routers</a></li>
+                <li><span class="sec-num">16.3</span> <a href="sections/section-16-3.html">Ensembles and Specialization</a></li>
+                <li><span class="sec-num">16.4</span> <a href="sections/section-16-4.html">Structured Outputs and Tool Compatibility</a></li>
+                <li><span class="sec-num">16.5</span> <a href="sections/section-16-5.html">Latency, Cost, and Quality Trade-offs</a></li>
+            </ul>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-15/index.html">Ch 15: Architectures</a>
+            <a class="up" href="../../part-4-engineering/index.html">Part IV Overview</a>
+            <a class="next" href="sections/section-16-1.html">16.1 Model Selection</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 16 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

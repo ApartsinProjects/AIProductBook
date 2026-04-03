@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.3 Why This Changes Product Strategy - Chapter 1: The New Economics of Building with AI</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
+        <div class="chapter-label">Chapter 1, Section 1.3</div>
+        <h1>Why This Changes Product Strategy</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Strategy is the allocation of scarce resources toward uncertain opportunities. When AI dramatically reduces the cost of building, it simultaneously reduces the risk of exploration and changes which resources are truly scarce.
+        </p>
+
+        <div class="epigraph">
+            <p>In the old world, you thought before you built. In the new world, you build before you think. The thinking still matters; it just moves earlier in the process or later.</p>
+            <cite>The new product development mantra</cite>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Tripartite Loop Through Strategy</div>
+            <p><strong>AI PM</strong> identifies which experiments to run and what success looks like. <strong>Vibe Coding</strong> runs those experiments faster by generating prototypes at machine speed. <strong>AI Engineering</strong> ensures experiments that succeed become durable product features. <strong>Evaluation</strong> closes the loop by measuring which experiments produced real value.</p>
+        </div>
+
+        <h2>Faster Prototyping Enables More Experiments</h2>
+
+        <p>
+            The core insight of lean startup methodology is that startups die from constipation, not hemorrhage. They fail to iterate fast enough to find product-market fit. AI directly addresses this constraint.
+        </p>
+
+        <p>
+            Consider a product team that can now run 50 experiments per quarter instead of 5. What changes? First, they can explore a much larger space of potential solutions. Second, they can fail faster and cheaper, which reduces the cost of bold experiments. Third, they develop iteration as a core competency rather than an unfortunate necessity.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Experiment Rate Hypothesis</div>
+            <p>
+                Teams that run more experiments per quarter will, on average, find better product-market fit faster. This is not a guarantee of success, but a statistical advantage. AI directly increases experiment rate by reducing the cost of each experiment.
+            </p>
+        </div>
+
+        <p>
+            But running more experiments requires knowing what makes an experiment meaningful. Without clear success criteria, more experiments simply generate more noise faster.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>Before running more experiments, define what constitutes an experiment success. In AI product strategy, this means establishing <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">evaluation criteria</a> before building. A micro-eval for strategy experiments: define your success metric (e.g., "user completes checkout") and your failure threshold (e.g., "below 3% conversion") before running the experiment. Without <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval-first</a> thinking, more experiments just generate more noise faster.</p>
+        </div>
+
+        <h3>The Economics of Experimentation</h3>
+
+        <p>
+            Traditional experimentation is expensive. An A/B test of a new feature requires engineering time to implement both variants, design time for variant mockups, QA time to ensure variant quality, data infrastructure to track and analyze results, and statistical expertise to interpret results correctly. With AI-augmented development, each of these costs drops by 50-90%, making experiments viable that were not economically feasible before.
+        </p>
+
+        <p>
+            Feature variations that would have required 3 weeks can be tested in 3 days. Concepts that would have required 2 hours of designer time can be explored in 20 minutes.
+        </p>
+
+        <p>
+            DataForge, a B2B analytics platform, increased their weekly experiment rate from 2 to 25 through AI-generated feature prototypes deployed behind feature flags, AI-generated copy and UI variations for each experiment, and AI-assisted data analysis to identify winning variations faster. The result was finding their highest-impact feature (predictive churn scoring) through an experiment that traditional processes would have deemed too risky to try.
+        </p>
+
+        <p>
+            Not only can you run more experiments, but the quality of each experiment improves. With AI generating variants, you can test more dimensions simultaneously. You can test 10 headlines instead of 2, test headline plus image plus CTA combinations systematically, test personalized variants for different user segments, and complete 10 experiment rounds in the time previously required for 1. The combinatorial explosion of possibilities means that AI-native experimentation can find solutions that manual experimentation would never explore.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">PM Lens: Designing Meaningful Experiments</div>
+            <p>More experiments only help if each experiment has clear success criteria. PMs must define what "winning" looks like before the experiment runs. AI can generate 100 variants, but only human judgment can determine which variant actually solves the user's problem worth solving.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe Coding Lens: Rapid Experiment Execution</div>
+            <p>Vibe coding enables a new experiment cadence: instead of bi-weekly experiment reviews, teams can run daily experiments. The bottleneck shifts from generation speed to user access for feedback. Vibe coders must become skilled at both generating variants quickly and recognizing which user feedback signals matter.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Engineering Lens: Experiment Infrastructure</div>
+            <p>Running experiments at 10x velocity requires engineering support: feature flag systems to deploy variants, analytics integration to measure outcomes, and automated alerting when experiments show surprising results. The engineering discipline builds the experimentation platform that makes rapid experimentation possible.</p>
+        </div>
+
+        <h2>The Build/Buy/Bake Calculus Shifts</h2>
+
+        <p>
+            Every product team faces the build/buy/partner decision: should we build this capability ourselves, buy it from a vendor, or partner with another company? AI shifts this calculus in ways that are not yet widely understood.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Build/Buy/Bake Framework</div>
+            <p>
+                <strong>Build</strong>: Develop the capability internally using your own team and infrastructure<br>
+                <strong>Buy</strong>: Purchase the capability from a vendor as a product or service<br>
+                <strong>Bake</strong>: Integrate the capability into an existing platform you already use<br><br>
+                AI shifts the cost of "build" downward, making previously impossible internal builds economically viable.
+            </p>
+        </div>
+
+        <h3>What Was Previously "Buy" Becomes "Build"</h3>
+
+        <p>
+            Consider a capability like natural language search. In 2022, building this required machine learning engineers, vector database infrastructure, embedding models and tuning, and search infrastructure expertise. Most product teams would buy this capability from a vendor like Algolia or Elastic. By 2026, the same capability can be built with a single engineer using an API-based LLM, a managed vector database, basic prompt engineering, and a few days of integration work. The economics flip: capabilities that required vendor partnerships can now be built internally.
+        </p>
+
+        <p>
+            More interestingly, AI enables building capabilities that did not previously exist as products. When the marginal cost of generation approaches zero, products can generate customized content for each user at scale. UI can adapt to each user's context and preferences in real-time. Products can anticipate user needs before they are explicitly stated. Any product can gain a conversational interface through simple API integration. These capabilities were theoretically possible before but economically unviable. AI makes them routine.
+        </p>
+
+        <h3>The "Bake" Option Becomes More Attractive</h3>
+
+        <p>
+            When building becomes cheaper, integrating deeply with existing platforms (baking) becomes relatively more attractive. The question shifts from "should we build or buy?" to "should we build this capability or integrate it into our platform?"
+        </p>
+
+        <p>
+            For semantic search, the 2022 decision was to buy from vendors like Algolia or Elastic, but by 2026 the decision becomes to build using an API plus vector database because build cost dropped 90%. For AI writing assistant, the 2022 decision was to integrate the OpenAI API, but by 2026 the decision becomes to build with a fine-tuned model because customization is worth the investment. For image generation, the 2022 decision was to integrate via Midjourney API, but by 2026 the decision becomes a buy versus build tradeoff because the quality gap between APIs and self-hosted is narrowing. For conversational UI, the 2022 decision was to build custom, but by 2026 the decision becomes to build using LLM API plus orchestration because it becomes a core competency for many products.
+        </p>
+
+        <h2>AI as Platform Rather Than Feature</h2>
+
+        <p>
+            The most strategic shift is from AI-as-feature to AI-as-platform. When AI capabilities are cheap to add, the question is not which AI feature to add but how AI transforms your entire product architecture.
+        </p>
+
+        <h3>The Platform Shift</h3>
+
+        <p>
+            Consider how mobile changed product strategy. Initially, companies asked "should we have a mobile app?" Later, they asked "should our primary experience be mobile-first?" The shift from feature to platform reorients all product decisions.
+        </p>
+
+        <p>
+            AI follows a trajectory similar to mobile. Initially, companies asked whether they should have a mobile app. Later, they asked whether their primary experience should be mobile-first. The shift from feature to platform reorients all product decisions.
+        </p>
+
+        <p>
+            AI as feature (2022-2023) means adding an AI chatbot to the existing product. AI as capability (2024-2025) means integrating AI across multiple product surfaces. AI as platform (2026+) means redesigning the product so AI enables experiences previously impossible. When AI is a platform, your product is not a product with AI but an AI system with product surfaces. This reorients decisions about data, personalization, and user relationships.
+        </p>
+
+        <p>
+            Data strategy becomes central because your AI capability depends on your data, and acquiring, structuring, and protecting data becomes the core competitive investment. Personalization is table stakes because if AI enables personalization, users expect it, and products without AI-powered personalization will feel outdated. User relationships shift because users develop relationships with the AI experience, not just the product interface, changing retention and engagement dynamics. Trust becomes existential because if AI failure means product failure, investing in AI reliability and safety becomes non-negotiable.
+        </p>
+
+        <h2>The Strategic Response</h2>
+
+        <p>
+            Given these shifts, how should product leaders respond? The answer is not to add more AI features but to fundamentally rethink product strategy for an AI-native world.
+        </p>
+
+        <h3>Questions Every Product Team Should Ask</h3>
+
+        <div class="callout tip">
+            <div class="callout-title">Strategic Review Questions</div>
+            <p>Product teams should ask themselves which of their current features they would not build today if starting from scratch, given how AI changes the cost structure. They should consider what capabilities they currently buy that could be built internally at acceptable quality. It is worth examining what experiences are now possible that were not economically viable before, and how they might shift from AI-as-feature to AI-as-platform thinking. Finally, teams should identify what data advantages they have or could build that would compound over time.</p>
+        </div>
+
+        <h3>The New Product Strategy Framework</h3>
+
+        <p>
+            Traditional product strategy asks: What should we build? AI-native product strategy asks a different set of questions:
+        </p>
+
+        <p>Product teams must decide what to generate, since not all value comes from building persistent features and some value comes from generating the right output for each situation. They must determine what to personalize, as AI makes personalization cheap and opens possibilities for tailoring experiences to each user segment or individual. Teams should consider what to anticipate, since AI enables proactive experiences that can reduce user effort by forecasting needs before they are explicitly stated. Finally, product leaders must decide what to trust, recognizing that AI introduces new failure modes and that determining how much autonomy to grant the AI and how to build appropriate trust is a critical strategic choice.</p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Strategy Trap</div>
+            <p>
+                Do not let AI drive your strategy. AI is a capability that enables certain approaches; it is not a strategy in itself. The companies that will win are those that use AI to execute on clear strategic priorities, not those that add AI because it is exciting.
+            </p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Strategic AI Audit</div>
+            <p>For your product, begin by listing all current AI features and asking for each whether it reflects AI-as-feature or AI-as-platform thinking. Then identify one product experience that AI makes possible but you have not pursued due to perceived cost. Next, map your top three competitors and consider how their AI capabilities might change your competitive position. Finally, assess what data you have that would compound if used to train or fine-tune AI models.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>Continue Learning</h3>
+            <p>
+                <strong>Up next:</strong> <a href="section-1-4.html">Section 1.4: The New Economics in Practice</a> &mdash; Case studies from QuickShip, HealthMetrics, and DataForge with real ROI modeling.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-1-2.html">1.2 AI as Compression</a>
+            <a class="up" href="../index.html">Chapter 1 Overview</a>
+            <a class="next" href="section-1-4.html">1.4 The New Economics in Practice</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 1, Section 1.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

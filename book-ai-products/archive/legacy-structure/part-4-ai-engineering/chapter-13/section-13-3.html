@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13.3 Advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Patterns - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 13</div>
+        <h1>Knowledge Retrieval and Advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></h1>
+        <p class="chapter-subtitle">13.3 Advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Patterns</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Build reliable knowledge systems with advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> techniques.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 13.2 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: When Basic <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Is Not Enough</div>
+            <p>This section covers advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> patterns including Graph <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, self-correcting retrieval, and RAFT (Retrieval-Augmented Fine-Tuning). In the context of AI engineering, these patterns address specific limitations of basic <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>. Understanding when to use each pattern prevents over-engineering or under-engineering your retrieval system.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Self-Healing Database</div>
+            <p>Science fiction imagined self-repairing computers. Graph <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> is a modest version: when retrieval fails, the system asks itself what it missed and tries again. We have not achieved consciousness, but we have achieved self-correction.</p>
+        </div>
+
+        <h2 id="section-13-3">13.3 Advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Patterns</h2>
+
+        <p>
+            Beyond basic <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, several advanced patterns address specific challenges in knowledge retrieval. These patterns can significantly improve retrieval quality for complex use cases, though they add implementation complexity.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Basic <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> works well for simple Q&A, but production systems often need more sophisticated approaches. When your knowledge has complex relationships, when simple retrieval misses too often, or when you need better reasoning over documents, these advanced patterns become essential.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Isn't Always Better</div>
+            <p>A common mistake is reaching for Graph <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> or Self-Correcting <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> before basic <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> is properly optimized. Advanced patterns add significant complexity and should only be used when basic <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> has clear, demonstrable limitations. If your retrieval is failing because of poor chunking, fixing the chunking is more effective than adding a self-correcting layer.</p>
+        </div>
+
+        <h3>1. Graph <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>: Incorporating Knowledge Graphs</h3>
+
+        <p>
+            Graph <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> enhances retrieval by incorporating knowledge graph relationships into the retrieval process. Instead of treating documents as independent chunks, Graph <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> identifies entities and their relationships, storing them in a knowledge graph alongside the vector data.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Enterprise Knowledge Base</div>
+            <p>Consider a company with thousands of technical documents, organizational policies, and product specifications. These documents have complex relationships:</p>
+            <ul>
+                <li>Products reference other products (related products)</li>
+                <li>Policies reference organizational structure (departments, teams)</li>
+                <li>Technical docs reference APIs and versions</li>
+                <li>Projects reference people and departments</li>
+            </ul>
+            <p>Basic <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> treats each chunk independently, missing these relationships. Graph <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> captures them.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Implementing Graph <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></div>
+            <pre class="code-block">from langchain.graphs import Neo4jGraph
+from langchain_community.graphs import Neo4jGraph
+
+# Connect to knowledge graph
+graph = Neo4jGraph(
+    url="bolt://localhost:7687",
+    username="neo4j",
+    password="password"
+)
+
+# Extract entities and relationships from documents
+def extract_graph(documents):
+    for doc in documents:
+        # Use LLM to extract entities
+        entities = extract_entities(doc.page_content)
+        
+        # Create nodes
+        for entity in entities:
+            graph.query("""
+                MERGE (e:Entity {name: $name, type: $type})
+            """, {"name": entity.name, "type": entity.type})
+        
+        # Create relationships
+        for rel in extract_relationships(doc.page_content):
+            graph.query("""
+                MATCH (a:Entity {name: $source}), (b:Entity {name: $target})
+                MERGE (a)-[r:RELATES {type: $rel_type}]->(b)
+            """, {"source": rel.source, "target": rel.target, "rel_type": rel.type})
+
+# Retrieval with graph traversal
+def retrieve_with_graph(query):
+    # Find related entities via graph
+    entities = find_entities_in_query(query)
+    
+    # Get documents related to those entities
+    related_docs = graph.query("""
+        MATCH (e:Entity)-[:MENTIONS]->(d:Document)
+        WHERE e.name IN $entities
+        RETURN d, collect(e.name) as related_entities
+        ORDER BY size(related_entities) DESC
+        LIMIT 10
+    """, {"entities": entities})
+    
+    # Also do semantic search
+    semantic_results = vectorstore.similarity_search(query, k=5)
+    
+    # Combine and deduplicate
+    return combine_results(related_docs, semantic_results)</pre>
+            <p>This pattern excels when your knowledge has rich interconnections, like organizational charts, scientific literature with citations, or complex technical documentation.</p>
+        </div>
+
+        <h3>2. Self-Correcting <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>: Iterative Retrieval</h3>
+
+        <p>
+            Self-Correcting <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> adds a feedback loop where the system evaluates its own retrieval quality before generating output. After retrieving documents, the system uses a classifier or LLM judge to assess whether the retrieved context is sufficient to answer the query.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Self-Correcting Pipeline</div>
+            <pre class="code-block">class SelfCorrectingRetriever:
+    """<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> with built-in retrieval quality checks"""
+    
+    def __init__(self, retriever, judge_llm):
+        self.retriever = retriever
+        self.judge_llm = judge_llm
+    
+    def retrieve(self, query, max_attempts=3):
+        for attempt in range(max_attempts):
+            # Initial retrieval
+            docs = self.retriever.invoke(query)
+            
+            # Judge whether retrieval is sufficient
+            sufficient, reasoning = self.judge_retrieval(query, docs)
+            
+            if sufficient:
+                return docs, {"attempts": attempt + 1, "reasoning": reasoning}
+            
+            # Not sufficient - reformulate query and try again
+            query = self.reformulate_query(query, reasoning)
+        
+        # Return best attempt even if not sufficient
+        return docs, {"attempts": max_attempts, "reasoning": "max attempts reached"}
+    
+    def judge_retrieval(self, query, docs):
+        """Use LLM to judge if retrieved docs answer the query"""
+        context = "\n\n".join([d.page_content for d in docs])
+        
+        response = self.judge_llm.invoke(f"""
+            Given the query: "{query}"
+            
+            And these retrieved documents:
+            {context}
+            
+            Can you answer the query using only these documents?
+            Answer YES if the documents contain sufficient information.
+            Answer NO if you need more information.
+            
+            If NO, explain what information is missing.
+        """)
+        
+        # Parse response to determine if sufficient
+        return parse_judgment(response)
+    
+    def reformulate_query(self, original_query, missing_info):
+        """Create a new query based on what's missing"""
+        reformulation = self.judge_llm.invoke(f"""
+            Original query: "{original_query}"
+            Missing information: {missing_info}
+            
+            Reformulate the query to better capture what we need.
+            Keep it close to the original intent but add key terms.
+        """)
+        return reformulation.content</pre>
+            <p>Self-correcting <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> is particularly valuable for complex queries where initial retrieval may miss the mark.</p>
+        </div>
+
+        <h3>3. RAFT: Retrieval-Augmented Fine-Tuning</h3>
+
+        <p>
+            RAFT (Retrieval-Augmented Fine-Tuning) combines <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> with fine-tuning to get the best of both approaches. The key insight is that fine-tuning can improve how a model uses retrieved context, not just how it generates text from training data.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Domain-Specific QA System</div>
+            <p>A healthcare company needed a Q&A system for medical literature. Basic <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> worked but responses were inconsistent in format and sometimes missed subtle nuances in medical terminology.</p>
+            <p>They implemented RAFT:</p>
+            <pre class="code-block"># RAFT training data format
+RAFT_TRAINING_DATA = [
+    {
+        "question": "What are the contraindications for warfarin?",
+        "retrieved_context": """
+        Warfarin is contraindicated in:
+        - Pregnancy (except for mechanical heart valves)
+        - Active bleeding
+        - Severe liver disease
+        - History of bleeding disorders
+        ...
+        """,
+        "answer": "Warfarin is contraindicated in pregnancy (except mechanical heart valves), active bleeding, severe liver disease, and bleeding disorders. It should be used with caution in patients with history of stroke, diabetes, or hypertension.",
+        "chain_of_thought": "First identify contraindications from context, then organize into clear categories, then add clinical considerations"
+    },
+    # More examples...
+]
+
+# Fine-tune the model on this data
+# The model learns not just to answer, but to answer well given context</pre>
+            <p>RAFT works by fine-tuning a model on retrieval-augmented examples, teaching it to better reason over retrieved documents. This approach is particularly powerful when you have domain-specific knowledge that needs both retrieval and specialized response patterns.</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Pattern</th><th>Best For</th><th>Complexity</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Graph <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></td><td>Knowledge with rich relationships</td><td>High</td></tr>
+                <tr><td>Self-Correcting</td><td>Complex queries needing iteration</td><td>Medium</td></tr>
+                <tr><td>RAFT</td><td>Domain-specific response patterns</td><td>High</td></tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>When to Go Beyond <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></strong> - choosing between <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, fine-tuning, or hybrid.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-13-2.html">13.2 Chunking, Embeddings, Hybrid Search</a>
+            <a class="up" href="index.html">Chapter 13 Index</a>
+            <a class="next" href="section-13-4.html">13.4 When to Go Beyond RAG</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 13.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7.2 Eval-First PRDs - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 7</div>
+        <h1>The AI PM Toolkit</h1>
+        <p class="chapter-subtitle">7.2 Eval-First PRDs</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Equip PMs with AI-specific tools including eval-first PRDs, LLM-as-judge, and experimentation methods.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 7.1 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Testable Specifications</div>
+            <p>Eval-first PRDs transform AI product requirements into measurable specifications that enable systematic evaluation throughout development. Traditional PRDs fail for AI because requirements describe behavior without defining success. Eval-first PRDs add explicit evaluation criteria, golden dataset specifications, and measurement methods, making the document itself a testable artifact.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The First Testable Recipe</div>
+            <p>The first recipe that specified exact measurements was not written by a chef but by a pharmaceutical company in 1890. They needed reproducible results for medicine. Now AI PRDs face the same challenge: how do you make "helpful" measurable?</p>
+        </div>
+
+        <h2 id="section-7-2">7.2 Eval-First PRDs</h2>
+
+        <p>
+            In Section 7.1, we discussed how the USID.O framework adapts for AI products, particularly the "Specify" phase where evaluation criteria must be established before implementation begins. This section builds on that foundation by showing exactly how to write those evaluation criteria into your product requirements. <strong>Eval-driven development</strong> makes AI product specs measurable. The traditional PRD (Product Requirements Document) focuses on requirements and user stories: what the product should do and who should use it. For AI products, this is insufficient because requirements describe behavior but do not specify what counts as success. An eval-first PRD includes not just requirements but explicit evaluation criteria that define what good looks like, making the document a testable specification.
+        </p>
+
+        <h3>Why Traditional PRDs Fail for AI</h3>
+
+        <p>
+            A traditional PRD might say "the AI should provide helpful responses to user questions." This requirement is unmeasurable: what does "helpful" mean? How do you know if the AI met this requirement? For deterministic software, you can test whether a feature works. For probabilistic AI, you must define what "working" means in terms that can be measured.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Vague Requirement</h4>
+            <p>
+                A company built a customer support AI with a PRD requirement: "The AI should answer customer questions accurately." After six months of development, they had no way to determine if they succeeded. They tried testing internally, but different team members had different opinions on whether answers were "accurate." Eventually, they had to go back and create evaluation criteria from scratch, delaying the launch by three months.
+            </p>
+            <p>
+                <strong>The lesson:</strong> Defining "accuracy" as a specific metric (e.g., "90% of answers are verified as correct by domain experts") would have enabled systematic evaluation throughout development.
+            </p>
+        </div>
+
+        <h3>Structure of an Eval-First PRD</h3>
+
+        <p>
+            An eval-first PRD adds three critical sections to traditional PRD structure:
+        </p>
+
+        <ol>
+            <li><strong>Evaluation criteria:</strong> Specific, measurable definitions of success</li>
+            <li><strong>Golden dataset specification:</strong> The test cases against which the AI will be measured</li>
+            <li><strong>Measurement method:</strong> How each metric will be calculated</li>
+        </ol>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Writing Eval-First PRD Requirements</h4>
+            <p>
+                <strong>Before (traditional):</strong>
+            </p>
+            <blockquote>
+                "The AI assistant should help users with scheduling tasks."
+            </blockquote>
+            <p>
+                <strong>After (eval-first):</strong>
+            </p>
+            <blockquote>
+                "The AI assistant should correctly parse scheduling requests with 90% accuracy, where accuracy is defined as: (correctly identified date/time AND correct duration AND correct attendees) / total requests. Measured on a golden dataset of 200 diverse scheduling requests including explicit requests, implied dates, and ambiguous phrasing."
+            </blockquote>
+            <p>
+                <strong>Why this matters:</strong> The eval-first version tells engineers exactly what to build and tells QA exactly how to test. There is no ambiguity about what success looks like.
+            </p>
+        </div>
+
+        <h3>Golden Dataset Creation</h3>
+
+        <p>
+            Creating effective golden datasets is both art and science. The dataset should contain at minimum 30 to 50 examples representing the range of inputs your AI will encounter in production. A good distribution is approximately 60% normal cases, 25% edge cases, and 15% failure modes. Normal cases represent the everyday inputs your system should handle easily: typical user queries, standard data formats, common scenarios. Edge cases are unusual but valid inputs that require careful handling: unusual phrasings, ambiguous queries, data at boundaries. Failure modes are inputs that should produce errors or special handling rather than attempting to generate output: malicious inputs, out-of-scope requests, invalid data.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Representative Dataset</h4>
+            <p>
+                A company building a medical chatbot created a golden dataset of 100 examples. They carefully balanced the dataset: 60 common symptoms, 25 uncommon symptoms, and 15 cases that should trigger medical referral (chest pain, severe bleeding, etc.). When they tested their AI, it achieved 95% accuracy on the common cases but only 40% on the edge cases. This revealed the need for additional training data on uncommon symptoms. If they had tested only on common cases, they would have shipped a product that failed on real-world diversity.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Golden Dataset Creation Process</h4>
+            <p>
+                <strong>Step 1: Define input categories</strong>
+                Analyze your expected user inputs and categorize them. For a support AI, categories might include: billing questions, technical issues, account management, general inquiries, out-of-scope requests.
+            </p>
+            <p>
+                <strong>Step 2: Create examples per category</strong>
+                For each category, create examples representing the range of inputs. Include variations in phrasing, length, and complexity.
+            </p>
+            <p>
+                <strong>Step 3: Define expected outputs</strong>
+                For each example, define what the correct output should be. This might be a specific answer, a particular action, or an error response.
+            </p>
+            <p>
+                <strong>Step 4: Establish scoring criteria</strong>
+                Define how each output will be scored. For factual questions: correct/incorrect. For generation tasks: human evaluation on defined dimensions (accuracy, helpfulness, tone).
+            </p>
+            <p>
+                <strong>Step 5: Validate with domain experts</strong>
+                Have experts review the dataset to ensure examples are realistic and expected outputs are correct.
+            </p>
+        </div>
+
+        <h3>Common Golden Dataset Mistakes</h3>
+
+        <p>
+            The most common mistake in golden dataset creation is defining criteria that are too vague. "Quality" is not a criterion; it is an outcome. Specific, measurable criteria would be "correct entity extraction," "appropriate tone," or "actionable response." Each criterion should be defined with enough precision that two different human evaluators would agree on whether it is met. Also remember that golden datasets are not static: as your understanding of the product evolves, you should update the dataset to reflect new insights, new edge cases, and changed criteria.
+        </p>
+
+        <ul>
+            <li>30-50 examples minimum (60% normal, 25% edge, 15% failure modes)</li>
+            <li>Define specific, measurable criteria (not "quality")</li>
+            <li>Update as product criteria evolve</li>
+            <li>Include realistic diversity in input types</li>
+            <li>Have experts validate expected outputs</li>
+        </ul>
+
+        <h3>LLM-as-Judge Implementation</h3>
+
+        <p>
+            LLM-as-judge is a technique where a powerful language model evaluates the outputs of other models. Research shows that strong models like GPT-4 achieve approximately 80% agreement with human evaluators on quality assessment tasks, making them viable for many evaluation scenarios where human evaluation would be too slow or expensive. The key to effective LLM-as-judge is proper prompt design and understanding the technique's limitations.
+        </p>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Academic Perspective: LLM-as-Judge and the Evaluation of Intelligence</div>
+            <p>The LLM-as-Judge approach connects to foundational work on the <strong>Turing Test</strong> (1950) and subsequent research on evaluation methodologies for intelligent systems. Turing's original proposal sidestepped the question of whether machines "think" in favor of whether they can produce behavior indistinguishable from human behavior. LLM-as-Judge operationalizes this by using model evaluation as a proxy for human assessment, raising fascinating methodological questions about evaluation validity.</p>
+            <p>Recent research by Wang et al. (2024) on "JudgeBench" identifies systematic biases in LLM judges: they exhibit verbosity bias (preferring longer responses), self-preference bias (preferring outputs similar to their own style), and position bias (sensitive to response ordering). Understanding these biases is essential for proper interpretation of LLM-as-judge results.</p>
+            <p><em>Key references: Turing, A.M. (1950). "Computing Machinery and Intelligence." Mind; Wang, P. et al. (2024). "JudgeBench: A Benchmark for LLM Evaluation." arXiv:2407.10670.</em></p>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Automated Quality Monitoring</h4>
+            <p>
+                A company running a customer service AI implemented LLM-as-judge to monitor quality in production. Every 100th response was evaluated by GPT-4 on dimensions of accuracy, helpfulness, and tone. If the quality score dropped below a threshold, alerts fired. This automated monitoring caught a regression that occurred when they updated their model: helpfulness scores dropped from 85% to 65%. Without automated monitoring, this would have gone unnoticed for weeks.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: LLM-as-Judge Implementation</h4>
+            <p>
+                <strong>Three evaluation approaches:</strong>
+            </p>
+            <ol>
+                <li><strong>Pairwise comparison:</strong> Present the judge with two outputs and ask which is better. This reduces positional bias because you can evaluate both orderings and average the results.</li>
+                <li><strong>Direct scoring:</strong> Assign a numerical score to each output without comparison to others. More efficient for production monitoring but more prone to scorer drift.</li>
+                <li><strong>Chain-of-thought evaluation:</strong> Ask the judge to reason through its evaluation before giving a final score. Produces more accurate results for complex quality assessments.</li>
+            </ol>
+            <p>
+                <strong>Example prompt for direct scoring:</strong>
+            </p>
+            <pre><code>You are evaluating an AI response for a customer service query.
+
+Query: {user_query}
+Response: {ai_response}
+
+Evaluate the response on a scale of 1-5 for:
+1. Accuracy: Does the response correctly answer the user's question?
+2. Helpfulness: Does the response provide useful information?
+3. Tone: Is the tone appropriate (friendly, professional)?
+
+Provide your scores with brief explanations.</code></pre>
+        </div>
+
+        <h4>LLM-as-Judge Biases</h4>
+
+        <p>
+            LLM judges have known biases that can affect evaluation accuracy:
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Bias</th><th>Description</th><th>Mitigation</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Position bias</td><td>Tendency to prefer first or second option (~40%)</td><td>Evaluate both orderings and average</td></tr>
+                <tr><td>Verbosity bias</td><td>Preference for longer outputs (~15%)</td><td>Include length as a scoring factor</td></tr>
+                <tr><td>Self-enhancement</td><td>Preference for outputs similar to judge model's style (5-7%)</td><td>Use different model families as judges</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Key Insight</div>
+            <p>
+                LLM-as-judge is a powerful tool but not a replacement for human evaluation. Use it to scale evaluation efforts, but validate results against human judgment periodically. The 80% agreement rate means 20% of evaluations may be wrong.
+            </p>
+        </div>
+
+        <h3>Evaluation Framework Integration</h3>
+
+        <p>
+            Modern AI product teams typically integrate multiple evaluation frameworks into their development workflow. DeepEval provides modular metrics for general LLM evaluation, including relevance, coherence, and factual accuracy with built-in support for custom metrics. <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-5.html">RAGAS</a> specializes in retrieval-augmented generation evaluation, measuring both retrieval quality and generation quality separately, which is essential for debugging complex RAG systems. Promptfoo enables systematic prompt testing across multiple models, treating prompts as versioned, testable artifacts. Braintrust provides end-to-end evaluation, testing, and monitoring capabilities in a unified platform, making it suitable for teams that want a single source of truth for AI quality.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Choosing an Evaluation Framework</h4>
+            <p>
+                <strong>Use DeepEval when:</strong>
+            </p>
+            <ul>
+                <li>You need general LLM evaluation metrics</li>
+                <li>You want to create custom evaluation metrics</li>
+                <li>You need to evaluate non-RAG applications</li>
+            </ul>
+            <p>
+                <strong>Use RAGAS when:</strong>
+            </p>
+            <ul>
+                <li>You are building RAG applications</li>
+                <li>You need to debug retrieval vs. generation issues separately</li>
+                <li>You want to measure context relevance</li>
+            </ul>
+            <p>
+                <strong>Use Promptfoo when:</strong>
+            </p>
+            <ul>
+                <li>You are doing heavy prompt engineering</li>
+                <li>You need to compare prompts across models</li>
+                <li>You want prompt version control</li>
+            </ul>
+            <p>
+                <strong>Use Braintrust when:</strong>
+            </p>
+            <ul>
+                <li>You want end-to-end evaluation and monitoring</li>
+                <li>You need to collect human feedback systematically</li>
+                <li>You want A/B testing for AI features</li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Experimentation Methods</strong> - A/B testing, canary, and shadow deployment strategies.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-7-1.html">7.1 Adapted USID.O Framework</a>
+            <a class="up" href="index.html">Chapter 7 Index</a>
+            <a class="next" href="section-7-3.html">7.3 Experimentation Methods</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 7.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

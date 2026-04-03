@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6.2 Build vs. Buy vs. Bake Decisions - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-2-discovery-design/index.html">Part II: Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 6</div>
+        <h1>AI Product Strategy and Portfolio Thinking</h1>
+        <p class="chapter-subtitle">6.2 Build vs. Buy vs. Bake Decisions</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master the build/buy/bake decision framework for AI products, understanding when to develop custom solutions versus using existing AI services.
+        </p>
+
+        <blockquote class="epigraph">
+            <p>"The decision between building, buying, or baking AI is one of the most consequential in AI product development. Make it wrong and you waste years or miss your window."</p>
+            <cite>Strategic AI Product Management</cite>
+        </blockquote>
+
+        <h2 id="section-6-2">6.2 Build vs. Buy vs. Bake Decisions</h2>
+
+        <p>
+            The build/buy/bake framework helps product teams make strategic decisions about AI development. Building involves developing custom AI solutions from scratch when proprietary capability is essential. Buying means acquiring AI capabilities through acquisition or licensing when speed or unique advantages are paramount. Baking involves using existing AI APIs and services, often called building on top of existing platforms, which offers the fastest path to capability.
+        </p>
+
+        <h3>The Build Decision</h3>
+
+        <p>
+            Building custom AI makes sense when you need proprietary advantage that cannot be achieved any other way.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">When to Build</div>
+            <p>Building custom AI makes sense under specific conditions. You should build when you have unique data advantages, meaning proprietary data that creates model quality advantages your competitors cannot replicate. You should build when AI capability is a core differentiator central to your competitive position. You should build when you need complete control over model behavior and data, such as when downstream applications depend on predictable AI behavior. You should build when regulatory requirements mandate specific AI implementations that external providers cannot satisfy. You should build when you can achieve better economics than buying at scale, making the investment economically rational.</p>
+        </div>
+
+        <h4>Build Considerations</h4>
+
+        <p>
+            <strong>Investment required:</strong> Building foundation models or significant model capabilities requires massive investment (millions to hundreds of millions of dollars). Even building specialized models requires substantial resources.
+        </p>
+        <p>
+            <strong>Time to value:</strong> Custom AI development takes time. You will not see results for months or years.
+        </p>
+        <p>
+            <strong>Talent requirements:</strong> You need ML engineers, researchers, and infrastructure expertise.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Build Example: Code Search at Stripe</div>
+            <p>Stripe built custom models for code search and API recommendations because they had proprietary code and API data that gave them unique training advantages. Code understanding was core to their developer experience, making it a genuine competitive differentiator rather than a nice-to-have feature. General-purpose models did not understand Stripe-specific patterns, requiring customization to achieve acceptable quality. Their scale justified the investment, making the economics of custom development favorable compared to using commodity solutions.</p>
+        </div>
+
+        <p>Building requires significant commitment but creates proprietary advantage when done for the right reasons.</p>
+
+        <h3>The Buy Decision</h3>
+
+        <p>
+            Buying AI capability through acquisition or licensing makes sense when speed is critical or when the target company has unique advantages.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">When to Buy</div>
+            <p>Buying AI capability through acquisition or licensing makes sense under specific circumstances. Speed to market is a primary driver when building would take too long and competitive pressure demands faster action. Acqui-hire situations occur when you need the team more than the technology, valuing the human expertise over existing capabilities. Unique technology arguments apply when the target has capabilities unavailable elsewhere that would take too long to develop internally. Market position considerations matter when acquiring a competitor eliminates a threat and strengthens your competitive standing. Existing investment in the target company may have already solved problems you face, making acquisition more efficient than building from scratch.</p>
+        </div>
+
+        <p>Buying can accelerate your path to capability but carries its own integration risks and costs.</p>
+
+        <h4>Buy Considerations</h4>
+
+        <p>
+            <strong>Integration challenges:</strong> Merging teams, technologies, and cultures is difficult.
+        </p>
+        <p>
+            <strong>Overpayment risk:</strong> AI valuations can be inflated.
+        </p>
+        <p>
+            <strong>Due diligence complexity:</strong> Assessing AI quality before acquisition is hard.
+        </p>
+
+        <h3>The Bake Decision</h3>
+
+        <p>
+            Baking (using existing AI APIs) is the most common approach for most AI features. It offers the fastest path to AI capability.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">When to Bake</div>
+            <p>Baking, or using existing AI APIs, is appropriate under several conditions. Commodity capability is a primary reason when AI is not your core differentiator and generic functionality suffices. Speed priority drives the decision when you need to ship AI features quickly and cannot afford development time. Limited resources matter when you lack ML engineering capacity and cannot build custom solutions internally. Evolving technology considerations apply when you want flexibility to switch models as the AI landscape evolves. Table stakes features make baking the right choice when basic AI is expected but not differentiating, such as spam filtering or search relevance.</p>
+        </div>
+
+        <h4>Bake Considerations</h4>
+
+        <p>
+            <strong>Commoditization risk:</strong> Everyone can access the same AI APIs, so you cannot differentiate on the base capability.
+        </p>
+        <p>
+            <strong>Dependency:</strong> You are at the mercy of API reliability and pricing changes.
+        </p>
+        <p>
+            <strong>Limited control:</strong> You cannot customize model behavior as deeply.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Bake Example: Customer Support Summary</div>
+            <p>A mid-size SaaS company added AI-generated support ticket summaries using the OpenAI API with the following characteristics: total development time was just two weeks, ongoing cost was approximately one cent per ticket, integration complexity was low, and competitive differentiation was also low since anyone can access the same API and implement similar functionality. This was the right decision because AI-generated summaries were a nice-to-have rather than a core differentiator, making the speed and simplicity of baking more valuable than the potential advantage of custom development.</p>
+        </div>
+
+        <p>Baking works well when speed matters more than differentiation.</p>
+
+        <h3>The Strategic Matrix</h3>
+
+        <div class="callout fun-note">
+            <div class="callout-title">The Build Paradox</div>
+            <p>Companies that build their own AI often spend 2 years and $50M. Companies that bake APIs ship in 2 weeks and wonder why they have no moat. The answer: Build when you need control, not when you're impatient.</p>
+        </div>
+
+        <p>The strategic matrix reveals how each approach compares across key factors. Investment required varies dramatically, with building requiring very high investment, buying requiring high investment, and baking requiring low investment. Time to market follows an inverse pattern, with building taking long, buying taking medium, and baking delivering fast results. Differentiation potential is high for both build and buy approaches but low for baking, since everyone can access the same APIs. Control over AI behavior is full with building, variable with buying depending on deal terms, and limited with baking. Risk is high with building due to execution uncertainty, medium with buying due to integration challenges, and low with baking due to proven technology.</p>
+
+        <h3>Making the Decision</h3>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Build/Buy/Bake Decision Framework</div>
+            <p>Work through this framework systematically to make the right strategic choice. First, categorize by taxonomy, determining whether the AI capability is table stakes, a differentiator, or core to your product strategy. Second, assess data advantage, asking whether you have unique data that would improve the model and create proprietary benefit. Third, evaluate time constraints, determining how urgently you need this capability given competitive pressure. Fourth, consider resource availability, assessing whether you have the ML talent and infrastructure to build or whether you need to rely on external solutions. Fifth, calculate unit economics, determining the true cost of each approach including development, operational, and opportunity costs.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before making any build/buy/bake decision, define how you will measure whether the choice was correct. A micro-eval for build/buy/bake compares: total cost of ownership across approaches, time-to-market impact, and strategic flexibility after each choice. A mid-size SaaS company's <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval-first</a> insight: they chose to "bake" AI summary features but measured API costs scaling 10x at 100K users. They pivoted to a hybrid approach with caching and saw 70% cost reduction while maintaining quality.
+            </p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Value Proposition Design</strong>, understanding how to articulate and design value propositions for AI products.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-6-1.html">6.1 AI Product Taxonomy</a>
+            <a class="up" href="../index.html">Chapter 6 Index</a>
+            <a class="next" href="section-6-3.html">6.3 Value Proposition Design</a>
+        </nav>
+
+        <footer>
+            <p>Section 6.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

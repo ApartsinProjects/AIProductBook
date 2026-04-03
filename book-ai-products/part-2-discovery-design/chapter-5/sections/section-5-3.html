@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5.3 Workflow Analysis and Jobs-to-be-Done - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-2-discovery-design/index.html">Part II: Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 5.3</div>
+        <h1>Workflow Analysis and Jobs-to-be-Done</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            You cannot improve what you cannot see. Before identifying where AI can help, you must understand how work actually flows through your product and your users' lives. Most organizations have only a vague sense of their real workflows. The tools they built do not match the ways people actually work.
+        </p>
+
+        <h2>Mapping Current Workflows</h2>
+
+        <p>Workflow mapping is the process of documenting how work moves through a system, from trigger to completion. Effective workflow maps capture not just the happy path but also exceptions, rework loops, and failure modes.</p>
+
+        <h3>The Workflow Mapping Process</h3>
+
+        <p>The workflow mapping process involves eight key activities. First, identify the workflow scope by determining where the workflow begins and ends. Second, interview stakeholders by talking to everyone who touches the workflow to understand their perspectives. Third, observe actual behavior by watching how work actually happens rather than how it is supposed to happen according to documentation. Fourth, document triggers by identifying what starts this workflow. Fifth, map steps and decisions by determining what happens at each step and what decisions are made. Sixth, identify handoffs by locating where work passes between people or systems. Seventh, note exceptions by understanding what goes wrong and how it is handled. Eighth, capture timing by measuring how long each step takes to identify bottlenecks and delays.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The As-Is vs To-Be Distinction</div>
+            <p>Always map the current state (As-Is) before imagining the future state (To-Be). Teams often skip this step, building solutions for workflows that do not exist rather than workflows that do.</p>
+            <p>As-Is mapping reveals workarounds that users have developed to cope with system limitations, which often represent clever solutions to real problems that the system should have addressed. It uncovers hidden expertise in how work actually gets done, showing the tacit knowledge that experienced workers possess. It identifies bottlenecks that appear only in practice, not in theory, because real-world constraints create delays that theoretical models miss. It also reveals handoffs that create delays and error opportunities, showing where information transfer between people or systems slows work and introduces risks.</p>
+        </div>
+
+        <h2>HealthMetrics: Workflow Mapping in Healthcare</h2>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: Patient Discharge Workflow</div>
+            <p>HealthMetrics identified patient discharge as a high-impact workflow to improve. Their initial assumption was that the bottleneck was bed availability. Workflow mapping revealed something different.</p>
+            <pre>
+AS-IS DISCHARGE WORKFLOW:
+
+Patient stable for discharge
+        │
+        ▼
+Nurse notices discharge readiness
+        │
+        ▼ (avg 2-4 hour delay)
+Nurse enters discharge order in EHR
+        │
+        ▼ (avg 1-2 hour delay)
+Attending physician reviews and approves
+        │
+        ▼ (avg 30 min - 2 hour delay)
+Social worker completes discharge planning
+        │
+        ▼ (variable delay, often 2-4 hours)
+Bed management notified
+        │
+        ▼ (avg 1 hour delay)
+Environmental services cleans room
+        │
+        ▼ (avg 45 min - 1.5 hours)
+New patient assigned
+
+TOTAL: Average 8-14 hours from readiness to bed turnover
+            </pre>
+            <p>The bottleneck was not bed availability. It was physician approval delays caused by information fragmentation. Physicians had to check three separate systems to approve discharges.</p>
+        </div>
+
+        <h2>Identifying Friction Points</h2>
+
+        <p>Friction points are the places where workflow slows down, breaks, or requires excessive effort. These are your highest-priority targets for improvement.</p>
+
+        <h3>Types of Friction</h3>
+
+        <p>Friction points come in multiple distinct types, each requiring different approaches to resolve. Information friction occurs when you cannot find the information needed to proceed, such as when switching between multiple systems to gather context. Decision friction arises from uncertainty about what to do or how to decide, often manifesting as waiting for someone with authority to make a call. Effort friction appears when a task requires excessive manual effort, such as copying data between systems manually when automation could handle it. Waiting friction occurs when work is blocked waiting for upstream activity, exemplified by a patient waiting for physician discharge approval. Error friction happens when errors require rework and re-processing, such as incorrect information requiring a correction cycle. Handoff friction emerges when work moving between people or systems causes delays, as when a referral is lost between departments.</p>
+
+        <h3>Friction Detection Methods</h3>
+
+        <p>Several methods help detect friction points in workflows. Process mining involves analyzing system logs to find where work slows or stops, providing objective data about actual workflow performance. User interviews surface friction by asking users directly where they get stuck or frustrated, capturing experiential knowledge that system data cannot reveal. Observation sessions involve watching real work happen to find workarounds that users have developed, which often indicate system deficiencies. Survey data enables systematic collection of pain points at scale, quantifying friction across many users. Support ticket analysis finds patterns in reported issues, revealing recurring problems that indicate friction points. Time studies measure actual time spent on workflow steps, providing quantitative data about where delays occur.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Friction Point Analysis</div>
+            <p>QuickShip used multiple methods to identify friction points in their delivery exception workflow:</p>
+            <pre>
+METHOD 1: Support ticket analysis
+├─ 67% of tickets related to "Where is my package?"
+├─ 22% related to "Change my delivery address"
+├─ 11% related to "Report damage or issue"
+
+METHOD 2: Agent interviews
+├─ Agents spent 40% of time on status lookups
+├─ Average handle time was 8 minutes per exception
+├─ Common complaint: "I have to check too many systems"
+
+METHOD 3: Process mining
+├─ Average exception resolution: 8 hours
+├─ 80% of time spent waiting for information retrieval
+├─ Only 20% of time on actual decision-making
+
+IDENTIFIED FRICTION POINTS:
+1. Information fragmentation (multiple systems)
+2. Manual status lookups (high effort, low value)
+3. Repetitive response typing (copy-paste patterns)
+4. Handoff delays between customer service tiers
+            </pre>
+        </div>
+
+        <h2>The Jobs-to-be-Done Framework</h2>
+
+        <p>Jobs-to-be-Done (JTBD) is a thought framework that focuses on the progress customers are trying to make in their lives, rather than the features they request. Users do not want your product. They want the progress your product enables.</p>
+
+        <h3>Core JTBD Concepts</h3>
+
+        <p>The Jobs-to-be-Done framework rests on several core concepts. A job is the progress a person is trying to make in a particular circumstance, representing the underlying need rather than a surface-level request. The functional job is the task to be accomplished, answering what the person is trying to achieve. The emotional job describes how the person wants to feel about the process, recognizing that how work feels matters as much as whether it gets done. The social job captures how the person wants to be perceived by others, acknowledging that work decisions are often influenced by social considerations and reputation.</p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The JTBD Statement Format</div>
+            <p>When [situation], I want to [motivation], so I can [expected outcome].</p>
+            <p>Example: "When a customer has a delivery problem, I want to resolve it quickly and accurately, so I can maintain customer satisfaction and reduce escalations."</p>
+        </div>
+
+        <h3>Finding AI Interventions with JTBD</h3>
+
+        <p>JTBD helps identify AI intervention points by revealing what users are actually trying to accomplish. Start by identifying the functional job being done, understanding the core progress the user is trying to make. Then find where in the job workflow friction exists, locating the specific steps that impede that progress. Ask what information would make this step easier, identifying data that would help users proceed more efficiently. Ask what decision support would reduce uncertainty, determining what guidance or analysis would help users make better choices. Finally, ask what automation would eliminate effort without removing agency, finding opportunities for AI to handle routine work while preserving user control over consequential decisions.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: JTBD Analysis for Discharge Planning</div>
+            <pre>
+FUNCTIONAL JOB: Get patients discharged safely and efficiently
+
+JTBD STATEMENT:
+"When a patient is medically ready for discharge, 
+I want to complete all necessary paperwork and coordination 
+quickly and correctly, 
+so the patient can go home and the bed can be freed for 
+new admissions."
+
+FRICTION POINTS IDENTIFIED:
+1. Gathering discharge authorization information (scattered)
+2. Coordinating with family for pickup timing
+3. Ensuring prescription and follow-up instructions are clear
+4. Confirming bed cleaning completion
+
+AI INTERVENTION OPPORTUNITIES:
+1. Auto-gather authorization requirements and surface them
+2. Predict optimal discharge timing based on bed demand
+3. Generate draft discharge instructions for nurse review
+4. Send automated notifications to family and environmental services
+            </pre>
+        </div>
+
+        <h2>Finding AI Intervention Points</h2>
+
+        <p>Once you have mapped workflows and identified friction points, you can systematically find where AI intervention creates the most value.</p>
+
+        <h3>The Intervention Point Framework</h3>
+
+        <p>Evaluate each friction point across four dimensions. Frequency measures how often this friction occurs, determining whether it is a common problem worth addressing or an occasional nuisance. Impact measures how much this friction costs in time, money, or quality, quantifying the value of solving it. AI Fit assesses whether AI is well-suited to address this specific friction, determining whether the problem characteristics match AI capabilities. Feasibility assesses whether we can build and deploy an AI solution reliably, considering our technical capabilities and resource constraints.</p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">Prioritization Matrix</div>
+            <pre>
+                    HIGH AI FIT              LOW AI FIT
+                ┌─────────────────────┬─────────────────────┐
+HIGH IMPACT     │                     │                     │
+                │  PRIMARY TARGET      │   DESIGN DIFFERENTLY│
+HIGH FREQ       │  High frequency,     │   May need human    │
+                │  high impact, AI     │   solution or       │
+                │  can help            │   process change    │
+                ├─────────────────────┼─────────────────────┤
+LOW IMPACT      │                     │                     │
+                │   LOW PRIORITY      │    ELIMINATE        │
+LOW FREQ        │   Consider if        │   Not worth         │
+                │   resources allow   │   solving           │
+                │                     │                     │
+                └─────────────────────┴─────────────────────┘
+            </pre>
+        </div>
+
+        <h3>QuickShip: Intervention Point Selection</h3>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Prioritizing Among Identified Friction Points</div>
+            <pre>
+FRICTION POINT ANALYSIS:
+
+1. Information fragmentation
+├─ Frequency: High (every exception)
+├─ Impact: High (causes most delays)
+├─ AI Fit: High (can connect and summarize)
+└─ Decision: PRIMARY TARGET
+
+2. Manual status lookups
+├─ Frequency: High (multiple per exception)
+├─ Impact: Medium (causes effort, not major delay)
+├─ AI Fit: Very High (perfect for AI)
+└─ Decision: PRIMARY TARGET (easy win)
+
+3. Repetitive response typing
+├─ Frequency: High (most exceptions)
+├─ Impact: Low (just typing time)
+├─ AI Fit: High (text generation)
+└─ Decision: SECONDARY (after #1, #2)
+
+4. Handoff delays between tiers
+├─ Frequency: Low (10% of exceptions)
+├─ Impact: High (causes escalation)
+├─ AI Fit: Low (human relationship issue)
+└─ Decision: PROCESS CHANGE, not AI
+
+PRIORITIZED INTERVENTION ORDER:
+1. Build unified information dashboard (AI-powered)
+2. Automate status lookups
+3. Add response generation assistance
+4. Flag escalation-risk exceptions early
+            </pre>
+        </div>
+
+        <h2>Redefining Work After AI</h2>
+
+        <p>When you successfully add AI to workflows, the work itself changes. Understanding this is crucial to designing AI that enhances rather than disrupts.</p>
+
+        <h3>The Work Redesign Principle</h3>
+
+        <p>AI should not simply make existing work faster. It should make existing work better and potentially unnecessary. When AI handles routine work, humans can focus on work that requires judgment, relationship, and creativity.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Questions for Work Redesign</div>
+            <p>When redesigning work after AI intervention, consider several key questions. Ask what work becomes possible when AI handles the routine, identifying new value-creating activities that become feasible when people are freed from repetitive tasks. Consider how the human role evolves from doing to supervising, recognizing that managing AI systems requires different skills than performing tasks directly. Determine what new skills are needed in the AI-augmented workflow, preparing workers for their changed responsibilities. Clarify how we measure success when AI changes the work, establishing new metrics that reflect improved outcomes rather than just faster processing. Finally, ask what previously unsolvable problems we can now address, identifying opportunities that were beyond reach when all work required human attention.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before redesigning any workflow, define how you will measure redesign success. A micro-eval for workflow changes tracks: cycle time before and after AI intervention, error rates at handoff points, user effort scores, and adoption rates of new workflows. QuickShip's <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval-first</a> insight: their initial discharge workflow redesign failed because nurses did not trust AI predictions they could not verify. They added explanation features and saw adoption jump from 34% to 78%, proving that explainability was a workflow requirement, not just a nice-to-have.
+            </p>
+        </div>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Workflow mapping reveals how work actually happens, not how it should happen according to theoretical models or documentation. Friction points come in multiple types including information, decision, effort, waiting, error, and handoff, each requiring different approaches to resolve. Jobs-to-be-Done focuses on user progress rather than product features, understanding that users hire products to make progress in their lives, not to use specific functionality. AI intervention points should be evaluated on frequency, impact, AI fit, and feasibility to ensure resources go to the highest-value opportunities. AI changes the nature of work, requiring careful work redesign that prepares workers for their evolved responsibilities. The goal is not faster work but better outcomes through AI augmentation, recognizing that speed matters less than the quality and impact of the work itself.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Mapping a Critical Workflow</div>
+            <p>Choose a critical workflow in your product or job and work through the following steps. First, map the As-Is workflow step by step, documenting how work actually moves from trigger to completion. Second, identify all friction points by type, classifying each bottleneck or delay as information, decision, effort, waiting, error, or handoff friction. Third, write JTBD statements for the key stakeholders, articulating their jobs in the format of when, I want to, so I can. Fourth, evaluate friction points on the prioritization matrix, considering frequency, impact, AI fit, and feasibility to determine where AI intervention would create the most value. Fifth, define three AI intervention points with highest priority, specifying exactly what AI would do at each point and how it would connect with human work.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 5.4, we explore <strong>Identifying Leverage Points</strong>, examining how to distinguish high-frequency from high-impact tasks, analyze bottlenecks, and balance quick wins against strategic investments.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 5: Finding Problems</a>
+            <a class="up" href="../index.html">Chapter 5 Overview</a>
+            <a class="next" href="section-5-4.html">5.4 Leverage Points</a>
+        </nav>
+
+        <footer>
+            <p>Section 5.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

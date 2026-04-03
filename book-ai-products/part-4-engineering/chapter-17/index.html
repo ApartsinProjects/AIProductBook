@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 17: Retrieval and Knowledge Systems - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 17</div>
+        <h1>Retrieval and Knowledge Systems</h1>
+    </header>
+
+    <main class="content">
+        <div class="opening-hook">
+            Your AI product passes every eval. It generates fluent, confident responses that look right. Users start relying on it for high-stakes decisions. Then someone notices the AI is citing a medical study that does not exist, referencing a product that was discontinued three years ago, and pulling pricing data from a database that has not been updated in eight months. The model is fine. The retrieval failed silently, returning plausible but wrong context that the AI then used to generate authoritative-sounding nonsense. The quality of an AI product is often determined by the quality of its retrieval. Garbage in, garbage out. Building robust retrieval systems is more important than choosing the right model.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-17-opener.png"
+                 alt="Chapter 17 opener illustration">
+            <figcaption>
+                Retrieval systems connect AI models to relevant knowledge at inference time.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Retrieval Behavior Probing</div>
+            <p>Use vibe coding to probe retrieval behavior before investing in production RAG systems. Quickly test different embedding models, chunking strategies, and query formulations against your actual data. Vibe coding retrieval variants lets you discover failure modes like irrelevant context, missing top results, and chunk boundary issues before they affect users, reducing the time spent debugging retrieval in production.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">PM Decision Points in Retrieval Systems</div>
+            <p>PMs must decide: What is the acceptable staleness of retrieved content? How do retrieval failures map to user-facing failures? When should the system say "I do not know" versus guessing? These decisions directly affect product reliability perceptions. PMs should define explicit data freshness requirements, establish escalation paths when retrieval fails, and determine which high-stakes domains require human verification rather than AI retrieval. Retrieval quality often matters more than model quality for user trust.</p>
+        </div>
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master retrieval architectures from basic RAG to advanced knowledge systems.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter covers the engineering decisions that determine how models are selected, routed, and allocated to tasks. Model selection involves understanding open versus closed models, size versus capability trade-offs, and task-model matching. Model routers direct requests to appropriate models based on task requirements, cost constraints, and quality targets. Ensembles and specialization combine multiple models for better results than any single model. Structured outputs and tool compatibility enable reliable integration with external systems. The chapter concludes with latency, cost, and quality trade-offs that guide optimization priorities.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> How to build retrieval systems that consistently provide the right context to AI models at the right time.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> A simple RAG prototype with your actual data that reveals whether retrieval quality is the bottleneck in your AI pipeline.</li>
+                <li><strong>What would count as success or failure?</strong> Retrieval systems where garbage-in-garbage-out failures are caught and measured, not hidden downstream in model behavior.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Retrieval quality often matters more than model quality; investment in retrieval infrastructure typically has higher ROI than model upgrades.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Design effective RAG systems grounded in actual data quality</li>
+                <li>Choose vector databases and embedding models appropriately</li>
+                <li>Optimize chunking strategies for your specific document types</li>
+                <li>Implement advanced retrieval patterns including reranking and hybrid search</li>
+                <li>Evaluate retrieval quality with systematic measurement frameworks</li>
+                <li>Recognize when RAG is the wrong choice and apply alternatives</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">17.1</span> <a href="sections/section-17-1.html">RAG Foundations</a></li>
+                <li><span class="sec-num">17.2</span> <a href="sections/section-17-2.html">Chunking, Indexing, and Hybrid Retrieval</a></li>
+                <li><span class="sec-num">17.3</span> <a href="sections/section-17-3.html">Reranking and Graph-Aware Retrieval</a></li>
+                <li><span class="sec-num">17.4</span> <a href="sections/section-17-4.html">Evaluation of Retrieval Quality</a></li>
+                <li><span class="sec-num">17.5</span> <a href="sections/section-17-5.html">When NOT to Use RAG</a></li>
+            </ul>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../chapter-16/index.html">Ch 16: Routing</a>
+            <a class="up" href="../../part-4-engineering/index.html">Part IV Overview</a>
+            <a class="next" href="sections/section-17-1.html">17.1 RAG Foundations</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 17 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

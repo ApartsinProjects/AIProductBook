@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 29.3: Internal Standards and Governance - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 29</div>
+        <h1>Internal Standards and Governance</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Standards are not bureaucracy. They are accumulated wisdom that prevents repeating avoidable mistakes."</p>
+            <cite>Principal Engineer Who Wrote Too Many Post-Mortems</cite>
+        </blockquote>
+
+        <h2 id="standards-purpose">Purpose of Internal Standards</h2>
+
+        <p>
+            As organizations scale AI product development, repeated decisions emerge. How should teams evaluate AI quality? What documentation is required before launch? How should AI failures be classified and responded to? Without shared standards, each team invents its own approaches, leading to inconsistency, knowledge loss, and preventable failures.
+        </p>
+
+        <p>
+            Internal standards capture organizational learning and make it reusable. They reduce decision fatigue, enable cross-team collaboration, and provide a foundation for governance.
+        </p>
+
+        <h2 id="eval-standards">Evaluation Standards</h2>
+
+        <p>
+            <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Chapter 21</a> introduced evaluation frameworks. This section covers organizational standards for evaluation practice.
+        </p>
+
+        <h3 id="eval-baseline-standards">Baseline Evaluation Standards</h3>
+
+        <p>
+            Define minimum evaluation requirements for AI features:
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Minimum Eval Requirements</h4>
+            <p><strong>Unit evals:</strong> Every AI feature must have automated tests that verify core behaviors (<a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">evaluation</a>)</p>
+            <p><strong>Integration evals:</strong> Every AI feature must have tests that verify behavior in realistic workflows</p>
+            <p><strong>User-facing evals:</strong> Every AI feature must have human evaluation of sample outputs</p>
+            <p><strong>Production monitoring:</strong> Every production AI feature must have metrics that detect degradation</p>
+        </div>
+
+        <h3 id="eval-metric-standards">Metric Standards</h3>
+
+        <p>
+            Establish standard metrics for common AI task types. Standard metrics enable cross-team comparison and shared dashboards. For classification, use accuracy, precision, recall, and F1 by category. For generation, use task completion rate, quality ratings, and human preference. For extraction, use entity-level F1 and relationship accuracy. For recommendation, use click-through rate, conversion rate, and engagement metrics.
+        </p>
+
+        <p>
+            Standard metrics enable cross-team comparison and shared dashboards.
+        </p>
+
+        <h2 id="documentation-standards">Documentation Standards</h2>
+
+        <p>
+            AI features require documentation that traditional software does not:
+        </p>
+
+        <h3 id="model-cards">Model and System Cards</h3>
+
+        <p>
+            Model cards document AI system characteristics for internal and external stakeholders:
+        </p>
+
+        <p>
+            AI features require documentation that traditional software does not. Model cards document AI system characteristics for internal and external stakeholders. The documentation covers intended use describing what the system is designed to do, known limitations describing where the system struggles or may fail, training data describing what data the system learned from, performance characteristics describing how well the system performs on standard benchmarks, and failure modes describing known failure patterns and their frequency.
+        </p>
+
+        <h3 id="launch-checklist">AI Feature Launch Checklist</h3>
+
+        <p>
+            Require completion of standard checklist before AI feature launch. The checklist includes defining and automating the eval framework, ensuring eval results meet minimum thresholds, completing human evaluation, identifying and documenting failure modes, defining a rollback plan, training the support team on common issues, establishing monitoring dashboards, and completing model card or system documentation.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: DataForge Launch Checklist Implementation</h4>
+            <p><strong>Who:</strong> DataForge engineering leadership standardizing AI feature launches</p>
+            <p><strong>Situation:</strong> Teams were launching AI features with inconsistent evaluation, leading to quality issues that reached customers</p>
+            <p><strong>Problem:</strong> No common standard for what "good enough" meant or what verification was required</p>
+            <p><strong>Solution:</strong> Created mandatory launch checklist with security, legal, and engineering requirements. Integrated into CI/CD pipeline so features cannot deploy without checklist approval.</p>
+            <p><strong>Result:</strong> Customer-facing AI incidents dropped 70% in first year. Cross-team collaboration improved as teams shared evaluation approaches.</p>
+            <p><strong>Lesson:</strong> <strong>Standards embedded in tooling get followed. Make compliance the path of least resistance.</strong></p>
+        </div>
+
+        <h2 id="governance-frameworks">Governance Frameworks</h2>
+
+        <p>
+            Governance ensures AI products meet organizational standards for quality, safety, and ethics. Effective governance is proportionate to risk and enables rather than blocks development.
+        </p>
+
+        <h3 id="tiered-governance">Tiered Governance by Risk</h3>
+
+        <p>
+            Governance ensures AI products meet organizational standards for quality, safety, and ethics. Effective governance is proportionate to risk and enables rather than blocks development. Apply governance controls proportionate to AI impact. Low-risk AI follows standard development practices, automated testing, and monitoring. Medium-risk AI requires additional human review, enhanced documentation, and staged rollout. High-risk AI requires mandatory review board, extensive testing, limited rollout, and ongoing monitoring.
+        </p>
+
+        <h3 id="risk-classification">AI Risk Classification</h3>
+
+        <p>
+            Classify AI risk along two dimensions. Decision consequence asks what the impact is if the AI makes a wrong decision. Reversibility asks whether wrong decisions can be easily reversed or corrected.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Risk Matrix</h4>
+            <p><strong>High consequence + Low reversibility:</strong> Highest risk. Requires extensive validation, human oversight, and monitoring. Examples: medical diagnosis, financial decisions, legal advice.</p>
+            <p><strong>High consequence + High reversibility:</strong> High risk but manageable. Requires validation and monitoring but can iterate faster. Examples: content recommendations, search ranking.</p>
+            <p><strong>Low consequence:</strong> Lower risk. Standard practices apply. Examples: auto-complete, spam detection, image tagging.</p>
+        </div>
+
+        <h2 id="review-board">AI Review Boards</h2>
+
+        <p>
+            <a href="../section-28-5.html" class="cross-ref">Chapter 28</a> introduced AI review boards as organizational structures. This section covers the standards and processes they apply.
+        </p>
+
+        <h3 id="review-board-charter">Review Board Charter</h3>
+
+        <p>
+            Define the scope and authority of review boards clearly. Scope determines which AI features require review and what triggers mandatory review. Authority determines whether the board can block launches and what escalation path exists. Membership determines who serves on the board and what expertise is required. Process determines how review works and what the timeline is.
+        </p>
+
+        <h3 id="review-criteria">Review Criteria</h3>
+
+        <p>
+            Standardize what review boards evaluate. Safety asks whether this AI could cause harm if it fails. Fairness asks whether this AI could perform differently across user groups. Privacy asks whether this AI handles data appropriately. Transparency asks whether users can understand when they are interacting with AI. Accuracy asks whether evaluation demonstrates acceptable quality.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-29-2.html">29.2 Hiring Profiles</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-29-4.html">29.4 Skills Repositories and Organizational Memory</a>
+        </nav>
+
+        <footer>
+            <p>Section 29.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

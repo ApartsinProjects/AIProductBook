@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16.4 Structured Outputs and Tool Compatibility - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+    <style>
+        .schema-diagram {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+        .tool-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        .tool-comparison th, .tool-comparison td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .tool-comparison th {
+            background: var(--accent);
+            color: white;
+        }
+        .tool-comparison tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .code-block {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .code-block .keyword { color: #c678dd; }
+        .code-block .string { color: #98c379; }
+        .code-block .function { color: #61afef; }
+        .code-block .property { color: #e5c07b; }
+        .code-block .comment { color: #5c6370; font-style: italic; }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 16.4</div>
+        <h1>Structured Outputs and Tool Compatibility</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"A model that can only generate text is a curiosity. A model that can generate valid JSON, call tools, and interact with external systems is a platform. Structured outputs transform language models from text generators into reliable components."</p>
+            <cite>An Engineer Who Wasted Six Months on Regex Parsing</cite>
+        </blockquote>
+
+        <h2>Introduction</h2>
+        <p>
+            Raw language model outputs are unstructured text. Production AI systems need structured outputs: JSON with specific schemas, function calls with typed arguments, and tool invocations that external systems can process. This section covers JSON mode, function calling, tool schema design, and reliability across models.
+        </p>
+
+        <h2>JSON Mode and Structured Generation</h2>
+        <p>
+            JSON mode instructs the model to generate output conforming to a specific JSON schema. This enables programmatic consumption of model outputs without fragile parsing logic.
+        </p>
+
+        <h3>How JSON Mode Works</h3>
+        <p>
+            When you request JSON mode, you provide a schema describing the expected output structure. The model generates JSON matching that schema, and the system validates the output. If validation fails, you can retry or fall back to a different approach.
+        </p>
+
+        <div class="schema-diagram">
++------------------------------------------------------------------+
+|                    JSON MODE FLOW                                  |
++------------------------------------------------------------------+
+|                                                                     |
+|   Request with Schema                                               |
+|          |                                                         |
+|          v                                                         |
+|   +------------------+                                             |
+|   |  Model generates |  Constrained to schema                      |
+|   |  JSON output     |                                             |
+|   +------------------+                                             |
+|          |                                                         |
+|          v                                                         |
+|   +------------------+                                             |
+|   |  Validate JSON  |                                             |
+|   +------------------+                                             |
+|          |                                                         |
+|     Valid|Invalid                                                   |
+|          |                                                         |
+|     Done |Retry/Fallback                                             |
+|                                                                     |
++------------------------------------------------------------------+
+        </div>
+
+        <h3>JSON Schema Design</h3>
+        <p>
+            Design schemas that are strict enough to be reliable but flexible enough to accommodate model limitations. Overly strict schemas cause high retry rates; overly loose schemas fail to provide structure.
+        </p>
+        <p>
+            <strong>Best practices:</strong> Use required fields sparingly; prefer nullable optional fields over strict unions; use enum fields for known values; include descriptions to guide the model; avoid deeply nested structures when possible.
+        </p>
+
+        <div class="code-block">
+<span class="comment">// Good schema design example</span>
+{
+  <span class="property">"$schema"</span>: <span class="string">"http://json-schema.org/draft-07/schema#"</span>,
+  <span class="property">"type"</span>: <span class="string">"object"</span>,
+  <span class="property">"properties"</span>: {
+    <span class="property">"status"</span>: {
+      <span class="property">"type"</span>: <span class="string">"string"</span>,
+      <span class="property">"enum"</span>: [<span class="string">"success"</span>, <span class="string">"failure"</span>, <span class="string">"partial"</span>],
+      <span class="property">"description"</span>: <span class="string">"Overall extraction status"</span>
+    },
+    <span class="property">"entities"</span>: {
+      <span class="property">"type"</span>: <span class="string">"array"</span>,
+      <span class="property">"items"</span>: {
+        <span class="property">"type"</span>: <span class="string">"object"</span>,
+        <span class="property">"properties"</span>: {
+          <span class="property">"type"</span>: { <span class="property">"type"</span>: <span class="string">"string"</span>, <span class="property">"enum"</span>: [<span class="string">"person"</span>, <span class="string">"organization"</span>, <span class="string">"date"</span>] },
+          <span class="property">"value"</span>: { <span class="property">"type"</span>: <span class="string">"string"</span> },
+          <span class="property">"confidence"</span>: { <span class="property">"type"</span>: <span class="string">"number"</span>, <span class="property">"minimum"</span>: 0, <span class="property">"maximum"</span>: 1 }
+        },
+        <span class="property">"required"</span>: [<span class="string">"type"</span>, <span class="string">"value"</span>]
+      }
+    }
+  },
+  <span class="property">"required"</span>: [<span class="string">"status"</span>]
+}
+</div>
+
+        <h2>Function Calling and Tool Use</h2>
+        <p>
+            Function calling (also called tool use) allows models to invoke external tools with structured arguments. This transforms models from text generators into interactive agents that can take actions in the world.
+        </p>
+
+        <h3>Function Calling Patterns</h3>
+        <p>
+            <strong>Zero-shot function calling:</strong> The model receives a list of available functions and selects which to call based on the request. The model reasons about intent and chooses appropriate tools.
+        </p>
+        <p>
+            <strong>Forced function calling:</strong> You specify which function must be called, and the model generates arguments for that function. Useful when user intent clearly maps to a specific tool.
+        </p>
+        <p>
+            <strong>Parallel function calling:</strong> The model generates multiple function calls simultaneously. Useful when a request requires multiple independent actions.
+        </p>
+
+        <table class="tool-comparison">
+            <thead>
+                <tr>
+                    <th>Pattern</th>
+                    <th>Use Case</th>
+                    <th>Reliability</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Zero-shot</strong></td>
+                    <td>Open-ended tool use</td>
+                    <td>Moderate (requires good function descriptions)</td>
+                </tr>
+                <tr>
+                    <td><strong>Forced</strong></td>
+                    <td>Intent is clear</td>
+                    <td>High</td>
+                </tr>
+                <tr>
+                    <td><strong>Parallel</strong></td>
+                    <td>Independent actions</td>
+                    <td>Moderate-High</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Function Schema Design</h3>
+        <p>
+            Function schemas tell the model what a function does and what arguments it accepts. Well-designed schemas are critical for reliable function calling.
+        </p>
+
+        <div class="code-block">
+<span class="comment">// Well-designed function schema</span>
+{
+  <span class="property">"name"</span>: <span class="string">"extract_patient_info"</span>,
+  <span class="property">"description"</span>: <span class="string">"Extract structured patient information from clinical notes. Use this when given a clinical document and asked to identify patient demographics, conditions, or treatments."</span>,
+  <span class="property">"parameters"</span>: {
+    <span class="property">"type"</span>: <span class="string">"object"</span>,
+    <span class="property">"properties"</span>: {
+      <span class="property">"patient_name"</span>: {
+        <span class="property">"type"</span>: <span class="string">"string"</span>,
+        <span class="property">"description"</span>: <span class="string">"Patient full name or 'NOT_FOUND' if not mentioned"</span>
+      },
+      <span class="property">"date_of_birth"</span>: {
+        <span class="property">"type"</span>: <span class="string">"string"</span>,
+        <span class="property">"description"</span>: <span class="string">"Patient DOB in ISO format or 'NOT_FOUND'"</span>
+      },
+      <span class="property">"conditions"</span>: {
+        <span class="property">"type"</span>: <span class="string">"array"</span>,
+        <span class="property">"items"</span>: { <span class="property">"type"</span>: <span class="string">"string"</span> },
+        <span class="property">"description"</span>: <span class="string">"List of diagnosed conditions"</span>
+      }
+    },
+    <span class="property">"required"</span>: [<span class="string">"patient_name"</span>]
+  }
+}
+</div>
+
+        <div class="callout key-insight">
+            <h4>The Description is the Prompt</h4>
+            <p>For function calling, the function description is as important as the parameters schema. Include clear guidance on when to use the function, what kind of requests it handles, and any edge cases to consider. Ambiguous descriptions lead to incorrect function selection.</p>
+        </div>
+
+        <h2>Tool Schema Design Best Practices</h2>
+        <p>
+            Tool schemas define the interface between your AI system and external systems. Good tool schemas improve reliability and reduce misuse.
+        </p>
+
+        <h3>Schema Design Principles</h3>
+        <p>
+            <strong>Be specific about types:</strong> Use the most specific types possible. Instead of allowing any string for an enum-like field, use enum constraints.
+        </p>
+        <p>
+            <strong>Provide example values:</strong> Include examples in descriptions to guide the model toward valid outputs.
+        </p>
+        <p>
+            <strong>Handle missing values explicitly:</strong> Decide how the model should indicate missing or unknown values. Using explicit markers like "NOT_FOUND" is better than returning null or empty strings.
+        </p>
+        <p>
+            <strong>Limit complexity:</strong> Deeply nested parameters increase error rates. Flatten where possible, or break into multiple function calls.
+        </p>
+
+        <h3>Handling Tool Failures</h3>
+        <p>
+            Tools fail. Network errors, authentication issues, and service outages all happen. Design your system to handle tool failures gracefully.
+        </p>
+        <p>
+            <strong>Retry logic:</strong> Implement automatic retries with exponential backoff for transient failures.
+        </p>
+        <p>
+            <strong>Error propagation:</strong> When a tool fails, propagate the error to the model with context about what happened. The model can often work around failures or provide better error messages.
+        </p>
+        <p>
+            <strong>Fallback tools:</strong> Define fallback tools that provide degraded but functional alternatives when primary tools are unavailable.
+        </p>
+
+        <h2>Reliability Across Models</h2>
+        <p>
+            Different models have different reliability levels for structured outputs. A model that produces valid JSON 99% of the time may only produce valid function calls 85% of the time. Understanding these differences guides model selection for structured output tasks.
+        </p>
+
+        <h3>Reliability Benchmarks</h3>
+        <p>
+            Test each model on your specific structured output tasks to measure reliability. Do not assume that benchmark performance translates to your use case.
+        </p>
+        <p>
+            Measure: JSON validity rate (parses as valid JSON), schema conformance rate (conforms to your schema), functional correctness rate (output is semantically correct).
+        </p>
+
+        <table class="tool-comparison">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>JSON Validity</th>
+                    <th>Schema Conformance</th>
+                    <th>Functional Correctness</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>GPT-4o</td>
+                    <td>99.5%</td>
+                    <td>98.0%</td>
+                    <td>97.5%</td>
+                </tr>
+                <tr>
+                    <td>Claude 3.5</td>
+                    <td>99.2%</td>
+                    <td>97.5%</td>
+                    <td>97.0%</td>
+                </tr>
+                <tr>
+                    <td>GPT-4o-mini</td>
+                    <td>98.0%</td>
+                    <td>94.0%</td>
+                    <td>92.0%</td>
+                </tr>
+                <tr>
+                    <td>Llama 3.1 70B</td>
+                    <td>95.0%</td>
+                    <td>88.0%</td>
+                    <td>85.0%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            These numbers are illustrative. Your actual reliability will vary based on your schemas, prompts, and task types. Always test empirically.
+        </p>
+
+        <h3>Validation Layers</h3>
+        <p>
+            Never trust model outputs without validation. Even the most reliable models produce invalid outputs occasionally. Build validation layers that check outputs before passing them downstream.
+        </p>
+        <p>
+            <strong>Structural validation:</strong> Check that output parses as valid JSON and conforms to schema.
+        </p>
+        <p>
+            <strong>Semantic validation:</strong> Check that output values are reasonable and consistent with other known values.
+        </p>
+        <p>
+            <strong>Business logic validation:</strong> Check that output satisfies domain-specific constraints.
+        </p>
+
+        <div class="callout warning">
+            <h4>Validation is Not Optional</h4>
+            <p>Every production system must validate structured outputs. Model outputs can be invalid for reasons ranging from simple token limits to complex reasoning errors. Without validation, invalid outputs propagate through your system causing errors, crashes, or data corruption downstream.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <h4>Practical Example: DataForge Structured Output Pipeline</h4>
+            <p><strong>Who:</strong> A legal tech startup processing contract documents</p>
+            <p><strong>Situation:</strong> DataForge extracts structured information from contracts using function calling</p>
+            <p><strong>Problem:</strong> Initial implementation had 12% failure rate due to invalid function calls and schema mismatches</p>
+            <p><strong>Solution:</strong> The team implemented a multi-layer validation pipeline:</p>
+            <p>Layer 1: Structural validation rejects non-JSON and schema violations immediately. Layer 2: Semantic validation checks that extracted dates are reasonable and entities are consistent. Layer 3: Business logic validation ensures extracted clauses are internally consistent. Layer 4: Cross-document validation flags inconsistencies across multiple contract sections.</p>
+            <p><strong>Result:</strong> Invalid output rate dropped from 12% to 0.3%. The remaining failures are flagged for human review. Human review queue decreased 85%, making the system economically viable.</p>
+        </div>
+
+        <h2>Cross-References</h2>
+        <p>
+            For tool use in agentic architectures, see <a href="section-15-4.html">Chapter 15.4 Agentic Workflow Systems</a>. For security considerations with tool calling, see <a href="chapter-20.html">Chapter 20 Security</a>. For evaluation of structured outputs, see <a href="../../part-5-evaluation-reliability/chapter-24/index.html">Chapter 24 Evaluation</a>.
+        </p>
+
+        <h2>Section Summary</h2>
+        <p>
+            Structured outputs transform models from text generators into reliable system components. JSON mode constrains output to conform to schemas, enabling programmatic consumption. Function calling enables models to invoke external tools with typed arguments. Tool schema design requires specific types, clear descriptions, and explicit handling of missing values. Validation layers are essential because every model produces invalid outputs occasionally. Measure reliability empirically across your specific tasks and schemas, not just on benchmarks.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-16-3.html">16.3 Ensembles and Specialization</a>
+            <a class="up" href="../index.html">Chapter 16 Overview</a>
+            <a class="next" href="section-16-5.html">16.5 Latency, Cost, and Quality Trade-offs</a>
+        </nav>
+
+        <footer>
+            <p>Section 16.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>19.3 Tool Schemas and Service Boundaries - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+    <style>
+        .diagram-block {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .schema-example {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+        .boundary-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .boundary-layer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .boundary-layer.outer {
+            background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+        }
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        .parameter-table th, .parameter-table td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .parameter-table th {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 19.3</div>
+        <h1>Tool Schemas and Service Boundaries</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"A tool is only as good as its schema. Vague tool descriptions produce unpredictable behavior. Precise schemas with clear boundaries produce reliable systems. The engineering discipline is in the schema design, not the tool implementation."</p>
+            <cite>AI Platform Architect, HealthMetrics</cite>
+        </blockquote>
+
+        <h2>Introduction</h2>
+        <p>
+            Tool schemas define the contract between AI models and the tools they can invoke. A well-designed schema tells the model exactly what a tool does, what parameters it accepts, and what outputs it returns. Service boundaries define where tool responsibility ends and model responsibility begins. Getting both right is essential for building reliable AI products that use tools.
+        </p>
+
+        <h2>Anatomy of a Tool Schema</h2>
+        <p>
+            A complete tool schema includes several essential components that work together to enable reliable tool invocation.
+        </p>
+
+        <h3>Tool Name</h3>
+        <p>
+            The tool name should be a verb or verb phrase that clearly describes the action. Names like <code>get_customer</code>, <code>search_products</code>, or <code>send_message</code> are clear. Names like <code>customer_action</code> or <code>do_stuff</code> are not.
+        </p>
+
+        <h3>Description</h3>
+        <p>
+            The description explains what the tool does in plain language. This description is the primary way models understand when to use the tool. Be specific about what the tool returns and any important limitations.
+        </p>
+
+        <h3>Parameter Schema</h3>
+        <p>
+            Parameters define what inputs the tool accepts. Each parameter needs a name, type, description, and whether it is required or optional. JSON Schema format is the standard for parameter definitions.
+        </p>
+
+        <div class="schema-example">
+{
+  "name": "search_products",
+  "description": "Search the product catalog by name, category, or attributes. 
+                   Returns up to 50 matching products with prices, stock status, 
+                   and product descriptions. Only searches active products.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "Search query matching product name or description"
+      },
+      "category": {
+        "type": "string",
+        "enum": ["electronics", "clothing", "home", "sports"],
+        "description": "Filter by product category"
+      },
+      "max_price": {
+        "type": "number",
+        "description": "Maximum price filter in USD"
+      },
+      "limit": {
+        "type": "integer",
+        "default": 20,
+        "description": "Maximum number of results to return (1-50)"
+      }
+    },
+    "required": ["query"]
+  }
+}
+        </div>
+
+        <h3>Response Schema</h3>
+        <p>
+            While not always formalized, documenting the expected response structure helps models interpret results correctly. Specify the shape of returned data and any important field semantics.
+        </p>
+
+        <h2>Service Boundaries: Where Does the Tool End?</h2>
+        <p>
+            A critical question in tool design is determining what the tool is responsible for versus what the model should handle. Service boundaries define this division of responsibility.
+        </p>
+
+        <div class="boundary-diagram">
+            <div class="boundary-layer">
+                <strong>AI Model Layer</strong><br/>
+                <small>Interpretation, reasoning, response synthesis, error handling for ambiguous cases</small>
+            </div>
+            <div class="boundary-layer outer">
+                <strong>Tool Layer</strong><br/>
+                <small>Data retrieval, external actions, API calls, side effects, structured operations</small>
+            </div>
+        </div>
+
+        <div class="callout key-insight">
+            <h4>The Single Responsibility Principle for Tools</h4>
+            <p>Each tool should do one thing well. A tool that tries to do too much has fuzzy boundaries. A tool that does one precise thing is easier to test, debug, and reason about. If you find yourself writing "and also..." in a tool description, split the tool into multiple tools.</p>
+        </div>
+
+        <h3>What Belongs in Tools</h3>
+        <p>
+            <strong>Data retrieval:</strong> Tools excel at fetching specific, structured data from databases, APIs, or search indices. If the model needs to know something specific that exists in your systems, a tool should retrieve it.
+        </p>
+        <p>
+            <strong>External actions:</strong> Sending messages, creating records, triggering workflows, making payments. These are actions with side effects that tools should handle.
+        </p>
+        <p>
+            <strong>Complex computation:</strong> Calculations that require precision or specific algorithms should live in tools, not in model reasoning.
+        </p>
+        <p>
+            <strong>Validation and transformation:</strong> Converting data formats, validating inputs against business rules, transforming API responses into consistent shapes.
+        </p>
+
+        <h3>What Belongs in Models</h3>
+        <p>
+            <strong>Interpretation:</strong> Understanding user intent, resolving ambiguity, determining appropriate responses.
+        </p>
+        <p>
+            <strong>Reasoning:</strong> Drawing conclusions from retrieved information, connecting concepts, making judgments.
+        </p>
+        <p>
+            <strong>Natural language generation:</strong> Producing coherent, well-formatted responses that synthesize tool results.
+        </p>
+        <p>
+            <strong>Error handling for edge cases:</strong> When tool results are incomplete or unexpected, models can often work around issues that would break rigid code.
+        </p>
+
+        <h2>Schema Design Best Practices</h2>
+
+        <h3>Be Specific About Limitations</h3>
+        <p>
+            Do not just describe what a tool does. Describe what it does not do, or what constraints apply. If a search tool only returns active products, say so. If an API has rate limits, mention them.
+        </p>
+
+        <div class="callout warning">
+            <h4>The Ambiguity Trap</h4>
+            <p>Vague schemas produce unpredictable tool invocations. "Search for products" might mean anything. "Search for active products in the catalog by name, returning price and availability" tells the model exactly what to expect and prevents surprising invocations.</p>
+        </div>
+
+        <h3>Use Consistent Naming Conventions</h3>
+        <p>
+            Establish naming conventions for tools and parameters and stick to them. If you use camelCase for parameters, do it consistently. If tools follow a verb_noun pattern, apply it everywhere.
+        </p>
+
+        <p>
+            <strong>verb_noun</strong> naming follows patterns like get_customer and create_order, and works well for tools that perform specific actions. <strong>noun_by_noun</strong> naming follows patterns like customer_by_id and products_by_category, and suits data retrieval with specific keys. <strong>search_by_noun</strong> naming follows patterns like search_products and search_orders, and is appropriate for free-text search operations.
+        </p>
+
+        <h3>Parameter Type Precision</h3>
+        <p>
+            Use the most specific type possible for parameters. If a parameter is a date, use string with date format. If it is an enum, define the allowed values. Avoid type ambiguity that forces the model to guess.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>Practical Example: HealthMetrics Tool Schema Design</h4>
+            <p><strong>Situation:</strong> HealthMetrics needed tools for hospital staff to query patient data, appointment schedules, and resource utilization.</p>
+            <p><strong>Problem:</strong> Initial schemas were vague. A tool called <code>get_patient_info</code> returned different data shapes for different query types.</p>
+            <p><strong>Solution:</strong> The team split into focused tools with precise schemas including get_patient_demographics that returns name, DOB, contact info, and insurance, get_patient_appointments that returns scheduled appointments with times and departments, get_patient_admissions that returns current and historical admissions, and search_patients that provides free-text search returning patient IDs and basic info.</p>
+            <p><strong>Result:</strong> Tool invocation accuracy improved from 72% to 96%. Models could reliably select the right tool because the boundaries were clear.</p>
+        </div>
+
+        <h2>Tool Catalog Design</h2>
+        <p>
+            When your AI product has many tools, organizing them into a catalog helps models discover and select appropriate tools.
+        </p>
+
+        <h3>Tool Grouping</h3>
+        <p>
+            Group related tools into categories. A customer service AI might have tool groups for <code>orders</code>, <code>products</code>, <code>account</code>, and <code>support</code>. Within each group, tools follow consistent naming and response patterns.
+        </p>
+
+        <h3>Capability Advertising</h3>
+        <p>
+            Tools should advertise their capabilities in ways that help models decide when to use them. This includes not just what the tool does, but what types of queries it handles best.
+        </p>
+
+        <div class="schema-example">
+{
+  "name": "search_orders",
+  "description": "Search customer orders by multiple criteria. Best for 
+                   questions about 'what orders', 'when did I order', 
+                   'order status', and 'order history' queries.",
+  "category": "orders",
+  "capabilities": [
+    "free_text_search",
+    "date_range_filtering",
+    "status_tracking"
+  ],
+  "limitations": [
+    "Returns max 100 orders per query",
+    "Only shows orders from past 2 years",
+    "Does not include cancelled orders"
+  ]
+}
+        </div>
+
+        <h2>Versioning and Evolution</h2>
+        <p>
+            Tools evolve over time. Schema changes can break AI product behavior if not handled carefully. Version your tool schemas and provide migration paths.
+        </p>
+
+        <h3>Backward Compatibility</h3>
+        <p>
+            Prefer additive changes that maintain backward compatibility. Adding new optional parameters does not break existing callers. Removing parameters or changing parameter types does.
+        </p>
+
+        <h3>Deprecation Handling</h3>
+        <p>
+            When removing tools or changing schemas, support both old and new during a transition period. Log warnings when deprecated tools are used to identify callers that need updating.
+        </p>
+
+        <h2>Cross-References</h2>
+        <p>
+            For MCP integration of tool schemas, see <a href="section-19-1.html">Section 19.1 MCP as a Standard</a>. For UI integration patterns for tool results, see <a href="section-19-4.html">Section 19.4 UI-Agent Integration Patterns</a>.
+        </p>
+
+        <h2>Section Summary</h2>
+        <p>
+            Tool schemas define the contract between AI models and tools. A complete schema includes the tool name, description, parameter definitions, and response structure. Service boundaries determine where tool responsibility ends and model responsibility begins. Tools should handle data retrieval, external actions, complex computation, and validation. Models should handle interpretation, reasoning, and natural language generation. Schema design should follow the single responsibility principle, use specific types, and document limitations. Organize tools into catalogs with consistent naming and capability advertising to help models select appropriate tools.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-19-2.html">19.2 A2A for Agent Interoperability</a>
+            <a class="up" href="../index.html">Chapter 19 Overview</a>
+            <a class="next" href="section-19-4.html">19.4 UI-Agent Integration Patterns</a>
+        </nav>
+
+        <footer>
+            <p>Section 19.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 26.3: Expectation Setting and Support Readiness - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 26</div>
+        <h1>Expectation Setting and Support Readiness</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"The support tickets you receive after launch reveal the promises you did not keep, not the promises you did."</p>
+            <cite>Head of Support Who Reads Every Ticket</cite>
+        </blockquote>
+
+        <h2 id="expectation-gap">The Expectation Gap in AI Products</h2>
+
+        <p>
+            AI products suffer from expectation failures that traditional software does not. Users bring mental models from science fiction, marketing hype, and oversimplified explanations. They interact with probabilistic systems that behave differently on different inputs. They form impressions after limited exposure that may not reflect long-term performance.
+        </p>
+
+        <p>
+            Closing the expectation gap requires proactive communication before, during, and after launch. This section covers the communication and support strategies that make AI launches successful.
+        </p>
+
+        <h2 id="pre-launch-expectations">Pre-Launch Expectation Setting</h2>
+
+        <p>
+            The launch communication shapes user expectations before they interact with your AI. Invest in framing that sets realistic expectations while maintaining enthusiasm.
+        </p>
+
+        <h3 id="capability-marketing">Capability Marketing vs. Reality</h3>
+
+        <p>
+            Marketing creates desire; product experience creates satisfaction. When marketing overpromises, product experience cannot deliver. Structure launch messaging to generate interest without creating impossible standards.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The Expectation Alignment Framework</h4>
+            <p><strong>What to highlight:</strong> Genuine capabilities, specific use cases, real user testimonials, concrete outcomes</p>
+            <p><strong>What to contextualize:</strong> AI limitations, the role of human oversight, expected failure modes, what "good" looks like</p>
+            <p><strong>What to avoid:</strong> Absolute claims, anthropomorphization, implying human-level understanding, ignoring limitations</p>
+        </div>
+
+        <h3 id="public-documentation">Public Documentation of AI Behavior</h3>
+
+        <p>
+            Some organizations publish AI model cards or system cards that document capabilities, limitations, and known failure modes. This transparency sets expectations and demonstrates responsible AI practice.
+        </p>
+
+        <p>
+            Some organizations publish AI model cards or system cards that document capabilities, limitations, and known failure modes. This transparency sets expectations and demonstrates responsible AI practice. The documentation should cover intended use cases describing what the AI is designed to do, known limitations explaining where the AI struggles or fails, confidence calibration showing how well AI confidence tracks with actual accuracy, and update history detailing what changed in recent updates.
+        </p>
+
+        <h2 id="launch-communication">Launch Communication Strategy</h2>
+
+        <p>
+            Launch communication serves multiple audiences with different needs:
+        </p>
+
+        <h3 id="segmented-communication">Segmented Launch Communication</h3>
+
+        <p>
+            Different user segments need different information. Existing users need to understand how AI affects current workflows, what is new, and what is different. Power users benefit from technical details, advanced use cases, and feedback mechanisms. Casual users prefer simple explanations, quick-start guides, and immediate value. Administrators need to know about governance implications, compliance considerations, and management options.
+        </p>
+
+        <h3 id="communication-channels">Multi-Channel Communication</h3>
+
+        <p>
+            Single-channel communication misses users who do not check every channel. Distribute launch information across multiple channels with consistent messaging, including in-product channels such as onboarding flows, tooltips, feature announcements, and help content, email with launch announcements, detailed guides, and feedback requests, documentation through updated help center, FAQs, and troubleshooting guides, and social and community channels via community forums, user groups, and support channels.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: HealthMetrics Care Coordinator AI Launch</h4>
+            <p><strong>Who:</strong> HealthMetrics launching AI care coordination to hospital administrators</p>
+            <p><strong>Situation:</strong> AI coordinates patient scheduling, resource allocation, and care team communication</p>
+            <p><strong>Problem:</strong> Hospital administrators are highly risk-averse and need strong expectation setting before allowing AI to make scheduling decisions</p>
+            <p><strong>Communication Strategy:</strong> Developed multi-tiered launch communication: (1) Executive briefing deck explaining AI role, oversight mechanisms, and safety measures (2) Administrator guide covering configuration options, override capabilities, and audit trails (3) Clinical staff training materials covering human-AI collaboration patterns (4) Patient-facing FAQ explaining how AI assists (not replaces) human care decisions</p>
+            <p><strong>Result:</strong> Administrator adoption rate exceeded targets by 40%. Support tickets focused on optimization, not concerns about AI errors. No escalations related to AI decision quality.</p>
+            <p><strong>Lesson:</strong> <strong>Segmentation and multi-channel communication prevented expectation mismatches that would have created resistance.</strong></p>
+        </div>
+
+        <h2 id="support-readiness">Support Readiness for AI</h2>
+
+        <p>
+            Support teams need different preparation for AI products than for traditional software. The unpredictability of AI behavior means support agents must handle issues without clear scripts.
+        </p>
+
+        <h3 id="support-training">Support Training for AI Features</h3>
+
+        <p>
+            Support agents require deep understanding of AI behavior to help users effectively. This includes AI literacy covering how AI systems work, why they behave inconsistently, and what influences output quality, a failure mode taxonomy explaining common AI failure patterns and how to recognize them, escalation criteria determining when AI issues require engineering involvement versus configuration changes, and feedback routing explaining how to capture and route AI feedback to improve future outputs.
+        </p>
+
+        <h3 id="ai-support-tools">AI-Specific Support Tools</h3>
+
+        <p>
+            Standard support tools may not capture the information needed to diagnose AI issues. AI-specific support tools should include input/output logging with the ability to capture the exact input that triggered an issue, confidence visibility providing access to AI confidence scores when users describe quality issues, model version tracking to understand which model version was serving when the issue occurred, and reproducibility tools that allow re-running the same input and comparing outputs.
+        </p>
+
+        <h2 id="feedback-loops">Closing the Loop with Users</h2>
+
+        <p>
+            AI products that improve based on user feedback demonstrate that user input matters. This builds trust and encourages continued engagement.
+        </p>
+
+        <h3 id="feedback-mechanisms">Effective Feedback Mechanisms</h3>
+
+        <p>
+            Design feedback mechanisms that are easy to use and capture meaningful signal. Quick feedback through thumbs up/down or helpful/not helpful buttons provides aggregate signal with minimal friction. Structured feedback using follow-up questions captures specific dimensions of quality such as accuracy, relevance, and tone. Free-text feedback provides open-ended input for detailed concerns or suggestions. Correction capability allows users to provide the correct answer or preferred output.
+        </p>
+
+        <h3 id="feedback-visibility">Showing Users That Feedback Matters</h3>
+
+        <p>
+            Collecting feedback is only valuable if users see that it changes something. Communicate feedback impact:
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Feedback Loop Communication</h4>
+            <p><strong>Acknowledge:</strong> Confirm when you receive feedback (automatic confirmation emails, in-app acknowledgment)</p>
+            <p><strong>Act:</strong> Show when feedback triggers changes (release notes mentioning user-reported issues)</p>
+            <p><strong>Report:</strong> Summarize feedback themes and actions taken (periodic transparency reports)</p>
+            <p><strong>Invite:</strong> Ask for feedback at meaningful moments (after AI outputs that users are likely to evaluate)</p>
+        </div>
+
+        <h2 id="post-launch-monitoring">Post-Launch Monitoring and Response</h2>
+
+        <p>
+            Launch day is not the end of expectation management. Continuous monitoring ensures you catch and respond to issues before they become systemic problems.
+        </p>
+
+        <h3 id="launch-metrics">Launch-Phase Metrics</h3>
+
+        <p>
+            During the launch window, typically 2-4 weeks post-deployment, monitor additional metrics beyond baseline. These include feedback volume and sentiment tracking whether feedback is trending positive or negative, support ticket patterns identifying whether certain issue types are increasing, feature adoption assessing whether users are discovering and using AI features, and engagement patterns observing whether users are returning to AI features or abandoning them.
+        </p>
+
+        <h3 id="incident-response">AI-Specific Incident Response</h3>
+
+        <p>
+            When AI incidents occur, standard incident response requires AI-specific additions. First, identify scope by determining how many users are affected and what types of outputs were impacted. Second, preserve evidence by capturing inputs, outputs, and model state for post-mortem. Third, communicate externally if users were impacted and proactive communication may be appropriate. Fourth, mitigate by considering disabling the AI feature temporarily if severity warrants. Fifth, determine the root cause by identifying whether this was a model issue, data issue, prompt issue, or infrastructure issue. Sixth, remediate by fixing the underlying cause and verifying the fix before re-enabling.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: DataForge AI Chart Suggestion Incident</h4>
+            <p><strong>Who:</strong> DataForge support team responding to user report of consistently wrong chart suggestions</p>
+            <p><strong>Situation:</strong> Enterprise user reported that AI always suggested line charts when bar charts were more appropriate</p>
+            <p><strong>Initial response:</strong> Support agent logged ticket, captured user data sample, and escalated to engineering</p>
+            <p><strong>Investigation:</strong> Engineering reproduced issue with user's data pattern. Analysis revealed training data skew: most enterprise customers used line charts, so AI learned to default to line charts even when bar charts were more appropriate for the data structure.</p>
+            <p><strong>Fix:</strong> Added data structure detection that considers chart type appropriateness before confidence scoring. Retrained on balanced dataset.</p>
+            <p><strong>Communication:</strong> Contacted user to explain root cause, confirmed fix with their data, offered early access to updated model.</p>
+            <p><strong>Lesson:</strong> <strong>Individual user reports can reveal systemic training issues. Support processes must capture these signals and route them to training improvement.</strong></p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-26-2.html">26.2 Staged Rollouts and User Education</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="../../chapter-27/index.html">Ch 27: Post-Launch Learning Loops</a>
+        </nav>
+
+        <footer>
+            <p>Section 26.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

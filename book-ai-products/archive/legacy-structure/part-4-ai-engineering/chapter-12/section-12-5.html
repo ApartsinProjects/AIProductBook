@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12.5 Advanced Agent Patterns - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 12</div>
+        <h1>Prompts, Chains, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and Orchestration</h1>
+        <p class="chapter-subtitle">12.5 Advanced Agent Patterns</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master advanced agent patterns that go beyond basic tool use: ReAct, reflection, and planning <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 12.4 recommended. Understanding of basic <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> and tool use.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Beyond Basic <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></div>
+            <p>This section covers advanced agent patterns including ReAct, reflection, planning, and supervisor patterns. In the context of AI engineering, these patterns separate prototype-level AI from production-ready systems. The reliability gap between basic and advanced <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> (60% vs 95% success) makes these patterns essential for real products.</p>
+        </div>
+
+        <h2 id="section-12-5">12.5 Advanced Agent Patterns</h2>
+
+        <p>
+            Basic <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> that simply call tools in sequence are the starting point, not the destination. Production AI systems require more sophisticated patterns that enable self-correction, planning, and continuous improvement. This section covers the agent patterns that separate prototype AI from production AI.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            A basic agent can execute a fixed plan. An advanced agent can evaluate its own performance, correct its course, plan multi-step solutions, and learn from experience. The difference is reliability. Advanced patterns are what make <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> trustworthy enough for production.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Reliability Gap</div>
+            <p>A basic agent might succeed 60% of the time in demos. Advanced agent patterns can push that to 95% or higher. In production, a 60% success rate is a support ticket tsunami. The patterns in this section close that gap.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">DataForge: Multi-Agent Architecture</div>
+            <p>DataForge uses a three-agent architecture for their ETL pipeline generation:</p>
+            <pre>User: "Create a pipeline that joins customer data with orders, 
+       filters for high-value customers, and outputs to Redshift"
+
+<a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>:
+[Parser Agent] -> [Code Generator Agent] -> [Validator Agent]
+       |                  |                        |
+       v                  v                        v
+   Extracts intent    Generates Python     Validates against
+   and entities      with pandas/dbt     enterprise schema
+
+Parser Agent: Interprets natural language, identifies entities 
+(customer, orders), determines transformation operations needed
+
+Code Generator Agent: Takes parsed intent, generates Python code
+using pandas/dbt patterns, creates idempotent transformations
+
+Validator Agent: Checks generated code against enterprise 
+schema, verifies column types, ensures no PII exposure</pre>
+            <p>DataForge found that separating concerns into specialized <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> improved code acceptance from 40% to 85%. Each agent could be optimized independently, and failures could be traced to specific components.</p>
+        </div>
+
+        <h3>1. ReAct Pattern: Reasoning Plus Acting</h3>
+
+        <p>
+            ReAct (Reasoning + Acting) combines explicit reasoning with tool actions. The agent generates reasoning traces that inform its actions, and actions that provide new information for reasoning. This creates a feedback loop between thought and action.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: ReAct for Complex Research</div>
+            <p>Without ReAct, an agent might make a plan and execute it blindly. With ReAct, it thinks about what it knows, decides what to try, observes the result, and adjusts:</p>
+            <pre class="code-block"># ReAct agent loop
+while not done:
+    # Think: What do I know? What should I try next?
+    thought = reasoner.generate_thought(
+        context=conversation_history,
+        question=original_goal,
+        observations=previous_results
+    )
+    
+    # Act: Take an action based on reasoning
+    if thought.action == "search":
+        result = search_tool.invoke(thought.query)
+    elif thought.action == "browse":
+        result = browse_tool.invoke(thought.url)
+    elif thought.action == "calculate":
+        result = calculate_tool.invoke(thought.expression)
+    
+    # Observe: Update what we know
+    observations.append({"thought": thought, "result": result, "action": thought.action})
+    
+    # Check if we can answer now
+    if enough_information(observations):
+        answer = reasoner.generate_answer(observations)
+        done = True</pre>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: ReAct Implementation</div>
+            <pre class="code-block">from langchain.<a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> import Agent
+from langchain.prompts import PromptTemplate
+from langchain.schema import AgentAction, AgentFinish
+
+class ReActAgent:
+    """ReAct pattern: Alternate between reasoning and acting"""
+    
+    def __init__(self, tools: list, llm):
+        self.tools = {t.name: t for t in tools}
+        self.llm = llm
+        self.prompt = PromptTemplate.from_template("""
+You are a research assistant using the ReAct pattern.
+
+Question: {input}
+
+Follow this format:
+Thought: What should I do next? What information do I need?
+Action: search/browse/calculate/lookup/[tool_name]
+Action Input: The input to the tool
+Observation: The result of the action
+... (repeat until you can answer)
+Thought: I can now answer the question.
+Answer: [your answer here]
+
+Begin:
+""")
+    
+    def run(self, question: str) -> str:
+        observations = []
+        max_iterations = 10
+        
+        for _ in range(max_iterations):
+            # Generate thought and action
+            response = self.llm.invoke(
+                self.prompt.format(input=question) +
+                "\n".join([f"Observation: {o}" for o in observations])
+            )
+            
+            # Parse response
+            thought, action, action_input = self._parse_response(response)
+            
+            if thought.lower().startswith("i can now"):
+                return action  # Final answer
+            
+            # Execute action
+            if action in self.tools:
+                result = self.tools[action].invoke(action_input)
+                observations.append(f"{action}: {result}")
+            else:
+                observations.append(f"Unknown action: {action}")
+        
+        return "Could not complete within iteration limit"</pre>
+        </div>
+
+        <h3>2. Reflection Agent: Self-Evaluation Pattern</h3>
+
+        <p>
+            Reflection <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> evaluate their own outputs before returning them. The agent generates a response, then critiques it, then improves it. This creates a quality check that catches errors before they reach users.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Why Reflection Matters</div>
+            <p>A basic agent generates once. A reflection agent generates, evaluates, and refines. The critique catches hallucinations, logical errors, and formatting issues that the initial generation missed. For high-stakes outputs, this extra step is essential.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Reflection for Code Generation</div>
+            <pre class="code-block">class ReflectionAgent:
+    """Agent that critiques and improves its own outputs"""
+    
+    def __init__(self, code_llm, critique_llm, tools):
+        self.code_llm = code_llm
+        self.critique_llm = critique_llm
+        self.tools = tools
+    
+    def generate_and_reflect(self, task: str) -> str:
+        # Step 1: Initial generation
+        initial_code = self.code_llm.invoke(f"""
+            Write Python code for: {task}
+            Follow best practices and include error handling.
+        """)
+        
+        # Step 2: Self-critique
+        critique = self.critique_llm.invoke(f"""
+            Review this code for:
+            1. Correctness - will it produce the right output?
+            2. Security - any vulnerabilities?
+            3. Performance - any efficiency issues?
+            4. Error handling - are edge cases covered?
+            
+            Code to review:
+            {initial_code}
+            
+            Provide specific issues found, or "Looks good" if no issues.
+        """)
+        
+        # Step 3: Decide if revision needed
+        if "looks good" in critique.lower():
+            return initial_code
+        
+        # Step 4: Revise based on critique
+        revised_code = self.code_llm.invoke(f"""
+            Original task: {task}
+            
+            Original code:
+            {initial_code}
+            
+            Critique:
+            {critique}
+            
+            Write the improved code addressing the critique.
+        """)
+        
+        return revised_code</pre>
+        </div>
+
+        <h3>3. Planning <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>: Decompose and Execute</h3>
+
+        <p>
+            Planning <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> break complex tasks into subgoals and execute them in sequence. The agent maintains a plan state, tracks completed steps, and adapts the plan as it learns what works.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: Planning for Multi-Step Research</div>
+            <p>A research task like "Analyze the competitive landscape for electric vehicles" requires planning:</p>
+            <pre class="code-block">class PlanningAgent:
+    """Agent that maintains and executes a plan"""
+    
+    def __init__(self, llm, tools):
+        self.llm = llm
+        self.tools = tools
+        self.plan = []
+        self.completed = []
+    
+    def create_plan(self, goal: str) -> list[str]:
+        """Break goal into executable steps"""
+        response = self.llm.invoke(f"""
+            Break down this goal into ordered steps:
+            Goal: {goal}
+            
+            Format:
+            1. [First step]
+            2. [Second step]
+            ...
+            
+            Steps should be ordered, with each step depending on previous ones.
+        """)
+        
+        # Parse steps from response
+        self.plan = self._parse_steps(response)
+        return self.plan
+    
+    def execute_plan(self) -> dict:
+        """Execute plan, adapting as needed"""
+        results = {}
+        
+        for i, step in enumerate(self.plan):
+            print(f"Executing step {i+1}: {step}")
+            
+            # Execute step with context from previous results
+            context = "\n".join([f"Step {j+1}: {results[j]}" for j in range(i)])
+            result = self._execute_step(step, context)
+            
+            # Evaluate if step achieved its goal
+            evaluation = self._evaluate_step(step, result)
+            
+            if not evaluation.success:
+                # Replan from this point
+                new_steps = self._replan(step, evaluation.reason)
+                self.plan = self.plan[:i+1] + new_steps + self.plan[i+1:]
+            
+            results[i] = result
+            self.completed.append(step)
+        
+        return self._synthesize_results(results)</pre>
+        </div>
+
+        <h3>4. Supervisor Pattern: Hierarchical Control</h3>
+
+        <p>
+            The supervisor pattern uses a high-level agent to coordinate multiple specialized sub-<a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>. The supervisor does not do the work; it delegates to specialists and manages the flow between them.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Supervisor for Customer Service</div>
+            <pre class="code-block">class CustomerServiceSupervisor:
+    """Supervisor that routes to specialized <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>"""
+    
+    def __init__(self):
+        self.classifier = load_intent_classifier()
+        self.billing_agent = BillingAgent()
+        self.technical_agent = TechnicalAgent()
+        self.escalation_agent = EscalationAgent()
+        self.general_agent = GeneralAgent()
+    
+    def handle(self, customer_message: str, customer_data: dict) -> str:
+        # Step 1: Classify intent
+        intent = self.classifier.classify(customer_message)
+        
+        # Step 2: Route to appropriate specialist
+        if intent.category == "billing":
+            response = self.billing_agent.handle(
+                message=customer_message,
+                account=customer_data["account"]
+            )
+        elif intent.category == "technical":
+            response = self.technical_agent.handle(
+                message=customer_message,
+                product=customer_data["product"]
+            )
+        elif intent.needs_escalation:
+            response = self.escalation_agent.handle(
+                message=customer_message,
+                reason=intent.escalation_reason
+            )
+        else:
+            response = self.general_agent.handle(customer_message)
+        
+        # Step 3: Log for monitoring
+        self.log_interaction(intent, response)
+        
+        return response</pre>
+        </div>
+
+        <h3>5. Error Recovery Patterns</h3>
+
+        <p>
+            Production <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> must handle failures gracefully. Error recovery patterns give <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> strategies for when things go wrong.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Error Recovery with Retry Strategies</div>
+            <pre class="code-block">class ErrorRecoveryAgent:
+    """Agent with systematic error recovery"""
+    
+    def __init__(self, base_agent):
+        self.agent = base_agent
+        self.max_retries = 3
+    
+    def execute_with_recovery(self, task: str) -> str:
+        last_error = None
+        
+        for attempt in range(self.max_retries):
+            try:
+                # Try the main approach
+                return self.agent.execute(task)
+            
+            except ToolNotFoundError as e:
+                # Strategy: Simplify tool usage
+                task = self._simplify_task(task, e.tool_name)
+                last_error = e
+            
+            except RateLimitError as e:
+                # Strategy: Wait and retry with backoff
+                wait_time = 2 ** attempt  # Exponential backoff
+                sleep(wait_time)
+                last_error = e
+            
+            except TimeoutError as e:
+                # Strategy: Reduce scope
+                task = self._reduce_scope(task)
+                last_error = e
+            
+            except InvalidResponseError as e:
+                # Strategy: Rephrase the request
+                task = self._rephrase_request(task)
+                last_error = e
+        
+        # All retries exhausted - use fallback
+        return self._fallback_response(task, last_error)</pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Pattern</th><th>Use Case</th><th>Benefit</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>ReAct</td><td>Open-ended research, multi-step problems</td><td>Adaptive decision-making</td></tr>
+                <tr><td>Reflection</td><td>High-stakes outputs, code generation</td><td>Quality assurance</td></tr>
+                <tr><td>Planning</td><td>Complex workflows, project execution</td><td>Structured execution</td></tr>
+                <tr><td>Supervisor</td><td>Multi-domain systems, triage</td><td>Specialization</td></tr>
+                <tr><td>Error Recovery</td><td>Unreliable tools, edge cases</td><td>Robustness</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Combining Patterns</div>
+            <p>The most capable production <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> combine multiple patterns. A research agent might use ReAct for decision-making, reflection for output quality, planning for complex tasks, and error recovery for robustness. Choose the combination that matches your reliability requirements.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">EduGen: Learning Path Agent Implementation</div>
+            <p>EduGen uses a reflection agent pattern for their learning path adaptation:</p>
+            <pre># Learner adaptation logic
+def adapt_learning_path(learner_id: str, progress: dict) -> LearningPath:
+    learner = get_learner(learner_id)
+    
+    if progress.completion_rate < 0.6:
+        # Learner struggling - add prerequisites
+        return LearningPath(
+            additional_topics=[prerequisite_skills],
+            pace="slower",
+            practice_ratio=0.7  # More practice problems
+        )
+    elif progress.completion_rate > 0.9 and progress.quiz_scores > 0.85:
+        # Learner excelling - accelerate
+        return LearningPath(
+            skip_review=True,
+            pace="faster",
+            advanced_topics=True
+        )
+    else:
+        # On track - standard path
+        return LearningPath(pace="standard")</pre>
+            <p>EduGen found that automatic pace adjustment reduced learner drop-off by 40%. Learners who felt the content was moving too fast or too slow were most likely to abandon. The reflection pattern continuously adjusts based on quiz scores and completion rates.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Agent Memory Management</strong> - how to maintain state in conversational and long-running <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-12-4.html">12.4 Agent Skills and Tool Use</a>
+            <a class="up" href="index.html">Chapter 12 Index</a>
+            <a class="next" href="section-12-6.html">12.6 Agent Memory Management</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 12.5 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

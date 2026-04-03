@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13.2 Delegation Patterns and Tool Use - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 13.2</div>
+        <h1>Delegation Patterns and Tool Use</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Multi-agent systems are only as good as their delegation patterns. Poor delegation turns multi-agent into expensive chaos.
+        </p>
+
+        <h2>The Delegation Problem</h2>
+
+        <p>Delegation is the challenge of getting the right task to the right agent with the right context. In multi-agent systems, delegation failures cascade. An agent that receives the wrong task produces wrong output. An agent that receives the right task but wrong context produces unreliable output.</p>
+
+        <p>Effective delegation requires clear task boundaries, explicit context passing, and explicit output expectations.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Delegation Components</div>
+            <p>Every delegation involves four components that must be specified clearly. Task definition specifies what needs to be done, providing enough clarity for the agent to understand the objective. Context transfer specifies what information the agent needs to accomplish the task, including relevant history, constraints, and background. Output specification defines what format and content is expected from the agent's work. Escalation path specifies what to do if the agent cannot complete the task, ensuring failures are handled gracefully rather than causing system-wide problems.</p>
+        </div>
+
+        <h2>Task Definition Patterns</h2>
+
+        <h3>Task Assignment</h3>
+
+        <p>Tasks should be assigned to agents based on capability matching. Define agent capabilities explicitly and match tasks to capabilities.</p>
+
+        <pre>
+Agent Registry:
+  - classifier: email classification, sentiment analysis
+  - responder: response generation, template filling
+  - database: CRUD operations, data validation
+  - escalation: complex reasoning, human handoff
+
+Task: "Classify incoming email"
+Match: classifier agent
+        </pre>
+
+        <h3>Task Decomposition</h3>
+
+        <p>Complex tasks should be decomposed into simpler subtasks. Each subtask should be independently delegable.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Task Decomposition</div>
+            <p><strong>Complex task:</strong> Handle delivery exception email</p>
+            <p><strong>Decomposition:</strong> The complex task breaks down into extracting email content handled by the classifier agent, classifying exception type also by the classifier agent, generating a response by the responder agent, validating the response by the database agent, sending the response by the database agent, and updating records by the database agent. Each step is a separate task that can be delegated, retried, or escalated independently, providing flexibility and fault tolerance.</p>
+        </div>
+
+        <h2>Context Passing Patterns</h2>
+
+        <h3>Context Isolation</h3>
+
+        <p><a href="../../../part-1-why-ai-changes/chapter-2/sections/section-2-3.html" class="cross-ref">Agents</a> should receive only the context they need. Passing unnecessary context wastes tokens and can introduce noise. Passing insufficient context produces incomplete results.</p>
+
+        <h3>Context Passing Techniques</h3>
+
+        <p>Context passing techniques vary in their tradeoffs. Full context passes the complete state, which is simple but expensive in terms of tokens and processing time. Relevant subset passes only the relevant state, which is efficient but requires filtering logic to determine what matters. Reference-based context passes pointers to state, which is efficient but requires state management infrastructure. Accumulated context passes a summary plus raw data, balancing completeness with efficiency.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">Context Passing Best Practices</div>
+            <p>Context passing should be made explicit in the delegation protocol so both sending and receiving agents understand what is being transferred. Validate context completeness at the receiving agent before attempting to use it, catching missing context issues early. Log context passing for debugging since context-related issues are often difficult to diagnose after the fact. Set context size limits to prevent overflow and ensure predictable resource usage.</p>
+        </div>
+
+        <h2>Tool Use Patterns</h2>
+
+        <p><a href="../../../part-1-why-ai-changes/chapter-2/sections/section-2-3.html" class="cross-ref">Agents</a> use tools to interact with external systems. Tool use patterns determine how tools are discovered, invoked, and managed.</p>
+
+        <h3>Tool Discovery</h3>
+
+        <p><a href="../../../part-1-why-ai-changes/chapter-2/sections/section-2-3.html" class="cross-ref">Agents</a> need to know what tools are available, and tool discovery can take different forms. Static discovery uses a fixed tool set defined at system design time, providing predictability but limited flexibility. Dynamic discovery finds tools at runtime through a registry, providing adaptability at the cost of additional complexity. Negotiated discovery has agents discover and negotiate tool availability directly, providing maximum flexibility but requiring sophisticated coordination.</p>
+
+        <h3>Tool Invocation</h3>
+
+        <p>Tool invocation should be explicit and auditable. Each invocation should include a tool identifier specifying which tool to use, input parameters providing the data the tool needs to operate, an invocation timestamp for tracking and debugging purposes, and expected output format so the calling agent knows how to interpret results.</p>
+
+        <h3>Tool Error Handling</h3>
+
+        <p>Tool failures should be handled explicitly through well-defined policies. Define what constitutes tool failure, being specific about which outcomes count as failures versus acceptable variation. Define retry policies specifying how many times to retry and with what backoff strategy. Define fallback options for when a tool is unavailable, providing alternative paths to accomplish the goal. Define escalation paths for persistent failures that cannot be resolved through retries.</p>
+
+        <div class="callout warning">
+            <div class="callout-title">Tool Use Pitfalls</div>
+            <p>Tool use has common pitfalls to avoid. Tool proliferation creates too many tools without clear organization, making it difficult for agents to select the right tool. Tool redundancy has multiple tools doing similar things, creating confusion about which to use. Tool coupling introduces hard-coded tool dependencies that prevent tool substitution or evolution. Tool opacity makes it unclear what tools do or how they work, requiring agents to guess or try tools experimentally.</p>
+        </div>
+
+        <h2>Output Specification Patterns</h2>
+
+        <p>Delegated tasks should return outputs in specified formats. Output specifications enable reliable downstream processing.</p>
+
+        <h3>Output Schema</h3>
+
+        <p>Define output schema explicitly:</p>
+
+        <pre>
+Output Schema for Classification:
+{
+  "category": string,      // Exception category
+  "confidence": number,    // 0.0 to 1.0
+  "reasoning": string,     // Explanation
+  "escalate": boolean     // Requires human review
+}
+        </pre>
+
+        <h3>Output Validation</h3>
+
+        <p>Validate outputs against schema before passing to downstream agents. Invalid outputs should trigger retry or escalation.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Delegation requires task definition that specifies what needs to be done, context passing that transfers necessary information, output specification that defines expected results, and escalation paths for handling failures. Match tasks to agent capabilities based on explicit capability definitions, and decompose complex tasks into subtasks that can be delegated independently. Pass only necessary context to avoid bloat and noise, carefully filtering what each agent truly needs. Tool use requires discovery patterns so agents find available tools, invocation patterns for explicit and auditable execution, and error handling patterns for managing failures gracefully. Define output schemas explicitly and validate outputs against them before passing results to downstream agents.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Designing Delegation for Your System</div>
+            <p>Design delegation for a system you are building by working through each component systematically. First, identify the main tasks and how you would decompose them into subtasks that can be delegated independently. Second, determine what agent capabilities are needed and how you would define them in an agent registry. Third, clarify what context each agent needs and how you would pass it, considering which technique fits your needs. Fourth, determine what tools each agent needs and how they will be discovered, whether statically or dynamically. Fifth, define the output schemas and how they will be validated before downstream processing. Sixth, establish escalation paths for failures so agents know when and how to escalate when they cannot proceed.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 13.3, we examine <strong>Orchestration vs Over-Orchestration</strong>, exploring when orchestration helps and when it becomes counterproductive.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-13-1.html">13.1 When Multi-Agent</a>
+            <a class="up" href="../index.html">Chapter 13 Overview</a>
+            <a class="next" href="section-13-3.html">13.3 Orchestration</a>
+        </nav>
+
+        <footer>
+            <p>Section 13.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14.4 Preparing for Team Handoff - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 14.4</div>
+        <h1>Preparing for Team Handoff</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            A prototype that works for you may be incomprehensible to your team. Team handoff requires transforming individual artifacts into shared understanding.
+        </p>
+
+        <h2>The <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Handoff Challenge</a></h2>
+
+        <p><a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> is often an individual activity. The developer who created the prototype understands it intimately: why decisions were made, what works, what does not, what needs attention. This understanding is not captured in the code itself.</p>
+
+        <p>Team handoff requires externalizing this tacit knowledge so others can understand, maintain, and extend the system.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Handoff Documentation Requirements</div>
+            <p>Handoff documentation must cover what the system does and what its key components are so others understand the scope. It must explain why decisions were made and what alternatives were considered so future developers understand the rationale. It must describe how to work with the system, extend it, and debug it so others can be productive. It must document known issues including what does not work well and what needs attention so others are not surprised.</p>
+        </div>
+
+        <h2>Documentation for Handoff</h2>
+
+        <h3>System Overview</h3>
+
+        <p>A high-level description of what the system does, how its major components interact, and where the AI-generated portions are.</p>
+
+        <h3>Decision Log</h3>
+
+        <p>Why key decisions were made. This helps future developers understand the rationale and evaluate whether circumstances have changed.</p>
+
+        <h3>Known Issues</h3>
+
+        <p>What does not work well, what requires attention, what has been identified as needing improvement. Honest communication prevents others from being surprised.</p>
+
+        <h3>Onboarding Guide</h3>
+
+        <p>How to get the system running, how to make changes, what conventions apply. This helps new team members become productive quickly.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Handoff Package</div>
+            <p>QuickShip prepared a comprehensive handoff package for their vibe-coded exception handler including README.md with system overview, quick start guide, and architecture diagram, DECISIONS.md documenting the decision log with rationale, ISSUES.md listing known issues and technical debt, ONBOARDING.md providing a getting started guide for new developers, and CONTEXT.md with updated project context for AI tools.</p>
+        </div>
+
+        <h2>Context for AI Tools</h2>
+
+        <p>If the team uses AI coding tools, the handoff should include updated context for those tools. New team members should be able to use the same AI-assisted workflow as the original developer.</p>
+
+        <h3>Essential Context Updates</h3>
+
+        <p>If the team uses AI coding tools, update several context files for the handoff. The CONTEXT.md should reflect the current state of the project accurately. Skill definitions should cover system-specific operations that the team will need. Prompt templates should be provided for common tasks to ensure consistency. Conventions and rules for the codebase should be documented so new team members can follow established patterns.</p>
+
+        <h2>Code Review for Understanding</h2>
+
+        <p>Before handoff, have the code reviewed by someone who will be on the team. This surfaces issues that documentation does not catch and begins the knowledge transfer process.</p>
+
+        <h3>Review Focus Areas</h3>
+
+        <p>Before handoff, have the code reviewed by someone who will be on the team, focusing on architectural issues that may cause problems as the system evolves, missing error handling that could cause failures in production, security concerns including input validation and access control, observability gaps that would make debugging difficult, and documentation completeness to ensure the system can be understood and maintained.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">Handoff Checklist</div>
+            <p>Complete the handoff checklist to ensure smooth transition. Documentation should be complete including system overview, decisions log, known issues, and onboarding guide. Context files should be updated for AI tools so new team members can use the same AI-assisted workflow. Code review should be completed by a team member who will work with the system. Questions should be answered and issues addressed before handoff concludes. Known limitations should be explicitly communicated to prevent surprises.</p>
+        </div>
+
+        <h2>Knowledge Transfer Sessions</h2>
+
+        <p>Documentation augments but does not replace direct knowledge transfer. Schedule time to walk through the system with team members.</p>
+
+        <h3>Session Types</h3>
+
+        <p>Documentation augments but does not replace direct knowledge transfer. Schedule several types of sessions to transfer understanding. Architecture walkthroughs cover high-level structure and decisions so team members understand the big picture. Code walkthroughs dive deep into key components so others understand implementation details. Pair programming sessions work on a change together to transfer practical knowledge. Debugging sessions investigate a known issue together to teach diagnostic approaches.</p>
+
+        <h2>Establishing Team Conventions</h2>
+
+        <p>If not already established, handoff is a good time to formalize team conventions for AI tool usage. Establish a directory structure for AI artifacts, agree on skill documentation format, define context document structure, and standardize rule documentation format to ensure consistency as more team members use AI tools.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Handoff requires externalizing tacit knowledge that exists only in your head, including what the system does and why, why decisions were made, how to work with it, and known issues that others should understand. Create documentation packages including README for system overview, DECISIONS for rationale, ISSUES for known problems, and ONBOARDING for getting started. Update AI tool context for new team members so they can use the same AI-assisted workflow you developed. Code review surfaces issues that documentation does not catch and begins the knowledge transfer process. Knowledge transfer sessions including architecture walkthroughs, code walkthroughs, pair programming, and debugging sessions complement documentation and build deeper understanding. Establish team conventions during or before handoff to ensure consistency as the system evolves.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Handoff Readiness Assessment</div>
+            <p>Evaluate your prototype for handoff readiness by asking diagnostic questions. First, could someone else understand what this system does from the documentation and code alone? Second, could someone else make changes to this system or would they be completely lost? Third, what is not documented that should be, identifying gaps in your current handoff preparation? Fourth, what questions would a new team member ask that you have not answered? Fifth, what would you need to do to be comfortable handing this off today, defining the gap between current state and handoff readiness?</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>Part III has covered vibe coding principles, AI-native prototyping workflows, prompting and skill architecture, multi-agent patterns, and transitioning from prototype to production. The next part explores <strong>engineering practices</strong> for AI products.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-14-3.html">14.3 Architectural Hardening</a>
+            <a class="up" href="../index.html">Chapter 14 Overview</a>
+            <a class="next" href="../../part-4-engineering/index.html">Part IV: Engineering</a>
+        </nav>
+
+        <footer>
+            <p>Section 14.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

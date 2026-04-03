@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11.1 Full-Stack AI Engineer Skills - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 11</div>
+        <h1>Core Principles of Modern AI Engineering</h1>
+        <p class="chapter-subtitle">11.1 Full-Stack AI Engineer Skills</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Shift mindset from PoC to production with core engineering principles.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Part III or equivalent AI product knowledge. Python basics expected.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Full-Stack AI Engineering</div>
+            <p>This section covers the expanding role of AI engineers who must understand the full stack from model selection to production deployment. In the context of AI product development, the synergy between AI PM skills (from Part III) and engineering skills creates the foundation for shipping AI products. Understanding the full stack helps you make better architectural decisions and collaborate more effectively with specialists.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The 10x Developer Returns</div>
+            <p>Companies once argued about whether developers were 10x more productive than others. AI has settled the debate differently: a developer with AI is now arguably 10x more productive than one without. The gap is no longer about individual skill.</p>
+        </div>
+
+        <h2 id="section-11-1">11.1 Full-Stack AI Engineer Skills</h2>
+
+        <p>
+            The role of the AI engineer today encompasses responsibilities that would have required multiple specialized roles in earlier eras. This is not because any individual engineer is expected to be an expert in everything, but because the boundaries between roles have blurred. A modern AI engineer must understand the full stack from model selection to production deployment, with particular depth in areas that are specific to AI systems.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Traditional software development had clear separation between frontend, backend, database, and operations engineers. AI systems blur these boundaries because the core "backend" logic involves probabilistic models rather than deterministic code. Understanding the entire stack is essential because problems often emerge at the boundaries between layers, and solutions require understanding how changes in one layer affect others.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: You Don't Need to Be an Expert in Everything</div>
+            <p>The goal is to understand the full stack at a working level, not to be the world's expert in each area. Focus on building depth in 1-2 areas while maintaining conceptual understanding across all layers. In practice, you'll collaborate with specialists for deep expertise in specific areas.</p>
+        </div>
+
+        <h3>The Evolving Skill Set</h3>
+
+        <h4>1. Prompt Engineering</h4>
+        <p>
+            Prompt engineering remains a foundational skill, but it has evolved beyond simple prompt writing. It now encompasses iterative prompt design, evaluation, and optimization. Modern prompt engineering involves understanding how models interpret different types of instructions, designing prompts that are robust to variations in input, and systematically measuring prompt quality against evaluation criteria. This is not a one-time activity. It is an ongoing process of refinement as the models and use cases evolve.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Prompt Engineering Is Not "Writing"</div>
+            <p>A common misconception is that prompt engineering is about crafting the "perfect" prompt that works once. The reality is that prompt engineering is an iterative process of testing, measuring, and refining. Your first prompt will rarely be your final prompt. Think of it more like A/B testing than creative writing.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Iterative Prompt Refinement</div>
+            <p>Consider building a customer support chatbot. Your initial prompt might be:</p>
+            <pre class="code-block">You are a helpful customer support agent. Answer user questions based on the provided documentation.</pre>
+            <p>This basic prompt produces inconsistent results. Through systematic iteration, you might evolve it to:</p>
+            <pre class="code-block">You are a technical support specialist for Acme Analytics. Your role is to help users resolve issues using our knowledge base. 
+
+ Guidelines:
+ - Always cite specific documentation sections when available
+ - Ask clarifying questions before providing solutions
+ - If the issue is not covered, explain what information would help
+ - Never recommend actions that could cause data loss
+ - Escalate to human support for billing issues
+
+ Response format:
+ - Acknowledge the user's issue
+ - Provide step-by-step solutions with expected outcomes
+ - Include any relevant warnings or prerequisites</pre>
+            <p>The refined version demonstrates how modern prompt engineering includes explicit guidelines, constraints, and response structure. The key skill is iterating based on eval results rather than writing "perfect" prompts upfront.</p>
+        </div>
+
+        <h4>2. System Design for AI Products</h4>
+        <p>
+            System design for AI products requires understanding not just software architecture but the unique characteristics of AI systems. How do you design for reliability when the core component is probabilistic? How do you handle failures gracefully when the model produces unexpected outputs? What monitoring do you need to detect quality degradation? These are system design questions that did not exist in traditional software development.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: Designing for Probabilistic Reliability</div>
+            <p>Imagine you're building a document processing system that uses an LLM to extract structured data from invoices. Traditional software design would expect the extraction to either succeed or fail deterministically. With AI, you face new challenges:</p>
+            <ul>
+                <li><strong>Partial failures:</strong> The model might extract 8 of 10 fields correctly, but hallucinate a value for the other 2</li>
+                <li><strong>Semantic vs syntactic errors:</strong> A field might be syntactically valid (correct format) but semantically wrong (wrong invoice number)</li>
+                <li><strong>Graded quality:</strong> Instead of pass/fail, you get "90% confident this extraction is correct"</li>
+            </ul>
+            <p>A well-designed system handles these by implementing confidence thresholds, extraction verification steps, and fallback to human review for low-confidence extractions.</p>
+        </div>
+
+        <h4>3. Data Engineering</h4>
+        <p>
+            Data engineering skills are essential for any AI product that uses custom data. This includes building <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> pipelines that retrieve relevant context, managing vector databases that store embeddings, and ensuring data quality across the pipeline. The saying "garbage in, garbage out" is particularly true for AI systems, making data engineering skills critical for product quality.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: It's Not Just About Data Quality</div>
+            <p>While data quality matters, the more subtle issue is data relevance and representation. Even high-quality data can produce poor results if it's not structured or indexed in ways that match how users query it. <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> failures often stem not from bad data but from poor chunking strategies, missing metadata, or retrieval algorithms that don't match query patterns. Focus on end-to-end retrieval quality, not just data cleanliness.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Building a <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Pipeline</div>
+            <p class="code-caption">Complete <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> pipeline implementation with chunking, embeddings, and vector storage using LangChain</p>
+            <pre class="code-block">import json
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import Pinecone
+
+def build_rag_pipeline(documents: list[str], index_name: str):
+    """
+    Build a complete <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> pipeline from raw documents.
+    """
+    # Step 1: Chunk the documents
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200,
+        length_function=len,
+    )
+    chunks = text_splitter.create_documents(documents)
+    
+    # Step 2: Generate embeddings
+    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+    
+    # Step 3: Store in vector database
+    vectorstore = Pinecone.from_documents(
+        chunks,
+        embedding=embeddings,
+        index_name=index_name
+    )
+    
+    # Step 4: Return retriever with configurable parameters
+    return vectorstore.as_retriever(
+        search_type="similarity",
+        search_kwargs={"k": 4}
+    )
+
+# This pipeline is the foundation for any <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>-based product

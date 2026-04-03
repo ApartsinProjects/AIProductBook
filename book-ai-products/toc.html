@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table of Contents - From AI-Assisted Software Development to AI-Powered Software Products</title>
+    <link rel="stylesheet" href="styles/book.css">
+    <style>
+        .toc-view-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            padding: 0.5rem;
+            background: rgba(15, 52, 96, 0.08);
+            border-radius: 10px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .toc-view-btn {
+            padding: 0.5rem 1.2rem;
+            border: none;
+            background: transparent;
+            color: var(--text-light);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        .toc-view-btn:hover {
+            color: var(--accent);
+            background: rgba(15, 52, 96, 0.06);
+        }
+        
+        .toc-view-btn.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 2px 8px rgba(15, 52, 96, 0.25);
+        }
+        
+        .toc-detailed { display: none; }
+        .toc-view-detailed .toc-detailed { display: block; }
+        .toc-view-detailed .toc-overview { display: none; }
+        
+        .toc-chapters { list-style: none; padding: 0; margin: 0; }
+        .toc-ch {
+            display: flex; align-items: flex-start; gap: 1rem;
+            padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.5rem;
+            transition: background 0.2s ease; text-decoration: none; color: inherit;
+        }
+        .toc-ch:hover { background: rgba(15, 52, 96, 0.05); }
+        .toc-ch-num { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--accent); min-width: 2.2rem; padding-top: 0.1rem; }
+        .toc-ch-info { flex: 1; }
+        .toc-ch-title { font-weight: 600; color: var(--primary); font-size: 1rem; display: block; margin-bottom: 0.2rem; }
+        .toc-ch-desc { font-size: 0.85rem; color: var(--text-light); line-height: 1.4; }
+        .toc-section-links { margin-left: 3.2rem; margin-top: 0.3rem; margin-bottom: 0.8rem; font-size: 0.82rem; color: var(--text-light); line-height: 1.6; }
+        .toc-section-links a { color: var(--accent); text-decoration: none; margin-right: 0.5rem; }
+        .toc-section-links a:hover { color: var(--highlight); text-decoration: underline; }
+        .toc-section-links .sec-sep { color: var(--text-light); opacity: 0.5; margin-right: 0.5rem; }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label">Contents</div>
+        <h1>Table of Contents</h1>
+    </header>
+
+    <main class="toc">
+        <div class="toc-view-toggle">
+            <button class="toc-view-btn active" onclick="setTocView('overview')">Overview</button>
+            <button class="toc-view-btn" onclick="setTocView('detailed')">Detailed</button>
+        </div>
+
+        <!-- Front Matter -->
+        <div class="toc-part">
+            <h2>Front Matter</h2>
+            <ul class="toc-chapters toc-overview">
+                <li><a href="front-matter/introduction.html" class="toc-ch">
+                    <span class="toc-ch-num">FM</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Introduction</span>
+                        <span class="toc-ch-desc">Defining the Journey from AI Assistant to AI Engine</span>
+                    </div>
+                </a></li>
+            </ul>
+        </div>
+
+        <!-- Part I: Why AI Changes Product Creation -->
+        <div class="toc-part">
+            <h2><a href="part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></h2>
+            <p class="part-intro">Understanding the fundamental shifts in how we build products with AI.</p>
+            
+            <ul class="toc-chapters toc-overview">
+                <li><a href="part-1-why-ai-changes/chapter-1/index.html" class="toc-ch">
+                    <span class="toc-ch-num">01</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">The New Economics of Building with AI</span>
+                        <span class="toc-ch-desc">50x cost reduction, reasoning models, build/buy/bake decisions</span>
+                    </div>
+                </a></li>
+                <li><a href="part-1-why-ai-changes/chapter-2/index.html" class="toc-ch">
+                    <span class="toc-ch-num">02</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">What AI Can and Cannot Reliably Do</span>
+                        <span class="toc-ch-desc">Capabilities assessment, hallucination mitigation, limitations</span>
+                    </div>
+                </a></li>
+                <li><a href="part-1-why-ai-changes/chapter-3/index.html" class="toc-ch">
+                    <span class="toc-ch-num">03</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">The Human-AI Product Stack</span>
+                        <span class="toc-ch-desc">Human-AI interplay, feedback loops, anti-patterns</span>
+                    </div>
+                </a></li>
+                <li><a href="part-1-why-ai-changes/chapter-4/index.html" class="toc-ch">
+                    <span class="toc-ch-num">04</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Scientific and Philosophical Principles</span>
+                        <span class="toc-ch-desc">Cognitive load theory, complementary change, ethics</span>
+                    </div>
+                </a></li>
+            </ul>
+        </div>
+
+        <!-- Part II: AI-Native Product Discovery and Design -->
+        <div class="toc-part">
+            <h2><a href="part-2-discovery-design/index.html">Part II: AI-Native Product Discovery and Design</a></h2>
+            <p class="part-intro">Finding problems worth solving and designing for probabilistic experiences.</p>
+            
+            <ul class="toc-chapters toc-overview">
+                <li><a href="part-2-discovery-design/chapter-5/index.html" class="toc-ch">
+                    <span class="toc-ch-num">05</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Finding Problems Worth Solving with AI</span>
+                        <span class="toc-ch-desc">User research methods, AI-appropriate problems</span>
+                    </div>
+                </a></li>
+                <li><a href="part-2-discovery-design/chapter-6/index.html" class="toc-ch">
+                    <span class="toc-ch-num">06</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">AI Product Strategy and Portfolio Thinking</span>
+                        <span class="toc-ch-desc">AI taxonomy, build/buy/bake, value proposition</span>
+                    </div>
+                </a></li>
+                <li><a href="part-2-discovery-design/chapter-7/index.html" class="toc-ch">
+                    <span class="toc-ch-num">07</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">AI-Native Product Discovery</span>
+                        <span class="toc-ch-desc">Systematic approaches to discovering opportunities</span>
+                    </div>
+                </a></li>
+                <li><a href="part-2-discovery-design/chapter-8/index.html" class="toc-ch">
+                    <span class="toc-ch-num">08</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Designing AI User Experiences</span>
+                        <span class="toc-ch-desc">UX patterns, trust design, expectation management</span>
+                    </div>
+                </a></li>
+                <li><a href="part-2-discovery-design/chapter-9/index.html" class="toc-ch">
+                    <span class="toc-ch-num">09</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Requirements for Probabilistic Products</span>
+                        <span class="toc-ch-desc">USID.O framework, eval-first PRDs, LLM-as-Judge</span>
+                    </div>
+                </a></li>
+            </ul>
+        </div>
+
+        <!-- Part III: Vibe-Coding and AI-Native Prototyping -->
+        <div class="toc-part">
+            <h2><a href="part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></h2>
+            <p class="part-intro">High-velocity prototyping with AI-native development workflows.</p>
+            
+            <ul class="toc-chapters toc-overview">
+                <li><a href="part-3-vibe-coding/chapter-10/index.html" class="toc-ch">
+                    <span class="toc-ch-num">10</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">What Vibe-Coding Is Really For</span>
+                        <span class="toc-ch-desc">Discovery tool, not just implementation</span>
+                    </div>
+                </a></li>
+                <li><a href="part-3-vibe-coding/chapter-11/index.html" class="toc-ch">
+                    <span class="toc-ch-num">11</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">AI-Native Prototyping Workflow</span>
+                        <span class="toc-ch-desc">From idea to prototype, iteration patterns</span>
+                    </div>
+                </a></li>
+                <li><a href="part-3-vibe-coding/chapter-12/index.html" class="toc-ch">
+                    <span class="toc-ch-num">12</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Prompting, Context, Memory, and Reusable Skills</span>
+                        <span class="toc-ch-desc">Advanced prompting, context management, skills</span>
+                    </div>
+                </a></li>
+                <li><a href="part-3-vibe-coding/chapter-13/index.html" class="toc-ch">
+                    <span class="toc-ch-num">13</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Multi-Agent and Tool-Based Build Flows</span>
+                        <span class="toc-ch-desc">Multi-agent orchestration, MCP connectors</span>
+                    </div>
+                </a></li>
+                <li><a href="part-3-vibe-coding/chapter-14/index.html" class="toc-ch">
+                    <span class="toc-ch-num">14</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">From Prototype to Reviewable System</span>
+                        <span class="toc-ch-desc">Transitioning to production-ready code</span>
+                    </div>
+                </a></li>
+            </ul>
+        </div>
+
+        <!-- Part IV: Engineering AI Products -->
+        <div class="toc-part">
+            <h2><a href="part-4-engineering/index.html">Part IV: Engineering AI Products</a></h2>
+            <p class="part-intro">Building production-ready AI systems with modern architecture patterns.</p>
+            
+            <ul class="toc-chapters toc-overview">
+                <li><a href="part-4-engineering/chapter-15/index.html" class="toc-ch">
+                    <span class="toc-ch-num">15</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Reference Architectures for AI Products</span>
+                        <span class="toc-ch-desc">Common patterns from simple to complex</span>
+                    </div>
+                </a></li>
+                <li><a href="part-4-engineering/chapter-16/index.html" class="toc-ch">
+                    <span class="toc-ch-num">16</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Models, Routing, and Capability Allocation</span>
+                        <span class="toc-ch-desc">Router strategies, model selection</span>
+                    </div>
+                </a></li>
+                <li><a href="part-4-engineering/chapter-17/index.html" class="toc-ch">
+                    <span class="toc-ch-num">17</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Retrieval and Knowledge Systems</span>
+                        <span class="toc-ch-desc">Vector DBs, Graph RAG, Self-Correcting RAG</span>
+                    </div>
+                </a></li>
+                <li><a href="part-4-engineering/chapter-18/index.html" class="toc-ch">
+                    <span class="toc-ch-num">18</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">State, Memory, and Workflow Orchestration</span>
+                        <span class="toc-ch-desc">Memory patterns, orchestration frameworks</span>
+                    </div>
+                </a></li>
+                <li><a href="part-4-engineering/chapter-19/index.html" class="toc-ch">
+                    <span class="toc-ch-num">19</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Building with Protocols and Interoperability</span>
+                        <span class="toc-ch-desc">MCP, A2A, agent communication</span>
+                    </div>
+                </a></li>
+                <li><a href="part-4-engineering/chapter-20/index.html" class="toc-ch">
+                    <span class="toc-ch-num">20</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Security, Privacy, and Abuse Resistance</span>
+                        <span class="toc-ch-desc">Prompt injection, data privacy, adversarial</span>
+                    </div>
+                </a></li>
+            </ul>
+        </div>
+
+        <!-- Part V: Evaluation, Reliability, and Governance -->
+        <div class="toc-part">
+            <h2><a href="part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></h2>
+            <p class="part-intro">Making AI products work reliably in production.</p>
+            
+            <ul class="toc-chapters toc-overview">
+                <li><a href="part-5-evaluation-reliability/chapter-21/index.html" class="toc-ch">
+                    <span class="toc-ch-num">21</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Evals as the Core Development Discipline</span>
+                        <span class="toc-ch-desc">LLM-as-Judge, eval pipelines, eval-driven dev</span>
+                    </div>
+                </a></li>
+                <li><a href="part-5-evaluation-reliability/chapter-22/index.html" class="toc-ch">
+                    <span class="toc-ch-num">22</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Observability, Debugging, and Failure Analysis</span>
+                        <span class="toc-ch-desc">Tracing, debugging AI failures</span>
+                    </div>
+                </a></li>
+                <li><a href="part-5-evaluation-reliability/chapter-23/index.html" class="toc-ch">
+                    <span class="toc-ch-num">23</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Reliability, Guardrails, and Recovery</span>
+                        <span class="toc-ch-desc">Circuit breakers, graceful degradation</span>
+                    </div>
+                </a></li>
+                <li><a href="part-5-evaluation-reliability/chapter-24/index.html" class="toc-ch">
+                    <span class="toc-ch-num">24</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Cost, Latency, and Unit Economics</span>
+                        <span class="toc-ch-desc">Cost optimization, latency management</span>
+                    </div>
+                </a></li>
+                <li><a href="part-5-evaluation-reliability/chapter-25/index.html" class="toc-ch">
+                    <span class="toc-ch-num">25</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Governance, Compliance, and Trustworthy AI</span>
+                        <span class="toc-ch-desc">NIST AI RMF, ISO 42001, EU AI Act</span>
+                    </div>
+                </a></li>
+            </ul>
+        </div>
+
+        <!-- Part VI: Shipping, Scaling, and Operating -->
+        <div class="toc-part">
+            <h2><a href="part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></h2>
+            <p class="part-intro">Taking AI products from launch to scale.</p>
+            
+            <ul class="toc-chapters toc-overview">
+                <li><a href="part-6-shipping-scaling/chapter-26/index.html" class="toc-ch">
+                    <span class="toc-ch-num">26</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Launching AI Features and Products</span>
+                        <span class="toc-ch-desc">GTM strategies, pricing models, onboarding</span>
+                    </div>
+                </a></li>
+                <li><a href="part-6-shipping-scaling/chapter-27/index.html" class="toc-ch">
+                    <span class="toc-ch-num">27</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Post-Launch Learning Loops</span>
+                        <span class="toc-ch-desc">User feedback, continuous improvement</span>
+                    </div>
+                </a></li>
+                <li><a href="part-6-shipping-scaling/chapter-28/index.html" class="toc-ch">
+                    <span class="toc-ch-num">28</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Team Topologies and AI-Native Operating Models</span>
+                        <span class="toc-ch-desc">Cross-functional teams, AI-first culture</span>
+                    </div>
+                </a></li>
+                <li><a href="part-6-shipping-scaling/chapter-29/index.html" class="toc-ch">
+                    <span class="toc-ch-num">29</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Building the AI Product Organization</span>
+                        <span class="toc-ch-desc">Organizational structures, career paths, hiring</span>
+                    </div>
+                </a></li>
+                <li><a href="part-6-shipping-scaling/chapter-30/index.html" class="toc-ch">
+                    <span class="toc-ch-num">30</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Strategic Positioning and Future-Proofing</span>
+                        <span class="toc-ch-desc">Competitive positioning, 2026+ trends</span>
+                    </div>
+                </a></li>
+            </ul>
+        </div>
+
+        <!-- Part VII: End-to-End Practice and Teaching Kit -->
+        <div class="toc-part">
+            <h2><a href="part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></h2>
+            <p class="part-intro">Putting it all together and teaching others.</p>
+            
+            <ul class="toc-chapters toc-overview">
+                <li><a href="part-7-practice-teaching/chapter-31/index.html" class="toc-ch">
+                    <span class="toc-ch-num">31</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">End-to-End Capstone Playbook</span>
+                        <span class="toc-ch-desc">Complete workflow from discovery to launch</span>
+                    </div>
+                </a></li>
+                <li><a href="part-7-practice-teaching/chapter-32/index.html" class="toc-ch">
+                    <span class="toc-ch-num">32</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Case Studies in Full</span>
+                        <span class="toc-ch-desc">Detailed real-world case studies</span>
+                    </div>
+                </a></li>
+                <li><a href="part-7-practice-teaching/chapter-33/index.html" class="toc-ch">
+                    <span class="toc-ch-num">33</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Teaching the Material as a Course</span>
+                        <span class="toc-ch-desc">Adapting content for teaching</span>
+                    </div>
+                </a></li>
+            </ul>
+        </div>
+
+        <!-- Appendices -->
+        <div class="toc-part">
+            <h2>Appendices</h2>
+            <ul class="toc-chapters toc-overview">
+                <li><a href="part-7-practice-teaching/appendices/appendix-a-glossary.html" class="toc-ch">
+                    <span class="toc-ch-num">A</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Glossary</span>
+                        <span class="toc-ch-desc">Key terminology for AI product development</span>
+                    </div>
+                </a></li>
+                <li><a href="part-7-practice-teaching/appendices/appendix-b-tool-comparison.html" class="toc-ch">
+                    <span class="toc-ch-num">B</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Tool Comparison Matrices</span>
+                        <span class="toc-ch-desc">AI coding tools, RAG frameworks, evaluation tools</span>
+                    </div>
+                </a></li>
+                <li><a href="part-7-practice-teaching/appendices/appendix-c-templates.html" class="toc-ch">
+                    <span class="toc-ch-num">C</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Templates</span>
+                        <span class="toc-ch-desc">Eval-first PRD, USID.O, and more</span>
+                    </div>
+                </a></li>
+                <li><a href="part-7-practice-teaching/appendices/appendix-d-evaluation-rubrics.html" class="toc-ch">
+                    <span class="toc-ch-num">D</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Evaluation Rubrics</span>
+                        <span class="toc-ch-desc">Detailed rubrics for assessing AI work</span>
+                    </div>
+                </a></li>
+                <li><a href="part-7-practice-teaching/appendices/appendix-e-architecture-checklists.html" class="toc-ch">
+                    <span class="toc-ch-num">E</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Architecture Checklists</span>
+                        <span class="toc-ch-desc">Pre-launch architecture review checklists</span>
+                    </div>
+                </a></li>
+                <li><a href="part-7-practice-teaching/appendices/appendix-f-prompts-skills-examples.html" class="toc-ch">
+                    <span class="toc-ch-num">F</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Prompts and Skills Examples</span>
+                        <span class="toc-ch-desc">Copy-paste prompts and .cursorrules</span>
+                    </div>
+                </a></li>
+                <li><a href="part-7-practice-teaching/appendices/appendix-g-artifact-translation.html" class="toc-ch">
+                    <span class="toc-ch-num">G</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Executable Product Artifacts</span>
+                        <span class="toc-ch-desc">AI-generated artifacts that become real products</span>
+                    </div>
+                </a></li>
+                <li><a href="part-7-practice-teaching/appendices/appendix-h-anti-patterns.html" class="toc-ch">
+                    <span class="toc-ch-num">H</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">AI Product Anti-Patterns</span>
+                        <span class="toc-ch-desc">Common mistakes and how to avoid them</span>
+                    </div>
+                </a></li>
+                <li><a href="part-7-practice-teaching/appendices/appendix-i-economics-of-loop.html" class="toc-ch">
+                    <span class="toc-ch-num">I</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Economics of the AI Product Loop</span>
+                        <span class="toc-ch-desc">Unit economics, loop dynamics, and sustainability</span>
+                    </div>
+                </a></li>
+            </ul>
+        </div>
+
+        <!-- Back Matter -->
+        <div class="toc-part">
+            <h2>Back Matter</h2>
+            <ul class="toc-chapters toc-overview">
+                <li><a href="back-matter/conclusion.html" class="toc-ch">
+                    <span class="toc-ch-num">BM</span>
+                    <div class="toc-ch-info">
+                        <span class="toc-ch-title">Conclusion</span>
+                        <span class="toc-ch-desc">Your AI Product Mastery Roadmap</span>
+                    </div>
+                </a></li>
+            </ul>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>First Edition, April 2026 &middot; <a href="toc.html">Contents</a></p>
+    </footer>
+    
+    <script>
+        function setTocView(view) {
+            const toc = document.querySelector('.toc');
+            const buttons = document.querySelectorAll('.toc-view-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            if (view === 'detailed') { toc.classList.add('toc-view-detailed'); }
+            else { toc.classList.remove('toc-view-detailed'); }
+        }
+    </script>
+</body>
+</html>

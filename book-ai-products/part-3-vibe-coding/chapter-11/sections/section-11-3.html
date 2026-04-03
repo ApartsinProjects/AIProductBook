@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11.3 Spec-Prototype-Critique-Revise Loops - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 11.3</div>
+        <h1>Spec-Prototype-Critique-Revise Loops</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Iteration is where learning happens. The spec-prototype-critique-revise loop transforms uncertainty into clarity through rapid cycling.
+        </p>
+
+        <h2>The <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">SPCR Loop</a> Structure</h2>
+
+        <p>The SPCR loop is a disciplined approach to iterative prototyping. Each iteration produces artifacts that inform the next iteration. The loop continues until the prototype answers the questions it was designed to answer.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The SPCR Loop</div>
+            <p>The SPCR loop structures iterative prototyping through four distinct phases. The Spec phase involves writing a specification for the next increment that states what should be accomplished without prescribing how. The Prototype phase uses vibe coding to generate implementation from the specification. The Critique phase evaluates the prototype against success criteria established during framing. The Revise phase updates the spec based on critique findings and repeats the cycle until the prototype answers the questions it was designed to address.</p>
+        </div>
+
+        <h2>The Spec Phase</h2>
+
+        <p>The spec phase defines what the next iteration should accomplish. Good specs are focused, achievable within the iteration timebox, and produce evaluable results.</p>
+
+        <h3>Spec Writing Principles</h3>
+
+        <p><strong>One concept per spec.</strong> Trying to accomplish too much in one iteration dilutes focus and makes evaluation difficult.</p>
+
+        <p><strong>State what, not how.</strong> The spec should describe the outcome, not the implementation. "Users can see exception reason classification with confidence scores" is a good spec. "Call the GPT-4 API with prompt X and display results in component Y" is a bad spec.</p>
+
+        <p><strong>Include acceptance criteria.</strong> How will you know if the spec is met? Define measurable criteria before generation.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Spec Example</div>
+            <p><strong>Spec:</strong> Display email exception queue with auto-classification</p>
+            <p><strong>What:</strong> Show list of unprocessed emails with GPT-4 classification results displayed inline. Each email shows predicted exception type and confidence score.</p>
+            <p><strong>Acceptance criteria:</strong> Unprocessed emails appear in queue within 30 seconds of receipt. Classification results appear within 5 seconds of email display. Confidence score shown as percentage. User can override classification with one click. Queue refreshes automatically without page reload.</p>
+        </div>
+
+        <h2>The Prototype Phase</h2>
+
+        <p>The prototype phase uses vibe coding to generate implementation from the spec. The goal is not perfect code but working implementation that can be evaluated against acceptance criteria.</p>
+
+        <h3>Generation Approach</h3>
+
+        <p>Feed the spec to the AI along with relevant context. Request implementation that meets acceptance criteria. If the first attempt does not meet criteria, do not immediately revise. Generate multiple approaches to see different implementation strategies.</p>
+
+        <h3>Timeboxing</h3>
+
+        <p>Timebox prototype generation. If you have allocated two hours for the prototype phase and you are one hour in with no working code, switch tactics. Generate simpler implementation, ask more specific questions, or pivot to directive mode.</p>
+
+        <h2>The Critique Phase</h2>
+
+        <p>The critique phase evaluates the prototype against the spec and success criteria. This is where learning happens if you are honest about the results.</p>
+
+        <h3>Critique Framework</h3>
+
+        <p>Evaluate each prototype on four dimensions. Completeness asks whether the prototype does what the spec requires. Correctness asks whether it does it right, meaning the implementation is sound. Usability asks whether users can accomplish their goals with the interface provided. Feasibility asks whether it can be built into production, considering architecture, security, and maintainability.</p>
+
+        <h3>Documenting Critique</h3>
+
+        <p>Write down critique findings. What worked, what did not, what is uncertain. This documentation informs the revise phase and future iterations.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">The Five-Question Critique</div>
+            <p>After each iteration, ask five diagnostic questions to guide your critique. First, what did this prototype accomplish well, identifying strengths to build upon? Second, what did it fail to accomplish, identifying gaps between intention and outcome? Third, what surprised me either positively or negatively, surfacing unexpected results that warrant attention? Fourth, what do I not yet understand, identifying areas requiring further investigation? Fifth, what should I try differently in the next iteration, translating lessons into actionable changes?</p>
+        </div>
+
+        <h2>The Revise Phase</h2>
+
+        <p>The revise phase updates the overall approach based on critique findings. It is not just refining the current prototype but potentially rethinking the direction if critique reveals that the current approach is flawed.</p>
+
+        <h3>Revise Decisions</h3>
+
+        <p>After critique, you face four possible decisions. Continue means the next iteration should extend or refine the current approach, suggesting the direction is sound. Redirect means keeping what's valuable while fundamentally changing direction, useful when part of the approach works but the overall path needs adjustment. Simplify means the current approach is too complex and should be stripped to essentials before retrying. Terminate means this direction is not viable and you should pivot to a different approach, which is not failure but rather intelligent resource allocation.</p>
+
+        <h3>When to Terminate</h3>
+
+        <p>Termination is not failure. Terminating a direction that is not working frees resources for directions that might work. Kill criteria established during framing help make termination decisions objective rather than emotional.</p>
+
+        <h2>Loop Velocity</h2>
+
+        <p>The value of the SPCR loop is velocity. Each cycle should be short enough to maintain momentum but long enough to produce evaluable results. Most prototyping iterations should complete in one to three days.</p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Iteration Velocity Guidelines</div>
+            <p>Iteration velocity varies by prototype class. Feasibility prototypes benefit from 1-2 day iterations with 1-3 typical iterations, since the goal is quickly determining technical viability. Desirability prototypes typically run 2-3 day iterations with 3-5 iterations to properly evaluate user response. Viability prototypes require 1-2 week iterations with 2-4 iterations to validate economic and operational models. Implementation prototypes span 2-4 weeks with only 1-2 iterations since the focus shifts to production-quality output.</p>
+        </div>
+
+        <h2>QuickShip SPCR Example</h2>
+
+        <p>QuickShip's exception handler prototyping demonstrates the SPCR loop in practice:</p>
+
+        <p><strong>Iteration 1:</strong> The spec called for a basic email queue display with manual classification, and the team vibe-coded a queue view with a dropdown for classification. The critique found it functional but slow, with users unlikely to use it daily. The revise decision was to automate classification and improve performance.</p>
+
+        <p><strong>Iteration 2:</strong> The spec called for auto-classification with GPT-4 and confidence display. The prototype added GPT-4 integration with confidence scores. The critique found accuracy at 78%, not yet good enough, with confidence calibration seeming off. The revise decision was to improve prompt engineering before adding features.</p>
+
+        <p><strong>Iteration 3:</strong> The spec called for an improved classification prompt with threshold for low-confidence alerts. The prototype implemented a new prompt with examples and confidence thresholds. The critique found accuracy improved to 89% and low-confidence alerts useful. The revise decision was to continue polishing and add a user feedback mechanism.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>The SPCR loop structures iteration through Spec, Prototype, Critique, and Revise phases that repeat until the prototype answers its guiding questions. Specs should state what not how, with clear acceptance criteria that define success before generation begins. Critique evaluates completeness, correctness, usability, and feasibility to provide comprehensive assessment. Revise decisions include continue, redirect, simplify, or terminate, each appropriate in different situations. Iteration velocity varies by prototype class, so feasibility iterations are short while implementation iterations are longer. Termination is not failure; it frees resources for viable directions when the evidence suggests a different path is needed.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Running an SPCR Cycle</div>
+            <p>Apply one SPCR cycle to your current project by working through each phase. First, write a spec for the next increment that states what you want to accomplish without prescribing how. Second, prototype it using vibe coding to generate working implementation. Third, critique using the five-question framework to honestly assess what worked and what did not. Fourth, make a revise decision and document your reasoning so future iterations benefit from this learning.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 11.4, we examine <strong>Working with AI-Generated UI, Backend, and Data Mocks</strong>, exploring patterns for generating and integrating AI-created components.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-11-2.html">11.2 Context Shaping</a>
+            <a class="up" href="../index.html">Chapter 11 Overview</a>
+            <a class="next" href="section-11-4.html">11.4 AI-Generated Components</a>
+        </nav>
+
+        <footer>
+            <p>Section 11.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

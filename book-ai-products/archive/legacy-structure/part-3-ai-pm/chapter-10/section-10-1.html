@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9.1 NIST AI RMF and ISO 42001 - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 9</div>
+        <h1>Ethics, Trust, and Governance</h1>
+        <p class="chapter-subtitle">9.1 NIST AI RMF and ISO 42001</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Build trustworthy products with proper governance frameworks.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Chapters 7-8 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: AI Governance as a Necessity</div>
+            <p>AI governance frameworks like NIST AI RMF and ISO 42001 are increasingly becoming compliance requirements rather than optional best practices. These frameworks provide structured approaches to managing AI risks that protect both users and organizations. Understanding both frameworks is essential for any AI product team, particularly those operating in regulated industries where governance failures can result in regulatory penalties and reputational damage.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The First Standard</div>
+            <p>The ISO 9000 quality standard was born from military contracts after World War II. Vendors who wanted to sell to the government had to prove their processes worked. AI governance may follow the same path: vendors who want enterprise customers must prove their AI works safely.</p>
+        </div>
+
+        <h2 id="section-9-1">9.1 NIST AI RMF and ISO 42001</h2>
+
+        <p>
+            In Chapter 8, we covered data strategy for <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, kill criteria for launching AI features, and evaluation infrastructure. As you think about shipping AI products to real users, you need to consider not just product quality but also governance and compliance. In earlier chapters, we discussed evaluation metrics and development processes. But how do you ensure your AI products meet broader standards for safety, accountability, and responsible AI? Two frameworks guide AI governance today: the NIST AI Risk Management Framework (AI RMF) and ISO 42001. These frameworks provide structured approaches to managing AI risks, and they are increasingly becoming compliance requirements rather than optional best practices. Understanding both frameworks is essential for any AI product team.
+        </p>
+
+        <h3>The NIST AI Risk Management Framework</h3>
+
+        <p>
+            The NIST AI RMF was developed by the National Institute of Standards and Technology in the United States to provide a structured approach for managing AI risks. It was created in response to Executive Order 14110 on Safe, Secure, and Trustworthy AI, and it has become the de facto standard for US federal agencies and increasingly for private companies. The framework is designed to be outcome-focused rather than prescriptive, allowing organizations to adapt it to their specific context.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: FinTech Company Adoption</h4>
+            <p>
+                A financial services company adopted NIST AI RMF to govern their AI-powered credit decisioning system. They mapped each of the four core functions to their existing processes and identified gaps. The "Govern" function revealed that AI decisions lacked clear accountability: multiple teams shared responsibility, making it impossible to assign ownership when things went wrong. They created a dedicated "AI Governance Officer" role with explicit accountability for credit AI decisions.
+            </p>
+            <p>
+                <strong>Why this matters:</strong> Without the framework, the accountability gap might not have been identified until a regulatory examination or customer harm incident.
+            </p>
+        </div>
+
+        <h4>The Four Core Functions</h4>
+
+        <table>
+            <thead>
+                <tr><th>Function</th><th>Description</th><th>AI-Specific Actions</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Govern</strong></td><td>Establish governance structures</td><td>Define AI roles, policies, accountability</td></tr>
+                <tr><td><strong>Map</strong></td><td>Contextualize AI risks</td><td>Identify where AI is used, what could go wrong</td></tr>
+                <tr><td><strong>Measure</strong></td><td>Assess and evaluate risks</td><td>Test, monitor, audit AI systems</td></tr>
+                <tr><td><strong>Manage</strong></td><td>Respond to identified risks</td><td>Mitigate, remediate, communicate</td></tr>
+            </tbody>
+        </table>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Applying NIST AI RMF to Your Product</h4>
+            <p>
+                <strong>Govern - Ask these questions:</strong>
+            </p>
+            <ul>
+                <li>Who is accountable for AI system outcomes?</li>
+                <li>What policies govern AI development and deployment?</li>
+                <li>How are AI risks communicated to leadership?</li>
+            </ul>
+            <p>
+                <strong>Map - Ask these questions:</strong>
+            </p>
+            <ul>
+                <li>Where in our product is AI involved?</li>
+                <li>What could go wrong in each AI component?</li>
+                <li>Who is affected when AI fails?</li>
+            </ul>
+            <p>
+                <strong>Measure - Ask these questions:</strong>
+            </p>
+            <ul>
+                <li>How do we test AI quality before release?</li>
+                <li>What monitoring do we have in production?</li>
+                <li>How often do we audit AI systems?</li>
+            </ul>
+            <p>
+                <strong>Manage - Ask these questions:</strong>
+            </p>
+            <ul>
+                <li>What happens when AI fails?</li>
+                <li>How do we fix AI issues?</li>
+                <li>How do we communicate AI failures to users?</li>
+            </ul>
+        </div>
+
+        <h3>ISO 42001: AI Management Systems</h3>
+
+        <p>
+            ISO 42001 represents the first international standard specifically for AI management systems. Unlike NIST AI RMF, which is a framework for managing risk, ISO 42001 is a certifiable management system standard. Organizations can pursue certification to demonstrate their AI governance maturity, which is increasingly required in regulated industries and enterprise sales contexts.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Enterprise Sales Requirement</h4>
+            <p>
+                A B2B AI company selling to healthcare systems found that hospital procurement required ISO 42001 certification. Without it, they could not sell to any hospital in their target market. They spent eight months implementing the standard, getting certified, and used the certification as a competitive differentiator. The certification cost $50,000-$100,000 but opened access to a $50M market.
+            </p>
+            <p>
+                <strong>Key insight:</strong> ISO 42001 certification is becoming a de facto requirement in regulated industries. Plan for it if you target enterprise or healthcare customers.
+            </p>
+        </div>
+
+        <h4>ISO 42001 Requirements</h4>
+
+        <ul>
+            <li><strong>Organizational context:</strong> Understand internal/external factors affecting AI</li>
+            <li><strong>Leadership commitment:</strong> Executive accountability for AI governance</li>
+            <li><strong>Planning:</strong> Risk assessment and treatment for AI systems</li>
+            <li><strong>Support:</strong> Resources, competence, awareness, communication</li>
+            <li><strong>Operation:</strong> Operational planning, control, and monitoring</li>
+            <li><strong>Performance evaluation:</strong> Measurement, analysis, internal audit</li>
+            <li><strong>Improvement:</strong> Non-conformity, corrective action, continual improvement</li>
+        </ul>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Research Spotlight: Algorithmic Fairness Metrics</div>
+            <p>The governance frameworks reference bias detection, but understanding the underlying research clarifies what fairness means in practice. Chouldechova (2017) demonstrated that no single fairness metric satisfies all desiderata: <strong>Equalized Odds</strong> (equal true positive and false positive rates across groups) and <strong>Calibration</strong> (predictions should reflect true probabilities regardless of group) cannot be simultaneously achieved in most cases. This "fairness impossibility theorem" means organizations must explicitly choose which fairness criterion matters most for their context.</p>
+            <p>For AI products, this research suggests that governance frameworks should mandate explicit documentation of which fairness metrics are prioritized and why. Products in criminal justice, healthcare, and lending face different tradeoffs and require different prioritization. The NIST AI RMF "Map" function specifically requires this documentation.</p>
+            <p><em>Key reference: Chouldechova, A. (2017). "Fair Prediction with Disparate Impact." Big Data, 5(2), 153-163; Kleinberg et al. (2016). "Inherent Trade-offs in Algorithmic Fairness." ICML.</em></p>
+        </div>
+
+        <h3>Comparing NIST AI RMF and ISO 42001</h3>
+
+        <table>
+            <thead>
+                <tr><th>Dimension</th><th>NIST AI RMF</th><th>ISO 42001</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Type</td><td>Framework (guidance)</td><td>Standard (certifiable)</td></tr>
+                <tr><td>Geographic origin</td><td>United States</td><td>International</td></tr>
+                <tr><td>Compliance driver</td><td>Voluntary, but often required</td><td>Often contractual requirement</td>
+                <tr><td>Implementation flexibility</td><td>High (outcome-focused)</td><td>Moderate (prescriptive requirements)</td>
+                <tr><td>Certification</td><td>No (self-attestation)</td><td>Yes (third-party audit)</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Implementing Both Frameworks</h3>
+
+        <p>
+            Many organizations implement both frameworks: NIST AI RMF as their internal governance methodology and ISO 42001 as their external certification. The good news is that significant overlap exists between the frameworks, so implementing one helps with the other. Start with NIST AI RMF to establish governance practices, then pursue ISO 42001 certification if required by your market.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">When to Pursue ISO 42001</div>
+            <p>
+                Pursue ISO 42001 certification if you: sell to regulated industries (healthcare, finance, government), have enterprise customers requiring vendor compliance, or want a competitive differentiator in AI trust. The certification process takes 6-12 months and $30,000-$100,000 depending on organization size.
+            </p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Core Ethical Principles</strong> - bias, transparency, and privacy.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Ch 9: Overview</a>
+            <a class="up" href="index.html">Chapter 9 Index</a>
+            <a class="next" href="section-9-2.html">9.2 Bias, Transparency, Privacy</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 9.1 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

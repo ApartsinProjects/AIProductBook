@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.2 Tool Landscape - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <div class="chapter-label">Chapter 3</div>
+        <h1>Understanding Vibe Coding Today</h1>
+        <p class="chapter-subtitle">3.2 Tool Landscape</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Demystify the shift from prompt engineering to agentic intent steering.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Basic programming knowledge helpful but not required. Completion of Section 3.1 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Tool Selection Strategy</div>
+            <p>The tool landscape for vibe coding spans from AI-native IDEs like Cursor and Claude Code to no-code/low-code builders like v0 and Bolt.new. Choosing the right tools is critical for workflow efficiency, much like selecting the right AI models for your product. Your tool stack shapes how effectively you can implement the iterative, intent-driven development that defines successful vibe coding.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Tool That Ate Silicon Valley</div>
+            <p>Microsoft Word was once just a word processor. It became ubiquitous because it handled everything related to documents. The best vibe coding tools follow the same pattern: they start as code generators but evolve into complete development environments.</p>
+        </div>
+
+        <h2 id="section-3-2">3.2 Tool Landscape</h2>
+
+        <p>
+            The vibe coding tool landscape has matured significantly, evolving from simple autocomplete extensions to full-featured AI-native development environments. Understanding this landscape is essential for selecting the right tools for your workflow. The current generation of AI coding tools falls into two broad categories: AI-native IDEs that integrate deeply into the development environment, and no-code/low-code builders that target rapid prototyping and simpler applications. Each category serves different use cases, and most developers find they need tools from both categories at different stages of a project.
+        </p>
+
+        <h3>Why Tool Selection Matters</h3>
+
+        <p>
+            The choice of vibe coding tool shapes how you work at a fundamental level. Different tools have different mental models, different strengths, and different limitations. Choosing the right tool is less about finding the "best" tool and more about matching the tool to your use case, your preferences, and your team's needs.
+        </p>
+
+        <p>
+            Consider the analogy of tools in a physical workshop. A hammer is excellent for driving nails but useless for measuring. A tape measure is essential for layout but can't drive nails. Using the wrong tool for a job makes the work harder and the results worse. The same is true for vibe coding tools - using a tool designed for quick prototyping for complex production work, or vice versa, creates friction and inefficiency.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Multi-Tool Strategy</div>
+            <p>Most effective vibe coding practitioners use multiple tools. They might use an AI-native IDE for complex application development, a no-code builder for rapid prototyping, and Claude Code for terminal-based workflows. The key is recognizing which tool is appropriate for each task and being comfortable switching between them. This flexibility enables you to pick the best tool for each situation rather than forcing everything through one tool.</p>
+        </div>
+
+        <h3>AI-Native IDEs</h3>
+
+        <p>
+            AI-native IDEs represent the most comprehensive approach to vibe coding. These tools integrate large language models directly into the development environment, providing context-aware code generation, intelligent autocomplete, and agentic capabilities that can execute complex tasks. The leading options today each take distinct approaches to the AI development experience.
+        </p>
+
+        <h4>Understanding IDE Capabilities</h4>
+
+        <p>
+            When evaluating AI-native IDEs, several capabilities matter most. First is context awareness: how well does the tool understand your project? Good context awareness means the AI can see your existing code, understand your project structure, and generate code that fits with what you've already built. Poor context awareness means starting from scratch each time.
+        </p>
+
+        <p>
+            Second is agent capability: can the AI execute multi-step tasks autonomously? Some tools can only generate code that you then copy and paste. Others can create files, modify existing code, run commands, and handle complex workflows. The more agentic the tool, the more it can take off your plate.
+        </p>
+
+        <p>
+            Third is customization: how much can you shape the AI's behavior? The best tools let you define project-specific rules, configure which models to use, and customize how the AI responds to different situations. This customization is what makes the tool work well for your specific project.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Tool</th><th>Strength</th><th>Best For</th><th>Cost</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Cursor</strong></td><td>Full IDE with <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, Cursor Rules, Automations</td><td>Comprehensive AI development</td><td>Free / $19/mo Pro</td></tr>
+                <tr><td><strong>Claude Code</strong></td><td>Terminal-native, Git workflow, memory</td><td>Terminal-first workflows</td><td>Free / $20/mo Teams</td></tr>
+                <tr><td><strong>Windsurf</strong></td><td>Context Engine, Flow mode</td><td>Context-aware coding</td><td>Free / $15/mo Pro</td></tr>
+                <tr><td><strong>GitHub Copilot</strong></td><td>IDE plugin, multi-model</td><td>Inline assistance</td><td>Free / $10/mo</td></tr>
+            </tbody>
+        </table>
+
+        <h4>Cursor: The Comprehensive Solution</h4>
+
+        <p>
+            <strong>Cursor</strong> has emerged as the leading vibe coding IDE, with regular updates that continue to enhance its capabilities. Its strength lies in the comprehensive feature set that spans inline code generation, agent mode for complex multi-file tasks, and automation workflows that run autonomously based on triggers. The Cursor Rules system allows you to codify project-specific conventions and patterns, making it easy to maintain consistency across large projects.
+        </p>
+
+        <p>
+            Cursor's approach is particularly well-suited for teams that want a single tool for most vibe coding work. The learning curve is gentle for developers already familiar with VS Code (which Cursor is built on), and the depth of features means you can grow into more advanced usage over time. The Automations feature enables sophisticated workflows where AI responds to events like code commits or pull requests, extending the tool beyond interactive development.
+        </p>
+
+        <h4>Claude Code: Terminal-First</h4>
+
+        <p>
+            <strong>Claude Code</strong> takes a different approach, integrating directly into the terminal rather than providing a graphical IDE. This makes it particularly appealing for developers who prefer command-line workflows or need to integrate AI assistance into existing scripts and tooling. Claude Code excels at git workflow integration, remembering context across sessions, and handling file operations through natural language commands.
+        </p>
+
+        <p>
+            The appeal of Claude Code is its minimalism - it doesn't try to replace your existing workflow, it enhances it. If you're comfortable in the terminal, Claude Code fits naturally into how you already work. The memory feature is particularly valuable: unlike tools that start fresh each session, Claude Code remembers what you've discussed, enabling longer-term projects without constant re-explaining.
+        </p>
+
+        <h4>Windsurf: Context-Focused</h4>
+
+        <p>
+            <strong>Windsurf</strong> differentiates itself through its Context Engine, which automatically maintains relevant context as you work across files and projects. The Flow mode enables multi-step task execution without manual intervention, though it is less feature-complete than Cursor for complex agent workflows.
+        </p>
+
+        <p>
+            Windsurf's strength is reducing the manual context management that other tools require. Rather than explicitly telling the AI about your project, Windsurf observes what you're working on and automatically surfaces relevant context. This can make the workflow feel more fluid, though it requires trust in the system to provide the right context.
+        </p>
+
+        <h3>No-Code/Low-Code Builders</h3>
+
+        <p>
+            For simpler applications or rapid prototyping, no-code and low-code builders offer an alternative path. These tools target users who may not have deep programming expertise, allowing them to create functional applications through natural language descriptions or visual interfaces. While they cannot replace full-featured IDEs for complex development, they excel at quick prototyping and simpler applications.
+        </p>
+
+        <h4>When to Use No-Code</h4>
+
+        <p>
+            No-code tools are ideal when speed matters more than customization, when the application is relatively simple, and when you don't need to integrate deeply with existing systems. They're particularly valuable for prototyping ideas before investing in full development, for building internal tools that don't need complex features, and for situations where the user interface is the primary deliverable.
+        </p>
+
+        <p>
+            The trade-off is control. No-code tools constrain what you can build to what the tool supports. If you need something the tool doesn't support, you're stuck waiting for the tool to add it (or you're stuck using a different tool). This is acceptable for some projects but not for others.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Tool</th><th>Strength</th><th>Backend</th><th>Export</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>v0</strong></td><td>UI/Design</td><td>No</td><td>React code</td></tr>
+                <tr><td><strong>Bolt.new</strong></td><td>Speed</td><td>Yes (Node)</td><td>Yes</td></tr>
+                <tr><td><strong>Lovable</strong></td><td>Full-stack</td><td>Yes (Supabase)</td><td>Yes</td></tr>
+            </tbody>
+        </table>
+
+        <h4>v0: Design-Focused</h4>
+
+        <p>
+            <strong>v0</strong> specializes in generating user interfaces from descriptions. If you can describe what you want the UI to look like, v0 can generate it. The tool is particularly strong for React-based frontends, making it ideal for teams already using that stack. The limitation is that v0 focuses purely on UI - it doesn't handle backend logic, databases, or server-side code.
+        </p>
+
+        <h4>Bolt.new: Speed-Focused</h4>
+
+        <p>
+            <strong>Bolt.new</strong> emphasizes rapid prototyping with minimal friction. It includes a built-in Node.js backend, meaning you can create full-stack applications without separate backend setup. The speed focus means it's optimized for getting something working quickly, with the understanding that you'll refine later.
+        </p>
+
+        <h4>Lovable: Full-Stack</h4>
+
+        <p>
+            <strong>Lovable</strong> takes the most comprehensive approach among no-code tools, integrating with Supabase for backend capabilities. This means you can build applications with databases, authentication, and server-side logic - everything needed for a complete product. The trade-off is that it's more opinionated about your stack, as it assumes Supabase for the backend.
+        </p>
+
+        <h3>Making Tool Decisions</h3>
+
+        <p>
+            The right tool depends on your specific situation. Consider these factors when choosing:
+        </p>
+
+        <p>
+            <strong>Project complexity:</strong> Simple projects with straightforward requirements can use no-code tools. Complex applications with specific technical needs require IDEs.
+        </p>
+
+        <p>
+            <strong>Team expertise:</strong> Teams with strong programming skills benefit from the control of IDEs. Teams with less programming experience might prefer no-code tools or IDEs with gentler learning curves.
+        </p>
+
+        <p>
+            <strong>Integration requirements:</strong> If you need to integrate with existing systems, IDEs offer more flexibility. No-code tools have their own ecosystems that may or may not support what you need.
+        </p>
+
+        <p>
+            <strong>Timeline:</strong> For rapid prototyping, no-code tools are often faster. For production systems that need to be maintained long-term, IDEs typically work better.
+        </p>
+
+        <div class="callout exercise">
+            <div class="callout-title">Exercise: Choose Your Tool Stack</div>
+            <p><strong>Scenario:</strong> You're starting a new AI product project with these requirements: React frontend, Node.js backend, PostgreSQL database, needs to handle 1000 concurrent users.</p>
+            <ol>
+                <li>Which tool(s) from the AI-native IDEs would you use and why? Consider context awareness, agent capability, and customization.</li>
+                <li>Would you incorporate any no-code tools? If so, for what purpose?</li>
+                <li>Sketch your multi-tool workflow for the first week of development.</li>
+            </ol>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Core Principles</strong> - the foundational skills that determine whether vibe coding efforts succeed. Tool selection is just the beginning; knowing how to use those tools effectively is what creates results.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-3-1.html">3.1 What Vibe Coding Is (and Is Not)</a>
+            <a class="up" href="index.html">Ch 3: Overview</a>
+            <a class="next" href="section-3-3.html">3.3 Core Principles</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 3.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

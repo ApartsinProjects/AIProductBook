@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12.3 MCP and A2A Protocols - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 12</div>
+        <h1>Prompts, Chains, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and Orchestration</h1>
+        <p class="chapter-subtitle">12.3 MCP and A2A Protocols</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master the building blocks of AI systems: prompts, chains, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and orchestration frameworks.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 12.2 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Standards Shape Ecosystems</div>
+            <p>This section covers MCP (Model Context Protocol) and A2A (Agent-to-Agent Protocol), emerging standards for tool use and agent communication. In the context of AI engineering, standardization reduces integration overhead and enables composable systems. Understanding these protocols future-proofs your architecture decisions.</p>
+        </div>
+
+        <h2 id="section-12-3">12.3 MCP and A2A Protocols</h2>
+
+        <p>
+            The AI ecosystem is moving toward standardization, and two protocols are emerging as foundational: MCP (Model Context Protocol) and A2A (Agent-to-Agent Protocol). Understanding these protocols is essential for building interoperable, future-proof AI systems.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Before these protocols, each tool and agent had its own API. Integrating a new tool meant writing custom integration code. MCP and A2A provide standardized ways for <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> to communicate with tools and with each other. This dramatically reduces integration overhead and enables building composable AI systems.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Not All Tools Support MCP</div>
+            <p>MCP is gaining adoption but not every tool supports it yet. Before designing your architecture around MCP, verify that your critical tools have MCP implementations. For tools without MCP, you'll still need custom integrations. A common mistake is assuming "everything supports MCP" and then discovering your key tool doesn't have an MCP server.</p>
+        </div>
+
+        <h3>MCP (Model Context Protocol): The USB-C for AI</h3>
+
+        <p>
+            MCP standardizes how <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> connect to tools and data. Just as USB-C unified device connections, MCP aims to unify how AI systems access resources. Rather than writing custom code for each tool, you use MCP to define resources, prompts, and tools in a standardized format.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Implementing MCP</div>
+            <pre class="code-block">from mcp.server import Server
+from mcp.types import Tool, Resource
+
+app = Server("my-research-agent")
+
+# Define available resources (data sources)
+@app.list_resources()
+async def list_resources():
+    return [
+        Resource(
+            uri="file:///docs",
+            name="Documentation",
+            description="Product documentation"
+        ),
+        Resource(
+            uri="db://users",
+            name="User Database",
+            description="User profiles and preferences"
+        )
+    ]
+
+# Define tools the agent can call
+@app.list_tools()
+async def list_tools():
+    return [
+        Tool(
+            name="search_docs",
+            description="Search through documentation",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string"}
+                },
+                "required": ["query"]
+            }
+        ),
+        Tool(
+            name="get_user_context",
+            description="Get user preferences for personalization",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "user_id": {"type": "string"}
+                },
+                "required": ["user_id"]
+            }
+        )
+    ]
+
+@app.call_tool()
+async def call_tool(name: str, arguments: dict):
+    if name == "search_docs":
+        return search_documentation(arguments["query"])
+    elif name == "get_user_context":
+        return get_user_preferences(arguments["user_id"])
+    raise ValueError(f"Unknown tool: {name}")</pre>
+            <p>With MCP, any agent that understands the protocol can connect to your tools without custom integration code.</p>
+        </div>
+
+        <h3>A2A (Agent-to-Agent Protocol): Communication Between <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></h3>
+
+        <p>
+            A2A enables communication between <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> built by different teams. With over 50 launch partners including Google, Anthropic, and Microsoft, A2A is emerging as the standard for multi-agent systems. A2A defines how <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> discover each other, negotiate capabilities, and exchange information.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: Multi-Team Agent Collaboration</div>
+            <p>Imagine a large organization where different teams build specialized <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>:</p>
+            <ul>
+                <li><strong>Data team:</strong> Agent that can query databases and run analytics</li>
+                <li><strong>Research team:</strong> Agent that searches academic papers andsummarizes findings</li>
+                <li><strong>Communication team:</strong> Agent that drafts emails and creates presentations</li>
+            </ul>
+            <p>Without A2A, integrating these requires custom code. With A2A, each agent publishes its capabilities, and they can discover and communicate with each other automatically.</p>
+            <pre class="code-block"># Using A2A to connect <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> from different teams
+from a2a.client import A2AClient
+
+# Connect to the data team's analytics agent
+data_agent = A2AClient.connect("agent://analytics.internal/capabilities")
+data_agent.discover(capabilities=["query_sql", "run_analytics"])
+
+# Connect to the research team's agent
+research_agent = A2AClient.connect("agent://research.internal/capabilities")
+research_agent.discover(capabilities=["search_papers", "summarize"])
+
+# Have them collaborate on a task
+task = {
+    "description": "Analyze sales data and find relevant research on market trends",
+    "requires": ["query_sql", "search_papers"],
+    "output": "Report with data analysis and research context"
+}
+
+result = await data_agent.execute_task(
+    task=task,
+    sub_tasks=[research_agent]  # Automatically coordinate with research agent
+)</pre>
+        </div>
+
+        <h3>Multi-Agent Orchestration Frameworks</h3>
+
+        <p>
+            Multi-agent orchestration frameworks provide the infrastructure for coordinating multiple AI <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> working together on complex tasks. These frameworks handle the complexity of agent communication, state management, and workflow orchestration, allowing developers to focus on agent behavior rather than infrastructure.
+        </p>
+
+        <h4>1. LangGraph</h4>
+        <p>
+            LangGraph, built by the creators of LangChain, provides a graph-based approach to orchestrating <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>. <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> are represented as nodes in a graph, with edges defining how control flows between them. This approach is particularly powerful for workflows that involve cycles, conditional logic, and dynamic routing.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: LangGraph Workflow</div>
+            <pre class="code-block">from langgraph.graph import StateGraph
+from typing import TypedDict
+
+class AgentState(TypedDict):
+    messages: list
+    current_task: str
+    results: dict
+
+workflow = StateGraph(AgentState)
+
+# Add nodes
+workflow.add_node("researcher", research_agent)
+workflow.add_node("analyst", analysis_agent)
+workflow.add_node("reporter", reporting_agent)
+
+# Define edges
+workflow.set_entry_point("researcher")
+
+# Conditional routing based on task complexity
+workflow.add_edge("researcher", "analyst")
+workflow.add_conditional_edges(
+    "analyst",
+    lambda state: "reporter" if state["results"]["complexity"] == "high" else "reporter",
+    {"reporter": "reporter"}
+)
+
+# Compile and run
+graph = workflow.compile()
+result = graph.invoke({
+    "messages": [{"role": "user", "content": "Analyze market trends for Q4"}],
+    "current_task": "market_analysis",
+    "results": {}
+})</pre>
+            <p>LangGraph supports both human-in-the-loop patterns where humans approve agent actions before they execute, and parallel execution where multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> work simultaneously on different parts of a task.</p>
+        </div>
+
+        <h4>2. CrewAI</h4>
+        <p>
+            CrewAI provides a role-based orchestration framework where <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> are assigned specific roles within a "crew." Each role defines the agent's goal, backstory, and available tools. The framework handles coordination between roles, ensuring that <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> contribute to a coherent overall result rather than working at cross-purposes.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Research Crew</div>
+            <pre class="code-block">from crewai import Agent, Crew, Task, Process
+
+# Define <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> with specific roles
+researcher = Agent(
+    role="Senior Market Researcher",
+    goal="Find comprehensive data on market trends",
+    backstory="You have 15 years of experience in market analysis...",
+    tools=[search_tool, database_tool]
+)
+
+analyst = Agent(
+    role="Data Analyst",
+    goal="Extract actionable insights from research",
+    backstory="You specialize in turning raw data into insights...",
+    tools=[analysis_tool, visualization_tool]
+)
+
+writer = Agent(
+    role="Technical Writer",
+    goal="Create clear, compelling reports",
+    backstory="You excel at explaining complex topics...",
+    tools=[document_tool]
+)
+
+# Define tasks
+research_task = Task(
+    description="Research Q4 2024 market trends in SaaS industry",
+    agent=researcher,
+    expected_output="Comprehensive research summary with sources"
+)
+
+analysis_task = Task(
+    description="Analyze research for key insights and opportunities",
+    agent=analyst,
+    expected_output="List of actionable insights with data support"
+)
+
+writing_task = Task(
+    description="Write executive summary report",
+    agent=writer,
+    expected_output="Professional report suitable for C-suite"
+)
+
+# Create crew with sequential process
+crew = Crew(
+    <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>=[researcher, analyst, writer],
+    tasks=[research_task, analysis_task, writing_task],
+    process=Process.sequential
+)
+
+# Execute
+result = crew.kickoff()</pre>
+            <p>CrewAI is particularly well-suited for tasks that require diverse expertise, like research teams where different <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> handle different aspects of information gathering and synthesis.</p>
+        </div>
+
+        <h4>3. AutoGen</h4>
+        <p>
+            AutoGen from Microsoft provides a flexible framework for building applications with multiple <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> that can communicate with each other. The framework supports various conversation patterns including pairwise chat, group chat, and nested chat where <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> can spawn sub-conversations.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: AutoGen Group Chat</div>
+            <pre class="code-block">from autogen import ConversableAgent, GroupChat, GroupChatManager
+
+# Create <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> with different personalities and capabilities
+researcher = ConversableAgent(
+    name="Researcher",
+    system_message="You are a thorough researcher...",
+    llm_config={"model": "gpt-4o"}
+)
+
+critic = ConversableAgent(
+    name="Critic",
+    system_message="You are a skeptical peer reviewer...",
+    llm_config={"model": "gpt-4o"}
+)
+
+writer = ConversableAgent(
+    name="Writer",
+    system_message="You are a skilled technical writer...",
+    llm_config={"model": "gpt-4o"}
+)
+
+# Create group chat
+group_chat = GroupChat(
+    <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>=[researcher, critic, writer],
+    messages=[],
+    max_round=5
+)
+
+# Create manager to orchestrate
+manager = GroupChatManager(
+    groupchat=group_chat,
+    llm_config={"model": "gpt-4o"}
+)
+
+# Execute task
+result = researcher.initiate_chat(
+    manager,
+    message="Write a research report on AI in healthcare"
+)</pre>
+            <p>AutoGen's strength is its flexibility: <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> can be customized with different LLMs, tools, and behaviors. The framework also supports both static agent definitions and dynamic agent creation at runtime.</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Framework</th><th>Best For</th><th>Key Feature</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>LangGraph</td><td>Complex workflows with cycles</td><td>Graph-based state management</td></tr>
+                <tr><td>CrewAI</td><td>Role-based multi-agent tasks</td><td>Built-in role definitions</td></tr>
+                <tr><td>AutoGen</td><td>Flexible agent communication</td><td>Multiple conversation patterns</td></tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Agent Skills and Tool Use</strong> - how <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> interact with external systems.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-12-2.html">12.2 Chains vs Agents</a>
+            <a class="up" href="index.html">Chapter 12 Index</a>
+            <a class="next" href="section-12-4.html">12.4 Agent Skills and Tool Use</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 12.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

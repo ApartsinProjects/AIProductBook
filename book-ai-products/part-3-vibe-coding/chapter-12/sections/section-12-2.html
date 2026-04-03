@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12.2 Prompts, Rules, Skills, Templates, Memory - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 12.2</div>
+        <h1>Prompts, Rules, Skills, Templates, Memory</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            The vocabulary of AI interaction overlaps confusingly. Understanding the distinction between prompts, rules, skills, templates, and memory clarifies when to use each.
+        </p>
+
+        <h2>The Building Block Model</h2>
+
+        <p>Think of AI interaction as composing building blocks. Each block type has different properties, costs, and use cases. The skill is in selecting the right block for each situation.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Building Block Overview</div>
+            <p>Think of AI interaction as composing building blocks, each with different properties, costs, and use cases. Prompts are direct requests for AI output, the atomic unit of AI interaction. Rules are persistent constraints on AI behavior that define boundaries the AI should not cross. Skills are reusable, composable AI capabilities that bundle prompts, rules, and context into portable units. Templates are parameterized prompt structures that define the shape of a prompt with slots for variable content. Memory is information retained across interactions, emerging from interaction history rather than being explicitly defined.</p>
+        </div>
+
+        <h2>Prompts</h2>
+
+        <p>Prompts are direct requests for AI output. They are the atomic unit of AI interaction. Every other building block is composed of prompts.</p>
+
+        <h3>Prompt Properties</h3>
+
+        <p>Prompts have several key properties. They are contextual, meaning their effectiveness depends heavily on surrounding context. They are ephemeral, not retained unless explicitly saved to a more durable form. They are specific, addressing particular tasks or questions rather than general capabilities.</p>
+
+        <h3>When to Use Prompts</h3>
+
+        <p>Prompts are appropriate for one-off tasks without reuse expectations, exploratory interactions where you are learning about a problem space, quick questions or generation requests that do not warrant formalization, and initial prompting before extracting patterns that emerge repeatedly.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Prompt Examples</div>
+            <p><strong>Exploratory prompt:</strong></p>
+            <p><em>"What are common patterns in logistics exception handling?"</em></p>
+            <p><strong>Specific task prompt:</strong></p>
+            <p><em>"Classify this email as: delayed, damaged, wrong address, refused, or other: [email content]"</em></p>
+            <p><strong>Generative prompt:</strong></p>
+            <p><em>"Generate 10 example customer emails about delivery exceptions, two for each category: delayed, damaged, wrong address, refused, other"</em></p>
+        </div>
+
+        <h2>Rules</h2>
+
+        <p>Rules are persistent constraints on AI behavior. They define boundaries that the AI should not cross regardless of the specific request.</p>
+
+        <h3>Rule Properties</h3>
+
+        <p>Rules have three key properties. They are persistent, applying across multiple interactions rather than single exchanges. They are constraining, limiting rather than directing output to preserve flexibility within boundaries. They are universal, applying regardless of context or task so the AI never violates them.</p>
+
+        <h3>Rule Examples</h3>
+
+        <p>Common rules include never logging personally identifiable information, always validating input parameters before processing, returning errors in JSON format with code and message fields, and escalating to human review when confidence falls below a specified threshold.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">Rule Writing</div>
+            <p>Rules should be declarative, stating what is true rather than prescribing how to achieve it. They should be falsifiable, having clear conditions for being violated so violations can be detected. They should be minimal, including only essential constraints rather than comprehensive guidelines.</p>
+        </div>
+
+        <h2>Skills</h2>
+
+        <p>Skills are reusable, composable AI capabilities. They bundle prompts, rules, and context into portable units that can be shared and combined.</p>
+
+        <h3>Skill Properties</h3>
+
+        <p>Skills have three defining properties. They are reusable, designed for multiple invocations rather than single-use. They are composable, able to be combined with other skills to address complex scenarios. They are portable, transferring across tools and contexts without requiring fundamental redesign.</p>
+
+        <h3>Skill Structure</h3>
+
+        <pre>
+Skill: [Name]
+Purpose: [What this skill does]
+Inputs: [What it requires]
+Outputs: [What it produces]
+Rules: [Constraints that apply]
+Context: [Required context elements]
+Examples: [Sample invocations]
+        </pre>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Email Classification Skill</div>
+            <pre>
+Skill: EmailExceptionClassifier
+Purpose: Classify customer emails about delivery exceptions
+Inputs: Email text, subject line
+Outputs: {category, confidence, reasoning}
+Rules:
+  - Return classification within 5 seconds
+  - Confidence must reflect actual certainty
+  - Never store email content, only classification
+Context:
+  - Exception categories and definitions
+  - Recent classification examples for calibration
+Examples:
+  - [See skill documentation for full examples]
+            </pre>
+        </div>
+
+        <h2>Templates</h2>
+
+        <p>Templates are parameterized prompt structures. They define the shape of a prompt with slots for variable content.</p>
+
+        <h3>Template Properties</h3>
+
+        <p>Templates have three key properties. They are parameterized, including slots for variable content that get filled in at invocation time. They are reusable, maintaining the same structure across different content. They are testable, able to be evaluated across parameter variations to ensure consistent quality.</p>
+
+        <h3>Template Example</h3>
+
+        <pre>
+Template: ClassificationPrompt
+Structure:
+  "Classify the following {content_type} as {categories}.
+   Content: {content}
+   Confidence required: {min_confidence}%
+   
+   Return in JSON format:
+   {{
+     "classification": "...,
+     "confidence": ...,
+     "reasoning": "..."
+   }}"
+Parameters:
+  - content_type: email, message, feedback
+  - categories: comma-separated list
+  - content: the text to classify
+  - min_confidence: number 0-100
+        </pre>
+
+        <h2>Memory</h2>
+
+        <p>Memory is information retained across interactions. Unlike prompts, rules, skills, and templates which are explicitly defined, memory emerges from interaction history.</p>
+
+        <p>Memory patterns include session memory within a single conversation, cross-session memory across multiple conversations, semantic memory representing generalized knowledge from training, and episodic memory of specific experiences or events that inform future interactions.</p>
+
+        <div class="callout note">
+            <div class="callout-title">Memory in Production Systems</div>
+            <p>For production systems, memory management becomes explicit and critical. See <a href="../../../part-4-engineering/chapter-18/sections/section-18-2.html">Chapter 18: Session State and User Memory</a> for patterns on implementing durable memory in AI applications.</p>
+        </div>
+
+        <h2>Choosing the Right Building Block</h2>
+
+        <p>Choose the right building block based on the situation. For one-off tasks with no reuse expected, use a prompt. For persistent constraints across tasks, use a rule. For reusable capabilities requiring multiple invocations, use a skill. For the same prompt structure with different content, use a template. For information from past interactions that needs to inform current work, use memory.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Prompts, rules, skills, templates, and memory are distinct building blocks, each designed for different situations. Prompts are ephemeral, specific, direct requests suited for one-off tasks. Rules are persistent constraints that limit behavior across interactions. Skills are reusable, composable capability units designed for repeated invocation. Templates are parameterized prompt structures that enable reuse across similar but not identical tasks. Memory retains information across interactions, allowing past context to inform current work. Choose the building block that fits the situation rather than forcing a mismatch between problem and solution.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Classifying Your AI Interactions</div>
+            <p>Review your recent AI interactions and classify each by answering several diagnostic questions. First, identify which were one-off prompts that could have been skills, suggesting they represent repeated patterns worth formalizing. Second, consider which would benefit from explicit rules, particularly those involving constraints that should consistently apply. Third, examine which involve repeated patterns that should be templates for consistency and efficiency. Fourth, reflect on where memory would improve the interaction by retaining relevant context from past exchanges.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 12.3, we examine <strong>Repository Conventions for Teams</strong>, exploring how to structure AI interaction artifacts for team collaboration.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-12-1.html">12.1 Durable Abstractions</a>
+            <a class="up" href="../index.html">Chapter 12 Overview</a>
+            <a class="next" href="section-12-3.html">12.3 Team Conventions</a>
+        </nav>
+
+        <footer>
+            <p>Section 12.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

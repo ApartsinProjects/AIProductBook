@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 16: Scaling - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 16</div>
+        <h1>Scaling, Reliability, and Observability</h1>
+        <p class="chapter-subtitle">Production-Hardening AI Systems</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Production harden your AI systems for scale and reliability.
+        </p>
+
+        <figure class="illustration">
+            <img src="../../images/illustrations/chapter-16-opener.png"
+                 alt="Production Hardening: Monitoring dashboard and reliability systems"
+                 style="max-width: 100%; border-radius: 12px; margin: 1.5rem auto; display: block;">
+            <figcaption>
+                Production AI requires comprehensive reliability engineering.
+            </figcaption>
+        </figure>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter covers production-hardening AI systems at scale. You will learn about 
+                latency, throughput, and multi-tenancy considerations, guardrails and fallbacks for 
+                safe operation, observability tools like LangSmith and Langfuse, and security and 
+                compliance requirements including SOC2, HIPAA, and GDPR. These skills are essential 
+                for running AI products in production with confidence.
+            </p>
+            <p>
+                The transition from prototype to production is where many AI products fail. The 
+                techniques in this chapter address the challenges that emerge only at scale: handling 
+                high traffic, maintaining quality under load, and operating reliably over time.
+            </p>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Design for latency, throughput, and multi-tenancy at scale</li>
+                <li>Implement input and output guardrails</li>
+                <li>Build observability with tracing, metrics, and logs</li>
+                <li>Apply security best practices and compliance frameworks</li>
+                <li>Design human-in-the-loop for high-stakes decisions</li>
+            </ul>
+        </div>
+
+        <div class="prerequisites">
+            <h3>Prerequisites</h3>
+            <p>
+                Readers should have completed Chapters 11-15 on AI engineering. Experience with 
+                production systems and basic security concepts is expected. If you are new to 
+                production hardening, Section 16.1 on latency and throughput provides the foundation.
+            </p>
+        </div>
+
+        <blockquote class="epigraph">
+            "Reliability is not a feature, it's a prerequisite." <cite>– Unknown</cite>
+        </blockquote>
+
+        <div class="sections-list">
+            <h2>Chapter Sections</h2>
+            <ul>
+                <li><a href="section-16-1.html">16.1 Latency, Throughput, Multi-Tenancy</a></li>
+                <li><a href="section-16-2.html">16.2 Guardrails and Fallbacks</a></li>
+                <li><a href="section-16-3.html">16.3 Observability Tools</a></li>
+                <li><a href="section-16-4.html">16.4 Security and Compliance</a></li>
+                <li><a href="section-16-5.html">16.5 Distributed Tracing and Resilience</a></li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Congratulations on completing Part IV on AI Engineering! You now have the technical 
+                skills to build production-ready AI systems. Continue to 
+                <a href="../../part-5-integration/chapter-17/index.html">Part V: Integration</a> to tie 
+                everything together, starting with Chapter 17: Integrated Vibe-to-Production Playbook. 
+                Part V shows how all three pillars (vibe coding, AI PM, and AI engineering) work in 
+                concert to deliver successful AI products.
+            </p>
+        </div>
+
+        <div class="bibliography">
+            <h3>Tools</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://docs.langchain.com">LangChain Observability Platform</a></p>
+                <p class="bib-authors">LangSmith</p>
+                <p class="bib-annotation">Why this is relevant: Comprehensive observability platform for LangChain applications; essential for debugging and monitoring production AI products.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://langfuse.com">Open-Source LLM Observability</a></p>
+                <p class="bib-authors">Langfuse</p>
+                <p class="bib-annotation">Why this is relevant: Self-hostable observability alternative; good option for teams needing data privacy in their AI products.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://helicone.ai">OpenAI Observability</a></p>
+                <p class="bib-authors">Helicone</p>
+                <p class="bib-annotation">Why this is relevant: Specialized observability for OpenAI APIs; lightweight option for monitoring ChatGPT API usage in AI products.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://arize.com">ML Observability Platform</a></p>
+                <p class="bib-authors">Arize AI</p>
+                <p class="bib-annotation">Why this is relevant: Enterprise-grade ML observability for production AI systems; comprehensive solution for monitoring model performance.</p>
+            </div>
+
+            <h3>Best Practices</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://aws.amazon.com">AI/ML Best Practices</a></p>
+                <p class="bib-authors">AWS</p>
+                <p class="bib-annotation">Why this is relevant: AWS guidance on building and scaling ML workloads; useful for teams deploying AI products on cloud infrastructure.</p>
+            </div>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-15/index.html">Ch 15: Inference Serving</a>
+            <a class="up" href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a>
+            <a class="next" href="../../part-5-integration/chapter-17/index.html">Part V: Integration</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 16 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5.2 Automated Testing and CI/CD - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <div class="chapter-label">Chapter 5</div>
+        <h1>Accelerating the Full Development Lifecycle with AI</h1>
+        <p class="chapter-subtitle">5.2 Automated Testing and CI/CD</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Extend vibe coding beyond core coding to requirements, testing, CI/CD, and observability.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 5.1 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Quality Automation</div>
+            <p>This section covers AI-powered testing and CI/CD integration. In the context of vibe coding, testing is where AI delivers massive productivity gains while requiring careful oversight. Test-driven vibe coding ensures specifications are captured before implementation, providing clear benchmarks for evaluating AI-generated code.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Infinite Monkey Protocol</div>
+            <p>If you gave infinite monkeys infinite time, they would write Hamlet. Given infinite AI <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> infinite time, they would also write the tests. The difference is the AI finishes before the heat death of the universe.</p>
+        </div>
+
+        <h2 id="section-5-2">5.2 Automated Testing and CI/CD</h2>
+
+        <p>
+            Testing is where vibe coding delivers some of its biggest productivity gains, and also where it requires the most careful oversight. AI can generate unit tests, integration tests, and end-to-end tests at speeds that would be impossible manually. However, the tests AI generates are only as good as the specifications it is given. You must clearly define what behavior you expect, what constitutes a pass versus a failure, and what edge cases matter for your specific use case.
+        </p>
+
+        <h3>5.2.1 Test-Driven Vibe Coding</h3>
+
+        <p>
+            The most effective approach is test-driven vibe coding: write test descriptions first, then let AI generate the implementation and the tests in parallel. This ensures that your understanding of correct behavior is captured before implementation begins, providing a clear benchmark for evaluating the AI-generated code. When tests fail, you immediately know whether the failure is due to incorrect implementation or incorrect test expectations.
+        </p>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: Writing Test Descriptions for AI</h4>
+            <p>The key to getting good tests from AI is providing precise specifications. Here's a template that works well:</p>
+
+            <pre class="code-example">
+// Test specification template for AI
+const testSpec = `
+Generate unit tests for a function that processes user checkout.
+The function is in file: checkout.js
+
+Function signature:
+processCheckout(cart: Cart, paymentMethod: PaymentMethod, shippingAddress: Address): Promise&lt;CheckoutResult&gt;
+
+Expected behavior:
+1. Returns success=true when payment is processed successfully
+2. Returns success=false with error="INSUFFICIENT_STOCK" when any item is out of stock
+3. Returns success=false with error="INVALID_ADDRESS" when address validation fails
+4. Applies discount codes: "SAVE10" = 10% off, "SAVE20" = 20% off (only one per order)
+5. Returns order ID on success
+6. Throws error if cart is empty
+
+Test cases needed:
+- Happy path: valid cart, valid payment, valid address
+- Empty cart: should throw "Cart cannot be empty"
+- Out of stock item: should return INSUFFICIENT_STOCK
+- Invalid address (missing postal code): should return INVALID_ADDRESS
+- Expired payment method: should return error code
+- Valid discount code "SAVE10": should apply 10% discount
+- Valid discount code "SAVE20": should apply 20% discount
+- Multiple discount codes: should use the higher discount
+- Invalid discount code: should be ignored (no discount applied)
+- Network error on payment: should return "PAYMENT_FAILED"
+
+Use Jest. Include descriptive test names following the pattern: should [expected behavior] when [condition]
+`;
+</pre>
+        </div>
+
+        <div class="real-world-scenario">
+            <h4>Real-World Scenario: E-Commerce Checkout Testing</h4>
+            <p>A team building an e-commerce platform used test-driven vibe coding for their checkout flow. They wrote comprehensive test specifications covering 47 different scenarios, then used AI to generate both the implementation and the tests simultaneously.</p>
+            <p>When they ran the tests, 12 failed. Instead of manually debugging, they asked AI to analyze the failures. In 8 cases, the test expectations were wrong (they had made mistakes in their specifications). In 4 cases, the implementation had bugs. They fixed the specification, regenerated the implementation, and had a passing test suite in 2 hours.</p>
+            <p>Without this approach, they estimated it would have taken 2 days of manual test writing and debugging to reach the same coverage.</p>
+        </div>
+
+        <h3>5.2.2 AI-Generated Unit Tests</h3>
+
+        <p>
+            AI excels at generating unit tests because it understands code patterns and can identify boundary conditions that humans might miss. Given a function to test, AI can generate tests for normal cases, edge cases, error conditions, and boundary values.
+        </p>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: Generating Unit Tests from Code</h4>
+            <pre class="code-example">
+// Prompt for unit test generation
+const unitTestPrompt = `
+Generate comprehensive unit tests for the following function using Jest:
+
+function calculateShippingCost(weight: number, destination: string, speed: string): number {
+    const baseRates = {
+        'US': 5.99,
+        'CA': 12.99,
+        'UK': 14.99,
+        'EU': 16.99,
+        'OTHER': 24.99
+    };
+    
+    const baseRate = baseRates[destination] || baseRates['OTHER'];
+    const weightMultiplier = weight <= 1 ? 1 : 1 + (weight - 1) * 0.5;
+    const speedMultiplier = speed === 'express' ? 2 : 1;
+    
+    return baseRate * weightMultiplier * speedMultiplier;
+}
+
+Requirements:
+1. Test each destination with weight=1 and speed='standard'
+2. Test weight boundaries: 0, 1, 2, 5, 10, 100
+3. Test both 'standard' and 'express' speed
+4. Test unknown destination (should use 'OTHER' rate)
+5. Test invalid inputs (negative weight, empty destination)
+6. Use describe blocks to group by destination region
+7. Include edge case: weight=0.5
+`;
+</pre>
+        </div>
+
+        <h3>5.2.3 Integration and End-to-End Tests</h3>
+
+        <p>
+            Beyond unit tests, AI can generate integration tests that verify how components work together and end-to-end tests that validate entire user workflows. These tests are more complex because they require understanding the system as a whole, but AI can help by generating test scenarios from user stories.
+        </p>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: Generating E2E Tests from User Stories</h4>
+            <pre class="code-example">
+// Generate Playwright E2E tests from user stories
+const e2ePrompt = `
+Generate Playwright E2E tests for the following user story:
+
+User Story: As a returning customer, I want to quickly reorder items from my previous purchase so that I don't have to search for products again.
+
+Acceptance Criteria:
+1. Customer can view their order history on the "My Orders" page
+2. "Reorder" button appears next to each previous order
+3. Clicking "Reorder" adds all items from that order to cart with same quantities
+4. If an item is now out of stock, show a warning message listing unavailable items
+5. Customer can modify quantities before checkout
+6. If all items are out of stock, the "Reorder" button is disabled with tooltip "Items unavailable"
+
+Generate a complete test file with:
+- Test for viewing order history
+- Test for successful reorder
+- Test for reorder with some out-of-stock items
+- Test for reorder with all items out of stock
+- Test for modifying quantities after reorder
+- Proper setup with test data (mock order history)
+
+Use Page Object Model pattern.
+`;
+</pre>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Startup Reduces Regression Bugs by 70%</h4>
+            <p>A Series A startup building a project management tool struggled with regression bugs. Their manual testing process caught about 40% of regressions, and developers spent 30% of their time fixing bugs discovered in staging.</p>
+            <p>They implemented AI-generated test coverage by:</p>
+            <ol>
+                <li>Writing behavior specifications for each feature as "given/when/then" statements</li>
+                <li>Using AI to generate unit tests from specifications</li>
+                <li>Using AI to generate integration tests from API contracts</li>
+                <li>Generating E2E tests from user stories</li>
+            </ol>
+            <p>Within 3 months, they had 85% automated test coverage and regression bugs in staging dropped by 70%. Developers reclaimed 15 hours per week previously spent on manual testing.</p>
+        </div>
+
+        <h3>5.2.4 CI/CD Integration</h3>
+
+        <p>
+            CI/CD integration extends AI assistance into the deployment pipeline. AI can review pull requests for common issues like security vulnerabilities, missing tests, or style violations. Some teams have configured AI <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> that run on every push, performing security audits on code changes and flagging potential issues before they reach production.
+        </p>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: Setting Up AI Code Review in CI/CD</h4>
+            <pre class="code-example">
+# GitHub Actions workflow for AI code review
+name: AI Code Review
+on: [pull_request]
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      
+      - name: AI Code Review
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          # Get the diff
+          DIFF=$(git diff --no-color origin/main...HEAD -- '*.ts' '*.js' '*.py')
+          
+          # Send to AI for review
+          curl -X POST https://api.openai.com/v1/chat/completions \
+            -H "Authorization: Bearer $OPENAI_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model": "gpt-4",
+              "messages": [{
+                "role": "system",
+                "content": "You are a senior software engineer reviewing code changes. Focus on: security vulnerabilities, performance issues, potential bugs, code quality, and test coverage. Provide specific, actionable feedback."
+              }, {
+                "role": "user",
+                "content": "Review the following code changes:\n\n" + env.DIFF
+              }],
+              "temperature": 0.3
+            }'
+</pre>
+        </div>
+
+        <div class="real-world-scenario">
+            <h4>Real-World Scenario: Automated PR Review at Scale</h4>
+            <p>A mid-size team with 12 developers implemented AI code review in their CI pipeline. They configured three levels of feedback:</p>
+            <ul>
+                <li><strong>Critical (blocks merge):</strong> Security vulnerabilities, potential data loss, authentication bypass</li>
+                <li><strong>Warning (non-blocking):</strong> Code style violations, missing comments, possible performance issues</li>
+                <li><strong>Suggestion (informational):</strong> Refactoring opportunities, alternative approaches, improvements</li>
+            </ul>
+            <p>In the first month, AI caught 47 issues that would have reached the main branch, including 3 potential SQL injection vulnerabilities and 12 cases of missing error handling. Developer satisfaction with code review increased because routine issues were caught automatically, allowing human reviews to focus on architectural decisions.</p>
+        </div>
+
+        <h3>5.2.5 AI-Powered Security Scanning</h3>
+
+        <p>
+            Security scanning represents a particularly valuable application of AI in the CI/CD pipeline. AI-powered static analysis goes beyond traditional pattern matching to understand code context and identify subtle security issues like injection vulnerabilities, authentication bypasses, and data exposure risks. These tools are not perfect, but they catch a significant percentage of common vulnerabilities and free security experts to focus on more complex audits.
+        </p>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: AI Security Review for Authentication Code</h4>
+            <pre class="code-example">
+// Prompt for security review of authentication code
+const securityPrompt = `
+Review the following authentication code for security vulnerabilities:
+
+async function login(email, password, req) {
+    const user = await db.query('SELECT * FROM users WHERE email = ?', email);
+    if (!user) {
+        return { error: 'Invalid credentials' };
+    }
+    
+    const match = await bcrypt.compare(password, user.password_hash);
+    if (!match) {
+        return { error: 'Invalid credentials' };
+    }
+    
+    req.session.userId = user.id;
+    return { success: true };
+}
+
+Identify and explain:
+1. SQL injection vulnerabilities
+2. Timing attack vulnerabilities
+3. Session fixation issues
+4. Rate limiting gaps
+5. Any other security concerns
+
+For each issue found, provide:
+- Severity (Critical/High/Medium/Low)
+- Description of the vulnerability
+- Suggested fix
+`;
+</pre>
+        </div>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: Comprehensive Security Scanner Script</h4>
+            <pre class="code-example">
+#!/bin/bash
+# ai-security-scan.sh - Run AI-powered security scan on code changes
+
+set -e
+
+echo "Running AI-powered security scan..."
+
+# Get changed files
+CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+SECURE_FILES=$(echo "$CHANGED_FILES" | grep -E '\.(js|ts|py|java|go|rb)$')
+
+# Scan each file
+for file in $SECURE_FILES; do
+    echo "Scanning $file..."
+    
+    CONTENT=$(cat "$file")
+    
+    # Send to AI for security analysis
+    SECURITY_REPORT=$(curl -s -X POST https://api.openai.com/v1/chat/completions \
+        -H "Authorization: Bearer $OPENAI_API_KEY" \
+        -H "Content-Type: application/json" \
+        -d "{
+            \"model\": \"gpt-4\",
+            \"messages\": [{
+                \"role\": \"system\",
+                \"content\": \"You are a security expert. Analyze code for OWASP Top 10 vulnerabilities. Provide findings in JSON format.\"
+            }, {
+                \"role\": \"user\",
+                \"content\": \"Analyze this code for security vulnerabilities in file $file:\n\n$CONTENT\"
+            }],
+            \"temperature\": 0.2
+        }")
+    
+    # Parse and report findings
+    echo "$SECURITY_REPORT" | jq -r '.choices[0].message.content'
+    
+    # Check for critical issues
+    if echo "$SECURITY_REPORT" | jq -r '.choices[0].message.content' | grep -q "Critical"; then
+        echo "::error::Critical security issues found in $file"
+        exit 1
+    fi
+done
+
+echo "Security scan complete."
+</pre>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Financial Services Company Security Pipeline</h4>
+            <p>A fintech company building a payment processing platform needed rigorous security controls. They integrated AI security scanning into their CI/CD pipeline to catch vulnerabilities before production.</p>
+            <p>Their pipeline now includes:</p>
+            <ol>
+                <li><strong>Pre-commit:</strong> Local AI scan on changed files (blocks commit if critical)</li>
+                <li><strong>PR review:</strong> AI security review as a required check</li>
+                <li><strong>Pre-deploy:</strong> Full codebase scan for dependencies and known CVEs</li>
+                <li><strong>Post-deploy:</strong> Runtime security monitoring with AI anomaly detection</li>
+            </ol>
+            <p>In 6 months, they caught 156 potential vulnerabilities before production, with an estimated 40% reduction in security audit time.</p>
+        </div>
+
+        <div class="why-it-matters">
+            <h4>Why This Matters</h4>
+            <ul>
+                <li><strong>Massive time savings:</strong> AI can generate comprehensive test suites in hours vs. weeks manually</li>
+                <li><strong>Better coverage:</strong> AI identifies edge cases humans often miss</li>
+                <li><strong>Faster feedback:</strong> CI/CD integration catches issues before they reach production</li>
+                <li><strong>Security improvement:</strong> AI security scanning catches common vulnerabilities automatically</li>
+                <li><strong>Developer focus:</strong> Automating routine review work lets humans focus on design decisions</li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Observability and Monitoring</strong> - setting up production monitoring with AI assistance.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-5-1.html">5.1 Requirements and Documentation</a>
+            <a class="up" href="index.html">Chapter 5 Index</a>
+            <a class="next" href="section-5-3.html">5.3 Observability and Monitoring</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 5.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

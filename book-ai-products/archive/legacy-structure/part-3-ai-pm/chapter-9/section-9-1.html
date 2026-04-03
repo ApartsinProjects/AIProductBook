@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8.1 User Research for AI - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 8</div>
+        <h1>Discovery, Prioritization, and Roadmapping</h1>
+        <p class="chapter-subtitle">8.1 User Research for AI</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Handle uncertainty in AI products through adapted research, prioritization, and data strategies.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Chapter 7 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Researching the Unknown</div>
+            <p>User research for AI products requires adapted methods because users often cannot imagine what is possible and their feedback reflects mental models of AI that may be inaccurate. Concept testing with prototypes, Wizard-of-Oz studies, and diary studies provide frameworks to understand user needs beyond what users can articulate. The key insight is that AI research must bridge the gap between user expectations and technical reality.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Wizard and the Curtain</div>
+            <p>The Wizard of Oz famously hid behind a curtain, projecting an impressive illusion. Dorothy and friends never knew they were talking to a small man with a big speaker. Users interacting with AI are often Dorothy; the curtain is just much smaller now.</p>
+        </div>
+
+        <h2 id="section-8-1">8.1 User Research for AI</h2>
+
+        <p>
+            In Chapter 7, we covered the AI PM Toolkit including the USID.O framework (a structured approach to AI product development: Understand, Scope, Ideate, Decide, Optimize), <a href="../../part-3-ai-pm/chapter-8/sections/section-8-2.html">eval-first</a> PRDs (product requirement documents that define evaluation criteria before building, rather than after), experimentation methods, and AI tools for PMs. These tools help you plan, evaluate, and iterate on AI products.
+        </p>
+
+        <p>
+            But before you can plan an AI product, you need to understand your users. In previous sections, we mentioned user research as important, but we did not explore how research methods must adapt for AI products specifically.
+        </p>
+
+        <p>
+            User research for AI products requires adapted methods because the product experience is fundamentally different from traditional software. When users interact with AI, they often do not know what is possible or what limitations to expect. Their feedback reflects not just their genuine preferences but their mental models of how AI works, which may be inaccurate. Effective research for AI products must account for these dynamics.
+        </p>
+
+        <h3>Why AI Research is Different</h3>
+
+        <p>
+            Traditional software research asks users what they want. With AI, users often cannot imagine what is possible. They might say they do not need a feature that would transform their workflow simply because they have never experienced anything like it. Conversely, they might expect AI capabilities that do not yet exist. Your research methods must bridge this gap between user expectations and technical reality.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The "Just Make It Smart" Trap</h4>
+            <p>
+                A productivity app company asked users what they wanted from AI. Users said "make it smarter" and "add smart features." The company spent six months building sophisticated AI features based on this feedback. Post-launch, usage was low. Users found the features confusing and could not articulate why they were not using them.
+            </p>
+            <p>
+                <strong>What went wrong:</strong> Users provided vague responses because they could not conceptualize specific AI capabilities. The company needed to show users concrete examples rather than asking them to imagine.
+            </p>
+            <p>
+                <strong>The fix:</strong> They switched to concept testing. They showed users mockups of specific AI features (automatic meeting notes, smart reply suggestions, context-aware reminders) and measured engagement. This revealed which features actually mattered to users.
+            </p>
+        </div>
+
+        <h3>Adapted Research Methods</h3>
+
+        <h4>Concept Testing with Prototypes</h4>
+
+        <p>
+            Rather than asking users what they want, show them working AI prototypes and measure their reactions. Concept testing works because it gives users something concrete to respond to. Create low-fidelity prototypes that demonstrate specific AI interactions: show what the AI would say, how it would appear in the interface, and what the user would do in response.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Conducting Concept Tests for AI</h4>
+            <p>
+                <strong>Step 1: Identify specific concepts to test</strong>
+                Instead of testing "AI features," test specific interactions like:
+            </p>
+            <ul>
+                <li>"When you start typing, the AI suggests completions" vs. "AI generates full response from scratch"</li>
+                <li>"AI explains its reasoning" vs. "AI provides answer without explanation"</li>
+                <li>"AI asks clarifying questions" vs. "AI makes best guess"</li>
+            </ul>
+            <p>
+                <strong>Step 2: Create realistic scenarios</strong>
+                Write scenario scripts that place users in real workflows. Do not just show the AI in isolation.
+            </p>
+            <p>
+                <strong>Step 3: Measure both behavior and sentiment</strong>
+                Track what users actually do (click, edit, ignore) as well as what they say they think.
+            </p>
+        </div>
+
+        <h4>Wizard-of-Oz Research</h4>
+
+        <p>
+            Wizard-of-Oz studies simulate AI behavior using human operators behind the scenes. This method is valuable because it reveals how users would interact with AI capabilities that do not exist yet, without the noise that comes from showing them broken prototypes. Users interact with what appears to be AI but is actually a human operator following scripts.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Discovering Real User Needs</h4>
+            <p>
+                A healthcare company wanted to understand how patients would use AI health assistants. They ran a Wizard-of-Oz study where a nurse (hidden from patients) responded to chat messages as if they were an AI. The nurse could look up information, ask follow-up questions, and provide customized responses.
+            </p>
+            <p>
+                <strong>Key finding:</strong> Patients asked questions the team had not anticipated: "Can I take this medication with alcohol?" "What does this medical term mean?" The team had been focused on diagnosis, but patients wanted health education. This insight changed the product direction entirely.
+            </p>
+        </div>
+
+        <h4>Diary Studies for Long-Term Usage</h4>
+
+        <p>
+            AI products often change how users work over time. What seems useful in a one-hour test might become annoying after three weeks of daily use. Diary studies track user experience over extended periods, capturing how usage patterns evolve, where users lose interest, and what causes them to stop using the product.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Running Diary Studies for AI Products</h4>
+            <p>
+                <strong>Structure:</strong>
+            </p>
+            <ol>
+                <li>Recruit 15-20 users for 2-4 weeks</li>
+                <li>Give users specific tasks to complete with AI assistance</li>
+                <li>Ask for daily or weekly entries on: what worked, what frustrated them, how their workflow changed</li>
+                <li>Conduct midpoint and endpoint interviews to probe deeper</li>
+            </ol>
+            <p>
+                <strong>What to look for:</strong>
+            </p>
+            <ul>
+                <li>Initial enthusiasm decay or sustained usage</li>
+                <li>Tasks where users abandon AI and do manually</li>
+                <li>Unexpected ways users combine AI with other tools</li>
+                <li>Evolving trust levels over time</li>
+            </ul>
+        </div>
+
+        <h3>Feedback Loops in Production</h3>
+
+        <p>
+            Feedback loops are essential for AI products because the product improves through use. Building continuous user signal collection into your product is not optional; it is how you identify degradation, discover edge cases, and prioritize improvements. This can be explicit feedback like thumbs up/down buttons, implicit feedback like whether users follow AI suggestions, or analytical feedback like which features users engage with most. The key is collecting feedback in a way that can be systematically analyzed and acted upon.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Building Continuous Feedback</h4>
+            <p>
+                A code completion tool implemented three feedback mechanisms:
+            </p>
+            <ol>
+                <li><strong>Explicit:</strong> Thumbs up/down on each completion</li>
+                <li><strong>Implicit:</strong> Did user accept the suggestion? Edit it significantly? Ignore it entirely?</li>
+                <li><strong>Analytical:</strong> Time to complete coding task, error rates in accepted code</li>
+            </ol>
+            <p>
+                This layered feedback revealed insights that any single signal would have missed. For example, suggestions with high thumbs-up but low acceptance were often "correct but too verbose" or "technically right but not matching user style."
+            </p>
+        </div>
+
+        <h4>Designing Effective Feedback Mechanisms</h4>
+
+        <p>
+            Not all feedback is useful. Design your feedback mechanisms to capture signals that can be acted upon:
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Signal Type</th><th>What It Measures</th><th>Actionable For</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Thumbs up/down</td><td>Immediate quality judgment</td><td>Identifying specific failure cases</td></tr>
+                <tr><td>Edit after accept</td><td>Output was wrong or incomplete</td><td>Finding accuracy issues</td></tr>
+                <tr><td>Ignore rate</td><td>Suggestion not useful</td><td>Improving relevance</td></tr>
+                <tr><td>Retry count</td><td>User needed different output</td><td>Understanding ambiguity handling</td></tr>
+                <tr><td>Escalation rate</td><td>AI could not handle task</td><td>Identifying coverage gaps</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Synthetic Users</h3>
+
+        <p>
+            Synthetic users represent an emerging research method where AI simulates user behavior to test products before launch. By generating thousands of synthetic user interactions, you can identify failure modes that would take weeks or months to discover through manual testing. This is particularly valuable for AI products where edge cases are numerous and varied. The limitation is that synthetic users do not capture the full range of human creativity and unexpected behavior, so synthetic testing should supplement rather than replace human research.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Using Synthetic Users Effectively</h4>
+            <p>
+                <strong>Best applications:</strong>
+            </p>
+            <ul>
+                <li>Stress testing: How does the product handle 10,000 different queries?</li>
+                <li>Edge case discovery: What weird inputs cause failures?</li>
+                <li>Coverage analysis: What percentage of possible user intents can the AI handle?</li>
+            </ul>
+            <p>
+                <strong>Limitations to respect:</strong>
+            </p>
+            <ul>
+                <li>Synthetic users do not represent human creativity or unexpected behavior</li>
+                <li>They cannot capture emotional response or trust dynamics</li>
+                <li>They may miss qualitative usability issues</li>
+            </ul>
+            <p>
+                <strong>Best practice:</strong> Use synthetic users to find problems, use human users to validate solutions.
+            </p>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Synthetic Testing for Coverage</h4>
+            <p>
+                A customer service AI company used synthetic users to analyze their coverage. They generated 5,000 synthetic customer inquiries based on common support topics, then tested how their AI handled each. This revealed that the AI could handle only 60% of customer inquiries. The remaining 40% were in specific categories like "refund requests with complex circumstances" and "technical troubleshooting with unusual error codes."
+            </p>
+            <p>
+                <strong>The outcome:</strong> Rather than launching with 60% coverage, they prioritized the highest-volume uncovered categories for development. When they launched, coverage was 85%, and they had clear roadmap for the remaining gaps.
+            </p>
+        </div>
+
+        <div class="callout exercise">
+            <div class="callout-title">Exercise: Design an AI Research Study</div>
+            <p><strong>Scenario:</strong> You're researching user needs for an AI-powered coding assistant.</p>
+            <ol>
+                <li>Why would asking users "what do you want from AI coding help?" likely produce poor results?</li>
+                <li>Design three specific concept tests you would run instead.</li>
+                <li>Write a scenario script for one of your concept tests that places users in a realistic workflow.</li>
+            </ol>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: User Research Session</div>
+            <p>HealthMetrics conducted research interviews with hospital administrators to understand pain points in their workflow. This is an excerpt from their research synthesis:</p>
+            <pre>Senior PM: "Dr. Martinez says the query interface works great 
+for simple questions. But she never uses it for complex cases."
+
+Junior PM: "Is that because she doesn't trust the AI for complex 
+cases, or because the interface is too slow?"
+
+Senior PM: "She wants to verify the source. Show me the evidence.
+That's our next sprint: citation links and confidence scores."
+
+[Research team noted: Dr. Martinez represents 60% of users interviewed.
+If power users want verification, we need to build it for all users.]</pre>
+            <p>Key insight from this research: hospital administrators need to justify AI recommendations to clinical staff and boards. They cannot just "trust" the AI; they need evidence. This discovery led HealthMetrics to prioritize citation links and source transparency in their roadmap.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">RetailMind: Store Manager Interview</div>
+            <p>RetailMind conducted store manager interviews to understand how associates would interact with AI shopping assistants:</p>
+            <pre>Store Manager: "I like the idea. But my associates are 
+already overwhelmed. They can't learn another system."
+
+RetailMind PM: "What if the AI surfaces information 
+your associates already know, just faster?"
+
+Store Manager: "Maybe. But if it gives wrong info, 
+customers will blame us, not the AI."
+
+RetailMind PM: "How do we build trust?"
+
+Store Manager: "Give us control. Let associates override 
+recommendations. If the AI learns from overrides, 
+we will trust it more."</pre>
+            <p>Key insight: store buy-in required showing associates the AI as a tool they control, not a replacement for their expertise. This led RetailMind to redesign their mobile interface to prominently display "Override" buttons and "Help us improve" prompts.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: User Research with E-commerce Owners</div>
+            <p>QuickShip founders conducted user interviews with small e-commerce owners to understand shipping pain points:</p>
+            <pre>PM (former logistics manager): "Users keep asking for 
+real-time tracking. But they also complain about subscription 
+costs. We need to understand if tracking is a differentiator 
+or just noise."
+
+Developer: "I can add basic tracking with webhooks from carriers. 
+Won't need new AI features. Just data aggregation."
+
+PM: "Let me ask them specifically what they mean by tracking."
+
+[Follow-up interviews revealed: Users wanted delivery date 
+estimates, not actual GPS tracking. They would pay $5/month 
+for reliable estimates but not $15/month for full tracking.]</pre>
+            <p>Key insight: the team thought users wanted "tracking" but they actually wanted "delivery date certainty." This single insight reduced the feature scope from building a full GPS tracking system to adding carrier webhook integration for date estimates, cutting development time from 3 months to 3 weeks.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Prioritization with Kill Criteria</strong> - defining explicit thresholds for AI feature launches.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Ch 8: Overview</a>
+            <a class="up" href="index.html">Chapter 8 Index</a>
+            <a class="next" href="section-8-2.html">8.2 Prioritization with Kill Criteria</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 8.1 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

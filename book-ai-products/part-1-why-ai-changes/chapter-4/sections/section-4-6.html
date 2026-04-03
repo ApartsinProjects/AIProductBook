@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.6 Trust, Calibration, and Interface Design - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../index.html">Part I: Why AI Changes</a></div>
+        <div class="chapter-label">Chapter 4, Section 4.6</div>
+        <h1>Trust, Calibration, and Interface Design</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Trust is not given; it is earned through consistent behavior over time. An AI system that declares itself trustworthy is not trusted. An AI system that demonstrates trustworthiness through honest uncertainty communication, reliable performance, and graceful failure handling earns trust that is durable and valuable.
+        </p>
+
+        <section class="core-concept">
+            <h2>Calibrated Confidence vs. Overconfidence</h2>
+            
+            <p>A well-calibrated system is one whose confidence levels match its actual accuracy. If a system says it is 80% confident, it should be correct about 80% of the time. Overconfident systems say they are more certain than they should be. Underconfident systems hedge more than necessary.</p>
+
+            <p>Most AI systems are systematically overconfident in ways that matter. They rarely say "I do not know" because language models generate fluent responses even when they are hallucinating. They cannot distinguish known from unknown since the same confidence score may apply to well-grounded and fabricated information. They project false certainty because confident-sounding responses are often taken as more authoritative than they deserve.</p>
+
+            <div class="principle-callout principle-accent">
+                <div class="principle-header">
+                    <span class="principle-icon">6</span>
+                    <h4>Principle: AI Products Require Explicit Trust Design</h4>
+                </div>
+                <p>Trust cannot be assumed; it must be architected into every layer of the system. This includes how confidence is communicated, how failures are handled, and how the system admits uncertainty.</p>
+            </div>
+
+            <div class="callout fun-note">
+                <div class="callout-title">Calibration Humor</div>
+                <p>Weather apps taught an entire generation that "30% chance of rain" actually means "we have no idea, bring an umbrella just in case." Turns out we've been training users to ignore confidence scores for decades.</p>
+            </div>
+
+            <div class="concept-definition">
+                <h3>Calibration Techniques</h3>
+                <p>Several approaches can improve calibration. Constitutional AI trains systems to assess their own confidence and express uncertainty appropriately. Ensemble methods use multiple models or runs to provide more calibrated confidence estimates. Post-hoc calibration applies statistical corrections to raw confidence scores. Uncertainty quantification uses techniques like Monte Carlo dropout or deep ensembles to estimate uncertainty.</p>
+            </div>
+        </section>
+
+        <section class="deeper-principles">
+            <h2>Trust as Earned, Not Assumed</h2>
+
+            <p>Trust is built through behavior over time, not through claims of capability. Users form trust models based on consistency (whether the system behaves predictably), honesty (whether the system admits its limitations), competence (whether the system does what it claims), and benevolence (whether the system seems to have user interests at heart).</p>
+
+            <div class="framework-box">
+                <h3>The Trust Architecture Framework</h3>
+                <div class="framework-steps">
+                    <div class="framework-step">
+                        <h4>Establish Reliable Behavior First</h4>
+                        <p>Trust is built by doing what you say consistently. Before adding capabilities, ensure the basics work reliably. A system that reliably handles simple cases well earns more trust than one that attempts ambitious cases and fails.</p>
+                    </div>
+                    <div class="framework-step">
+                        <h4>Communicate Uncertainty Transparently</h4>
+                        <p>When the AI does not know something, it should say so clearly. This is not weakness; it is honesty that earns trust. Users who are told when to trust AI outputs make better use of the system.</p>
+                    </div>
+                    <div class="framework-step">
+                        <h4>Handle Failures Gracefully</h4>
+                        <p>When the AI fails, it should fail in ways that are recoverable and informative. Provide fallback options, explain what went wrong, and offer alternative paths forward.</p>
+                    </div>
+                    <div class="framework-step">
+                        <h4>Allow Calibration Over Time</h4>
+                        <p>Trust should be dynamic, adjusting based on recent performance. Users should be able to update their trust model based on experience, and systems should support this by providing feedback about when they are more or less reliable.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="deeper-principles">
+            <h2>Trust Repair After Failures</h2>
+
+            <p>AI systems will fail. How failures are handled determines whether trust is repaired or destroyed:</p>
+
+            <div class="concept-definition">
+                <h3>Effective Trust Repair</h3>
+                <p>When trust is violated, consider acknowledging the failure without minimizing or deflecting since users respect honesty. Explain what happened to help users understand why the failure occurred. Describe prevention measures by showing what you are doing to prevent recurrence. Provide restitution where possible by compensating users for the failure. Earn trust incrementally by being more conservative after a failure until trust is rebuilt.</p>
+            </div>
+
+            <div class="example-box">
+                <h3>Worked Example: AI Medical Diagnosis System</h3>
+                <p>A medical AI system recommends an incorrect diagnosis. Trust repair is critical. Immediately, clearly indicate uncertainty in high-stakes domains with language like "This is a suggestion for consideration by a medical professional." When failure occurs, explain the reasoning that led to the error by describing how the system focused on certain symptoms which led it to overlook others. Post-incident, retrain on the failure case, adjust confidence calibration, and publish the learning. For rebuilding, initially require higher confidence thresholds before presenting recommendations.</p>
+            </div>
+        </section>
+
+        <section class="deeper-principles">
+            <h2>Interfaces as Contracts</h2>
+
+            <p>Every interface to an AI system is a contract that defines what the system will do, how it will behave, and what users can expect. This contract can be explicit through documentation and UI labels, or implicit through behavior and affordances. Understanding interfaces as contracts helps you design AI products that users can rely on.</p>
+
+            <div class="concept-definition">
+                <h3>The Interface Contract Framework</h3>
+                <p><strong>Capability contracts</strong> specify what the AI can do, including the types of inputs it accepts, the outputs it produces, and the boundaries of its competence. These should be documented clearly so users know when to rely on the AI and when to seek human assistance.</p>
+                <p><strong>Behavior contracts</strong> specify how the AI will behave, including response timing, consistency guarantees, and uncertainty communication. These set user expectations about the AI's operational characteristics.</p>
+                <p><strong>Reliability contracts</strong> specify expected success rates, known failure modes, and escalation paths. Users need to know when the AI is likely to fail and what to do when it does.</p>
+            </div>
+        </section>

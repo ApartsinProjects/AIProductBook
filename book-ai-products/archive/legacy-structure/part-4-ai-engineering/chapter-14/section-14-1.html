@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14.1 Model Router Strategies - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 14</div>
+        <h1>Model Selection, Customization, and Evaluation</h1>
+        <p class="chapter-subtitle">14.1 Model Router Strategies</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Choose and improve models wisely with the right evaluation frameworks.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Chapters 11-13 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Use the Right Model for the Task</div>
+            <p>This section covers model routing strategies that can reduce AI costs by 60-70% while maintaining quality. In the context of AI product development, routing is essential for viable economics. The difference between routing everything to GPT-4o and using intelligent routing is often the difference between a profitable product and an expensive experiment.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Router That Pays For Itself</div>
+            <p>A team at a fintech startup discovered their routing system paid for itself in one week. By routing 80% of simple queries to a cheaper model, they saved $12,000/month in API costs while actually improving response times. The routing classifier cost $50/month to run.</p>
+        </div>
+
+        <h2 id="section-14-1">14.1 Model Router Strategies</h2>
+
+        <p>
+            Not all queries require the most capable model. A well-designed routing system sends simple tasks to cheaper, faster models while reserving expensive models for complex tasks that need their capabilities. This approach can reduce costs by 60-70% while maintaining quality.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            The difference in cost between models can be 10-20x. Using GPT-4o for a simple "What is 2+2?" question is wasteful. A router that classifies query complexity and routes appropriately lets you get the best quality per dollar.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Routing Mistakes Cost More Than Routing</div>
+            <p>A common worry is that routing adds cost. The reality is that routing adds minimal cost (a few milliseconds and a tiny token count) while saving significant money through model routing. The cost of a routing classifier is far less than the cost of over-routing to expensive models. The risk is under-routing (sending complex queries to cheap models that fail), which creates poor user experience. When in doubt, route up.</p>
+        </div>
+
+        <h3>The Routing Principle</h3>
+
+        <p>
+            Use the right model for the right task. This is not about using the cheapest model possible, but about matching model capability to task complexity.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Customer Support Router</div>
+            <p>A customer support system implemented tiered routing:</p>
+            <table>
+                <thead>
+                    <tr><th>Query Type</th><th>Example</th><th>Model</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Simple factual</td><td>"What are your hours?"</td><td>gpt-4o-mini</td></tr>
+                    <tr><td>Policy lookup</td><td>"What's your return policy?"</td><td>gpt-4o-mini + <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></td></tr>
+                    <tr><td>Complex troubleshooting</td><td>"My order arrived damaged"</td><td>gpt-4o</td></tr>
+                    <tr><td>Escalation needed</td><td>"I want to sue your company"</td><td>Human agent</td></tr>
+                </tbody>
+            </table>
+            <p>Results: 70% of queries handled by mini model, 25% by standard, 5% human. Cost reduction: 65%.</p>
+        </div>
+
+        <h3>Implementation Approaches</h3>
+
+        <h4>1. Heuristic Routing</h4>
+        <p>Use simple rules based on query characteristics like length, keywords, or explicit indicators.</p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Heuristic Router</div>
+            <pre class="code-block">def route_query(query: str) -> str:
+    """Simple heuristic routing"""
+    query_lower = query.lower()
+    
+    # Complex indicators - route to capable model
+    complex_indicators = [
+        "compare", "analyze", "debug", "explain why",
+        "troubleshoot", "design", "write code for"
+    ]
+    
+    for indicator in complex_indicators:
+        if indicator in query_lower:
+            return "gpt-4o"
+    
+    # Simple indicators - cheap model sufficient
+    simple_indicators = [
+        "what is", "when does", "where is", "how to",
+        "list", "what are", "define"
+    ]
+    
+    for indicator in simple_indicators:
+        if indicator in query_lower:
+            return "gpt-4o-mini"
+    
+    # Default to medium model
+    return "gpt-4o"
+
+# Tradeoff: Simple but doesn't capture all complexity</pre>
+        </div>
+
+        <h4>2. LLM-Based Routing</h4>
+        <p>Use a small model to classify query complexity and route accordingly.</p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: LLM Router</div>
+            <pre class="code-block">from enum import Enum
+from pydantic import BaseModel
+
+class QueryComplexity(BaseModel):
+    complexity: Literal["simple", "moderate", "complex"]
+    reasoning: str
+
+def route_with_llm(query: str) -> str:
+    """Use small model to classify complexity"""
+    
+    classification = llm_mini.with_structured_output(QueryComplexity).invoke(f"""
+        Classify this query's complexity for routing purposes.
+        
+        - simple: Factual questions, basic lookups, simple transformations
+        - moderate: Questions requiring context, multi-step reasoning, policy application
+        - complex: open-ended analysis, creative tasks, debugging, multi-part problems
+        
+        Query: {query}
+        
+        Provide complexity level and brief reasoning.
+    """)
+    
+    if classification.complexity == "simple":
+        return "gpt-4o-mini"
+    elif classification.complexity == "moderate":
+        return "gpt-4o"
+    else:
+        return "gpt-4o"
+
+# Tradeoff: More accurate but adds latency and cost per query</pre>
+        </div>
+
+        <h4>3. Embedding-Based Routing</h4>
+        <p>Train a classifier on historical queries to predict which model to use.</p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: Classifier-Based Router</div>
+            <pre class="code-block">from sklearn.linear_model import LogisticRegression
+import numpy as np
+
+class EmbeddingRouter:
+    """Train a classifier on query embeddings to predict model"""
+    
+    def __init__(self):
+        self.classifier = LogisticRegression()
+        self.embedding_model = embeddings_model
+    
+    def train(self, queries, correct_model_labels):
+        # Convert queries to embeddings
+        X = np.array([self.embedding_model.encode(q) for q in queries])
+        
+        # Train classifier
+        self.classifier.fit(X, correct_model_labels)
+    
+    def predict(self, query):
+        embedding = self.embedding_model.encode(query)
+        return self.classifier.predict([embedding])[0]
+    
+    def get_confidence(self, query):
+        embedding = self.embedding_model.encode(query)
+        probs = self.classifier.predict_proba([embedding])[0]
+        return max(probs)
+
+# Train on historical data where you know which model worked best</pre>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Routing with Confidence</div>
+            <p>Add a confidence threshold to your router. If confidence is low, default to the more capable model. It's better to over-pay slightly than to give users a poor experience with an under-powered model.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Fine-tuning vs Distillation</strong> - choosing between customization approaches.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Ch 14: Overview</a>
+            <a class="up" href="index.html">Chapter 14 Index</a>
+            <a class="next" href="section-14-2.html">14.2 Fine-tuning vs Distillation</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 14.1 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

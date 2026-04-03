@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16.5 Distributed Tracing and Resilience - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 16</div>
+        <h1>Scaling, Reliability, and Observability</h1>
+        <p class="chapter-subtitle">16.5 Distributed Tracing and Resilience</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn distributed tracing across AI pipelines and resilience patterns specific to AI workloads.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 16.4 recommended. Familiarity with microservices architecture.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Design for Failure</div>
+            <p>This section covers distributed tracing across AI pipelines and resilience patterns specific to AI workloads. In the context of AI engineering, failure is not an exception but the default state in distributed systems. Designing for failure ensures your AI product continues operating (at reduced quality) when components fail.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Circuit Breaker That Breaks Too Often</div>
+            <p>A team implemented a circuit breaker that opened after 5 failures. Their AI had natural variance, so 5 failures happened weekly during normal operation. The circuit breaker was tripping constantly, degrading service unnecessarily. The fix: increase the threshold to match actual failure patterns during normal operation.</p>
+        </div>
+
+        <h2 id="section-16-5">16.5 Distributed Tracing and Resilience</h2>
+
+        <p>
+            Production AI systems span multiple services: API gateway, retrieval pipeline, model serving, post-processing. When something goes wrong, you need to trace a request across all these services to find the failure point. Distributed tracing gives you that visibility. Resilience patterns ensure that failures in one component do not cascade.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            In a microservices architecture, a single user request might touch 10+ services. If latency spikes or errors increase, you need to know which service is the culprit. Without distributed tracing, this is guesswork. With tracing, it is obvious. Similarly, without resilience patterns, a single service failure brings down your entire AI capability.
+        </p>
+
+        <h3>1. Distributed Tracing for AI Pipelines</h3>
+
+        <p>
+            OpenTelemetry has become the standard for distributed tracing. It provides instrumentation that works across services and language runtimes, including Python for AI workloads.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">OpenTelemetry Setup for AI Services</div>
+            <pre class="code-block">from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.jaeger.thrift import JaegerExporter
+from opentelemetry.sdk.resources import Resource
+
+# Configure tracer provider
+provider = TracerProvider(
+    resource=Resource.create({
+        "service.name": "ai-<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>-service",
+        "service.version": "1.0.0",
+        "deployment.environment": "production"
+    })
+)
+
+# Add Jaeger exporter for visualization
+jaeger_exporter = JaegerExporter(
+    agent_host_name="jaeger",
+    agent_port=6831,
+)
+
+provider.add_span_processor(BatchSpanProcessor(jaeger_exporter))
+trace.set_tracer_provider(provider)
+
+# Get tracer for use in code
+tracer = trace.get_tracer(__name__)</pre>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">Instrumenting a <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Pipeline</div>
+            <pre class="code-block">from opentelemetry import trace
+from opentelemetry.trace import Status, StatusCode
+
+class TracedRAGPipeline:
+    """<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> pipeline with full distributed tracing"""
+    
+    def __init__(self, retriever, ranker, llm):
+        self.retriever = retriever
+        self.ranker = ranker
+        self.llm = llm
+        self.tracer = trace.get_tracer(__name__)
+    
+    async def answer(self, query: str, trace_context=None):
+        # Extract any incoming trace context for propagation
+        ctx = trace_context and trace_context.extract()
+        
+        with self.tracer.start_as_current_span(
+            "rag_pipeline",
+            context=ctx,
+            kind=trace.SpanKind.INTERNAL
+        ) as span:
+            # Add query attributes
+            span.set_attribute("query.length", len(query))
+            span.set_attribute("query.hash", hash(query))
+            
+            # Step 1: Retrieval
+            with self.tracer.start_span("retrieval", parent=span) as retrieval_span:
+                retrieval_start = time.time()
+                docs = await self.retriever.invoke(query)
+                retrieval_span.set_attribute("num_docs_retrieved", len(docs))
+                retrieval_span.set_attribute("retrieval.duration_ms", time.time() - retrieval_start)
+                retrieval_span.set_status(Status(StatusCode.OK if docs else StatusCode.ERROR))
+            
+            # Step 2: Reranking
+            with self.tracer.start_span("reranking", parent=span) as rerank_span:
+                rerank_start = time.time()
+                reranked = await self.ranker.rerank(query, docs, top_k=5)
+                rerank_span.set_attribute("num_docs_reranked", len(reranked))
+                rerank_span.set_attribute("rerank.duration_ms", time.time() - rerank_start)
+            
+            # Step 3: Generation
+            with self.tracer.start_span("generation", parent=span) as gen_span:
+                gen_start = time.time()
+                context = self.format_context(reranked)
+                answer = await self.llm.generate(query, context)
+                gen_span.set_attribute("answer.length", len(answer))
+                gen_span.set_attribute("generation.duration_ms", time.time() - gen_start)
+                
+                # Add token usage if available
+                if hasattr(answer, 'usage'):
+                    gen_span.set_attribute("tokens.prompt", answer.usage.prompt_tokens)
+                    gen_span.set_attribute("tokens.completion", answer.usage.completion_tokens)
+            
+            span.set_status(Status(StatusCode.OK))
+            return answer</pre>
+        </div>
+
+        <h3>2. Trace Context Propagation</h3>
+
+        <p>
+            AI systems often span multiple services. Trace context propagation ensures a single trace ID follows requests across service boundaries.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Context Propagation Across Services</div>
+            <pre class="code-block">from opentelemetry.propagate import inject, extract
+from opentelemetry.trace import Span, SpanKind
+
+# API Gateway: Inject trace context into downstream request
+async def call_model_service(user_query: str, trace_context: dict):
+    headers = {}
+    
+    # Inject current trace context into outgoing headers
+    inject(headers)
+    
+    # downstream call carries trace context
+    response = await http_client.post(
+        "http://model-service/generate",
+        json={"query": user_query},
+        headers={
+            **headers,
+            "trace-context": str(headers)  # Implementation varies
+        }
+    )
+    
+    return response
+
+# Model Service: Extract trace context and continue trace
+async def model_service_handler(request):
+    # Extract incoming trace context
+    ctx = extract(request.headers)
+    
+    with tracer.start_as_current_span(
+        "model_service_generate",
+        context=ctx,
+        kind=SpanKind.SERVER  # This is a server receiving a request
+    ) as span:
+        span.set_attribute("internal.request_id", request.id)
+        
+        # Process with full trace context
+        result = await generate_response(request.json(), span)
+        
+        return result</pre>
+        </div>
+
+        <h3>3. AI-Specific Resilience Patterns</h3>
+
+        <p>
+            AI workloads have unique resilience challenges. LLM calls are slow (hundreds of milliseconds to seconds), expensive, and can return variable quality. Standard resilience patterns must be adapted for these characteristics.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Circuit Breaker for LLM Calls</div>
+            <pre class="code-block">from circuitbreaker import circuit
+import time
+
+class CircuitBreakerLLMClient:
+    """LLM client with circuit breaker pattern"""
+    
+    def __init__(self, base_client, failure_threshold=5, recovery_timeout=60):
+        self.client = base_client
+        self.failure_threshold = failure_threshold
+        self.recovery_timeout = recovery_timeout
+        self.failures = 0
+        self.last_failure_time = None
+        self.state = "CLOSED"  # CLOSED, OPEN, HALF_OPEN
+    
+    async def generate(self, prompt: str, **kwargs):
+        # Check circuit state
+        if self.state == "OPEN":
+            if time.time() - self.last_failure_time > self.recovery_timeout:
+                self.state = "HALF_OPEN"
+            else:
+                raise CircuitBreakerOpenError("Circuit breaker is OPEN")
+        
+        try:
+            result = await self.client.generate(prompt, **kwargs)
+            self._on_success()
+            return result
+        
+        except Exception as e:
+            self._on_failure()
+            raise
+    
+    def _on_success(self):
+        self.failures = 0
+        self.state = "CLOSED"
+    
+    def _on_failure(self):
+        self.failures += 1
+        self.last_failure_time = time.time()
+        
+        if self.failures >= self.failure_threshold:
+            self.state = "OPEN"
+            print(f"Circuit breaker opened after {self.failures} failures")</pre>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">Bulkhead Isolation for AI Workloads</div>
+            <pre class="code-block">from asyncio import Semaphore
+from concurrent.futures import ThreadPoolExecutor
+
+class BulkheadPattern:
+    """
+    Bulkhead pattern: isolate different workload types into separate resource pools.
+    Prevents one workload type from starving others.
+    """
+    
+    def __init__(self):
+        # Separate semaphores for different workload types
+        self.simple_tasks = Semaphore(50)   # Simple Q&A: high concurrency OK
+        self.agent_tasks = Semaphore(10)   # Agent tasks: expensive, limit concurrency
+        self.batch_tasks = Semaphore(5)     # Batch processing: GPU intensive
+    
+    async def execute_simple(self, task_fn, *args, **kwargs):
+        async with self.simple_tasks:
+            return await task_fn(*args, **kwargs)
+    
+    async def execute_agent(self, task_fn, *args, **kwargs):
+        async with self.agent_tasks:
+            return await task_fn(*args, **kwargs)
+    
+    async def execute_batch(self, task_fn, *args, **kwargs):
+        async with self.batch_tasks:
+            return await task_fn(*args, **kwargs)
+
+# Usage: Route tasks to appropriate bulkhead
+bulkhead = BulkheadPattern()
+
+async def handle_request(request):
+    if request.type == "simple_qa":
+        return await bulkhead.execute_simple(process_simple, request)
+    elif request.type == "agent_research":
+        return await bulkhead.execute_agent(process_agent, request)
+    elif request.type == "batch_summary":
+        return await bulkhead.execute_batch(process_batch, request)</pre>
+        </div>
+
+        <h3>4. Timeout Patterns for AI Workloads</h3>
+
+        <p>
+            LLM calls need different timeout strategies than standard HTTP requests. Short timeouts cause unnecessary failures; long timeouts cause slow error reporting.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Adaptive Timeout Strategy</div>
+            <pre class="code-block">class AdaptiveTimeoutStrategy:
+    """
+    Timeouts that adapt based on expected latency for different operations.
+    """
+    
+    # Base timeouts by operation type (in seconds)
+    BASE_TIMEOUTS = {
+        "embedding": 5,
+        "retrieval": 2,
+        "reranking": 3,
+        "simple_generation": 15,
+        "complex_generation": 60,
+        "agent_iteration": 30,
+    }
+    
+    def __init__(self, latency_percentiles: dict = None):
+        self.percentiles = latency_percentiles or {}
+    
+    def get_timeout(self, operation: str, num_docs: int = 0, estimated_complexity: str = "medium") -> float:
+        base = self.BASE_TIMEOUTS.get(operation, 30)
+        
+        # Adjust for retrieval size
+        if operation == "retrieval" and num_docs > 0:
+            base = base * (1 + num_docs / 100)
+        
+        # Adjust for complexity
+        if operation == "generation":
+            if estimated_complexity == "high":
+                base *= 2
+            elif estimated_complexity == "low":
+                base *= 0.5
+        
+        # Adjust for observed latency patterns
+        if operation in self.percentiles:
+            observed_p99 = self.percentiles[operation]
+            # Use observed p99 + 50% headroom
+            base = max(base, observed_p99 * 1.5)
+        
+        return base
+
+# Usage
+timeouts = AdaptiveTimeoutStrategy({"generation": 12.0})
+
+async def generate_with_timeout(prompt: str, context: str):
+    timeout = timeouts.get_timeout(
+        "generation",
+        estimated_complexity="high"
+    )
+    
+    try:
+        return await asyncio.wait_for(
+            llm.generate(prompt, context),
+            timeout=timeout
+        )
+    except asyncio.TimeoutError:
+        # Log and handle gracefully
+        print(f"Generation timed out after {timeout}s")
+        return await fallback_response()</pre>
+        </div>
+
+        <h3>5. Graceful Degradation Strategies</h3>
+
+        <p>
+            AI systems should degrade gracefully, not fail completely. When the ideal path is unavailable, provide the best available response.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Multi-Tier Degradation</div>
+            <pre class="code-block">class GracefulDegradation:
+    """
+    Multi-tier degradation: Provide best available response as services degrade.
+    """
+    
+    async def answer(self, query: str) -> str:
+        # Tier 1: Full <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> pipeline (best quality)
+        try:
+            return await self.tier1_full_rag(query)
+        
+        except VectorDBError:
+            # Tier 2: Keyword search fallback
+            try:
+                return await self.tier2_keyword_fallback(query)
+            except Exception:
+                pass
+        
+        except TimeoutError:
+            # Tier 3: Cached similar response
+            try:
+                return await self.tier3_cache_fallback(query)
+            except Exception:
+                pass
+        
+        except Exception as e:
+            # Tier 4: Simple generation without retrieval
+            try:
+                return await self.tier4_simple_generation(query)
+            except Exception:
+                pass
+        
+        # Final fallback: Polite error
+        return self.tier5_error_response()
+    
+    async def tier1_full_rag(self, query):
+        docs = await self.vector_db.similarity_search(query)
+        reranked = await self.ranker.rerank(query, docs)
+        return await self.llm.generate(query, reranked)
+    
+    async def tier2_keyword_fallback(self, query):
+        docs = await self.keyword_index.search(query)
+        return await self.llm.generate(query, docs)
+    
+    async def tier3_cache_fallback(self, query):
+        cached = await self.cache.get_similar(query)
+        if cached:
+            return cached.response
+        raise CacheMissError()
+    
+    async def tier4_simple_generation(self, query):
+        # No retrieval, rely on model's knowledge
+        return await self.llm.generate(f"Answer from general knowledge: {query}")
+    
+    def tier5_error_response(self):
+        return "I apologize, but I'm experiencing technical difficulties. Please try again."</pre>
+        </div>
+
+        <h3>6. Health Checks for AI Services</h3>
+
+        <p>
+            Standard health checks verify a service is running. AI services need deeper checks: model loaded, GPU available, dependencies accessible.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">AI Service Health Check</div>
+            <pre class="code-block">class AIHealthCheck:
+    """
+    Multi-level health check for AI services.
+    """
+    
+    def __init__(self, model_loader, vector_db, gpu_available):
+        self.model_loader = model_loader
+        self.vector_db = vector_db
+        self.gpu_available = gpu_available
+    
+    async def check(self) -> dict:
+        checks = {}
+        
+        # Level 1: Basic service health
+        checks["service_alive"] = True
+        
+        # Level 2: GPU availability
+        checks["gpu_available"] = self.gpu_available.check()
+        
+        # Level 3: Model loaded and responsive
+        checks["model_loaded"] = await self._check_model()
+        
+        # Level 4: Dependencies accessible
+        checks["vector_db_healthy"] = await self._check_vector_db()
+        
+        # Level 5: Latency under threshold
+        checks["latency_acceptable"] = await self._check_latency()
+        
+        # Determine overall health
+        critical_checks = [
+            checks["service_alive"],
+            checks["gpu_available"],
+            checks["model_loaded"]
+        ]
+        
+        checks["healthy"] = all(critical_checks)
+        checks["degraded"] = any(checks.values()) and not checks["healthy"]
+        
+        return checks
+    
+    async def _check_model(self) -> bool:
+        try:
+            start = time.time()
+            # Lightweight generation test
+            response = await self.model_loader.test_generate("Hi")
+            latency = time.time() - start
+            return latency < 5.0  # Should respond within 5 seconds
+        except:
+            return False
+    
+    async def _check_vector_db(self) -> bool:
+        try:
+            await self.vector_db.ping()
+            return True
+        except:
+            return False
+    
+    async def _check_latency(self) -> bool:
+        try:
+            start = time.time()
+            await self.model_loader.test_generate("Test")
+            latency = time.time() - start
+            return latency < 10.0  # p99 should be under 10s
+        except:
+            return True  # Don't fail health check for latency alone</pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Pattern</th><th>Purpose</th><th>AI-Specific Consideration</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Distributed Tracing</td><td>Cross-service visibility</td><td>Trace context propagation across async boundaries</td></tr>
+                <tr><td>Circuit Breaker</td><td>Prevent cascade failures</td><td>LLM calls are slow; timeouts must be calibrated</td></tr>
+                <tr><td>Bulkhead</td><td>Isolate workload types</td><td>Agents consume more resources than simple chains</td></tr>
+                <tr><td>Adaptive Timeout</td><td>Balance responsiveness vs. coverage</td><td>Varies by operation type and observed latency</td></tr>
+                <tr><td>Graceful Degradation</td><td>Best available when ideal unavailable</td><td>Tiered responses from full <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> to error message</td></tr>
+                <tr><td>Health Checks</td><td>Orchestration awareness</td><td>Model loading takes minutes; needs staged checks</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Design for Failure</div>
+            <p>In distributed AI systems, failure is not an exception, it is the default state. Some component will be unavailable at any given time. Design your system to continue operating (possibly at reduced quality) when parts fail. The difference between a resilient AI product and a brittle one is whether you planned for failure before it happened.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Congratulations on completing Part IV on AI Engineering! You now have the technical 
+                skills to build production-ready AI systems. Continue to 
+                <a href="../../part-5-integration/chapter-17/index.html">Part V: Integration</a> to tie 
+                everything together.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-16-4.html">16.4 Security and Compliance</a>
+            <a class="up" href="index.html">Chapter 16 Index</a>
+            <a class="next" href="../../part-5-integration/chapter-17/index.html">Part V: Integration</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 16.5 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

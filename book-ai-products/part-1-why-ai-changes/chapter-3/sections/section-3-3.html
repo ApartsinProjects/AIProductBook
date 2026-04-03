@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.3 Feedback Loops Between Human and AI - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
+        <div class="chapter-label">Chapter 3</div>
+        <h1>The Human-AI Product Stack</h1>
+        <p class="chapter-subtitle">3.3 Feedback Loops Between Human and AI</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Understand how to design feedback mechanisms that allow AI systems to improve from human guidance while maintaining appropriate human control.
+        </p>
+
+        <blockquote class="epigraph">
+            <p>"The best AI systems are not the ones that need the least human input. They are the ones that make human input most valuable."</p>
+            <cite>Learning from Human Feedback</cite>
+        </blockquote>
+
+        <h2 id="section-3-3">3.3 Feedback Loops Between Human and AI</h2>
+
+        <p>
+            Human feedback is the primary mechanism through which AI systems improve in production. Understanding how to design effective feedback loops is essential for building AI products that get better over time while maintaining user trust and control.
+        </p>
+
+        <h3>The Feedback Loop Architecture</h3>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Components of Effective Feedback Loops</div>
+            <p><strong>1. Signal Collection</strong></p>
+            <p>Gathering implicit or explicit indicators of AI output quality from users. Signals include clicks, corrections, ratings, edits, and abandonment patterns.</p>
+            <p><strong>2. Interpretation and Aggregation</strong></p>
+            <p>Turning raw signals into meaningful feedback. This includes filtering noise, handling bias in feedback, and aggregating across users.</p>
+            <p><strong>3. Model Update</strong></p>
+            <p>Using feedback to improve the model. This can happen through fine-tuning, reinforcement learning from human feedback (RLHF), or prompt refinement.</p>
+            <p><strong>4. Deployment and Monitoring</strong></p>
+            <p>Rolling out updates and monitoring for regressions. Feedback loops must be monitored for feedback loop attacks and distribution shift.</p>
+        </div>
+
+        <h3>Types of Human Feedback</h3>
+
+        <h4>Explicit Feedback</h4>
+        <p>
+            Direct user indications of preference or quality include ratings such as thumbs up or down, star ratings, and satisfaction surveys. Corrections refer to user edits to AI-generated content. Selections involve choosing one AI suggestion over others. Reports include flagging errors, inappropriate content, or harmful outputs.
+        </p>
+
+        <h4>Implicit Feedback</h4>
+        <p>
+            Behavioral signals that indicate preference without direct user action include adoption when a user accepts AI suggestion without modification, ignoring when a user dismisses AI suggestion and does something else, editing when a user significantly modifies AI output, reversion when a user undoes AI action and does something different, and abandonment when a user leaves mid-task after AI involvement.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Feedback Quality Considerations</div>
+            <p>Implicit feedback is noisier because users may abandon tasks for reasons unrelated to AI quality. Explicit feedback is biased because users who provide feedback are not representative of all users. Corrections reveal preference because what users change AI output to is often more informative than what they reject. Feedback can be manipulated because users and adversaries can provide misleading feedback.</p>
+        </div>
+
+        <h3>Designing Feedback Mechanisms</h3>
+
+        <p>
+            Effective feedback mechanisms are invisible when working well but provide clear value when things go wrong:
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">EduGen: Feedback Loop Design</div>
+            <p>EduGen's learning recommendation system demonstrates thoughtful feedback design. The implicit signal comes when a learner completes a recommended lesson, which the system notes as positive signal. The explicit signal is collected after each lesson when learners rate difficulty and relevance, taking about 5 seconds. The correction signal occurs when a learner skips a recommended lesson, which the system notes as negative signal. The outcome signal comes from assessment performance following recommendations, which indicates recommendation quality. Together these signals create a rich picture of recommendation quality without burdening users.</p>
+        </div>
+
+        <p>Effective feedback mechanisms balance signal quality with user effort.</p>
+
+        <h4>Making Feedback Low-Friction</h4>
+
+        <p>
+            The best feedback mechanisms require minimal user effort. One-click corrections allow quick fixes without detailed explanations. Gesture-based feedback enables swipe to accept and tap to dismiss. Passive signals let the system monitor behavior without requiring action. Opt-in depth allows users to provide detailed feedback when they want.
+        </p>
+
+        <h3>Feedback and Model Improvement</h3>
+
+        <p>
+            Feedback becomes valuable when it changes how the AI behaves:
+        </p>
+
+        <h4>Reinforcement Learning from Human Feedback (RLHF)</h4>
+        <p>
+            RLHF uses human feedback to train a reward model that guides model behavior. This technique is used in major language models to align outputs with human preferences.
+        </p>
+
+        <h4>Fine-Tuning from Feedback</h4>
+        <p>
+            Feedback data can be used to fine-tune models on specific tasks or domains, improving performance for particular use cases.
+        </p>
+
+        <h4>Prompt and Context Engineering</h4>
+        <p>
+            The simplest form of feedback integration is updating system prompts based on observed failure patterns.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">Feedback Loop Risks</div>
+            <p>Feedback loops carry several risks that product teams must manage. Feedback loops can amplify bias because if feedback is not representative, model behavior skews toward majority preferences. Gaming and manipulation occur when adversaries can manipulate feedback to change model behavior. Regression happens when model updates can degrade performance on behaviors not represented in feedback. Overfitting to feedback occurs when a model may optimize for feedback metrics rather than actual user satisfaction.</p>
+        </div>
+
+        <h3>The Human-in-the-Loop Pipeline</h3>
+
+        <p>
+            For critical applications, human feedback is part of a larger pipeline:
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">HITL Pipeline Design</div>
+            <p>The human-in-the-loop pipeline proceeds as follows. First, AI generates output. Second, human reviews samples or all depending on stakes. Third, human provides feedback by accepting, rejecting, or correcting. Fourth, feedback is aggregated and analyzed. Fifth, the model is updated based on patterns in feedback. Sixth, the updated model is tested and deployed. Seventh, the system monitors for regressions in production. This pipeline creates a continuous improvement cycle while maintaining appropriate human oversight.</p>
+        </div>
+
+        <p>This pipeline creates a continuous improvement cycle while maintaining appropriate human oversight.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before designing your feedback loop, define how you will measure feedback quality. A micro-eval for HITL systems tests: inter-annotator agreement (do human reviewers agree?), feedback signal reliability (does corrected output actually improve?), and feedback loop latency (how long from user action to model update?). EduGen's <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval-first</a> insight: their initial feedback loop had 60% agreement between reviewers, meaning much of their "learning" signal was noise. They improved to 85% agreement by clarifying annotation guidelines before collecting bulk feedback.
+            </p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                This completes Chapter 3. You have learned about the Human-AI Product Stack framework, how AI amplifies rather than replaces human judgment, and how feedback loops enable continuous improvement. In Chapter 4, we explore <strong>The Economic Case for AI-Native Products</strong>, understanding the cost structure and value creation of AI products.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-3-2.html">3.2 AI as Amplifier</a>
+            <a class="up" href="../index.html">Chapter 3 Index</a>
+            <a class="next" href="../../chapter-4/index.html">Ch 4: Economics</a>
+        </nav>
+
+        <footer>
+            <p>Section 3.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

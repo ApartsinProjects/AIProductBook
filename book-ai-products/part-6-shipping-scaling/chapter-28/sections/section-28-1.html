@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 28.1: Cross-Functional Structures for AI - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 28</div>
+        <h1>Cross-Functional Structures for AI</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Building AI products requires tearing down the walls between disciplines. The PM who understands eval is worth more than three who do not."</p>
+            <cite>Head of AI Product at a Fortune 500 Retailer</cite>
+        </blockquote>
+
+        <h2 id="ai-team-composition">AI Product Team Composition</h2>
+
+        <p>
+            Traditional product teams follow a predictable pattern: product managers define requirements, designers create experiences, engineers build features, and data scientists work on analytics. AI-native products break this pattern. The most effective AI teams integrate AI expertise throughout the product development lifecycle, not as a downstream service but as a core capability embedded in every team.
+        </p>
+
+        <p>
+            Chapter 9 introduced the concept of <a href="../../../part-2-discovery-design/chapter-9/sections/section-9-1.html" class="cross-ref">AI-native product discovery</a>, where PMs, designers, and engineers jointly explore AI capabilities. This philosophy extends to team structure. The question is not how to add AI to your organization, but how to build teams that think in AI-first terms from inception.
+        </p>
+
+        <h3 id="team-topology-evolution">From Service Model to Embedded Model</h3>
+
+        <p>
+            Many organizations start with a centralized AI team that provides ML services to product teams. This model has merit for early-stage AI adoption, but it creates bottlenecks and misalignments that compound as AI usage scales. The alternative is an embedded model where AI expertise lives within product teams, with a central enablement function providing shared tooling, training, and governance.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">The Embedded Model Is Not Free</h4>
+            <p>Embedded AI expertise is more expensive than centralized AI services in the short term. You need more people with AI skills, and those skills are scarce and expensive. The return on this investment is faster iteration, better-aligned AI implementations, and organizational capability that does not depend on a single team.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Misconception</div>
+            <p>
+                More AI team members does not always mean faster AI development. Some organizations hire multiple AI specialists expecting acceleration, but without clear ownership and workflow integration, additional AI staff can create coordination overhead without proportionate output. The bottleneck is often not AI expertise but product evaluation culture, clear requirements, and organizational alignment. Address those first before scaling AI headcount.
+            </p>
+        </div>
+
+        <h2 id="role-definitions">Role Definitions for AI-Native Teams</h2>
+
+        <p>
+            Standard product roles need adaptation for AI contexts. The following roles have emerged as essential for AI-native product teams:
+        </p>
+
+        <h3 id="ai-pm">AI Product Manager</h3>
+
+        <p>
+            The AI PM brings deep understanding of AI capabilities and limitations to product strategy. Unlike traditional PMs who may treat AI as a black box, AI PMs understand evaluation frameworks, model behavior, and the tradeoffs between AI capabilities and user experience.
+        </p>
+
+        <p>
+            The AI PM brings deep understanding of AI capabilities and limitations to product strategy. Unlike traditional PMs who may treat AI as a black box, AI PMs understand evaluation frameworks, model behavior, and the tradeoffs between AI capabilities and user experience. Key capabilities include eval literacy understanding how to define and measure AI performance using the evaluation frameworks from Chapter 21, prompt design sensibility where they can formulate effective prompts and recognize when AI behavior indicates capability gaps rather than implementation bugs, data partnership working closely with data teams to ensure training and evaluation data represents real user needs, risk framing identifying where AI failures would be most impactful and designing mitigations, and staged rollout thinking planning AI feature releases with canary deployments and rollback mechanisms.
+        </p>
+
+        <h3 id="ai-designer">AI UX Designer</h3>
+
+        <p>
+            AI introduces unique UX challenges: how do you explain what the AI is doing, set appropriate expectations, handle uncertainty, and give users meaningful control? AI UX designers specialize in human-AI interaction patterns that traditional UX training does not cover.
+        </p>
+
+        <p>
+            AI introduces unique UX challenges: how do you explain what the AI is doing, set appropriate expectations, handle uncertainty, and give users meaningful control? AI UX designers specialize in human-AI interaction patterns that traditional UX training does not cover. Key capabilities include AI behavior visualization designing interfaces that communicate AI reasoning and confidence appropriately, graceful degradation planning for AI unavailability or degraded performance with appropriate fallback experiences, user override patterns creating mechanisms for users to correct, refine, or dismiss AI suggestions, expectation calibration using onboarding and interface cues to set realistic user expectations about AI capabilities, and feedback collection designing interaction patterns that naturally harvest user feedback for eval improvement.
+        </p>
+
+        <h3 id="ml-engineer">ML Engineer</h3>
+
+        <p>
+            ML engineers build and maintain the AI systems that power product features. They work at the intersection of software engineering and machine learning, focusing on production-ready ML systems rather than research.
+        </p>
+
+        <p>
+            ML engineers build and maintain the AI systems that power product features. They work at the intersection of software engineering and machine learning, focusing on production-ready ML systems rather than research. Key capabilities include model deployment managing the full ML lifecycle from training through serving to monitoring, pipeline reliability building and maintaining data pipelines that feed model training and evaluation, inference optimization balancing model performance with latency, cost, and reliability constraints, eval infrastructure implementing the evaluation frameworks and dashboards described in Chapter 21 and Chapter 27, and A/B testing infrastructure building systems for shadow mode deployments and canary releases.
+        </p>
+
+        <h3 id="ai-researcher">AI Researcher (Optional, for Advanced Teams)</h3>
+
+        <p>
+            For organizations pushing the boundaries of AI capability, research scientists contribute by experimenting with new model architectures, training strategies, and evaluation methodologies. Most product teams do not need dedicated researchers, but the role becomes relevant when commercial models do not meet specific domain needs.
+        </p>
+
+        <h2 id="team-size">Team Size and Composition Patterns</h2>
+
+        <p>
+            Effective AI product team sizes vary by product complexity and AI intensity. Use these patterns as starting points and adjust based on your context:
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">AI Product Team Composition Guidelines</h4>
+            <p>Effective AI product team sizes vary by product complexity and AI intensity. A small AI feature team with 1-2 AI features includes 1 AI PM, 1 ML Engineer, shared Designer, and shared Engineering support, appropriate for AI features that enhance existing products. A medium AI product team with 3-5 AI features includes 1 AI PM, 1 AI Designer, 2 ML Engineers, 2 Full-stack Engineers, and 1 Data Analyst, appropriate for products where AI is a primary differentiator. A large AI product team for full AI products includes 2 AI PMs, 2 AI Designers, 4+ ML Engineers, 4+ Engineers, 1 MLOps Engineer, 1 Data Scientist, and shared Platform support, appropriate for AI-native products where the core value proposition is AI-driven.</p>
+        </div>
+
+        <h2 id="collaboration-patterns">Collaboration Patterns</h2>
+
+        <p>
+            AI products require tighter collaboration cycles than traditional software. The <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval-driven development approach</a> described in Chapter 21 creates a shared language that bridges PM, Design, and Engineering. Teams that adopt these patterns iterate faster and catch problems earlier:
+        </p>
+
+        <h3 id="shared-eval-language">Shared Eval Language</h3>
+
+        <p>
+            When everyone on the team understands evaluation, conversations change. Instead of "the AI is not working well," teams say "eval score X is below threshold Y because the model misclassifies category Z." This precision accelerates diagnosis and alignment.
+        </p>
+
+        <h3 id="design-ai-pairing">Design-AI Pairing</h3>
+
+        <p>
+            Some teams institute regular pairing sessions between designers and ML engineers. Designers bring user needs and interaction patterns; ML engineers bring technical constraints and model capabilities. Together they identify where AI can add value and how to present AI outputs in ways users can understand and trust.
+        </p>
+
+        <h3 id="pm-eval-ownership">PM-Owned Evals</h3>
+
+        <p>
+            In traditional development, PMs define requirements that engineers implement. In AI development, PMs define evaluation criteria that guide development. This shift requires PMs to develop eval literacy and teams to trust PMs as the arbiters of AI quality, not just feature completeness.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: HealthMetrics Care Team Coordination</h4>
+            <p><strong>Who:</strong> HealthMetrics team building AI-assisted care coordination</p>
+            <p><strong>Situation:</strong> Their initial team structure had a central ML team serving multiple product teams</p>
+            <p><strong>Problem:</strong> ML team became bottleneck. Product teams waited 8-12 weeks for ML features. Miscommunication about requirements led to delivered features that did not match product needs.</p>
+            <p><strong>Decision:</strong> Restructure to embed ML engineers within product teams, with a central AI Platform team providing shared infrastructure</p>
+            <p><strong>How:</strong> 2 ML engineers moved from central team to product teams. Central team retained 3 engineers to maintain platform, tooling, and model deployment infrastructure. AI PM role created to bridge product strategy and ML implementation.</p>
+            <p><strong>Result:</strong> Product team iteration cycles shortened from 8-12 weeks to 2-3 weeks for ML features. Central platform team improved deployment infrastructure, reducing model deployment time from 4 hours to 15 minutes.</p>
+            <p><strong>Lesson:</strong> <strong>Embedding ML expertise in product teams removes bottlenecks and improves alignment, but requires investment in shared platform infrastructure.</strong></p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 28: Team Topologies</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-28-2.html">28.2 Platform Teams</a>
+        </nav>
+
+        <footer>
+            <p>Section 28.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

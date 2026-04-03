@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 19: Building with Protocols and Interoperability - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 19</div>
+        <h1>Building with Protocols and Interoperability</h1>
+    </header>
+
+    <main class="content">
+        <div class="opening-hook">
+            In 2010, companies that embraced HTTP and REST built the modern web. In 2020, companies that understood API economics dominated platform businesses. Today, the Agent2Agent protocol and Model Context Protocol are emerging as the foundational standards for AI interoperability. Teams that understand these protocols now, during the Architect phase of the evidence loop, will shape how AI systems communicate and collaborate for the next decade. Those who wait will find themselves locked out of an interoperable AI ecosystem.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-19-opener.png"
+                 alt="Chapter 19 opener illustration">
+            <figcaption>
+                Protocols like MCP and A2A enable AI systems to interoperate and share capabilities.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Protocol Integration Testing</div>
+            <p>Vibe coding accelerates protocol integration testing by letting you quickly assemble MCP tool integrations and A2A agent communications. Rather than reading protocol specs and hoping your implementation is correct, vibe code working examples that demonstrate real interoperability. Vibe coding protocol integration reveals actual behavior, limitations, and edge cases faster than formal implementation alone.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">PM Decision Points in Protocols and Interoperability</div>
+            <p>PMs face protocol decisions: Should we adopt MCP for tool integration now or wait for standards to mature? How much vendor lock-in is acceptable versus beneficial? When agents need to collaborate across systems, what data contracts must be established? Protocol adoption timing is strategic: early adoption offers first-mover advantage but risk of instability; late adoption means stability but potential lock-in to proprietary solutions. These decisions shape the long-term extensibility of your AI product.</p>
+        </div>
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master MCP, A2A, and emerging AI interoperability standards.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter covers the engineering decisions that determine how models are selected, routed, and allocated to tasks. Model selection involves understanding open versus closed models, size versus capability trade-offs, and task-model matching. Model routers direct requests to appropriate models based on task requirements, cost constraints, and quality targets. Ensembles and specialization combine multiple models for better results than any single model. Structured outputs and tool compatibility enable reliable integration with external systems. The chapter concludes with latency, cost, and quality trade-offs that guide optimization priorities.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> How to leverage MCP and A2A protocols to build interoperable AI systems that can communicate and use tools effectively.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> Implementing one MCP tool integration and one A2A agent communication to understand protocol benefits and overhead.</li>
+                <li><strong>What would count as success or failure?</strong> Interoperability that enables flexible composition of AI capabilities without lock-in to specific vendors or models.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Protocol-driven design provides strategic flexibility; ad-hoc tool integration provides short-term speed but long-term lock-in.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Understand MCP as a standard for model-to-tool integration</li>
+                <li>Implement A2A protocol for agent-to-agent communication</li>
+                <li>Design effective tool schemas with clear service boundaries</li>
+                <li>Build UI integration patterns that communicate agent activity</li>
+                <li>Apply protocol-driven system design principles</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">19.1</span> <a href="sections/section-19-1.html">MCP as a Standard</a></li>
+                <li><span class="sec-num">19.2</span> <a href="sections/section-19-2.html">A2A for Agent Interoperability</a></li>
+                <li><span class="sec-num">19.3</span> <a href="sections/section-19-3.html">Tool Schemas and Service Boundaries</a></li>
+                <li><span class="sec-num">19.4</span> <a href="sections/section-19-4.html">UI-Agent Integration Patterns</a></li>
+                <li><span class="sec-num">19.5</span> <a href="sections/section-19-5.html">Protocol-Driven System Design</a></li>
+            </ul>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../chapter-18/index.html">Ch 18: State</a>
+            <a class="up" href="../../part-4-engineering/index.html">Part IV Overview</a>
+            <a class="next" href="sections/section-19-1.html">19.1 MCP as a Standard</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 19 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

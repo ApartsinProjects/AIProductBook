@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5.2 Task Decomposition for AI - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-2-discovery-design/index.html">Part II: Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 5.2</div>
+        <h1>Task Decomposition for AI</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            A problem well-decomposed is half-solved. The way you break down a problem determines whether AI can address it effectively. Ill-structured decomposition leads to AI systems that are unreliable, untrustworthy, and ultimately abandoned.
+        </p>
+
+        <h2>What Makes a Task AI-Appropriate?</h2>
+
+        <p>Not all problems break down into AI-solvable pieces. Understanding what makes a task appropriate for AI is fundamental to building useful AI products. The key is matching task characteristics to AI capabilities.</p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Task Characteristics and AI Suitability</div>
+            <p>Understanding which tasks suit AI requires examining several task characteristics. For input format, AI handles text, images, and structured data well, while human-appropriate tasks involve physical actions and real-world objects that require sensory and motor capabilities. For output format, AI excels at generating content, classifications, and predictions, whereas human work produces physical delivery and real-world impact. Error tolerance reveals another key distinction: AI tasks typically accept some error as tolerable, while human-appropriate tasks often demand zero tolerance for error. Reasoning requirements show that AI works best with pattern-based, probabilistic reasoning, while humans handle multi-step causal reasoning requiring high reliability. Context needs differ as well: AI performs well when context is contained within the input, whereas human judgment requires broad world knowledge that cannot be fully captured in data inputs.</p>
+        </div>
+
+        <h2>Breaking Problems into AI-Appropriate Units</h2>
+
+        <p>Large problems must be decomposed into smaller units that AI can address reliably. This decomposition is both a technical and a product decision. The goal is to create boundaries where AI capabilities align with task requirements.</p>
+
+        <h3>The Decomposition Framework</h3>
+
+        <p>Use this three-step framework to decompose problems. First, identify atomic operations, determining what the smallest meaningful unit of work is. Second, assess each operation, asking whether AI can handle this reliably or whether it requires human judgment. Third, define interfaces, determining how the pieces connect and where information passes between AI and human.</p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">QuickShip: Decomposing Exception Handling</div>
+            <pre>
+PROBLEM: Handle delivery exception requests automatically
+
+DECOMPOSITION:
+
+Task 1: Classify exception type
+├─ AI-Appropriate: Yes
+├─ Input: Customer message, delivery data
+└─ Output: Exception category
+
+Task 2: Retrieve relevant context
+├─ AI-Appropriate: No
+├─ This is a database lookup, not AI
+└─ Output: Status information
+
+Task 3: Determine resolution options
+├─ AI-Appropriate: Yes
+├─ Input: Exception type, customer history, policy rules
+└─ Output: List of possible resolutions
+
+Task 4: Select and execute resolution
+├─ AI-Appropriate: Partial
+├─ Auto-execute low-stakes resolutions
+└─ Escalate high-stakes resolutions to humans
+
+Task 5: Generate customer response
+├─ AI-Appropriate: Yes
+├─ Input: Resolution selected, customer context
+└─ Output: Natural language response
+            </pre>
+        </div>
+
+        <p>This decomposition shows how even a seemingly simple task involves a mix of AI-appropriate and human-appropriate components.</p>
+
+        <h2>Identifying Where AI Adds Value</h2>
+
+        <p>Within a decomposed problem, not all pieces benefit equally from AI. Focus investment on pieces where AI provides unique advantages.</p>
+
+        <h3>AI Value Indicators</h3>
+
+        <p>Look for these indicators that AI will add significant value:</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Where AI Adds Unique Value</div>
+            <p><strong>Scale advantages:</strong> AI handles volume that humans cannot match, making it possible to process far more requests or data than any human team could manage.</p>
+            <p><strong>Consistency benefits:</strong> AI applies the same reasoning to every case, eliminating the variability that comes from human fatigue, mood, or inexperience.</p>
+            <p><strong>Speed requirements:</strong> Response times faster than humanly possible create genuine value, such as instant responses to customer inquiries.</p>
+            <p><strong>Multivariate analysis:</strong> Pattern detection across many variables simultaneously reveals insights that humans could not practically uncover.</p>
+            <p><strong>Personalization at scale:</strong> Individualized treatment for each user without the per-user cost that would make human personalization economically impossible.</p>
+        </div>
+
+        <h3>The Added Value Test</h3>
+
+        <p>For each AI-suitable task, ask: Would a non-AI solution be significantly worse? If a skilled human using simpler tools could achieve 80% of the outcome at 20% of the cost, AI may not be justified.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: Finding High-Value AI Applications</div>
+            <p>HealthMetrics Analytics provides real-time patient flow analytics for hospitals. Their team was evaluating AI opportunities in their data.</p>
+            <p><strong>Low-Value AI Application:</strong></p>
+            <p>The task of flagging potentially incorrect ICD-10 codes presented a low-value AI application because medical coders already achieve 98 percent accuracy, meaning any AI improvement would be marginal at best and not worth the complexity and potential for false positives that AI would introduce.</p>
+            <p><strong>High-Value AI Application:</strong></p>
+            <p>The task of predicting which patients are likely to experience unexpected deterioration in the next four hours proved to be a high-value AI application because the current process relies on nurse intuition and intermittent vital sign checks, whereas AI can analyze continuous data streams and catch subtle patterns that humans would miss, providing unique early warning value that humans cannot match at scale.</p>
+        </div>
+
+        <p>These examples illustrate how the same Added Value Test helps distinguish genuine AI opportunities from false ones.</p>
+
+        <h2>Recognizing When Human Judgment Is Needed</h2>
+
+        <p>Just as important as identifying where AI adds value is identifying where AI should not operate independently. Human judgment remains essential in many situations.</p>
+
+        <h3>Human Judgment Requirements</h3>
+
+        <div class="callout key-insight">
+            <div class="callout-title">When Human Judgment Is Essential</div>
+            <p><strong>High-stakes decisions:</strong> AI errors can be catastrophic and humans can weigh context and values in ways that algorithms cannot.</p>
+            <p><strong>Novel situations:</strong> AI excels at interpolation within known patterns but struggles with true extrapolation to genuinely new territory.</p>
+            <p><strong>Ethical dimensions:</strong> AI lacks moral reasoning and cannot consider fairness and equity the way humans can.</p>
+            <p><strong>Regulatory accountability:</strong> Someone must be legally responsible for outcomes, and AI cannot be held accountable in the way humans can.</p>
+            <p><strong>Trust and relationships:</strong> When building trust with users, particularly around sensitive matters, users need human points of contact who can empathize and take responsibility.</p>
+        </div>
+
+        <h3>Designing Human-AI Collaboration</h3>
+
+        <p>The goal is not to replace human judgment but to make it more effective. AI should handle what it handles well, surfacing human judgment for what requires it.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Human-AI Collaboration Spectrum</div>
+            <p>Design where on this spectrum each task falls. At one end lies AI Only, appropriate for low-stakes, reversible, high-volume tasks with established patterns that AI can handle reliably. Next comes AI Recommends, Human Decides, suitable for medium-stakes situations that require context beyond what the AI input contains. In the middle sits Human and AI Collaborate, for complex stakes where both bring unique value to the outcome. AI Assists Human represents cases where the human leads and AI provides supporting information to augment their judgment. At the far end is Human Only, reserved for high-stakes decisions, novel situations without precedent, and relationship-dependent matters where human connection is essential.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before deploying any AI-human collaboration, define how you will measure collaboration effectiveness. A micro-eval for task decomposition tests: decision accuracy at each boundary point, human override rates (too high means AI is unreliable, too low means human is not adding value), and time-per-task across the collaboration. HealthMetrics' <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval-first</a> insight: their initial patient deterioration system had 40% of nurses overriding AI recommendations. Rather than improving the AI, they discovered the UI made it hard to understand AI reasoning. They fixed the UX, and override rates dropped to 12%.
+            </p>
+        </div>
+
+        <h2>Task Boundary Design</h2>
+
+        <p>Where you draw boundaries between AI and human responsibility significantly affects both utility and trust. Poor boundaries create confusion, liability, and user frustration.</p>
+
+        <h3>Boundary Design Principles</h3>
+
+        <div class="callout tip">
+            <div class="callout-title">Effective Boundary Design</div>
+            <p>Effective boundary design requires attention to five principles. Make boundaries visible so users know when they are interacting with AI versus a human, preventing confusion about who or what is handling their request. Ensure escalation paths are clear so users can always reach a human when they need to, maintaining trust that human support is available when required. Design errors to be recoverable so that AI errors caught by humans are correctable, preventing mistakes from propagating unchecked. Clarify accountability so someone or something is responsible for every outcome, ensuring that responsibility for both successes and failures is unambiguous. Keep boundaries stable because frequent shifting creates confusion and distrust among users who cannot predict how their interaction will be handled.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: Designing Patient Deterioration Alerts</div>
+            <pre>
+AI ANALYSIS OUTPUT:
+┌─────────────────────────────────────────┐
+│ Patient #2847 - Bed 12                 │
+│ Risk Score: 87/100 (HIGH)              │
+│                                         │
+│ AI Confidence: 73%                      │
+│ Predicted: Deterioration within 3 hours │
+│                                         │
+│ Contributing factors:                  │
+│ - Vital instability increasing         │
+│ - Lab value trending concern           │
+│ - Nursing notes mention fatigue        │
+│                                         │
+│ [View Full Analysis] [Acknowledge]     │
+│ [Escalate to Attending] [Override]      │
+└─────────────────────────────────────────┘
+
+BOUNDARY DESIGN:
+- AI identifies risk and surfaces alerts
+- Nurses acknowledge and assess context
+- Attending physician makes transfer decisions
+- AI does not make or recommend specific transfers
+- Human judgment preserved for consequential decisions
+            </pre>
+        </div>
+
+        <p>This example shows how careful boundary design preserves human accountability while leveraging AI capability.</p>
+
+        <h2>Iterative Decomposition</h2>
+
+        <p>Task decomposition is not a one-time activity. As you learn more about AI performance and user needs, decomposition should evolve. Start conservative, expand where AI proves reliable.</p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Decomposition Trap</div>
+            <p>A common mistake is decomposing too coarsely initially and then struggling with AI reliability. If an AI task has a 70 percent success rate and a 30 percent failure rate is unacceptable, you need to break the task into smaller pieces, focusing AI on the pieces where it is most reliable and moving the hard cases to human judgment. Use human feedback to improve AI over time, recognizing that perfect AI reliability is not the goal. The goal is useful AI that makes human work more effective, not flawless autonomous operation.</p>
+        </div>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Task decomposition reveals which pieces are AI-appropriate and which require human judgment, guiding where to invest in AI development versus human capability. AI adds unique value at scale, with consistency, speed, and personalization capabilities that humans cannot match economically. Human judgment remains essential for high-stakes, novel, and ethical decisions where errors would be costly or where moral reasoning is required. Task boundaries should be visible, escalatable, and accountable to maintain user trust and ensure responsibility is clear. Iterative decomposition refines AI scope based on real performance data, allowing teams to expand AI responsibility where it proves reliable and retreat where it struggles. The goal is effective human-AI collaboration, not AI replacement, recognizing that the best outcomes come from humans and machines working together.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Decomposing a Problem from Your Product</div>
+            <p>Take a problem your product currently solves or could solve and work through the following steps. First, list all the atomic operations involved, breaking the problem down to its smallest meaningful units of work. Second, classify each operation as AI-appropriate, human-required, or infrastructure (database, API, or similar technical components). Third, for AI-appropriate tasks, apply the Added Value Test to determine whether AI genuinely improves on simpler alternatives. Fourth, design boundaries for human-AI collaboration, determining where each task falls on the collaboration spectrum. Fifth, identify how you will handle errors and edge cases, ensuring that failures are recoverable and accountability remains clear.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 5.3, we explore <strong>Workflow Analysis and Jobs-to-be-Done</strong>, examining how to map current workflows, identify friction points, and find AI intervention points systematically.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 5: Finding Problems</a>
+            <a class="up" href="../index.html">Chapter 5 Overview</a>
+            <a class="next" href="section-5-3.html">5.3 Workflow Analysis</a>
+        </nav>
+
+        <footer>
+            <p>Section 5.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

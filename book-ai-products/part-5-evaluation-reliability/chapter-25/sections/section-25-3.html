@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 25.3: Release Review Checklists - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 25</div>
+        <h1>Release Review <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Checklists</a></h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"A checklist that is not followed is not a checklist. It is a wish list. Build checklists that teams actually use."</p>
+            <cite>An Engineering Manager Who Has Seen Checklists Fail</cite>
+        </blockquote>
+
+        <h2 id="checklist-purpose">Purpose of Release Review Checklists</h2>
+
+        <p>
+            Release review checklists translate <a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">governance</a> requirements into actionable steps. They ensure consistent evaluation of AI features before deployment and create documentation for accountability.
+        </p>
+
+        <p>
+            Effective checklists are specific, testable, and enforced. A checklist item like "ensure AI is fair" is useless. A checklist item like "run bias evaluation on protected attributes with threshold EODIS < 0.1" is actionable.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Checklist as Process, Not Bureaucracy</h4>
+            <p>Checklists should enable shipping, not block it. If your checklist takes two weeks to complete, it is either too detailed or poorly designed. Build checklists that can be completed in hours, not days.</p>
+        </div>
+
+        <h2 id="pre-deployment-checklist">Pre-Deployment AI Feature Checklist</h2>
+
+        <h3 id="technical-validation">Technical Validation</h3>
+
+        <pre><code class="language-markdown">
+## Technical Validation Checklist
+
+### Model Performance
+- [ ] Evaluation metrics meet minimum thresholds:
+  - [ ] Accuracy >= 0.90
+  - [ ] Precision >= 0.85
+  - [ ] Recall >= 0.85
+  - [ ] F1 >= 0.87
+- [ ] Evaluation run on held-out test set
+- [ ] Evaluation results documented and reviewed
+- [ ] Model version recorded in system
+
+### Data Quality
+- [ ] Training data lineage documented
+- [ ] Data quality metrics meet standards
+- [ ] Data bias checks completed
+- [ ] PII audit completed
+
+### System Integration
+- [ ] Integration tests passing
+- [ ] Latency within SLA (< 500ms p99)
+- [ ] Error rate < 1%
+- [ ] Fallback behavior verified
+- [ ] Timeout handling verified
+
+### Security
+- [ ] Security review completed
+- [ ] Input validation implemented
+- [ ] Output sanitization implemented
+- [ ] Rate limiting configured
+        </code></pre>
+
+        <h3 id="bias-evaluation">Bias Evaluation</h3>
+
+        <pre><code class="language-markdown">
+## Bias Evaluation Checklist
+
+### Protected Attributes
+- [ ] Protected attributes identified and documented
+- [ ] Evaluation run for each protected attribute
+- [ ] Known limitations documented
+
+### Fairness Metrics
+- [ ] Statistical parity calculated
+- [ ] True positive rate parity calculated
+- [ ] False positive rate parity calculated
+- [ ] Calibration across groups verified
+
+### Bias Mitigation
+- [ ] Pre-processing mitigation applied (if needed)
+- [ ] In-processing mitigation applied (if needed)
+- [ ] Post-processing mitigation applied (if needed)
+- [ ] Mitigation effectiveness evaluated
+
+### Documentation
+- [ ] Bias evaluation report generated
+- [ ] Known limitations documented
+- [ ] Monitoring plan for bias defined
+        </code></pre>
+
+        <h3 id="governance-checklist">Governance Checklist</h3>
+
+        <pre><code class="language-markdown">
+## Governance Checklist
+
+### Risk Assessment
+- [ ] AI risk classification completed
+- [ ] Risk level approved by governance board
+- [ ] High-risk review completed (if applicable)
+
+### Documentation
+- [ ] Model card created and approved
+- [ ] Data card created and approved
+- [ ] System card created (for complex systems)
+- [ ] Known limitations documented
+
+### Human Oversight
+- [ ] Human oversight requirements defined
+- [ ] Human review workflow implemented
+- [ ] Escalation path defined and tested
+
+### Monitoring Plan
+- [ ] Monitoring metrics defined
+- [ ] Alert thresholds configured
+- [ ] Dashboard created
+- [ ] On-call runbook updated
+
+### Legal/Compliance
+- [ ] Privacy review completed
+- [ ] IP review completed
+- [ ] Regulatory review completed (if applicable)
+- [ ] Terms of service updated (if needed)
+        </code></pre>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Checklist Tailoring</h4>
+            <p>Not every feature needs every checklist item. Tailor checklists to feature risk and complexity. Low-risk features should have abbreviated checklists. High-risk features may need additional items.</p>
+        </div>
+
+        <h2 id="checklist-enforcement">Checklist Enforcement</h2>
+
+        <h3 id="gate-based">Gate-Based Enforcement</h3>
+
+        <p>
+            Block deployment until checklist is complete:
+        </p>
+
+        <pre><code class="language-python">
+class AIFeatureGate:
+    """
+    Enforce checklist completion before deployment.
+    """
+    def __init__(self, checklist_registry):
+        self.registry = checklist_registry
+    
+    async def can_deploy(self, feature_id):
+        """Check if feature can be deployed."""
+        feature = await self.registry.get_feature(feature_id)
+        checklist = self.registry.get_checklist(feature.risk_level)
+        
+        missing = []
+        for item in checklist.items:
+            if not await self._is_item_complete(feature_id, item):
+                missing.append(item.id)
+        
+        return len(missing) == 0, missing
+        </code></pre>
+
+        <h3 id="exception-process">Exception Process</h3>
+
+        <p>
+            Define how to handle checklist exceptions:
+        </p>
+
+        <pre><code class="language-python">
+class ChecklistException:
+    def __init__(
+        self,
+        checklist_item_id,
+        reason,
+        risk_mitigation,
+        compensating_controls,
+        approval_chain
+    ):
+        self.checklist_item_id = checklist_item_id
+        self.reason = reason
+        self.risk_mitigation = risk_mitigation
+        self.compensating_controls = compensating_controls
+        self.approval_chain = approval_chain
+        self.status = "pending"
+        self.approval_timestamp = None
+        </code></pre>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: DataForge Release Gates</h4>
+            <p>The DataForge engineering team was implementing release gates after AI features were shipping without adequate review. The problem was that there was no consistent process for ensuring quality and compliance across the team.</p>
+            <p>The team decided to implement tiered gates based on risk classification to match review effort to feature risk. They classified features into Low, Medium, and High risk categories. They created tiered checklists for each risk level so higher-risk features received more scrutiny. They implemented automated gate checks in CI/CD to enforce checklist completion before deployment. They built an exception process with appropriate approval chains for cases where checklist items needed to be waived. They made gate status visible in the feature dashboard so teams could track their progress through the review process.</p>
+            <p>The result was improved release quality. High-risk features require a two-week review period while medium-risk features require three days and low-risk features use self-service. The team achieved zero post-release incidents in six months. The lesson is that checklists work when enforced. Tiered checklists match effort to risk.</p>
+        </div>
+
+        <h2 id="checklist-maintenance">Checklist Maintenance</h2>
+
+        <h3 id="review-cadence">Review Cadence</h3>
+
+        <p>Review and update checklists regularly to ensure they remain relevant and effective. Conduct a full checklist review quarterly to identify items that are no longer relevant or gaps that need addressing. Perform post-incident reviews to add checklist items if incidents reveal gaps in coverage. Update checklists when regulations change to ensure ongoing compliance with legal requirements.</p>
+
+        <h3 id="metrics">Checklist Metrics</h3>
+
+        <p>Track checklist metrics to understand whether governance processes are working effectively. Completion rate measures the percentage of features with complete checklists, with a target above ninety-five percent to ensure most features go through proper review. Exception rate measures the percentage of features with exceptions, with a target below ten percent to ensure exceptions are rare rather than routine. Gate time measures the average time in the release gate, with a target below three days to ensure the process does not become a bottleneck. Post-release issues measures issues that arose from checklist failures, with a target of zero to ensure the checklist actually prevents problems.</p>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>Research on "adaptive checklists" explores using ML to dynamically adjust checklist items based on feature risk profile and historical patterns. This could reduce overhead for low-risk features while maintaining rigor for high-risk ones.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-25-2.html">25.2 NIST AI RMF</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-25-4.html">25.4 Accountability Patterns</a>
+        </nav>
+
+        <footer>
+            <p>Section 25.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

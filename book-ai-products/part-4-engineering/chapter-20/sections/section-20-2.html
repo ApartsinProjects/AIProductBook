@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20.2 Data Leakage Prevention - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 20</div>
+        <h1>20.2 Data Leakage Prevention (see <a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">governance</a>)</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            In 2023, a legal firm used an AI assistant to review contracts. They discovered that sensitive deal terms were being retained in the model's context window and occasionally appearing in responses to unrelated queries. This data leakage incident cost them a client and led to regulatory scrutiny.
+        </p>
+
+        <div class="overview">
+            <h2>Section Overview</h2>
+            <p>
+                Data leakage in AI systems takes multiple forms: training data extraction, context window contamination, sensitive data exposure in prompts, and output filtering failures. Each requires different defensive measures. This section covers the mechanisms of leakage and practical controls to prevent it.
+            </p>
+        </div>
+
+        <h2>Training Data Extraction</h2>
+
+        <p>
+            LLMs can memorize and later reproduce training data. Attackers have demonstrated the ability to extract sensitive information including phone numbers, email addresses, and personal identifiers from model outputs. This poses severe risks when models were trained on sensitive data.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Extraction Threat</div>
+            <p>
+                Research has shown that LLMs can reproduce training data with high fidelity when prompted correctly. An attacker who knows they are querying a model trained on specific data can craft prompts to extract that data.
+            </p>
+        </div>
+
+        <h3>Defense Against Extraction</h3>
+
+        <p>Defenses against extraction include data minimization by not training on sensitive data unless necessary, differential privacy applying DP-SGD or similar techniques during training, memory sanitization using techniques to forget specific data points post-training, and output filtering to detect and block extraction attempts at inference time.</p>
+
+        <h2>Context Window Leakage</h2>
+
+        <p>
+            The context window is the most immediate leakage vector. Any data placed in the context is visible to the model and can influence outputs. In multi-user systems, context from one user's session can leak into another's.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Context Isolation Problem</div>
+            <p>
+                In shared AI systems, context isolation is critical. A user's sensitive document should never influence responses to other users' queries, even indirectly through model behavior changes.
+            </p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: Context Isolation</div>
+            <p>
+                HealthMetrics processes health records through their AI assistant. Each user session maintains isolated context. When a user queries about treatment options, the system loads only that user's relevant records, not records from other users. The context is purged after the session ends.
+            </p>
+        </div>
+
+        <h3>Context Management Best Practices</h3>
+
+        <p>Context management best practices include session isolation where each user session has independent context, context expiration to automatically purge context after defined periods, data minimization in context to only include information necessary for the current query, and context partitioning to separate sensitive data into isolated context segments.</p>
+
+        <h2>Sensitive Data in Prompts</h2>
+
+        <p>
+            Users often include sensitive information in their prompts without realizing it may be stored, logged, or used in unexpected ways. Your system must handle this data responsibly.
+        </p>
+
+        <h3>Data Classification for AI Systems</h3>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Data Classification Levels</div>
+            <p>Public data can be included in training and shared in outputs. Internal data should not appear in training and should be limited to context for specific queries. Confidential data should only be in isolated context, never in training, with strict access controls. Restricted data cannot be used in AI systems without explicit consent and additional controls.</p>
+        </div>
+
+        <div class="callout algorithm">
+            <div class="callout-title">Prompt Data Scanning</div>
+            <pre>
+function scanPromptForSensitiveData(prompt):
+    entities = extractEntities(prompt)
+
+    for entity in entities:
+        classification = lookupDataClassification(entity)
+
+        if classification == "RESTRICTED":
+            return { status: "BLOCK", reason: "Restricted data detected" }
+        if classification == "CONFIDENTIAL":
+            logForAudit(entity, "confidential_data_in_prompt")
+
+    return { status: "ALLOW" }</pre>
+        </div>
+
+        <h2>Output Filtering</h2>
+
+        <p>
+            Even with careful input handling, models can generate outputs containing sensitive data. Output filtering validates model responses before they reach users.
+        </p>
+
+        <h3>PII Detection and Redaction</h3>
+
+        <p>
+            Implement real-time PII detection in outputs. Common sensitive data types include names, addresses, and phone numbers, Social Security numbers and passport numbers, financial account numbers, medical record numbers, and biometric identifiers.
+        </p>
+
+        <div class="callout tip">
+            <div class="callout-title">Practical Tip</div>
+            <p>
+                Use dedicated PII detection libraries rather than relying on regex patterns alone. Names and contexts vary widely, and regex approaches generate both false positives and false negatives.
+            </p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">DataForge: Output Filtering Pipeline</div>
+            <p>
+                DataForge's enterprise search returns AI-generated summaries of documents. The output filtering pipeline scans each summary for PII before delivery. If detected, the PII is redacted and the query is logged for security review. The system also flags the user account for potential data handling training.
+            </p>
+        </div>
+
+        <h2>Prevention Controls Summary</h2>
+
+        <div class="callout key-takeaway">
+            <div class="callout-title">Data Leakage Prevention Checklist</div>
+            <p>Classify data before using in AI workflows. Implement session isolation for multi-user systems. Scan prompts for sensitive data before processing. Filter outputs for PII and sensitive information. Purge context after defined expiration periods. Apply differential privacy if training on internal data. Log all data handling events for audit compliance. Implement data retention policies for AI interactions.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-20-1.html">20.1 Prompt Injection</a>
+            <a class="up" href="../index.html">Chapter 20 Overview</a>
+            <a class="next" href="section-20-3.html">20.3 Tool Misuse</a>
+        </nav>
+
+        <footer>
+            <p>Section 20.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

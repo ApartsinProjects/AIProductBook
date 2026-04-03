@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 8: Designing AI User Experiences - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-discovery-design/index.html">Part II: AI-Native Product Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 8</div>
+        <h1>Designing AI User Experiences</h1>
+        <p class="chapter-subtitle">UX principles and patterns for probabilistic AI products</p>
+    </header>
+
+    <main class="content">
+        <div class="epigraph">
+            <p>The best AI product is not the one with the most powerful model. It is the one that earns trust, handles failure gracefully, and augments human capabilities without replacing human judgment.</p>
+            <cite>Maya Bello, Principal Design Researcher, Anthropic</cite>
+        </div>
+
+        <div class="opening-hook">
+            <strong>Why this chapter matters:</strong> Traditional UX design assumes deterministic behavior. Click a button, get a predictable result. AI changes everything. Your product can be confident and wrong. It can surprise users in ways that delight or frustrate. Designing for these probabilistic experiences requires new principles, patterns, and mental models. This chapter establishes AI UX as a first-class discipline, not an afterthought.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-8-opener.png"
+                 alt="Chapter 8 opener illustration">
+            <figcaption>
+                AI UX design goes far beyond chatbots to include copilots, agents, and invisible interfaces.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in UX Prototyping</div>
+            <p>Vibe-coding accelerates UX prototyping by letting you rapidly assemble AI interaction patterns and test them with real users. Quickly prototype confidence indicators, uncertainty communications, and graceful failure responses to see how users actually react. Vibe-coding UX patterns lets you discover trust issues and friction points before investing in polished design, making AI UX experimentation accessible to every team.</p>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Recognize the full spectrum of AI interaction modes beyond chatbots</li>
+                <li>Design trust calibration mechanisms that set appropriate expectations</li>
+                <li>Implement graceful degradation and recovery paths for AI failures</li>
+                <li>Apply conversation design principles for agent interactions</li>
+                <li>Redesign workflows to embrace AI augmentation</li>
+            </ul>
+        </div>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                AI UX is a first-class design discipline that addresses the unique challenges of probabilistic systems. Unlike deterministic software where every action has a predictable outcome, AI products can be confident and wrong, surprising users in ways that either build trust or destroy it. This chapter covers trust design, expectation management, graceful failure, conversation patterns, multimodal interaction, and workflow redesign.
+            </p>
+            <p>
+                We will explore how to design AI experiences that earn user trust through transparency, recover gracefully from failures, and augment human capabilities without replacing human judgment.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> How to design user experiences that earn trust, handle AI failures gracefully, and augment human capabilities rather than replacing judgment.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> A trust calibration prototype demonstrating how confidence indicators and uncertainty communication affect user trust perceptions.</li>
+                <li><strong>What would count as success or failure?</strong> User research showing appropriate reliance on AI assistance without either blind trust or unnecessary skepticism.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> UX patterns for AI products must include confidence indicators, graceful degradation, and recovery flows that are architected into the system, not bolted on.</li>
+            </ol>
+        </div>
+
+        <div class="prereqs">
+            <h3>Prerequisites</h3>
+            <p>This chapter builds on foundational concepts from earlier chapters. You should be familiar with:</p>
+            <ul>
+                <li><a href="../chapter-7/index.html">Chapter 7: AI-Native Product Discovery</a> for identifying AI-appropriate problem spaces</li>
+                <li>Basic UX design principles from any introductory UX course</li>
+                <li>The concept of <a href="../../chapter-1/index.html">AI capabilities and limitations</a> from Chapter 1</li>
+            </ul>
+        </div>
+
+        <div class="role-specific">
+            <h3>Role-Specific Lenses</h3>
+            
+            <div class="callout key-insight">
+                <div class="callout-title">Why PMs Should Care</div>
+                <p>Product managers must understand AI UX because the success of AI features depends not just on model quality but on how users perceive and trust those features. A PM who masters AI UX can differentiate between features that feel magical and trustworthy versus those that feel creepy or unreliable. This directly impacts adoption, retention, and ultimately product success.</p>
+            </div>
+
+            <div class="callout key-insight">
+                <div class="callout-title">Why Designers Should Care</div>
+                <p>Designers need to unlearn habits formed in deterministic environments. AI introduces new patterns: confidence indicators, explanation UIs, graceful degradation, and conversation flows. Designers who master these patterns will define the next generation of product interfaces. Those who resist will find themselves marginalized as AI features proliferate.</p>
+            </div>
+
+            <div class="callout key-insight">
+                <div class="callout-title">Why Engineers Should Care</div>
+                <p>Engineers must understand AI UX because implementation details directly impact user experience. Response streaming, error handling, and fallback mechanisms are engineering decisions that shape whether users trust the system. AI UX is not just a design concern; it is an architectural one.</p>
+            </div>
+
+            <div class="callout key-insight">
+                <div class="callout-title">Why Students and Instructors Should Care</div>
+                <p>AI UX is an emerging discipline with few established curricula. Students entering the field will need to navigate novel design challenges without established best practices. This chapter provides a framework for thinking about AI user experience that will remain valuable as specific tools and patterns evolve.</p>
+            </div>
+
+            <div class="callout key-insight">
+                <div class="callout-title">Why Leaders and Strategists Should Care</div>
+                <p>Leaders must understand AI UX to make informed decisions about product direction and investment. The difference between a successful AI product and a failed one often comes down to whether the team understood how to design for trust and graceful failure. This chapter provides strategic frameworks for AI product decisions.</p>
+            </div>
+        </div>
+
+        <div class="section-break"></div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul class="sections-list">
+                <li>
+                    <a class="section-card" href="sections/section-8-1.html">
+                        <span class="section-num">8.1</span>
+                        <span class="section-title">Beyond Chatbots: The Full Spectrum of AI UX</span>
+                        <span class="section-desc">Copilots, agents, invisible AI, review loops, and hybrid interfaces</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="section-card" href="sections/section-8-2.html">
+                        <span class="section-num">8.2</span>
+                        <span class="section-title">Trust Calibration and Explanation Design</span>
+                        <span class="section-desc">When to show confidence, communicating uncertainty, trust-building patterns</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="section-card" href="sections/section-8-3.html">
+                        <span class="section-num">8.3</span>
+                        <span class="section-title">Fallbacks and Recovery Paths</span>
+                        <span class="section-desc">Graceful degradation, human escalation, error recovery, negative feedback loops</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="section-card" href="sections/section-8-4.html">
+                        <span class="section-num">8.4</span>
+                        <span class="section-title">Conversation and Agent Interaction Design</span>
+                        <span class="section-desc">Turn-taking, context management, proactive AI behavior, personality design</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="section-card" href="sections/section-8-5.html">
+                        <span class="section-num">8.5</span>
+                        <span class="section-title">Workflow Redesign, Not Just Screen Redesign</span>
+                        <span class="section-desc">AI-augmented workflows, identifying value vs. friction, measuring UX quality</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-7/index.html">Ch 7: Discovery</a>
+            <a class="up" href="../../part-2-discovery-design/index.html">Part II Overview</a>
+            <a class="next" href="sections/section-8-1.html">8.1 Beyond Chatbots</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 8 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

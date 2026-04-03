@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 27.2: Drift Detection - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 27</div>
+        <h1>Drift Detection</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Your AI is not static. The world is not static. The gap between them grows until you measure it."</p>
+            <cite>An ML Engineer Who Has Seen This Happen</cite>
+        </blockquote>
+
+        <h2 id="drift-reality">The Reality of Drift</h2>
+
+        <p>
+            AI products exist in dynamic environments. User behavior changes. Business conditions evolve. External events reshape contexts. Your AI, trained on historical data, gradually becomes less aligned with the world it operates in. This degradation is called drift, and it is one of the most underestimated risks in AI product development.
+        </p>
+
+        <p>
+            Drift matters because AI products do not fail loudly. They fail quietly. A route optimization AI does not stop working. It just gradually suggests routes that are less optimal. A recommendation engine does not break. It just recommends things that are less relevant. Without explicit measurement, you notice only when users complain or metrics plummet.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Drift Is Inevitable</h4>
+            <p>Every AI product experiences drift. The question is not whether you will encounter it, but whether you will detect it. Teams that monitor for drift catch gradual degradation before it becomes catastrophic. Teams that do not monitor find out the hard way, often when users have already had poor experiences for weeks or months.</p>
+        </div>
+
+        <h2 id="model-drift">Model Drift</h2>
+
+        <p>
+            Model drift, also called capability drift, occurs when the AI model's actual performance degrades over time. The model has not changed, but its effectiveness has.
+        </p>
+
+        <h3 id="causes-of-model-drift">Causes of Model Drift</h3>
+
+        <p>
+            Model drift occurs when the AI model's actual performance degrades over time while the model itself has not changed. Several factors cause this degradation. World knowledge aging means a model trained on data up to a certain date becomes increasingly outdated on topics that evolve rapidly such as news, trends, technology, and regulations. Behavioral shifts occur when users change how they interact with the AI, using new phrases, new expectations, and new types of requests that the model handles poorly. Edge case accumulation happens as more users interact with the AI, they encounter and trigger edge cases that were rare in training but common in production. Dependency changes occur when the AI depends on upstream systems such as embeddings, retrieval, or third-party APIs that change without warning.
+        </p>
+
+        <h3 id="detecting-model-drift">Detecting Model Drift</h3>
+
+        <p>
+            Model drift detection compares model performance over time by tracking eval scores continuously, running your eval suite on production samples at regular intervals, plotting scores over time, and alerting on sustained decline. It monitors human feedback signals by tracking thumbs up/down ratios, correction rates, and escalation rates since declines often precede eval score drops. It compares against baselines by running the same inputs through the original model and current model to measure divergence. Finally, it involves periodic human auditing where experts review a sample of production outputs since human judgment catches drift that automated metrics miss.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: QuickShip Model Drift Detection</h4>
+            <p><strong>Who:</strong> QuickShip team monitoring route optimization AI</p>
+            <p><strong>Situation:</strong> Quarterly review showed customer satisfaction with routes declining slowly</p>
+            <p><strong>Problem:</strong> No automated drift detection in place. Decline went unnoticed for 4 months.</p>
+            <p><strong>Decision:</strong> Implemented continuous eval monitoring with weekly scoring against held-out test set</p>
+            <p><strong>How:</strong> Sampled 1000 production routes weekly, ran through eval pipeline, tracked score over time with alert threshold at 5% decline from baseline</p>
+            <p><strong>Result:</strong> Within 3 months, caught early signs of drift related to new highway construction. Addressed by updating model context with current road information.</p>
+            <p><strong>Lesson:</strong> <strong>Automated drift detection turns slow degradation into actionable alerts.</strong></p>
+        </div>
+
+        <h2 id="data-drift">Data Drift</h2>
+
+        <p>
+            Data drift occurs when the distribution of inputs your AI receives changes over time. The model has not changed, but the data it sees has.
+        </p>
+
+        <h3 id="data-drift-types">Types of Data Drift</h3>
+
+        <p>
+            Data drift occurs when the distribution of inputs your AI receives changes over time while the model itself has not changed. Several types of data drift exist. Population drift happens when the user base changes, new demographic groups start using the product, or user demographics shift geographically or psychographically. Feature drift occurs when the input data distribution changes, such as user queries getting longer or shorter, image quality improving, or voice inputs becoming more common. Contextual drift refers to external context changes including seasonal patterns emerging, economic conditions shifting, or the competitive landscape evolving. Schema drift happens when upstream data sources change format, new fields appear, old fields are deprecated, or integration partners modify APIs.
+        </p>
+
+        <h3 id="detecting-data-drift">Detecting Data Drift</h3>
+
+        <p>
+            Data drift is detected by monitoring input distributions through statistical distribution tests that compare input distributions week-over-week using KL divergence, Wasserstein distance, or simple histogram comparison. Anomaly detection on inputs flags inputs that are statistical outliers compared to historical norms. Feature importance tracking monitors which input features drive predictions, and changes in feature importance signal distribution shifts. Segment monitoring tracks metrics by segment because data drift often affects specific segments before the whole population.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Data Drift Before Model Drift</h4>
+            <p>Data drift often precedes model drift. When input distributions shift, model performance degrades gradually. By monitoring data drift, you can anticipate model drift and address root causes before performance suffers. Build both monitors, but prioritize data distribution monitoring as an early warning system.</p>
+        </div>
+
+        <h2 id="concept-drift">Concept Drift</h2>
+
+        <p>
+            Concept drift occurs when the relationship between inputs and outputs changes, even though both distributions may remain stable. The model correctly learned "good" for a past definition of good that no longer applies.
+        </p>
+
+        <h3 id="types-of-concept-drift">Types of Concept Drift</h3>
+
+        <p>
+            Concept drift occurs when the relationship between inputs and outputs changes, even though both distributions may remain stable, meaning the model correctly learned "good" for a past definition of good that no longer applies. Several types of concept drift exist. Sudden drift happens when an external event suddenly changes what "correct" means, such as a pandemic transforming shopping behavior, a new competitor changing customer expectations, or a regulatory change altering what is acceptable. Gradual drift occurs when customer preferences slowly shift over time, where what was popular becomes niche and what was acceptable becomes outdated. Recurring drift refers to seasonal patterns that repeat, such as summer preferences differing from winter and holiday shopping differing from regular shopping. Blip drift describes one-time anomalies that temporarily change behavior, such as a viral event, news cycle, or cultural moment creating unusual patterns that then return to normal.
+        </p>
+
+        <h3 id="detecting-concept-drift">Detecting Concept Drift</h3>
+
+        <p>
+            Concept drift is the hardest to detect because it requires understanding changes in the meaning of outcomes. Outcome distribution monitoring tracks what outcomes the AI produces over time, and when output distributions shift without corresponding input shifts, you should suspect concept drift. Ground truth delay tracking for predictions with delayed feedback compares predictions against eventual outcomes, and growing gaps signal concept drift. Expert review involves having domain experts periodically review whether the AI's assumptions still match business reality. A/B test results provide another detection method where you look for changes in which variant wins, and if the optimal strategy changes over time, concept drift is likely.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: RetailMind Concept Drift During Pandemic</h4>
+            <p><strong>Who:</strong> RetailMind team managing in-store shopping AI</p>
+            <p><strong>Situation:</strong> Shopping assistant had been performing well for 18 months post-launch</p>
+            <p><strong>Problem:</strong> When pandemic hit, store closures and safety concerns suddenly changed what "helpful shopping assistance" meant</p>
+            <p><strong>Detection:</strong> Manual monitoring by customer success team noticed unusual support tickets about "unhelpful" recommendations for items in high-demand categories</p>
+            <p><strong>How:</strong> RetailMind had built outcome tracking: when recommendations led to out-of-stock disappointments. This metric spiked dramatically but input distributions had not changed. Clear signal of concept drift.</p>
+            <p><strong>Response:</strong> Within 2 weeks, updated AI to prioritize in-stock availability over personalization, and to surface safety-related information. Model had not changed; world had.</p>
+            <p><strong>Lesson:</strong> <strong>Concept drift requires understanding what your AI should optimize for, not just what it currently optimizes for.</strong></p>
+        </div>
+
+        <h2 id="drift-monitoring-systems">Building Drift Monitoring Systems</h2>
+
+        <p>
+            Effective drift monitoring requires infrastructure, not just intuition. Build these components:
+        </p>
+
+        <h3 id="monitoring-pipeline">Monitoring Pipeline</h3>
+
+        <p>
+            Effective drift monitoring requires infrastructure, not just intuition. The monitoring pipeline begins with data capture that logs all production inputs with timestamps, user context, and system state. Distribution calculation computes statistical summaries of inputs at regular intervals whether hourly, daily, or weekly. Baseline comparison compares current distributions against established baselines using statistical tests. Alerting triggers alerts when distributions exceed threshold differences from baseline. Dashboarding makes drift metrics visible in operational dashboards that the team reviews regularly.
+        </p>
+
+        <h3 id="drift-response-playbook">Drift Response Playbook</h3>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">When Drift Is Detected</h4>
+            <p>Drift detection without response is just anxiety. Build a playbook for drift response. First, confirm the drift is real by ruling out data pipeline bugs, logging issues, or measurement errors. Second, assess the impact by determining if this is affecting user outcomes and by how much. Third, identify the cause by determining whether it is model drift, data drift, or concept drift. Fourth, choose the response by deciding whether to retrain, update prompts, adjust thresholds, or accept the change. Fifth, verify the fix by confirming drift has been addressed through monitoring.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-27-1.html">27.1 Production Evals</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-27-3.html">27.3 User Feedback Harvesting</a>
+        </nav>
+
+        <footer>
+            <p>Section 27.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 12: Orchestration - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 12</div>
+        <h1>Prompts, Chains, Agents, and Orchestration</h1>
+        <p class="chapter-subtitle">Building Blocks of AI Systems</p>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            You need your AI to do more than answer a single prompt. You need it to reason through a multi-step problem, fetch data from external APIs, maintain context across a conversation, and coordinate multiple components. One prompt will not get you there.
+        </p>
+        <p>
+            Complex AI systems are not built from single prompts. They are built from prompts composed into chains, chains that become agents, and agents that orchestrate together. This chapter is your guide to that architecture.
+        </p>
+
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master the building blocks of AI systems: prompts, chains, agents, and orchestration frameworks.
+        </p>
+
+        <figure class="illustration">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" style="max-width: 100%; margin: 1.5rem auto; display: block;">
+    <defs>
+        <linearGradient id="queryGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#e94560;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#f39c12;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="retrieveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#f39c12;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#16a085;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="generateGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#16a085;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#3498db;stop-opacity:1" />
+        </linearGradient>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.15"/>
+        </filter>
+    </defs>
+    
+    <rect width="700" height="400" fill="#faf8f5"/>
+    
+    <text x="350" y="26" text-anchor="middle" fill="#1a1a2e" font-family="Georgia, serif" font-size="15" font-weight="bold">RAG System Architecture</text>
+    
+    <g transform="translate(280, 45)">
+        <rect width="140" height="48" rx="24" fill="url(#queryGrad)" filter="url(#shadow)"/>
+        <text x="70" y="23" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="11" font-weight="bold">User Query</text>
+        <text x="70" y="40" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="9">"What is X?"</text>
+    </g>
+    
+    <path d="M350,98 L350,125" fill="none" stroke="#1a1a2e" stroke-width="2"/>
+    
+    <g transform="translate(260, 130)">
+        <rect width="180" height="42" rx="8" fill="#f39c12" filter="url(#shadow)"/>
+        <text x="90" y="27" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="10" font-weight="bold">Embedding Model</text>
+    </g>
+    
+    <path d="M350,177 L350,205" fill="none" stroke="#1a1a2e" stroke-width="2"/>
+    <text x="365" y="194" fill="#666" font-family="Georgia, serif" font-size="9">vector</text>
+    
+    <g transform="translate(250, 210)">
+        <ellipse cx="100" cy="32" rx="115" ry="45" fill="#16a085" filter="url(#shadow)"/>
+        <text x="100" y="22" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="10" font-weight="bold">Vector Database</text>
+        <text x="100" y="38" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Pinecone, Weaviate, Chroma</text>
+    </g>
+    
+    <path d="M250,260 Q195,260 195,280 Q195,300 130,310" fill="none" stroke="#1a1a2e" stroke-width="2"/>
+    <path d="M350,260 L350,290" fill="none" stroke="#1a1a2e" stroke-width="2"/>
+    <path d="M450,260 Q505,260 505,280 Q505,300 570,310" fill="none" stroke="#1a1a2e" stroke-width="2"/>
+    
+    <text x="135" y="275" fill="#666" font-family="Georgia, serif" font-size="9">top-k chunks</text>
+    <text x="565" y="275" fill="#666" font-family="Georgia, serif" font-size="9">top-k chunks</text>
+    
+    <g transform="translate(25, 315)">
+        <rect width="145" height="55" rx="8" fill="white" stroke="#16a085" stroke-width="2"/>
+        <text x="72" y="22" text-anchor="middle" fill="#16a085" font-family="Georgia, serif" font-size="9" font-weight="bold">Retrieved Context</text>
+        <text x="72" y="38" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">Chunk 1: ...</text>
+        <text x="72" y="50" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">Chunk 2: ...</text>
+    </g>
+    
+    <path d="M170,342 L240,342" fill="none" stroke="#1a1a2e" stroke-width="2" stroke-dasharray="4,2"/>
+    <path d="M530,342 L460,342" fill="none" stroke="#1a1a2e" stroke-width="2" stroke-dasharray="4,2"/>
+    
+    <g transform="translate(260, 315)">
+        <rect width="180" height="55" rx="10" fill="url(#generateGrad)" filter="url(#shadow)"/>
+        <text x="90" y="22" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="11" font-weight="bold">LLM</text>
+        <text x="90" y="38" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Claude, GPT-4, Llama</text>
+    </g>
+    
+    <rect x="25" y="140" width="145" height="65" rx="6" fill="#fef5f5" stroke="#e94560" stroke-width="1"/>
+    <text x="97" y="158" text-anchor="middle" fill="#e94560" font-family="Georgia, serif" font-size="9" font-weight="bold">Chunking Strategy</text>
+    <text x="97" y="173" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">Split documents into</text>
+    <text x="97" y="186" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">searchable pieces</text>
+    <text x="97" y="198" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">512-1024 tokens</text>
+    
+    <rect x="530" y="140" width="145" height="65" rx="6" fill="#fef9e7" stroke="#f39c12" stroke-width="1"/>
+    <text x="602" y="158" text-anchor="middle" fill="#f39c12" font-family="Georgia, serif" font-size="9" font-weight="bold">Hybrid Search</text>
+    <text x="602" y="173" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">Vector + Keyword</text>
+    <text x="602" y="186" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">BM25 + cosine</text>
+    <text x="602" y="198" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">similarity</text>
+  </svg>
+  <figcaption>
+    RAG architecture: User queries are embedded, matched against a vector database, and the top-k relevant chunks are combined with the original query to generate accurate, context-grounded responses.
+  </figcaption>
+</figure>
+
+        <figure class="illustration">
+            <img src="../../images/illustrations/chapter-12-opener.png"
+                 alt="Prompts and Orchestration: Blocks being assembled into AI system architecture"
+                 style="max-width: 100%; border-radius: 12px; margin: 1.5rem auto; display: block;">
+            <figcaption>
+                Complex AI systems are built from simpler components.
+            </figcaption>
+        </figure>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter covers the fundamental building blocks of AI systems. You will learn 
+                advanced prompting patterns like chain-of-thought and few-shot learning, the distinction 
+                between chains and agents, the MCP and A2A protocols for agent communication, and how 
+                agents use tools to interact with external systems. These skills are essential for building 
+                any AI application beyond simple single-prompt interactions.
+            </p>
+            <p>
+                The key insight is that prompt engineering is just the beginning. To build sophisticated 
+                AI applications, you need to understand how to compose multiple prompts, handle different 
+                types of user requests, and orchestrate multiple AI components working together. This 
+                chapter provides that foundation.
+            </p>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Apply advanced prompting patterns (CoT, few-shot, role, constraint)</li>
+                <li>Distinguish between chains and agents for different use cases</li>
+                <li>Implement MCP and A2A protocols for agent communication</li>
+                <li>Build agents that can use external tools and APIs</li>
+                <li>Design orchestration frameworks for complex AI workflows</li>
+            </ul>
+        </div>
+
+        <div class="prerequisites">
+            <h3>Prerequisites</h3>
+            <p>
+                Readers should have completed Chapter 11 on core principles. Familiarity with Python and 
+                basic API usage is expected. Experience with any LLM API (OpenAI, Anthropic, etc.) is 
+                helpful. If you are new to prompting, focus on Section 12.1 first.
+            </p>
+        </div>
+
+        <blockquote class="epigraph">
+            "The question is not whether machines can think, but whether men can." <cite>– B.F. Skinner</cite>
+        </blockquote>
+
+        <div class="sections-list">
+            <h2>Chapter Sections</h2>
+            <ul>
+                <li><a href="section-12-1.html">12.1 Advanced Prompting Patterns</a></li>
+                <li><a href="section-12-2.html">12.2 Chains vs Agents</a></li>
+                <li><a href="section-12-3.html">12.3 MCP and A2A Protocols</a></li>
+                <li><a href="section-12-4.html">12.4 Agent Skills and Tool Use</a></li>
+                <li><a href="section-12-5.html">12.5 Advanced Agent Patterns</a></li>
+                <li><a href="section-12-6.html">12.6 Agent Memory Management</a></li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-13/index.html">Chapter 13: Knowledge Retrieval and Advanced RAG</a> 
+                to learn how to build reliable knowledge systems with advanced RAG techniques, vector 
+                databases, and hybrid search. Understanding RAG is essential for any AI product that 
+                needs to access external knowledge.
+            </p>
+        </div>
+
+        <div class="bibliography">
+            <h3>Books</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title">Science and Human Behavior</p>
+                <p class="bib-authors">Skinner, B.F. (1953)</p>
+                <p class="bib-annotation">Why this is relevant: Behavioral psychology foundation relevant to understanding human-AI interaction patterns in product design.</p>
+            </div>
+
+            <h3>Frameworks</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://python.langchain.com">LangGraph Documentation</a></p>
+                <p class="bib-authors">LangChain</p>
+                <p class="bib-annotation">Why this is relevant: Graph-based orchestration framework for building complex multi-agent workflows; essential for production AI systems.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://docs.crewai.com">CrewAI Framework</a></p>
+                <p class="bib-authors">CrewAI</p>
+                <p class="bib-annotation">Why this is relevant: Role-based multi-agent framework for building collaborative AI teams; popular for implementing agentic workflows.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://microsoft.github.io/autogen">AutoGen Framework</a></p>
+                <p class="bib-authors">Microsoft</p>
+                <p class="bib-annotation">Why this is relevant: Microsoft open-source framework for building multi-agent applications; good for enterprise AI product architectures.</p>
+            </div>
+
+            <h3>Protocols</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://modelcontextprotocol.io">Model Context Protocol (MCP)</a></p>
+                <p class="bib-authors">Anthropic (2025)</p>
+                <p class="bib-annotation">Why this is relevant: Emerging standard for connecting AI models to external tools and data sources; important for AI product extensibility.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://a2aprotocol.io">Agent-to-Agent (A2A) Protocol</a></p>
+                <p class="bib-authors">Google (2025)</p>
+                <p class="bib-annotation">Why this is relevant: New protocol for agent interoperability; emerging standard for multi-agent system communication.</p>
+            </div>
+
+            <h3>APIs</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://docs.anthropic.com">Claude API Documentation</a></p>
+                <p class="bib-authors">Anthropic</p>
+                <p class="bib-annotation">Why this is relevant: Official API reference for Claude models; primary documentation for integrating Claude into AI products.</p>
+            </div>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-11/index.html">Ch 11: Core Principles</a>
+            <a class="up" href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a>
+            <a class="next" href="chapter-13/index.html">Ch 13: Advanced RAG</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 12 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

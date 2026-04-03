@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12.2 Chains vs <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 12</div>
+        <h1>Prompts, Chains, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and Orchestration</h1>
+        <p class="chapter-subtitle">12.2 Chains vs <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master the building blocks of AI systems: prompts, chains, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and orchestration frameworks.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 12.1 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Choosing Your Architecture</div>
+            <p>This section covers the fundamental distinction between chains (deterministic workflows) and <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> (dynamic decision-makers). In the context of AI product development, choosing the right pattern affects cost, reliability, and debuggability. The 10x cost difference between chains and <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> makes this one of the most important architectural decisions.</p>
+        </div>
+
+        <h2 id="section-12-2">12.2 Chains vs <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></h2>
+
+        <p>
+            Understanding the distinction between chains and <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> is fundamental to designing AI systems. Chains are deterministic sequences where each step follows from the previous one in a fixed order. <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> are dynamic systems where the model decides which actions to take based on the context. This fundamental difference affects everything from development approach to production reliability.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Choosing the wrong pattern leads to either over-engineering (using <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> for simple tasks) or under-engineering (using chains for tasks that need flexibility). The cost and complexity difference is significant: a chain is typically 10x cheaper to run than an equivalent agent, and much easier to debug. But using a chain where you need dynamic adaptation leads to brittle systems that fail in unexpected ways.
+        </p>
+
+        <div class="callout aha-moment">
+    <div class="callout-title">&#128161; Aha Moment: The 10x Cost Difference</div>
+    <p><strong>The shock:</strong> A chain is typically <strong>10x cheaper</strong> to run than an equivalent agent. The cost and complexity difference is massive.</p>
+    <p><strong>What this means:</strong> Do not reach for an agent unless you genuinely need dynamic decision-making. If the workflow is predictable, use a chain. Many teams over-engineer by defaulting to <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> when a simple chain would suffice, and they pay 10x more than necessary.</p>
+</div>
+
+        <h3>Chains: Deterministic Workflows</h3>
+
+        <p>
+            Chains are ideal for simple transformations where the path from input to output is well-defined and predictable. Text summarization, translation, sentiment analysis, and similar tasks are well-suited to chain-based approaches because they have clear steps and expected outputs.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: A Translation Chain</div>
+            <pre class="code-block">from langchain import LLMChain
+from langchain.prompts import PromptTemplate
+from langchain.chat_models import ChatOpenAI
+
+# Step 1: Translate to target language
+translate_prompt = PromptTemplate(
+    input_variables=["text", "target_language"],
+    template="Translate the following to {target_language}:\n{text}"
+)
+translate_chain = LLMChain(llm=llm, prompt=translate_prompt)
+
+# Step 2: Check for cultural appropriateness
+review_prompt = PromptTemplate(
+    input_variables=["translated_text"],
+    template="Review this translation for cultural appropriateness and suggest improvements:\n{translated_text}"
+)
+review_chain = LLMChain(llm=llm, prompt=review_prompt)
+
+# Step 3: Finalize translation
+finalize_prompt = PromptTemplate(
+    input_variables=["translated_text", "feedback"],
+    template="Apply the following feedback to finalize the translation:\nOriginal: {translated_text}\nFeedback: {feedback}"
+)
+finalize_chain = LLMChain(llm=llm, prompt=finalize_prompt)
+
+# Compose the chain
+full_chain = translate_prompt | translate_chain | review_chain | finalize_chain
+
+# Execute
+result = full_chain.invoke({
+    "text": "Let's grab some coffee",
+    "target_language": "Japanese"
+})</pre>
+            <p>Chains are easier to debug and maintain because the flow is explicit. When a chain fails, you can identify exactly which step caused the problem. Chains are also easier to test because you can verify each step independently.</p>
+        </div>
+
+        <h4>When to Use Chains</h4>
+        <ul>
+            <li>Tasks with well-defined, linear workflows</li>
+            <li>Situations where you need full auditability of each step</li>
+            <li>High-volume, low-complexity transformations</li>
+            <li>When cost is a primary constraint</li>
+            <li>When deterministic behavior is required</li>
+        </ul>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Chains Can Still Be Non-Deterministic</div>
+            <p>Even within a deterministic chain, individual LLM calls can produce variable outputs. A "deterministic" chain only means the workflow steps are fixed; each step can still produce different outputs. Don't assume chain outputs are reproducible unless you also fix randomness (use temperature=0 or deterministic prompts).</p>
+        </div>
+
+        <h3>Agents: Dynamic Decision-Making</h3>
+
+        <p>
+            <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> are necessary for complex tasks where the path from input to output cannot be predicted in advance. <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> excel at tasks that require planning, tool use, and dynamic decision-making. The agent observes its environment, decides what action to take, executes the action, and iterates until the task is complete.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Research Agent</div>
+            <pre class="code-block">from langchain.<a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> import AgentExecutor, create_openai_functions_agent
+from langchain import hub
+
+# Define tools the agent can use
+tools = [
+    Tool(name="search", func=search_api.run, description="Search for information"),
+    Tool(name="url_open", func=browse.run, description="Open a URL and extract content"),
+    Tool(name="calculator", func=calculate.run, description="Perform calculations"),
+]
+
+# Pull the prompt from LangChain hub
+prompt = hub.pull("hwchase17/openai-functions-agent")
+
+# Create the agent
+agent = create_openai_functions_agent(llm, tools, prompt)
+
+# Create the executor
+agent_executor = AgentExecutor(
+    agent=agent,
+    tools=tools,
+    verbose=True,
+    max_iterations=10,
+    max_execution_time=120
+)
+
+# Execute - agent decides what to do
+result = agent_executor.invoke({
+    "input": "What is the current market cap of Tesla? Compare it to Toyota's market cap and calculate the ratio."
+})
+
+# The agent will:
+# 1. Recognize it needs current financial data
+# 2. Use search tool to find Tesla market cap
+# 3. Use search tool to find Toyota market cap
+# 4. Use calculator to compute the ratio
+# 5. Format the final answer</pre>
+            <p>This makes <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> ideal for research tasks, complex problem-solving, and any scenario where the appropriate action depends on the results of previous actions.</p>
+        </div>
+
+        <h4>When to Use <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></h4>
+        <ul>
+            <li>Tasks where the steps cannot be predetermined</li>
+            <li>Research and information gathering tasks</li>
+            <li>Complex problem-solving requiring multiple tool uses</li>
+            <li>Situations where adapting to user input is essential</li>
+        </ul>
+
+        <table>
+            <thead>
+                <tr><th>Aspect</th><th>Chains</th><th>Agents</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Flow</strong></td><td>Deterministic, fixed sequence</td><td>Dynamic, model decides</td></tr>
+                <tr><td><strong>Cost</td><td>Lower (fixed LLM calls)</td><td>Higher (variable calls)</td></tr>
+                <tr><td><strong>Debugging</td><td>Easier (explicit steps)</td><td>Harder (opaque decisions)</td></tr>
+                <tr><td><strong>Reliability</td><td>Predictable</td><td>Variable</td></tr>
+                <tr><td><strong>Use Case</td><td>Transformations, extraction</td><td>Research, multi-step problems</td></tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>MCP and A2A Protocols</strong> - standards for agent communication and tool use.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-12-1.html">12.1 Advanced Prompting Patterns</a>
+            <a class="up" href="index.html">Chapter 12 Index</a>
+            <a class="next" href="section-12-3.html">12.3 MCP and A2A Protocols</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 12.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

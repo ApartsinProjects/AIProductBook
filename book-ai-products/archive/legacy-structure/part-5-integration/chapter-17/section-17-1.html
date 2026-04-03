@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17.1 End-to-End Workflow - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-integration/index.html">Part V: Integration</a></div>
+        <div class="chapter-label">Chapter 17</div>
+        <h1>Integrated Vibe-to-Production Playbook</h1>
+        <p class="chapter-subtitle">17.1 End-to-End Workflow</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Tie everything together in a repeatable end-to-end process.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Parts I-IV recommended.
+        </div>
+
+        <h2 id="section-17-1">17.1 End-to-End Workflow: From Vibe to Production</h2>
+
+        <p>
+            Building AI-powered products is fundamentally different from traditional software development. 
+            The non-deterministic nature of AI models means your development workflow must adapt to handle 
+            uncertainty while still delivering reliable, production-ready systems. This section walks you 
+            through the complete lifecycle from initial concept to shipped product.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Without a structured workflow, teams often get stuck in infinite prototyping loops or ship products 
+            that fail in production. The vibe-to-production framework provides a systematic approach that 
+            balances speed with reliability, ensuring you can iterate quickly while building toward 
+            production-readiness from day one.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Imagine If...</div>
+            <p>
+                Imagine building what feels like a great AI feature in 2 weeks, then spending 
+                6 months trying to make it production-ready. You discover costs are 10x higher 
+                than expected, latency is unacceptable, and eval scores are poor. If you'd planned 
+                for production from day one, you could have caught these issues in week 1 instead 
+                of month 6. That's why the structured workflow matters - it prevents expensive 
+                detours.
+            </p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The 15-Minute Meeting That Saved 6 Months</div>
+            <p>A PM spent 15 minutes asking "What would make this feature fail in production?" The team identified cost as a likely killer. They pivoted to a simpler approach. That 15-minute question potentially saved 6 months of wasted development effort.</p>
+        </div>
+
+        <div class="callout aha-moment">
+            <div class="callout-title">&#128161; Aha Moment: The Production Gap</div>
+            <p><strong>The shock:</strong> The gap between "works in prototype" and "works in production" is where most AI product attempts die. Teams spend 6 months trying to ship what they built in 2 weeks.</p>
+            <p><strong>What this means:</strong> Plan for production from day one. Define your eval criteria, estimate your costs, and set latency targets before you write code. The structured workflow is not about slowing down; it is about preventing expensive rewrites.</p>
+        </div>
+
+        <hr>
+
+        <h3>Phase 1: Idea and Discovery (Weeks 1-2)</h3>
+
+        <p>
+            Every successful AI product starts with a clearly defined problem. This phase is about 
+            validating that your problem is worth solving and that AI is the right approach.
+        </p>
+
+        <h4>Step 1: Define the Problem</h4>
+        <p>
+            Articulate the specific user problem you're solving. Avoid vague statements like "help users 
+            be more productive." Instead, define concrete outcomes: "Reduce the time it takes for 
+            customer support <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> to find relevant help articles from 3 minutes to 30 seconds."
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Skill Demonstration: Problem Statement Template</div>
+            <p><strong>Before (Vague):</strong> "Build an AI that helps with coding."</p>
+            <p><strong>After (Specific):</strong> "Reduce junior developer code review feedback time by 70% by automatically identifying common bugs and suggesting fixes in their GitHub PR workflow."</p>
+        </div>
+
+        <h4>Step 2: Research Market and Users</h4>
+        <p>
+            Validate that your target users actually have this problem. Conduct user interviews, analyze 
+            competitor products, and examine where users currently go to solve this problem. The goal 
+            is to understand the alternatives your AI product will compete against.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario</div>
+            <p>
+                A SaaS company wanted to add AI writing assistance. Rather than building first, they 
+                analyzed their users' existing workflows: 40% used ChatGPT directly, 30% used Grammarly, 
+                20% used no tool, and 10% had custom solutions. This revealed the real opportunity: 
+                not a general writing tool, but domain-specific assistance for their specific use case.
+            </p>
+        </div>
+
+        <h4>Step 3: Create Initial Specification</h4>
+        <p>
+            Document what your AI product will do and, crucially, what it won't do. Define the scope 
+            clearly to prevent scope creep during development.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Code Example: Specification Document Structure</div>
+            <pre><code>AI Product Specification - Customer Support AI Assistant
+
+PROBLEM:
+- Support <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> spend 3+ minutes per ticket searching knowledge base
+- 60% of questions are repetitive
+
+SOLUTION:
+- AI-powered search that understands natural language queries
+- Returns top 3 relevant articles with highlighted answers
+
+SUCCESS METRICS:
+- Reduce average search time from 3 min to 30 sec
+- Increase first-contact resolution by 15%
+
+SCOPE (MVP):
+- Search across knowledge base articles
+- Highlight relevant passages in results
+- Track query satisfaction
+
+OUT OF SCOPE (v2):
+- Multi-language support
+- Live chat integration
+- Auto-response generation
+
+CONSTRAINTS:
+- Must respond in under 2 seconds
+- 95% availability SLA
+- Handle up to 1000 concurrent users</code></pre>
+        </div>
+
+        <hr>
+
+        <h3>Phase 2: Vibe Prototype (Weeks 2-6)</h3>
+
+        <p>
+            This is where you move fast using vibe coding techniques to validate your concept before 
+            investing in production engineering.
+        </p>
+
+        <h4>Step 1: Build Fast with Vibe Coding</h4>
+        <p>
+            Use AI coding assistants, low-code tools, and rapid prototyping to build a working demo. 
+            The goal is to test your core value proposition quickly.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Skill Demonstration: Rapid Prototype Timeline</div>
+            <p><strong>Day 1-2:</strong> Set up basic UI with placeholder data</p>
+            <p><strong>Day 3:</strong> Connect to LLM API with simple prompt</p>
+            <p><strong>Day 4:</strong> Add basic retrieval (fake data initially)</p>
+            <p><strong>Day 5:</strong> User testing with 5 users</p>
+            <p><strong>Day 6-7:</strong> Iterate based on feedback</p>
+        </div>
+
+        <h4>Step 2: Define Golden Dataset</h4>
+        <p>
+            Your golden dataset is a curated set of examples that represent the types of queries 
+            your product should handle well. This becomes your primary evaluation benchmark.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: Golden Dataset Creation</div>
+            <p>
+                For a legal document AI assistant, the golden dataset included: 200 real user queries 
+                from the company's support system, 50 edge cases (ambiguous queries, out-of-scope 
+                requests), and 50 "should fail" examples (harmful requests, privacy violations). 
+                Each example was annotated with the expected answer type and quality rating.
+            </p>
+        </div>
+
+        <pre><code>Golden Dataset Entry Example:
+{
+  "id": "gd_001",
+  "query": "What's the termination clause for the contract?",
+  "expected_output_type": "quoted_section",
+  "expected_source": "contract_section_4_2",
+  "quality_rating": "excellent",
+  "difficulty": "easy",
+  "notes": "User wants specific clause, not summary"
+}</code></pre>
+
+        <h4>Step 3: Iterate on Evaluation Criteria</h4>
+        <p>
+            Your eval criteria define what "good" looks like. Start with simple metrics and 
+            refine them based on what you observe during testing.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Eval Criteria Evolution Example</div>
+            <p><strong>v1 (Initial):</strong> "Answers should be relevant to the query"</p>
+            <p><strong>v2 (After user testing):</strong> "Answers must cite sources, be under 200 words, and not hallucinate"</p>
+            <p><strong>v3 (After production testing):</strong> Complete rubric with scoring for: relevance (0-10), accuracy (0-10), conciseness (0-10), source citation (yes/no), hallucination (yes/no)</p>
+        </div>
+
+        <hr>
+
+        <h3>Phase 3: Production Engineering (Weeks 6-12)</h3>
+
+        <p>
+            Transition from prototype to production involves addressing reliability, cost, 
+            and scale concerns that don't matter in prototyping.
+        </p>
+
+        <h4>Step 1: Optimize for Cost</h4>
+        <p>
+            AI inference costs can quickly spiral. Build cost controls early.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Code Example: Cost-Aware API Handler</div>
+            <pre><code>async function handleUserQuery(query) {
+  const startTime = Date.now();
+  
+  // Step 1: Use cheaper model for classification
+  const classification = await callModel('claude-haiku', {
+    messages: [{ role: 'user', content: `Classify: ${query}` }],
+    temperature: 0.1
+  });
+  
+  // Step 2: Route based on complexity
+  if (classification.type === 'simple') {
+    // Use cached response or simple retrieval
+    return await getCachedResponse(query);
+  } else if (classification.type === 'complex') {
+    // Use more capable model
+    return await callModel('claude-sonnet', {
+      messages: [{ role: 'user', content: query }],
+      temperature: 0.7
+    });
+  }
+  
+  // Step 3: Track cost per request
+  const cost = calculateCost(classification) + 
+    (classification.type === 'complex' ? calculateCost(sonnet) : 0);
+  
+  metrics.record('query_cost', cost);
+  
+  if (cost > threshold) {
+    alert('High cost detected for query:', query);
+  }
+}</code></pre>
+        </div>
+
+        <h4>Step 2: Add Observability</h4>
+        <p>
+            You cannot improve what you cannot measure. Build comprehensive observability 
+            from the start.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Key Metrics to Track</div>
+            <ul>
+                <li><strong>Latency:</strong> P50, P95, P99 response times</li>
+                <li><strong>Cost per request:</strong> Track by user, session, and feature</li>
+                <li><strong>Quality scores:</strong> Run evals on sample of responses</li>
+                <li><strong>Error rates:</strong> By type and severity</li>
+                <li><strong>Human escalation rate:</strong> When users need human help</li>
+            </ul>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">DataForge: Prometheus Metrics Definitions</div>
+            <p>DataForge tracks AI-specific metrics beyond standard infrastructure metrics:</p>
+            <pre># Prometheus metrics for DataForge
+CODE_ACCEPTANCE = Counter(
+    'dataforge_code_acceptance_total',
+    'User acceptance of generated code',
+    ['user_tier', 'complexity']
+)
+PIPELINE_SUCCESS = Histogram(
+    'dataforge_pipeline_success_duration_seconds',
+    'Time for generated pipeline to first success',
+    buckets=[60, 300, 900, 3600]
+)
+RETRIEVAL_RELEVANCE = Gauge(
+    'dataforge_retrieval_relevance_score',
+    'Average relevance score of retrieved context',
+    ['query_type']
+)
+HALLUCINATION_RATE = Counter(
+    'dataforge_hallucination_total',
+    'Detected hallucinations in generated code',
+    ['severity']
+)</pre>
+            <p>DataForge found that tracking code acceptance rate was the most leading indicator of customer churn. Customers whose acceptance rate dropped below 70% were 5x more likely to cancel within 30 days. By proactively monitoring this metric, they could intervene before customers complained.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Real-Time Route Monitoring</div>
+            <p>QuickShip monitors latency for their route suggestion API using Prometheus/Grafana:</p>
+            <pre># QuickShip observability stack configuration
+route_suggestion_latency_seconds{quantile="0.99"}
+route_suggestion_latency_seconds{quantile="0.95"}
+route_suggestion_latency_seconds{quantile="0.50"}
+
+# Alert configuration for P99 latency
+- alert: RouteSuggestionLatencyHigh
+  expr: histogram_quantile(0.99, rate(route_suggestion_seconds_bucket[5m])) > 0.5
+  for: 2m
+  labels:
+    severity: critical
+  annotations:
+    summary: "Route suggestion P99 latency exceeds 500ms"
+
+# Route accuracy tracking
+route_accuracy_percent{carrier="ups", route_type="domestic"}
+route_accuracy_percent{carrier="fedex", route_type="international"}</pre>
+            <p>QuickShip's SLA requires 95% of route suggestions to complete within 200ms. Their Grafana dashboard shows real-time latency breakdown by carrier, route type, and time of day, allowing them to identify bottlenecks before customers notice.</p>
+        </div>
+
+        <h4>Step 3: Implement Guardrails</h4>
+        <p>
+            Guardrails protect your users and your product from edge cases and abuse.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: Guardrail Failure</div>
+            <p>
+                A customer service chatbot was deployed without proper input guardrails. 
+                Users discovered they could inject system prompts through creative phrasing, 
+                causing the bot to reveal internal documentation. The fix required implementing 
+                input validation, output filtering, and rate limiting within 48 hours.
+            </p>
+        </div>
+
+        <pre><code>Guardrail Implementation Example:
+const guardrails = {
+  input: {
+    maxLength: 2000,
+    blockedPatterns: ['system:', 'ignore previous', 'you are now'],
+    requireAuth: true
+  },
+  output: {
+    filterPII: true,
+    blockSensitiveTerms: ['internal only', 'confidential'],
+    maxTokens: 1000
+  },
+  rateLimit: {
+    perUser: { count: 100, window: '1m' },
+    perIP: { count: 1000, window: '1h' }
+  }
+};</code></pre>
+
+        <hr>
+
+        <h3>Phase 4: Launch and Iterate (Ongoing)</h3>
+
+        <p>
+            Launch is just the beginning. Successful AI products require continuous improvement 
+            based on real-world feedback.
+        </p>
+
+        <h4>Step 1: Ship to Users</h4>
+        <p>
+            Start with a controlled rollout. Don't ship to everyone at once.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Phased Rollout Strategy</div>
+            <ul>
+                <li><strong>Internal (5-10 users):</strong> Team uses product daily, report issues immediately</li>
+                <li><strong>Alpha (50-100 users):</strong> Trusted early adopters with direct feedback channel</li>
+                <li><strong>Beta (1000+ users):</strong> Broader audience, monitor metrics closely</li>
+                <li><strong>GA:</strong> Full availability with full support infrastructure</li>
+            </ul>
+        </div>
+
+        <h4>Step 2: Monitor Evals</h4>
+        <p>
+            Your evaluation metrics should run continuously in production, not just during development.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: Eval Drift Detection</div>
+            <p>
+                A search product noticed their eval scores dropped 8% over 2 weeks. Investigation 
+                revealed that new documents added to the index had different formatting than 
+                training data, causing retrieval to fail. The fix: add document quality validation 
+                and retrain the chunking algorithm on the new format.
+            </p>
+        </div>
+
+        <h4>Step 3: Continuous Improvement</h4>
+        <p>
+            Establish a regular cadence of improvements based on what you learn from production data.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Improvement Sprint Template</div>
+            <pre><code>Bi-Weekly AI Product Improvement Cycle:
+
+Week 1 (Focus):
+- Review top 10 user complaints
+- Analyze failure cases from eval system
+- Update golden dataset with new examples
+
+Week 2 (Execute):
+- Implement fix for highest-impact issue
+- A/B test the change
+- Update documentation if behavior changed
+
+Metrics to Review:
+- Eval score trend
+- Cost per session
+- User satisfaction
+- Escalation rate</code></pre>
+        </div>
+
+        <hr>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Key Takeaways</div>
+            <ul>
+                <li>Start with a clearly defined, specific problem</li>
+                <li>Move fast in prototype phase, but capture eval data from day one</li>
+                <li>Build cost controls and observability before shipping</li>
+                <li>Launch incrementally and monitor continuously</li>
+                <li>Iterate based on production data, not assumptions</li>
+            </ul>
+        </div>
+
+        <div class="callout exercise">
+            <div class="callout-title">Exercise: Plan Your End-to-End AI Product</div>
+            <p><strong>Scenario:</strong> You want to build an AI-powered meeting summarizer that extracts action items from video calls.</p>
+            <ol>
+                <li>Write a specific problem statement following the template in this chapter.</li>
+                <li>What would you include in your golden dataset? Give at least 5 example entries.</li>
+                <li>Outline your phased rollout strategy from internal to GA.</li>
+            </ol>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Templates and Checklists</strong> - practical tools for eval and production readiness.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Ch 17: Overview</a>
+            <a class="up" href="index.html">Chapter 17 Index</a>
+            <a class="next" href="section-17-2.html">17.2 Templates and Checklists</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 17.1 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

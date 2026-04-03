@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12.6 Agent Memory Management - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 12</div>
+        <h1>Prompts, Chains, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and Orchestration</h1>
+        <p class="chapter-subtitle">12.6 Agent Memory Management</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn how to manage memory and state in long-running conversational <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 12.5 recommended. Understanding of agent architectures.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Memory Enables Continuity</div>
+            <p>This section covers memory management strategies for long-running conversational <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, from sliding windows to knowledge graphs. In the context of AI products, memory enables <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> to maintain context across interactions, which is essential for useful customer-facing applications. Without proper memory management, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> either forget important context or degrade over time.</p>
+        </div>
+
+        <h2 id="section-12-6">12.6 Agent Memory Management</h2>
+
+        <p>
+            AI <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> that serve users over multiple interactions must remember relevant history while discarding noise. Memory management is the discipline that makes this possible. Without proper memory management, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> either forget important context or accumulate unbounded state that degrades performance.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            A customer service agent that does not remember your name from the last interaction provides a frustrating experience. A research agent that remembers every token from every conversation eventually runs out of <a href="../../part-1-foundations/chapter-1/sections/section-1-3.html">Context Window</a>. Memory management is the difference between <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> that are useful over time and <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> that fail in extended interactions.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Unbounded Memory Problem</div>
+            <p>Passing entire conversation histories to language models creates three problems: escalating latency as history grows, escalating cost as more tokens are processed, and degrading quality as relevant context is diluted by noise. Memory management is not optional; it is essential for viable long-running <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>.</p>
+        </div>
+
+        <h3>1. Conversation Window Memory</h3>
+
+        <p>
+            The simplest approach: maintain a sliding window of recent messages. When the window fills, the oldest messages are discarded. This is effective for most conversational applications.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Sliding Window Implementation</div>
+            <pre class="code-block">class SlidingWindowMemory:
+    """Maintain last N messages in conversation"""
+    
+    def __init__(self, max_tokens: int = 16000):
+        self.messages = []
+        self.max_tokens = max_tokens  # Leave room for response
+    
+    def add_message(self, role: str, content: str):
+        self.messages.append({"role": role, "content": content})
+        self._prune_if_needed()
+    
+    def _prune_if_needed(self):
+        while self.count_tokens(self.messages) > self.max_tokens:
+            # Remove oldest message
+            self.messages.pop(0)
+    
+    def get_context(self) -> list:
+        return self.messages
+    
+    def count_tokens(self, messages: list) -> int:
+        # Approximate token count
+        return sum(len(m["content"].split()) * 1.3 for m in messages)</pre>
+        </div>
+
+        <h3>2. Summarization-Based Memory</h3>
+
+        <p>
+            For longer conversations, periodically summarize the history into a compact form. This preserves key information while dramatically reducing token count.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Summarization Memory</div>
+            <pre class="code-block">class SummarizationMemory:
+    """Periodically summarize conversation history"""
+    
+    def __init__(self, llm, max_messages: int = 20, summary_interval: int = 10):
+        self.messages = []
+        self.summary = ""
+        self.llm = llm
+        self.max_messages = max_messages
+        self.summary_interval = summary_interval
+        self.messages_since_summary = 0
+    
+    def add_message(self, role: str, content: str):
+        self.messages.append({"role": role, "content": content})
+        self.messages_since_summary += 1
+        
+        if self.messages_since_summary >= self.summary_interval:
+            self._summarize()
+            self.messages_since_summary = 0
+    
+    def _summarize(self):
+        """Compress old messages into summary"""
+        old_messages = self.messages[:-self.summary_interval]
+        if not old_messages:
+            return
+        
+        # Generate summary of old messages
+        summary_prompt = f"""
+        Summarize this conversation concisely, preserving key facts and decisions:
+        
+        {self._format_messages(old_messages)}
+        
+        Summary:
+        """
+        
+        new_summary = self.llm.invoke(summary_prompt)
+        
+        # Keep summary and recent messages
+        self.summary = f"{self.summary}\n{new_summary}" if self.summary else new_summary
+        self.messages = self.messages[-self.summary_interval:]
+    
+    def get_context(self) -> list:
+        context = []
+        if self.summary:
+            context.append({"role": "system", "content": f"Previous conversation summary: {self.summary}"})
+        context.extend(self.messages)
+        return context</pre>
+        </div>
+
+        <h3>3. Entity Memory</h3>
+
+        <p>
+            Track key entities (people, companies, preferences, facts) that emerge during conversation. Entity memory enables <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> to recall specific details without storing entire conversations.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Entity Memory for Customer Support</div>
+            <pre class="code-block">class EntityMemory:
+    """Remember key entities across conversations"""
+    
+    def __init__(self, max_entities: int = 100):
+        self.entities = {}  # name -> {value, last_updated, importance, category}
+        self.max_entities = max_entities
+    
+    def add_entity(self, name: str, value: str, category: str = "general", importance: float = 0.5):
+        self.entities[name] = {
+            "value": value,
+            "last_updated": datetime.now(),
+            "importance": importance,
+            "category": category
+        }
+        self._evict_if_needed()
+    
+    def get_entity(self, name: str) -> str | None:
+        entity = self.entities.get(name)
+        if entity:
+            entity["last_updated"] = datetime.now()  # Bump on access
+            return entity["value"]
+        return None
+    
+    def _evict_if_needed(self):
+        if len(self.entities) > self.max_entities:
+            # Remove lowest importance entities
+            sorted_entities = sorted(
+                self.entities.items(),
+                key=lambda x: (x[1]["importance"], x[1]["last_updated"])
+            )
+            
+            # Remove bottom 10%
+            to_remove = len(sorted_entities) // 10
+            for name, _ in sorted_entities[:to_remove]:
+                del self.entities[name]
+    
+    def extract_and_store(self, text: str):
+        """Extract entities from text using LLM"""
+        entities = self.llm.invoke(f"""
+            Extract key entities from this text as JSON:
+            {{
+              "entities": [
+                {{"name": "entity name", "value": "what it refers to", "category": "person/product/fact/preference", "importance": 0.1-1.0}}
+              ]
+            }}
+            
+            Text: {text}
+        """)
+        # Store extracted entities
+        for entity in entities:
+            self.add_entity(entity["name"], entity["value"], entity.get("category"), entity.get("importance", 0.5))
+    
+    def get_context_string(self) -> str:
+        if not self.entities:
+            return ""
+        
+        # Group by category
+        by_category = {}
+        for name, data in self.entities.items():
+            cat = data.get("category", "general")
+            if cat not in by_category:
+                by_category[cat] = []
+            by_category[cat].append(f"{name}: {data['value']}")
+        
+        return "\n".join([f"{cat}: {', '.join(items)}" for cat, items in by_category.items()])</pre>
+        </div>
+
+        <h3>4. Knowledge Graph Memory</h3>
+
+        <p>
+            For complex domains, maintain a knowledge graph that captures relationships between entities. This enables reasoning over connected facts rather than isolated mentions.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: Knowledge Graph Memory</div>
+            <pre class="code-block">class KnowledgeGraphMemory:
+    """Graph-based memory for related entities"""
+    
+    def __init__(self, graph_db):
+        self.graph = graph_db  # Neo4j or similar
+    
+    def add_fact(self, subject: str, predicate: str, object: str, confidence: float = 1.0):
+        """Add a fact to the graph"""
+        self.graph.query("""
+            MERGE (s:Entity {name: $subject})
+            MERGE (o:Entity {name: $object})
+            MERGE (s)-[r:RELATES {type: $predicate, confidence: $confidence}]->(o)
+        """, {"subject": subject, "predicate": predicate, "object": object, "confidence": confidence})
+    
+    def query(self, subject: str = None, predicate: str = None, related_to: str = None) -> list:
+        """Query the graph for facts"""
+        if subject and predicate and related_to:
+            results = self.graph.query("""
+                MATCH (s:Entity {name: $subject})-[r:RELATES {type: $predicate}]->(o:Entity {name: $related_to})
+                RETURN s.name, r.type, o.name, r.confidence
+            """, {"subject": subject, "predicate": predicate, "related_to": related_to})
+        elif subject:
+            results = self.graph.query("""
+                MATCH (s:Entity {name: $subject})-[r]->(o)
+                RETURN o.name, r.type, r.confidence
+            """, {"subject": subject})
+        
+        return results
+    
+    def get_context_for_agent(self, topic: str) -> str:
+        """Get all facts related to a topic for agent context"""
+        facts = self.query(related_to=topic)
+        return "\n".join([f"- {f['s.name']} {f['r.type']} {f['o.name']}" for f in facts])</pre>
+        </div>
+
+        <h3>5. Hybrid Memory Architecture</h3>
+
+        <p>
+            Production systems typically combine multiple memory types. Each serves a different purpose and operates at a different granularity.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: Hybrid Memory for Research Assistant</div>
+            <pre class="code-block">class HybridAgentMemory:
+    """
+    Production memory system combining multiple memory types.
+    Each operates at different granularity for different purposes.
+    """
+    
+    def __init__(self, llm):
+        # Working memory: recent conversation (sliding window)
+        self.working = SlidingWindowMemory(max_tokens=8000)
+        
+        # Episodic memory: summarized past interactions
+        self.episodic = SummarizationMemory(llm, max_messages=20)
+        
+        # Semantic memory: key facts and entities
+        self.semantic = EntityMemory(max_entities=100)
+        
+        # Procedural memory: learned patterns and workflows
+        self.procedural = {}
+    
+    def add_turn(self, user_message: str, agent_response: str):
+        """Add a conversation turn to appropriate memories"""
+        # Working memory
+        self.working.add_message("user", user_message)
+        self.working.add_message("assistant", agent_response)
+        
+        # Episodic memory
+        self.episodic.add_message("user", user_message)
+        self.episodic.add_message("assistant", agent_response)
+        
+        # Semantic memory: extract entities
+        self.semantic.extract_and_store(user_message)
+        self.semantic.extract_and_store(agent_response)
+    
+    def get_agent_context(self) -> str:
+        """Combine all memory types into context string"""
+        parts = []
+        
+        # Recent conversation
+        working_context = self.working.get_context()
+        if working_context:
+            parts.append("Recent conversation:\n" + self._format_messages(working_context))
+        
+        # Past summary
+        episodic_context = self.episodic.get_context()
+        if episodic_context:
+            parts.append("Past interactions:\n" + episodic_context)
+        
+        # Key entities
+        entity_context = self.semantic.get_context_string()
+        if entity_context:
+            parts.append("Known facts:\n" + entity_context)
+        
+        return "\n\n".join(parts)
+    
+    def remember_learned_pattern(self, pattern_name: str, pattern_data: dict):
+        """Store learned procedural knowledge"""
+        self.procedural[pattern_name] = pattern_data
+    
+    def get_learned_pattern(self, pattern_name: str) -> dict | None:
+        return self.procedural.get(pattern_name)</pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Memory Type</th><th>Granularity</th><th>Capacity</th><th>Use Case</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Sliding Window</td><td>Messages</td><td>Fixed token limit</td><td>Short conversations</td></tr>
+                <tr><td>Summarization</td><td>Episode summaries</td><td>Unlimited</td><td>Long conversations</td></tr>
+                <tr><td>Entity Memory</td><td>Key facts</td><td>Configurable</td><td>Personalization</td></tr>
+                <tr><td>Knowledge Graph</td><td>Related entities</td><td>Unlimited</td><td>Complex domains</td></tr>
+                <tr><td>Hybrid</td><td>All of the above</td><td>Maximized</td><td>Production systems</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Memory Is Not Free</div>
+            <p>Every memory operation has a cost. Summarization uses LLM calls. Entity extraction uses LLM calls. Knowledge graph updates add latency. Design your memory system with the same cost discipline you apply to the rest of your architecture. More memory is not always better.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="../chapter-13/index.html">Chapter 13: Knowledge Retrieval and Advanced RAG</a> 
+                to learn systematic approaches to evaluating retrieval quality in <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> systems.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-12-5.html">12.5 Advanced Agent Patterns</a>
+            <a class="up" href="index.html">Chapter 12 Index</a>
+            <a class="next" href="../chapter-13/sections/section-13-1.html">13.1 Vector Database Landscape</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 12.6 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

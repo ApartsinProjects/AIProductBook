@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appendix C: Templates - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../index.html">Part VII: Practice and Teaching Kit</a></div>
+        <div class="chapter-label">Appendix C</div>
+        <h1>Templates</h1>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Provide ready-to-use templates for AI product development.
+        </p>
+
+        <h2>C.1 Eval-First PRD Template</h2>
+
+        <p>
+            An eval-first Product Requirements Document extends traditional PRD structure with explicit evaluation criteria. This ensures quality is defined before implementation begins.
+        </p>
+
+        <div class="callout note">
+            <div class="callout-title">Eval-First PRD Template</div>
+            <pre>
+# Product Requirements Document: [Product Name]
+
+## 1. Problem Statement
+[What user problem does this product solve?]
+
+## 2. Success Metrics
+| Metric | Target | Measurement Method |
+|--------|--------|-------------------|
+| [Metric 1] | [Target]% | [How measured] |
+| [Metric 2] | [Target]% | [How measured] |
+
+## 3. AI Capability Requirements
+
+### 3.1 Core Functionality
+[What should the AI do?]
+
+### 3.2 Evaluation Criteria
+| Criterion | Test Method | Pass Threshold |
+|-----------|-------------|---------------|
+| [Criterion 1] | [LLM-as-judge / unit test / human eval] | [Threshold] |
+| [Criterion 2] | [Same] | [Threshold] |
+
+### 3.3 Known Failure Modes
+| Failure Mode | Severity | Mitigation |
+|--------------|----------|------------|
+| [Mode 1] | High | [Strategy] |
+| [Mode 2] | Medium | [Strategy] |
+
+## 4. Functional Requirements
+[Standard feature list]
+
+## 5. Non-Functional Requirements
+- Latency: [P95 target]
+- Availability: [SLA]
+- Cost: [Per-call target]
+
+## 6. Constraints
+- [Regulatory / privacy / technical constraints]
+
+## 7. Out of Scope
+- [Explicitly excluded features]
+            </pre>
+        </div>
+
+        <h2>C.2 AI Product Requirements Checklist</h2>
+
+        <div class="callout tip">
+            <div class="callout-title">AI Product Requirements Checklist</div>
+            <p>Problem Validation requires that user research has been conducted with target users, problem frequency has been quantified, the current workaround has been documented, and willingness to pay has been established. AI Appropriateness requires that the AI capability genuinely improves on the status quo, failure modes have been identified and are acceptable, human oversight has been designed, and graceful degradation has been defined. Evaluation Coverage requires that an eval dataset has been created with a minimum of one hundred cases, baseline metrics have been established, success thresholds have been defined, and a regression test suite has been planned. Trust and Safety requires that content safety guardrails have been defined, prompt injection mitigations have been planned, the bias evaluation approach has been documented, and privacy requirements have been addressed. Business Viability requires that cost per request has been estimated, unit economics have been validated, compliance requirements have been identified, and competitive differentiation is clear.</p>
+        </div>
+
+        <h2>C.3 USID.O Framework Worksheet</h2>
+
+        <p>
+            USID.O (Understand, Specify, Implement, Deploy, Operate) provides a structured approach to AI product development:
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">USID.O Worksheet</div>
+            <pre>
+## Understand
+- User: [Who is the end user?]
+- Situation: [When/where do they encounter the problem?]
+- Issue: [What specifically goes wrong or is difficult?]
+- Desire: [What would make it better?]
+
+## Specify
+- AI Capability: [What should the AI do?]
+- Success Criteria: [How do we measure success?]
+- Constraints: [What limits the solution space?]
+
+## Implement
+- Architecture: [System design]
+- Eval Plan: [How do we verify quality?]
+- Fallbacks: [What happens when AI fails?]
+
+## Deploy
+- Rollout: [Phased or big bang?]
+- Monitoring: [What signals indicate success/failure?]
+- Rollback: [How do we undo?]
+
+## Operate
+- Maintenance: [Who owns ongoing quality?]
+- Improvement: [How do we iterate?]
+- Sunset: [When do we retire the feature?]
+            </pre>
+        </div>
+
+        <h2>C.4 Architecture Decision Template</h2>
+
+        <pre>
+# Architecture Decision Record: [Title]
+
+## Status
+[Proposed | Accepted | Deprecated | Superseded]
+
+## Context
+[What is the issue or decision being addressed?]
+
+## Decision
+[What is the change being made?]
+
+## Options Considered
+| Option | Pros | Cons | Risk |
+|--------|------|------|------|
+| [A] | [List] | [List] | [Level] |
+| [B] | [List] | [List] | [Level] |
+
+## Consequences
+### Positive
+- [List benefits]
+
+### Negative
+- [List drawbacks]
+
+### Neutral
+- [List trade-offs]
+
+## Compliance
+- [ ] Security review completed
+- [ ] Privacy review completed
+- [ ] Cost analysis approved
+            </pre>
+
+        <h2>C.5 Eval Dataset Curation Checklist</h2>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval Dataset Quality Checklist</div>
+            <p>Coverage requires that the dataset represents real user query distribution, includes edge cases and failure modes, covers all priority intents, and includes multi-language examples if applicable. Quality requires that ground truth has been verified by experts, no personally identifiable information is present, authors and sources are diverse, and labels are consistent and unambiguous. Maintenance requires that the dataset is version controlled, additions are reviewed before merging, stale examples are removed periodically, and drift from production is monitored over time.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="appendix-b-tool-comparison.html">Appendix B: Tools</a>
+            <a class="up" href="../index.html">Part VII Overview</a>
+            <a class="next" href="appendix-d-evaluation-rubrics.html">Appendix D: Rubrics</a>
+        </nav>
+
+        <footer>
+            <p>Appendix C &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

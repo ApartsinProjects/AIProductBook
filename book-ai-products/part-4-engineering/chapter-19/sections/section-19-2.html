@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>19.2 A2A for Agent Interoperability - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+    <style>
+        .diagram-block {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .agent-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .agent-card h4 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+        }
+        .agent-card small {
+            opacity: 0.9;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 19.2</div>
+        <h1>A2A for <a href="../../../part-1-why-ai-changes/chapter-2/sections/section-2-3.html" class="cross-ref">Agent</a> Interoperability</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"MCP connects AI to tools. A2A connects AI to AI. The difference matters when your AI product needs to coordinate multiple agents, each with their own specialization, to solve complex problems no single agent can handle alone."</p>
+            <cite>Head of AI Architecture, DataForge</cite>
+        </blockquote>
+
+        <h2>Introduction</h2>
+        <p>
+            While MCP standardizes how models interact with tools, the Agent-to-Agent (A2A) protocol addresses a different problem: how multiple AI agents communicate, coordinate, and collaborate to solve complex tasks. A2A is essential for building AI products that decompose problems across specialized agents, delegate work, and synthesize results.
+        </p>
+
+        <h2>The Multi-Agent Coordination Problem</h2>
+        <p>
+            Complex AI tasks often require multiple specialized capabilities that no single model can optimally provide. A research agent needs to coordinate with a writing agent. A code generation agent needs to coordinate with a testing agent. A planning agent needs to coordinate with execution agents.
+        </p>
+        <p>
+            Without standardized protocols, multi-agent coordination requires bespoke implementations that are hard to maintain, difficult to debug, and impossible to reuse across different agent combinations.
+        </p>
+
+        <div class="callout big-picture">
+            <h4>Why A2A Matters for AI Products</h4>
+            <p>AI products that seem like single agents are often systems of agents. Customer service AI includes intent classification, response generation, and knowledge retrieval agents. Code generation AI includes parsing, generation, testing, and debugging agents. A2A enables these agent systems to be built from interchangeable components rather than integrated custom code.</p>
+        </div>
+
+        <h2>A2A Protocol Design</h2>
+        <p>
+            A2A defines how agents discover each other, negotiate tasks, share context, and report results. The protocol is designed around several key principles.
+        </p>
+
+        <h3>Agent Discovery</h3>
+        <p>
+            Agents in an A2A system can discover each other through a registry. When a new agent joins the system, it registers its capabilities. Other agents can query the registry to find agents that can help with specific tasks.
+        </p>
+
+        <div class="diagram-block">
++------------------------------------------------------------------+
+|                    A2A AGENT DISCOVERY                              |
++------------------------------------------------------------------+
+|                                                                       |
+|   +----------------+                                              |
+|   |  Agent         |                                              |
+|   |  Registry      |<---------------------------------------------+ |
+|   +-------+--------+                                              | |
+|           |                                                       | |
+|           | 1. Register (capabilities)                             | |
+|           | 2. Query (find agent)                                  | |
+|           |                                                       | |
+|           v                                                       | |
+|   +----------------+       +----------------+       +----------------+ |
+|   | Research       |       | Writing        |       | Code           | |
+|   | Agent          |       | Agent          |       | Generation     | |
+|   |                |       |                |       | Agent          | |
+|   | - Web search   |       | - Edits        |       | - Generation   | |
+|   | - Fact check   |       | - Formatting   |       | - Testing      | |
+|   +----------------+       +----------------+       +----------------+ |
+|                                                                       |
+|   Use case: User asks "Research topic X and write a report"           |
+|   Research Agent -> finds Writing Agent via registry -> delegates      |
+|                                                                       |
++------------------------------------------------------------------+
+        </div>
+
+        <h3>Task Negotiation</h3>
+        <p>
+            When one agent needs to delegate work to another, A2A defines a negotiation protocol. The delegating agent proposes a task with constraints. The receiving agent can accept, reject, or negotiate modifications based on its capabilities and current load.
+        </p>
+
+        <h3>Context Sharing</h3>
+        <p>
+            Agents need to share context efficiently. A2A defines standardized context formats that agents use to share partial results, intermediate findings, and task state. This standardization enables agents to pick up work where other agents left off.
+        </p>
+
+        <h3>Result Reporting</h3>
+        <p>
+            When an agent completes its portion of a task, it reports results in a standardized format that other agents can consume. Results include not just the output but also confidence scores, limitations, and suggestions for follow-up work.
+        </p>
+
+        <h2>A2A in Practice: DataForge Multi-Agent Pipeline</h2>
+
+        <div class="callout practical-example">
+            <h4>DataForge Code Generation Pipeline</h4>
+            <p><strong>Architecture:</strong> DataForge uses A2A to coordinate a pipeline of specialized agents for enterprise data pipeline generation.</p>
+        </div>
+
+        <div class="diagram-block">
++------------------------------------------------------------------+
+|                    DATAFORGE A2A PIPELINE                           |
++------------------------------------------------------------------+
+|                                                                       |
+|   User: "Create pipeline joining orders to customers, output to S3"  |
+|                                                                       |
+|   +----------------+                                               |
+|   | Orchestrator   | : Receives request, decomposes into tasks      |
+|   | Agent          |                                               |
+|   +-------+--------+                                               |
+|           |                                                         |
+|           | A2A: Delegate schema_analysis                            |
+|           v                                                         |
+|   +----------------+   A2A: Delegate code_generation                 |
+|   | Schema         | ----------------------------------------+      |
+|   | Agent          |                                         |      |
+|   +-------+--------+                                         |      |
+|           |                                                   v      |
+|           | A2A: Share schema context                          |      |
+|           +---------------------------------------------------+      |
+|                                                                     |
+|                               +----------------+   A2A: Delegate    |
+|                               | Code           | ------------------+ |
+|                               | Generation     |                    |
+|                               | Agent          |                    |
+|                               +-------+--------+                    |
+|                                       |                              |
+|                                       | A2A: Share generated code    |
+|                                       v                              |
+|                               +----------------+   A2A: Delegate     |
+|                               | Testing        | -------------------+ |
+|                               | Agent          |                    |
+|                               +-------+--------+                    |
+|                                       |                             |
+|                                       | A2A: Report test results     |
+|                                       v                             |
+|                               +----------------+                    |
+|                               | Orchestrator   | : Synthesize final  |
+|                               | Agent          |   pipeline output   |
+|                               +-------+--------+                    |
+|                                                                     |
++------------------------------------------------------------------+
+        </div>
+
+        <p>
+            Each agent in the pipeline uses A2A to communicate with others. The orchestrator does not hard-code agent implementations. It discovers agents via A2A registry and delegates tasks based on their advertised capabilities.
+        </p>
+
+        <h2>Benefits for AI Product Teams</h2>
+
+        <h3>Composable Architecture</h3>
+        <p>
+            A2A enables a composable <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">agent architecture</a> where agents can be added, removed, or replaced without changing the rest of the system. Adding a new specialized agent requires only registering it with the A2A registry.
+        </p>
+
+        <h3>Scalable Processing</h3>
+        <p>
+            When one agent type becomes a bottleneck, A2A enables horizontal scaling of that specific agent. Multiple instances of a code generation agent can register with the same capabilities, and the orchestrator distributes work across them.
+        </p>
+
+        <h3>Debugging and Observability</h3>
+        <p>
+            Standardized agent communication enables better debugging. A2A messages can be logged, replayed, and analyzed to understand how agents collaborated on a task and where failures occurred.
+        </p>
+
+        <h2>A2A vs MCP: Complementary Protocols</h2>
+        <p>
+            A2A and MCP address different coordination problems and work together in production AI systems.
+        </p>
+
+        <p>
+            <strong>Purpose</strong> differs between the two protocols. A2A focuses on agent-to-agent coordination while MCP focuses on model-to-tool integration. The <strong>communication pattern</strong> also differs significantly: A2A uses negotiation, delegation, and context sharing between agents, whereas MCP uses tool discovery, invocation, and result return for connecting models to external services. In terms of <strong>typical usage</strong>, A2A powers multi-agent pipelines and orchestrators while MCP connects models to external services.
+        </p>
+        <p>
+            <strong>State management</strong> represents a key architectural difference. A2A maintains shared task state and intermediate results across agent interactions, while MCP uses stateless tool calls where each invocation is independent. A concrete example of <strong>A2A</strong> would be a research agent delegating to a writing agent, while an example of <strong>MCP</strong> would be a model querying a database or API.
+        </p>
+
+        <div class="callout key-insight">
+            <h4>Using Both Protocols Together</h4>
+            <p>A sophisticated AI product uses both A2A and MCP. A2A coordinates the overall agent system. MCP connects individual agents to their required tools. A code generation agent uses MCP to access version control. The orchestration system uses A2A to coordinate multiple code generation agents for parallel processing.</p>
+        </div>
+
+        <h2>Challenges and Considerations</h2>
+
+        <h3>Protocol Overhead</h3>
+        <p>
+            A2A adds overhead to agent communication. For simple single-agent tasks, the overhead is unjustified. Reserve A2A for complex multi-agent workflows where the coordination benefits outweigh the protocol cost.
+        </p>
+
+        <h3>Trust and Security</h3>
+        <p>
+            When agents delegate work to each other, security boundaries become complex. An agent that receives delegated tasks should have appropriate permission scoping. A2A implementations need careful security design to prevent privilege escalation.
+        </p>
+
+        <h3>Failure Modes</h3>
+        <p>
+            Multi-agent systems have more failure modes than single-agent systems. An agent might fail mid-task, return untrustworthy results, or become unresponsive. A2A systems need robust timeout handling, retry logic, and graceful degradation.
+        </p>
+
+        <div class="callout warning">
+            <h4>Start with Simpler Architectures</h4>
+            <p>Adopting A2A before you need multi-agent coordination adds unnecessary complexity. Start with single agents or simple agent pipelines. Introduce A2A when you have a demonstrated need for dynamic agent coordination that cannot be achieved through simpler orchestration patterns.</p>
+        </div>
+
+        <h2>Cross-References</h2>
+        <p>
+            For orchestration patterns that A2A enables, see <a href="../../part-4-engineering/chapter-13/index.html">Chapter 13 Prompts and Agents</a>. For tool schemas that MCP uses, see <a href="section-19-1.html">Section 19.1 MCP as a Standard</a>.
+        </p>
+
+        <h2>Section Summary</h2>
+        <p>
+            A2A (Agent-to-Agent) protocol enables multi-agent coordination in AI products. It defines how agents discover each other, negotiate tasks, share context, and report results. A2A enables composable, scalable agent architectures where agents can be added or replaced without system-wide changes. A2A and MCP are complementary: A2A handles agent coordination while MCP connects agents to tools. A2A introduces complexity and overhead, so use it when multi-agent coordination needs are demonstrated rather than theoretical.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-19-1.html">19.1 MCP as a Standard</a>
+            <a class="up" href="../index.html">Chapter 19 Overview</a>
+            <a class="next" href="section-19-3.html">19.3 Tool Schemas and Service Boundaries</a>
+        </nav>
+
+        <footer>
+            <p>Section 19.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

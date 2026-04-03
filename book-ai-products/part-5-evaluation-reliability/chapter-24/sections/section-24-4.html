@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 24.4: Feature Margin Analysis and ROI - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 24</div>
+        <h1>Feature Margin Analysis and <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">ROI</a></h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Every AI feature should pay for itself. Feature margin analysis reveals which features are assets and which are liabilities masquerading as innovation."</p>
+            <cite>A VP of Product Who Reads Unit Economics</cite>
+        </blockquote>
+
+        <h2 id="feature-margin">Feature Margin Analysis</h2>
+
+        <p>
+            Feature margin analysis examines the revenue and cost associated with each AI feature to determine its profitability. A feature with positive margin generates more value than it costs. A feature with negative margin is subsidized by other features or investor capital.
+        </p>
+
+        <h3 id="margin-calculation">Margin Calculation</h3>
+
+        <p>
+            Calculate margin per feature:
+        </p>
+
+        <pre><code class="language-python">
+from dataclasses import dataclass
+from typing import Optional
+
+@dataclass
+class FeatureMargin:
+    feature_name: str
+    
+    # Volume metrics
+    daily_active_users: int
+    avg_sessions_per_user: float
+    avg_calls_per_session: float
+    
+    # Revenue metrics
+    revenue_per_user: float
+    conversion_rate: float  # % sessions that lead to revenue
+    
+    # Cost metrics
+    cost_per_call: float
+    infrastructure_cost_pct: float = 0.2  # Non-token costs
+    
+    @property
+    def daily_volume(self) -> int:
+        return int(self.daily_active_users * self.avg_sessions_per_user)
+    
+    @property
+    def daily_calls(self) -> int:
+        return int(self.daily_volume * self.avg_calls_per_session)
+    
+    @property
+    def daily_revenue(self) -> float:
+        paying_users = self.daily_active_users * self.conversion_rate
+        return paying_users * self.revenue_per_user
+    
+    @property
+    def daily_cost(self) -> float:
+        token_cost = self.daily_calls * self.cost_per_call
+        infra_cost = token_cost * self.infrastructure_cost_pct
+        return token_cost + infra_cost
+    
+    @property
+    def daily_margin(self) -> float:
+        return self.daily_revenue - self.daily_cost
+    
+    @property
+    def margin_percentage(self) -> float:
+        if self.daily_revenue == 0:
+            return 0
+        return (self.daily_margin / self.daily_revenue) * 100
+    
+    @property
+    def unit_economics(self) -> dict:
+        return {
+            "cost_per_session": self.daily_cost / self.daily_volume,
+            "revenue_per_session": self.daily_revenue / self.daily_volume,
+            "margin_per_session": self.daily_margin / self.daily_volume,
+            "cost_per_user": self.daily_cost / self.daily_active_users,
+            "revenue_per_user": self.daily_revenue / self.daily_active_users,
+        }
+        </code></pre>
+
+        <h3 id="margin-classification">Classifying Features by Margin</h3>
+
+        <p>Features can be classified by margin into categories that guide investment strategy. Cash cow features have margins above sixty percent and should be optimized and maintained with high quality since they generate significant profits. Growth driver features have margins between thirty and sixty percent and warrant investment and scaling to capture more value. Strategic features have margins between ten and thirty percent and should be monitored closely while justifying ongoing investment. Subsidized features have margins below ten percent or negative margins and should be optimized aggressively or considered for sunset if they cannot be turned around.</p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Negative Margin Features</h4>
+            <p>A feature with negative margin may still be rational if it drives usage of positive-margin features. The key is to measure and understand these relationships rather than running features blindly.</p>
+        </div>
+
+        <h2 id="roi-analysis">ROI Analysis for AI Features</h2>
+
+        <h3 id="investment-roi">Calculating Feature ROI</h3>
+
+        <pre><code class="language-python">
+@dataclass
+class FeatureInvestment:
+    feature_name: str
+    
+    # Development investment
+    initial_dev_cost: float
+    ongoing_dev_cost_monthly: float
+    
+    # Infrastructure investment
+    infrastructure_setup: float
+    infrastructure_monthly: float
+    
+    # Expected returns
+    expected_monthly_revenue: float
+    expected_monthly_cost_savings: float
+    expected_user_growth_pct: float
+    
+    # Timeline
+    months_to_develop: int
+    payback_months_target: int = 12
+
+    def roi(self, months: int = 12) -> float:
+        """Calculate ROI over specified months."""
+        initial_investment = self.initial_dev_cost + self.infrastructure_setup
+        ongoing_investment = self.ongoing_dev_cost_monthly * months
+        ongoing_infra = self.infrastructure_monthly * months
+        
+        total_investment = initial_investment + ongoing_investment + ongoing_infra
+        
+        total_returns = (
+            self.expected_monthly_revenue * months +
+            self.expected_monthly_cost_savings * months
+        )
+        
+        if total_investment == 0:
+            return 0
+        
+        return ((total_returns - total_investment) / total_investment) * 100
+    
+    def payback_period(self) -> float:
+        """Calculate months until investment breaks even."""
+        monthly_net = self.expected_monthly_revenue + self.expected_monthly_cost_savings
+        monthly_investment = self.ongoing_dev_cost_monthly + self.infrastructure_monthly
+        
+        net_after_infra = monthly_net - monthly_investment
+        
+        if net_after_infra <= 0:
+            return float('inf')
+        
+        initial = self.initial_dev_cost + self.infrastructure_setup
+        return initial / net_after_infra
+        </code></pre>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: QuickShip Route Optimization ROI</h4>
+            <p>The QuickShip team was evaluating their AI route optimization investment after leadership questioned the five hundred thousand dollar investment. They needed to justify the investment with concrete ROI calculations. They faced a dilemma about how to measure ROI for something that improves efficiency rather than directly generating revenue.</p>
+            <p>The team decided to conduct rigorous ROI analysis through a structured process. They established baseline metrics including average route efficiency, fuel costs, and driver time before AI implementation. They measured AI impact by running an A/B test with and without AI routing to isolate the effect. They measured costs including AI infrastructure costs, API costs, and ongoing maintenance. They calculated benefits including fuel savings, time savings, and capacity improvement from more efficient routing.</p>
+            <p>The results demonstrated strong returns: twelve percent reduction in fuel costs per delivery, eight percent improvement in deliveries per driver per day, and fifteen percent reduction in route planning headcount. Monthly cost savings reached eighty-five thousand dollars while monthly AI cost was twenty-two thousand dollars, resulting in a net monthly benefit of sixty-three thousand dollars and a payback period of eight months. The lesson is that AI investments require rigorous ROI analysis. The cost is certain, the benefit is not. Measure benefits before investing.</p>
+        </div>
+
+        <h2 id="optimization-decisions">Optimization Decisions</h2>
+
+        <h3 id="margin-optimization">Improving Feature Margins</h3>
+
+        <p>For features with poor margins, identify optimization paths to improve profitability. Reduce token usage by optimizing prompts to use fewer tokens and implementing caching to avoid redundant API calls. Reduce model costs by routing to cheaper models where appropriate rather than always using the most capable model. Increase conversion by improving user experience to drive more value from each session. Increase efficiency by batching requests and optimizing infrastructure to reduce per-request overhead.</p>
+
+        <h3 id="sunset-decisions">Sunset Decisions</h3>
+
+        <p>
+            Some features should be sunset rather than optimized:
+        </p>
+
+        <pre><code class="language-python">
+def should_sunset_feature(feature: FeatureMargin, min_margin: float = -10) -> tuple[bool, str]:
+    """
+    Determine if a feature should be sunset.
+    """
+    if feature.margin_percentage > min_margin:
+        return False, "Feature margin acceptable"
+    
+    if feature.daily_active_users > 10000:
+        return False, "High user base, investigate optimization"
+    
+    # Calculate cost to maintain
+    maintenance_cost_monthly = feature.daily_cost * 30
+    
+    if maintenance_cost_monthly < 1000:
+        return True, f"Low usage, low cost - candidate for sunset"
+    
+    return True, f"Negative margin {feature.margin_percentage:.1f}%, evaluate ROI"
+        </code></pre>
+
+        <h2 id="portfolio-analysis">Feature Portfolio Analysis</h2>
+
+        <h3 id="portfolio-dashboard">Portfolio Dashboard Metrics</h3>
+
+        <p>Track portfolio dashboard metrics to understand the overall health of your AI feature portfolio. Portfolio margin is the weighted average margin across all features with a target above forty percent. Margin concentration measures the percentage of margin coming from the top three features with a target below eighty percent, since high concentration indicates vulnerability if those features decline. Feature ROI is the average ROI across active investments with a target above one hundred percent. Optimization pipeline tracks features with active optimization efforts with a target of five or more to ensure continuous improvement.</p>
+
+        <h3 id="investment-prioritization">Prioritizing Optimization Investments</h3>
+
+        <p>When deciding where to invest optimization effort, consider four factors that together determine the priority score for each opportunity. Impact measures the potential margin improvement from optimization, indicating how much value could be captured. Effort measures the engineering time and complexity required, indicating the investment needed. Risk measures the likelihood of successful optimization, accounting for technical uncertainties. Strategic value measures the importance to the overall product, capturing whether the feature is critical to the product strategy or more peripheral.</p>
+
+        <pre><code class="language-python">
+@dataclass
+class OptimizationOpportunity:
+    feature_name: str
+    current_margin: float
+    potential_margin: float
+    effort_weeks: int
+    success_probability: float
+    
+    @property
+    def expected_improvement(self) -> float:
+        return (self.potential_margin - self.current_margin) * self.success_probability
+    
+    @property
+    def priority_score(self) -> float:
+        return self.expected_improvement / self.effort_weeks
+        </code></pre>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>Research on "AI portfolio management" explores treating AI features like financial portfolios, applying concepts like diversification, hedging, and risk-adjusted returns. This could help product teams make more systematic investment decisions.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-24-3.html">24.3 Cost-Aware Routing</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="../../chapter-25/sections/section-25-1.html">25.1 Governance Models</a>
+        </nav>
+
+        <footer>
+            <p>Section 24.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

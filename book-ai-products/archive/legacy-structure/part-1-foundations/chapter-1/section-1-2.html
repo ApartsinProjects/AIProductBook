@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.2 Agentic AI and Tool Use - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-1-foundations/index.html">Part I: Foundations</a></div>
+        <div class="chapter-label">Chapter 1</div>
+        <h1>AI Capabilities and Limitations That Shape Products</h1>
+        <p class="chapter-subtitle">1.2 Agentic AI and Tool Use</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Ground readers in what AI can (and cannot) do reliably today; build shared vocabulary across your team.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Basic programming knowledge helpful but not required. Section 1.1 recommended.
+        </div>
+
+        <h2 id="section-1-2">1.2 Agentic AI and Tool Use</h2>
+
+        <p>
+            Today is being called "The Year Autonomous Agents Crossed the Chasm." AI agents have moved from experimental prototypes to production-ready autonomous systems. But what does this mean for product teams, and why should you care? The shift from passive AI assistants that respond to single prompts to active AI agents that can take multi-step actions represents perhaps the most significant change in how we build software since the advent of cloud computing.
+        </p>
+
+        <h3>Why Agents Matter Now</h3>
+
+        <p>
+            To understand why agentic AI matters today, consider the evolution from 2023 to now. In 2023, interacting with AI meant sending a prompt and receiving a response. The AI was essentially a sophisticated autocomplete, generating text based on patterns it had learned during training. You might get a brilliant answer to a complex question, but the AI couldn't take action on your behalf. It could write code, but it couldn't run it. It could draft an email, but it couldn't send it. It could analyze data, but it couldn't save the results.
+        </p>
+
+        <p>
+            The limitation wasn't intelligence; it was agency. The AI had knowledge but no ability to act in the world. Agents change this fundamental equation. An agent is an AI system that can not only reason about what to do but also execute those plans using tools that interact with external systems. The agent can read a file, decide it needs modification, write the new version, and then verify the change was applied correctly. This capability transforms AI from a consultant that provides advice into a team member that gets things done.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Agency Spectrum</div>
+            <p>Think of AI agency as a spectrum rather than a binary on/off. At one end, you have simple request-response AI that generates text. Moving along the spectrum, you encounter AI that can maintain context across a conversation. Further along, AI that can use tools (search, code execution, file operations). At the far end, AI that can plan multi-step tasks, execute them autonomously, handle errors, and iterate until the goal is achieved. Most products today use some point on this spectrum, and understanding where your product falls helps determine the complexity of implementation required.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Productivity Multiplier</div>
+            <p>The first chatbot ELIZA from 1966 could fool some users into thinking they were talking to a human, despite having zero understanding. Modern agents cost millions to train and still occasionally confuse the word "not" with "now." We have made impressive progress, and yet.</p>
+        </div>
+
+        <figure class="illustration">
+            <img src="../../images/illustrations/chapter-1-agents.png"
+                 alt="An AI agent as a friendly robot with multiple tool arms - one holding a search magnifying glass, one holding a code editor, one holding a file folder, one holding a browser. The robot is wearing a thinking cap with gears turning."
+                 style="max-width: 100%; border-radius: 12px; margin: 1.5rem auto; display: block;">
+            <figcaption>
+                Modern AI agents can use multiple tools simultaneously: search, code execution, file management, and browser automation.
+            </figcaption>
+        </figure>
+
+        <h3>The Economic Rationale for Agents</h3>
+
+        <p>
+            The shift to agents is driven by economics as much as capability. Consider the cost of human labor versus agent labor. A human developer might take 8 hours to implement a feature, including time for research, implementation, testing, and debugging. An AI agent might accomplish the same task in 20-30 minutes of compute time. At $0.40 per million tokens for inference (today's baseline), a complex agent task might cost $0.50-2.00 in API calls. The economics are staggering: you can run thousands of agent tasks for the cost of one human hour.
+        </p>
+
+        <p>
+            This economic shift enables entirely new product categories. Products that were previously too labor-intensive to build can now be automated. A small startup can build a product that would have required a team of 10 developers in 2023. The implications for competition are profound: barriers to entry are falling, and speed of iteration becomes more important than scale of team.
+        </p>
+
+        <h3>Single vs. Multi-Agent Systems</h3>
+
+        <p>
+            Understanding when to use single versus multi-agent architectures is crucial for product design. A single agent is simpler to build and maintain but has inherent limitations. Think of a single agent like a smart employee: they can handle complex tasks but have a ceiling on how much they can do in parallel. Multi-agent systems are like a team: different agents specialize in different areas, and they collaborate to handle complex workflows that would overwhelm any single agent.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Type</th><th>Description</th><th>Use Case</th><th>Cost Implications</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Single Agent</td><td>One model with tools, makes decisions</td><td>Simple automation, Q&A</td><td>Low - single API key, minimal infrastructure</td></tr>
+                <tr><td>Multi-Agent</td><td>Multiple agents coordinating</td><td>Complex workflows, research</td><td>Higher - more compute, orchestration overhead</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Tool Use Capabilities</h3>
+
+        <p>
+            The power of agents comes from their ability to use tools. Each tool extends what the agent can do beyond generating text. Understanding the tool landscape helps you design better agent products. The key categories are:
+        </p>
+
+        <h4>Information Retrieval Tools</h4>
+        <p>
+            These allow agents to access external knowledge. Web search lets agents find current information beyond their training data, addressing the knowledge cutoff problem. API calls let agents query databases, fetch user data, or retrieve business information. File reading lets agents access your documents, codebases, or data stores.
+        </p>
+        <p>
+            <strong>Why external tools matter:</strong> Language models are frozen in time - they learned from data up to a certain date and can't learn new information without retraining. But real products need current information: today's stock prices, the latest policy changes, or recent customer orders. Tools bridge this gap by letting the agent fetch fresh data at request time rather than relying entirely on training. Without tools, agents are limited to their training data, which becomes increasingly stale over time and can only answer questions the model saw during training.
+        </p>
+
+        <h4>Action Execution Tools</h4>
+        <p>
+            These let agents change state in the world. Code execution lets agents run code they write, enabling them to test their own solutions. API write operations let agents modify data in your systems. Browser automation lets agents interact with web applications, filling forms, clicking buttons, and navigating interfaces. Email and messaging tools let agents communicate with users or team members.
+        </p>
+        <p>
+            <strong>The agency breakthrough:</strong> Before action tools, AI was purely consultative - it could recommend but not execute. This limitation made AI useful for advice but not for getting work done. Action tools transform AI from a consultant into a team member. The key insight is that the agent can now verify its own work: it writes code, runs it, sees if it works, and tries again if needed. This creates a self-correcting loop where the agent improves its own outputs without human intervention. The implications are massive for automation - tasks that previously required human-in-the-loop at every step can now be handed off entirely.
+        </p>
+
+        <h4>Reasoning and Verification Tools</h4>
+        <p>
+            These help agents think more carefully. Chain-of-thought prompting encourages step-by-step reasoning. Self-consistency checks let agents verify their own answers by generating multiple solutions and comparing them. Reflection prompts encourage agents to evaluate their outputs against criteria you specify.
+        </p>
+
+        <ul>
+            <li><strong>Browse the web and extract information</strong> - Agents can search for current information, read web pages, and extract relevant facts, solving the knowledge cutoff problem that plagued earlier AI systems</li>
+            <li><strong>Execute code and analyze results</strong> - Agents can write and run code in sandboxes, enabling them to solve programming problems, analyze data, and verify their solutions work correctly</li>
+            <li><strong>Read and modify files</strong> - Agents can access your codebase, documentation, or data files, enabling them to understand context and make changes to your projects</li>
+            <li><strong>Call APIs and interact with external services</strong> - Agents can integrate with your existing systems, pulling data from databases, updating CRM records, or triggering business processes</li>
+            <li><strong>Use computer use to operate browsers and desktop applications</strong> - The newest capability lets agents control browsers directly, clicking, typing, and navigating like a human user would</li>
+        </ul>
+
+        <div class="callout warning">
+            <div class="callout-title">The Trust Boundary Problem</div>
+            <p>When agents can take actions in your systems, you introduce risk. A well-intentioned agent might delete the wrong file, send an incorrect email, or make a costly API call. Products using agents need clear boundaries: what actions can the agent take autonomously versus what requires human approval? This "human-in-the-loop" pattern is essential for responsible agent deployment. The general principle: agents can do, but humans must approve high-stakes actions.</p>
+        </div>
+
+        <div class="callout info">
+            <div class="callout-title">Enterprise Adoption</div>
+            <p>According to the Nylas Agentic AI Report, over 1,000 developers and product leaders surveyed show increased trust and shipping of agentic capabilities. Focus areas: autonomous workflow automation, research synthesis, and task completion. The survey shows that 67% of enterprises have deployed at least one agent in production, up from 23% in 2024. The primary driver is productivity: teams report 3-5x productivity gains when agents handle routine tasks.</p>
+        </div>
+
+        <h3>Designing for Agent Capabilities</h3>
+
+        <p>
+            When designing products that leverage agents, consider three key dimensions. First, what level of agency does your use case require? A customer service bot might need to read order history and provide answers but not modify anything. A code review agent might need to read your entire codebase and write comments but not commit changes. A research agent might need full autonomy to gather information, synthesize findings, and present conclusions. The more agency, the more complex the implementation and the higher the risk.
+        </p>
+
+        <p>
+            Second, what tools does the agent need access to? Each tool introduces capabilities but also risk. Start with the minimum set required for your use case, and add tools incrementally. A common mistake is giving agents more access than needed "just in case," which increases attack surface and makes debugging harder when things go wrong.
+        </p>
+
+        <p>
+            Third, how will you handle failures? Agents will occasionally do the wrong thing, just as humans do. Your product needs graceful error handling: what happens when the agent calls the wrong API, provides incorrect information, or gets stuck in a loop? Build in fallbacks, timeouts, and human handoffs.
+        </p>
+
+        <div class="callout exercise">
+            <div class="callout-title">Exercise: Design Agent Trust Boundaries</div>
+            <p><strong>Scenario:</strong> You're building an AI sales assistant that can access your CRM, send emails, and schedule meetings.</p>
+            <ol>
+                <li>List three actions the agent should be able to do autonomously versus three that require human approval.</li>
+                <li>For each autonomous action, describe a failure mode and how the system should handle it.</li>
+                <li>How would you log agent actions for audit purposes?</li>
+            </ol>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore the <strong>Key Advancements</strong> - including long context windows, inference economics, and new protocols like <a href="../../part-4-ai-engineering/chapter-12/sections/section-12-3.html">MCP and A2A</a>. These advancements directly enable the agent capabilities we've discussed and have major implications for what products can now achieve.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-1-1.html">1.1 Evolution of Foundation Models</a>
+            <a class="up" href="index.html">Ch 1: Overview</a>
+            <a class="next" href="section-1-3.html">1.3 Key Advancements</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 1.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

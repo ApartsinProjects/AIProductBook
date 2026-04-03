@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9.3 LLM-as-Judge for Requirements - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-2-discovery-design/index.html">Part II: Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 9</div>
+        <h1>Requirements for Probabilistic Products</h1>
+        <p class="chapter-subtitle">9.3 LLM-as-Judge for Requirements</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn to use LLM-as-Judge techniques for evaluating AI outputs, understanding both the power and limitations of this approach.
+        </p>
+
+        <blockquote class="epigraph">
+            <p>"Using AI to evaluate AI is like using a scale to calibrate a scale. It works, but you need reference weights."</p>
+            <cite>Practical AI Evaluation</cite>
+        </blockquote>
+
+        <h2 id="section-9-3">9.3 LLM-as-Judge for Requirements</h2>
+
+        <p>
+            LLM-as-Judge uses AI models to evaluate AI outputs. This technique enables scalable evaluation but requires careful design to ensure reliability.
+        </p>
+
+        <h3>Why LLM-as-Judge</h3>
+
+        <p>
+            Traditional evaluation methods have limitations. Human evaluation is scalable but expensive and slow. Automated metrics are fast but may not capture nuanced quality. Rule-based evaluation is limited to easily specified criteria and cannot handle complex or subjective aspects of quality.
+        </p>
+
+        <p>
+            LLM-as-Judge offers a middle path: flexible, scalable evaluation using AI that can understand nuanced quality.
+        </p>
+
+        <h3>The LLM-as-Judge Approach</h3>
+
+        <div class="callout fun-note">
+            <div class="callout-title">The Circular Problem</div>
+            <p>You're using AI to evaluate AI. It's like asking the chef to taste their own cooking and rate it. The chef might genuinely believe it's delicious. The diners are still chewing.</p>
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">LLM-as-Judge Architecture</div>
+            <p><strong>1. Define Evaluation Criteria</strong></p>
+            <p>What aspects of output quality matter? E.g., relevance, accuracy, coherence, helpfulness.</p>
+            <p><strong>2. Create Reference Outputs</strong></p>
+            <p>Examples of good and bad outputs for calibration.</p>
+            <p><strong>3. Design Judge Prompt</strong></p>
+            <p>Instructions for how the judge model should evaluate.</p>
+            <p><strong>4. Run Evaluation</strong></p>
+            <p>Apply judge to outputs being evaluated.</p>
+            <p><strong>5. Calibrate and Validate</strong></p>
+            <p>Compare judge to human evaluation and refine.</p>
+        </div>
+
+        <h3>Designing the Judge Prompt</h3>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Effective Judge Prompt Elements</div>
+            <p>Effective judge prompts include several key elements. Clear criteria specify what the judge should look for when evaluating outputs. Scoring rubric defines how to score each criterion, providing a consistent scale for assessment. Reference examples show what good and bad outputs look like, helping the judge calibrate its evaluations. Chain-of-thought instructions ask for reasoning before scoring, which improves evaluation quality by forcing the judge to articulate its thinking. Output format specifies the exact structure of the evaluation output, ensuring consistency and parseability.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Judge Prompt Example</div>
+            <pre>
+You are evaluating AI-generated meeting summaries.
+
+CRITERIA:
+1. Actionability: Are action items clearly identified?
+2. Accuracy: Does the summary reflect what was said?
+3. Completeness: Are key points covered?
+
+SCORING: Rate each criterion 1-5
+
+REFERENCE GOOD:
+"Discussed Q3 roadmap. Action: Sarah to finalize 
+budget by Friday. Decision: Launch date set for Oct 15."
+
+REFERENCE BAD:
+"Meeting happened. Topics discussed."
+
+OUTPUT FORMAT:
+{
+  "actionability": {"score": 1-5, "reasoning": "..."},
+  "accuracy": {"score": 1-5, "reasoning": "..."},
+  "completeness": {"score": 1-5, "reasoning": "..."}
+}
+            </pre>
+        </div>
+
+        <h3>Calibration and Validation</h3>
+
+        <p>
+            LLM-as-Judge must be calibrated against human judgment through several methods. Correlation analysis examines how well the judge agrees with humans on the same outputs. Calibration curves verify that higher scores actually correlate with higher quality outputs. Bias detection checks whether the judge favors certain output styles systematically, which would indicate a reliability problem.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">LLM-as-Judge Limitations</div>
+            <p>LLM-as-Judge has several known limitations that teams should monitor. Length bias occurs when the judge may favor longer outputs even when length does not correlate with quality. Position bias occurs when the judge may favor first or last options in comparisons. Self-preference occurs when the judge may favor outputs similar to its own writing style. Calibration drift means judge quality may vary over time as model behavior changes.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before deploying LLM-as-Judge for production evaluation, define how you will measure whether the judge itself is reliable. A micro-<a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval</a> for LLM-as-judge tracks: correlation with human evaluation (should be > 0.8), consistency rate (same input gets same score), and calibration accuracy (does higher score predict better outcomes?). A team's eval-first insight: they discovered their LLM-as-judge had 0.72 correlation with human evaluators initially, but after adding reference examples and chain-of-thought reasoning, correlation improved to 0.89. Without measuring this, they would have deployed an unreliable evaluation system.
+            </p>
+        </div>
+
+        <h3>Best Practices</h3>
+
+        <p>Teams should follow several best practices when using LLM-as-Judge. Use LLM-as-Judge as a complement to human <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">evaluation</a> rather than a complete replacement, maintaining human oversight for critical decisions. Calibrate regularly by validating judge outputs against human judgment frequently to ensure reliability. Ensemble judges by using multiple judges for critical evaluations to reduce individual bias. Report confidence by including uncertainty estimates in judge outputs so downstream decisions can account for reliability.</p>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Acceptance Criteria for AI</strong>, understanding how to define and verify acceptance criteria for AI features.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-9-2.html">9.2 Eval-First PRDs</a>
+            <a class="up" href="../index.html">Chapter 9 Index</a>
+            <a class="next" href="section-9-4.html">9.4 Acceptance Criteria</a>
+        </nav>
+
+        <footer>
+            <p>Section 9.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5.5 AI Skills and Tool Integration - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <div class="chapter-label">Chapter 5</div>
+        <h1>Accelerating the Full Development Lifecycle with AI</h1>
+        <p class="chapter-subtitle">5.5 AI Skills and Tool Integration</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Integrate AI skills for security, testing, deployment, and documentation into your workflow.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Sections 5.1-5.4 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: AI as Full Lifecycle Partner</div>
+            <p>Specialized AI skills in security, testing, deployment, and documentation transform AI from a code generator into a comprehensive development partner. Integrating these skills across the development lifecycle enables teams to ship production-ready code with confidence. This approach embodies the <a href="../../part-1-foundations/chapter-2/sections/section-2-1.html">Synergy Triangle</a> by combining human judgment with AI execution at every stage.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Jack of All Trades Problem</div>
+            <p>Leonardo da Vinci was a master painter, sculptor, architect, musician, mathematician, engineer, and inventor. Yet he finished fewer paintings than many of his contemporaries who specialized. Jack of all trades may be admirable, but the masters finish more.</p>
+        </div>
+
+        <h2 id="section-5-5">5.5 AI Skills and Tool Integration</h2>
+
+        <p>
+            The vibe coding ecosystem has matured beyond basic code generation into a rich landscape of specialized AI skills. These skills extend AI capabilities into specific domains like security analysis, testing automation, deployment orchestration, and documentation generation. Understanding how to integrate these skills transforms AI from a coding assistant into a comprehensive development partner.
+        </p>
+
+        <p>
+            The key to effective skill integration is understanding that different skills have different integration points in your workflow. Some skills operate at code generation time, others in CI/CD, and others in production. The most effective teams layer multiple skills together, creating a comprehensive AI-assisted development environment.
+        </p>
+
+        <h3>5.5.1 Security Skills</h3>
+
+        <p>
+            Security is where AI assistance delivers exceptional value because the attack surface is vast and attackers are constantly evolving. Security frameworks provide structured approaches to AI-assisted security review, combining static analysis with behavioral testing to identify both known vulnerability patterns and subtle logic flaws that traditional scanners miss.
+        </p>
+
+        <p>
+            Integrating security skills into your workflow means configuring AI to analyze code for common vulnerability patterns during generation, not just after. When you describe what you want to build, include security constraints in your prompts. The AI can then implement defenses proactively rather than having security added retroactively.
+        </p>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: Security-Focused Code Generation</h4>
+            <pre class="code-example">
+// Security-focused prompt with explicit constraints
+const securePrompt = `
+Create a user registration endpoint that:
+- Validates email format and domain reputation
+- Hashes passwords using bcrypt with cost factor 12
+- Implements rate limiting (5 attempts per minute per IP)
+- Logs failed attempts for fraud detection
+- Returns generic error messages (no email enumeration)
+- Prevents SQL injection via parameterized queries
+- Validates all inputs with strict allowlists
+- Implements CSRF protection
+
+Use Node.js with Express and PostgreSQL.
+Include proper error handling and input validation.
+`;
+
+            <p>AI-generated code will include bcrypt hashing, rate limiting middleware, parameterized SQL queries, input validation, and proper error handling that doesn't leak sensitive information.</p>
+        </div>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: Security Audit Script</h4>
+            <pre class="code-example">
+// Security audit prompt for existing code
+const securityAuditPrompt = `
+Conduct a comprehensive security audit of this authentication module.
+
+Code:
+\`\`\`javascript
+async function login(email, password) {
+    const user = await db.query(
+        'SELECT * FROM users WHERE email = "' + email + '"'
+    );
+    
+    if (user.password === password) {
+        return { token: generateToken(user.id) };
+    }
+}
+\`\`\`
+
+For each vulnerability found, provide:
+1. Severity (Critical/High/Medium/Low)
+2. CVE if applicable
+3. Exploitation scenario
+4. Remediation steps
+5. Alternative secure implementation
+
+Focus on: SQL injection, credential handling, timing attacks, 
+authentication bypass, information disclosure
+`;
+</pre>
+
+            <p>AI would identify the critical SQL injection vulnerability and provide a secure alternative using parameterized queries.</p>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Fintech Company Prevents Data Breach</h4>
+            <p>A fintech company building a payment processing platform integrated AI security skills into their development workflow. On the first day, AI caught 23 critical vulnerabilities across their codebase that traditional static analysis had missed:</p>
+            <ul>
+                <li>8 SQL injection vulnerabilities</li>
+                <li>6 insecure direct object references</li>
+                <li>5 cases of sensitive data in logs</li>
+                <li>4 authentication bypasses</li>
+            </ul>
+            <p>Fixing these before production prevented a potential data breach that would have exposed customer payment information. The company now requires AI security review for all code changes.</p>
+        </div>
+
+        <h3>5.5.2 Testing Skills</h3>
+
+        <p>
+            AI-powered testing skills span the entire testing pyramid from unit tests to end-to-end validation. Modern testing skills can analyze your codebase and generate comprehensive test suites that achieve high coverage while avoiding test brittleness. The key is providing the AI with enough context about expected behavior that it can generate meaningful assertions.
+        </p>
+
+        <p>
+            Property-based testing represents an advanced testing skill where AI generates randomized inputs to verify code behavior across a wide range of scenarios. This catches edge cases that manual test design misses.
+        </p>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: Property-Based Testing</h4>
+            <pre class="code-example">
+// Prompt to generate property-based tests
+const propertyBasedPrompt = `
+Generate property-based tests for a discount calculation function.
+
+Function:
+\`\`\`javascript
+function calculateDiscount(orderTotal, discountCode, customerTier) {
+    const discountRates = {
+        'SAVE10': 0.10,
+        'SAVE20': 0.20,
+        'SAVE30': 0.30,
+        'VIP50': 0.50
+    };
+    
+    let discount = discountRates[discountCode] || 0;
+    
+    // Customer tier multiplier
+    if (customerTier === 'gold') discount *= 1.5;
+    if (customerTier === 'platinum') discount *= 2;
+    
+    // Cap maximum discount at 75%
+    discount = Math.min(discount, 0.75);
+    
+    return orderTotal * (1 - discount);
+}
+\`\`\`
+
+Generate 50+ test cases using fast-check library that verify:
+1. Discount never exceeds 75%
+2. Higher tier always gets equal or better discount
+3. Valid codes always apply discount
+4. Invalid codes result in no discount
+5. Order total minus discount is never negative
+6. Same inputs always produce same outputs
+`;
+
+            <p>Property-based testing finds edge cases like what happens with negative order totals, empty discount codes, or unexpected tier values.</p>
+        </div>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: API Fuzz Testing</h4>
+            <pre class="code-example">
+// Prompt to generate API fuzz tests
+const fuzzPrompt = `
+Generate API fuzz tests for a user registration endpoint.
+
+Endpoint: POST /api/users/register
+Expected input:
+{
+    "email": "string (valid email)",
+    "password": "string (min 8 chars)",
+    "name": "string (1-100 chars)"
+}
+
+Expected output (success):
+{
+    "id": "uuid",
+    "email": "string",
+    "createdAt": "datetime"
+}
+
+Expected error responses:
+- 400: Invalid email format
+- 400: Password too weak
+- 400: Name too long/empty
+- 409: Email already exists
+
+Generate 200+ fuzz test cases covering:
+1. Invalid email formats (SQL injection, XSS, null bytes)
+2. Password edge cases (empty, too short, max length, special chars)
+3. Name edge cases (empty, max length, unicode, script tags)
+4. Missing required fields
+5. Extra unexpected fields
+6. Wrong data types
+7. Very long strings (buffer overflow testing)
+8. JSON syntax errors
+
+Use Jest with faker library.
+`;
+</pre>
+        </div>
+
+        <div class="real-world-scenario">
+            <h4>Real-World Scenario: Finding a Race Condition</h4>
+            <p>A team used AI to generate property-based tests for their inventory management system. Among 500 generated test cases, one revealed a critical race condition: when two concurrent requests tried to purchase the last item in stock, both succeeded when only one should have.</p>
+            <p>Traditional unit tests never caught this because they tested sequential operations. The property-based tests with concurrent operations exposed the bug immediately. Fixing it required adding database-level locking.</p>
+        </div>
+
+        <h3>5.5.3 Deployment Skills</h3>
+
+        <p>
+            Deployment skills automate the complex process of moving code from development to production. These skills handle containerization, infrastructure provisioning, database migrations, and rollback procedures. The most effective deployment skills integrate with your existing CI/CD pipeline, adding AI-powered validation at each stage.
+        </p>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: Generating Dockerfiles</h4>
+            <pre class="code-example">
+// Prompt to generate production-ready Dockerfile
+const dockerfilePrompt = `
+Generate a production-ready Dockerfile for a Node.js API service.
+
+Service details:
+- Express.js REST API
+- PostgreSQL database connection
+- Redis for caching
+- Environment: Node 20, Alpine Linux
+- Port: 8080
+- Health check endpoint: GET /health
+
+Requirements:
+1. Multi-stage build (build stage + runtime stage)
+2. Install production dependencies only
+3. Non-root user execution
+4. Proper signal handling for graceful shutdown
+5. Health check configuration
+6. Resource limits (memory: 512MB, CPU: 0.5)
+7. Health checks for: API, DB connection, Redis connection
+8. Minimal layers for fast builds
+
+Use Alpine base image for smaller size.
+Include .dockerignore file.
+`;
+</pre>
+        </div>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: Generating Kubernetes Manifests</h4>
+            <pre class="code-example">
+// Prompt to generate Kubernetes deployment
+const k8sPrompt = `
+Generate Kubernetes manifests for deploying an API service.
+
+Service: user-api
+Image: registry.example.com/user-api:latest
+Replicas: 3
+Resources:
+  - requests: 250m CPU, 256Mi memory
+  - limits: 500m CPU, 512Mi memory
+
+Environment variables:
+- DATABASE_URL (secret)
+- REDIS_URL (secret)
+- LOG_LEVEL (configmap)
+- PORT (configmap)
+
+Requirements:
+1. Deployment with rolling update strategy
+2. HorizontalPodAutoscaler (min 3, max 10, target 70% CPU)
+3. Service with ClusterIP
+4. ConfigMap for non-secret config
+5. Secret for sensitive data (referenced from external secret store)
+6. Liveness and readiness probes
+7. Pod disruption budget
+8. Resource quotas
+
+Output complete YAML manifests.
+`;
+</pre>
+        </div>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: Generating CI/CD Pipeline</h4>
+            <pre class="code-example">
+// Prompt to generate GitHub Actions workflow
+const cicdPrompt = `
+Generate GitHub Actions CI/CD workflow for a Node.js + React application.
+
+Structure:
+- Backend: Node.js API in /server
+- Frontend: React app in /client
+- Database: PostgreSQL
+- Deployment: AWS ECS
+
+CI requirements:
+1. Run tests on PR and push to main
+2. Run linting and type checking
+3. Build both frontend and backend
+4. Run security scan (npm audit, snyk)
+5. Upload coverage to Codecov
+
+CD requirements:
+1. On push to main: deploy to staging
+2. On tag: deploy to production
+3. Wait for approval before production
+4. Run smoke tests after deployment
+5. Rollback on failure
+
+Use concurrency groups to cancel outdated runs.
+Include proper secrets management.
+`;
+</pre>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Startup Automates Entire Deployment Pipeline</h4>
+            <p>A Series A startup with 4 engineers needed to deploy multiple times per day but had no dedicated DevOps. They used AI deployment skills to build a complete pipeline:</p>
+            <ul>
+                <li>AI-generated Dockerfiles optimized for their Node.js services</li>
+                <li>AI-generated Kubernetes manifests with auto-scaling</li>
+                <li>AI-generated GitHub Actions workflows with security scanning</li>
+                <li>AI-generated database migration scripts</li>
+                <li>AI-generated rollback procedures</li>
+            </ul>
+            <p>Result: Deployment time dropped from 2 hours (manual) to 5 minutes (automated). Deployments increased from 2 per week to 15 per day. Zero deployment-related incidents in 6 months.</p>
+        </div>
+
+        <h3>5.5.4 Documentation Skills</h3>
+
+        <p>
+            Documentation skills transform code into maintainable knowledge bases. Beyond simple README generation, advanced documentation skills produce API references, architecture decision records, and inline code documentation. The key is teaching the AI about your project's domain vocabulary so it generates accurate terminology.
+        </p>
+
+        <div class="skill-demo">
+            <h4>Skill Demonstration: Generating Architecture Decision Records</h4>
+            <p>Architecture Decision Records (ADRs) document important technical decisions. AI can generate ADRs from your design discussions:</p>

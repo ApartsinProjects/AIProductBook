@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16.3 Observability Tools - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 16</div>
+        <h1>Scaling, Reliability, and Observability</h1>
+        <p class="chapter-subtitle">16.3 Observability Tools</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Production harden your AI systems for scale and reliability.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 16.2 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Visibility Enables Improvement</div>
+            <p>This section covers observability tools including LangSmith, Langfuse, Helicone, and Arize. In the context of AI engineering, observability is the foundation for continuous improvement. Without it, you are blind to AI behavior and cannot debug issues or optimize performance.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Dashboard No One Looked At</div>
+            <p>A team built a beautiful observability dashboard with 47 charts. It sat untouched for 6 months. When they finally checked it during an outage, they discovered their worst-performing feature was responsible for 80% of costs. The dashboard was there, but no one had set up alerts. Data without action is just decoration.</p>
+        </div>
+
+        <h2 id="section-16-3">16.3 Observability Tools</h2>
+
+        <p>
+            Observability tools provide visibility into AI system behavior. Unlike traditional monitoring (did it work?), observability tells you why it worked or didn't. This section covers the tools that make AI systems debuggable and optimizable.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Without observability, you are blind to AI behavior. You can't tell why quality degraded, which prompts are working, or where bottlenecks are. Observability is not optional; it's the foundation for continuous improvement.
+        </p>
+
+        <h3>1. LangSmith: LangChain Observability</h3>
+
+        <p>
+            LangSmith is LangChain's observability platform, providing tracing, evaluation, and debugging for LangChain applications. It integrates deeply with LangChain and provides excellent debugging capabilities.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: LangSmith Setup</div>
+            <pre class="code-block">from langsmith import Client
+from langchain.callbacks import LangChainTracer
+
+# Configure LangSmith
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_API_KEY"] = "your-api-key"
+os.environ["LANGCHAIN_PROJECT"] = "production"
+
+# Add tracing to your chains
+from langchain_openai import ChatOpenAI
+from langchain import LLMChain, PromptTemplate
+
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
+
+prompt = PromptTemplate(
+    input_variables=["question"],
+    template="Answer this question: {question}"
+)
+
+chain = LLMChain(llm=llm, prompt=prompt)
+
+# Run with automatic tracing
+result = chain.invoke({"question": "What is <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>?"})
+
+# View trace at: app.langchain.ai
+# Shows: LLM calls, retrieval calls, timing, token usage</pre>
+        </div>
+
+        <h3>2. Langfuse: Open-Source Tracing</h3>
+
+        <p>
+            Langfuse is an open-source observability platform that provides similar capabilities to LangSmith with the option to self-host. It is popular for teams that want more control over their data.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Langfuse Integration</div>
+            <pre class="code-block">from langfuse import Langfuse
+from langfuse.decorators import observe
+
+langfuse = Langfuse()
+
+# Add @observe decorator for automatic tracing
+@observe()
+def process_user_query(query: str) -> str:
+    # This function will be traced
+    docs = retrieve_docs(query)
+    context = format_docs(docs)
+    response = generate_response(query, context)
+    return response
+
+# Or use context manager for custom traces
+with langfuse.trace(name="custom-query-processing") as trace:
+    trace.put_attribute("query_type", classify(query))
+    
+    docs = retrieve_docs(query)
+    trace.put_attribute("num_docs", len(docs))
+    
+    response = generate_response(query, docs)
+    trace.set_output(response)
+
+# Langfuse provides:
+# - Traces with full context
+# - Dataset management
+# - Prompt management
+# - Analytics dashboards
+# - Self-host option</pre>
+        </div>
+
+        <h3>3. Helicone: OpenAI-Specific</h3>
+
+        <p>
+            Helicone is an observability platform specifically for OpenAI API usage. It provides lightweight integration and excellent cost tracking.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: Helicone Setup</div>
+            <pre class="code-block">import openai
+from helicone import Helicone
+
+# Helicone wraps the OpenAI client
+Helicone.configure(api_key="your-helicone-key")
+
+# Use OpenAI as normal - Helicone captures all calls
+client = openai.OpenAI(
+    api_key="your-openai-key",
+    http_client=Helicone().client
+)
+
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "Hello"}]
+)
+
+# View at helicone.ai
+# Shows: costs, latency, token usage, prompts</pre>
+        </div>
+
+        <h3>4. Arize: ML Observability</h3>
+
+        <p>
+            Arize provides comprehensive ML observability including drift detection, performance monitoring, and root cause analysis. It is designed for teams with mature ML operations.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: Drift Detection</div>
+            <pre class="code-block">from arize.pandas.logger import Logger
+from arize.utils.types import ModelTypes
+
+# Track predictions and outcomes
+logger = Logger(
+    api_key="your-arize-key",
+    space_key="your-space"
+)
+
+# Log prediction
+logger.log_prediction(
+    model_id="question-answering-v1",
+    model_version="2024-01",
+    features={
+        "query_length": len(query),
+        "num_docs_retrieved": len(docs),
+        "prompt_tokens": response.usage.prompt_tokens
+    },
+    prediction=response_text,
+    actual=actual_answer_if_available,
+    timestamp=datetime.now()
+)
+
+# Arize will:
+# - Detect input drift (queries changing over time)
+# - Detect output drift (response patterns changing)
+# - Track accuracy over time
+# - Alert on anomalies</pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Tool</th><th>Purpose</th><th>Best For</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>LangSmith</td><td>LangChain tracing</td><td>LangChain users</td></tr>
+                <tr><td>Langfuse</td><td>Open-source tracing</td><td>Self-hosting preference</td></tr>
+                <tr><td>Helicone</td><td>OpenAI cost tracking</td><td>Simple use cases</td></tr>
+                <tr><td>Arize</td><td>ML observability</td><td>Enterprise, drift detection</td></tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Security and Compliance</strong> - SOC2, HIPAA, GDPR requirements.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-16-2.html">16.2 Guardrails and Fallbacks</a>
+            <a class="up" href="index.html">Chapter 16 Index</a>
+            <a class="next" href="section-16-4.html">16.4 Security and Compliance</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 16.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

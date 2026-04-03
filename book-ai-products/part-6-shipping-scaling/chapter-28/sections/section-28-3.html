@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 28.3: Central AI Enablement - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 28</div>
+        <h1>Central AI Enablement</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Every organization that builds AI products eventually discovers they need to teach people how to build AI products. The question is whether they figure that out before or after they have already made expensive mistakes."</p>
+            <cite>VP of Engineering at a Series C Startup</cite>
+        </blockquote>
+
+        <h2 id="center-of-excellence">Center of Excellence Model</h2>
+
+        <p>
+            The AI Center of Excellence (CoE) is a centralized function responsible for AI capability building across the organization. Unlike platform teams that provide infrastructure, CoEs focus on knowledge, methodology, and capability development.
+        </p>
+
+        <h3 id="coe-responsibilities">Core Responsibilities</h3>
+
+        <p>
+            The AI Center of Excellence (CoE) is a centralized function responsible for AI capability building across the organization. Unlike platform teams that provide infrastructure, CoEs focus on knowledge, methodology, and capability development. Core responsibilities include training and enablement building AI literacy across the organization through structured curricula, workshops, and hands-on labs, methodology development creating and maintaining organizational standards for AI development, evaluation, and deployment, best practice propagation identifying successful patterns from individual teams and sharing them organization-wide, tool evaluation assessing new AI tools, vendors, and technologies for organizational fit, and community building creating forums, internal conferences, and knowledge-sharing mechanisms for AI practitioners.
+        </p>
+
+        <h3 id="coe-vs-platform">CoE vs. Platform Teams</h3>
+
+        <p>
+            It is easy to confuse CoE responsibilities with platform team responsibilities. The distinction is important: CoE builds organizational capability through knowledge transfer; platform teams build technical infrastructure through software development.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">CoE vs. Platform Team Comparison</h4>
+            <p>It is easy to confuse CoE responsibilities with platform team responsibilities, but the distinction is important. The CoE builds organizational capability through knowledge transfer while platform teams build technical infrastructure through software development. Comparing dimensions: the CoE's primary output is knowledge, training, and methodology while the platform team's primary output is software infrastructure and tooling. CoE success is measured by organizational AI capability maturity while platform success is measured by platform adoption and team productivity. CoE interaction model involves consulting, training, and knowledge transfer while platform interaction involves service provision and infrastructure consumption. CoE staffing profile includes technical educators and curriculum developers while platform staffing includes ML engineers, MLOps engineers, and SREs.</p>
+        </div>
+
+        <h2 id="embedded-experts">Embedded AI Experts</h2>
+
+        <p>
+            One of the most effective mechanisms for capability building is embedding AI experts within product teams for extended periods. These embedded experts work alongside team members, transferring knowledge through daily collaboration rather than formal training.
+        </p>
+
+        <h3 id="rotation-model">Rotation Model</h3>
+
+        <p>
+            Some organizations rotate AI experts through teams on 6-12 month assignments. This model spreads knowledge broadly and gives AI experts diverse product experience, but can create discontinuity and relationship-building overhead.
+        </p>
+
+        <h3 id="embedded-champion">Embedded Champion Model</h3>
+
+        <p>
+            More effective is identifying AI champions within each product team and providing them with ongoing support from the CoE. Champions remain embedded long-term while receiving periodic training and coaching from the central function.
+        </p>
+
+        <p>
+            More effective than rotation is identifying AI champions within each product team and providing them with ongoing support from the central function. Champions remain embedded long-term while receiving periodic training and coaching from the central function. The embedded champion model involves selection identifying team members who show aptitude and interest in AI, training providing structured AI education aligned with organizational methodology, community connecting champions across teams for peer learning, and support giving champions direct access to CoE experts for consultation.
+        </p>
+
+        <h3 id="embedded-constraints">When Embedded Experts Backfire</h3>
+
+        <p>
+            Embedded experts work best when they transfer knowledge rather than become permanent dependencies. If embedded experts become the only people who can work with AI in a team, you have created a different kind of bottleneck.
+        </p>
+
+        <div class="callout warning">
+            <h4 class="callout-title">Anti-Pattern: The AI Expert Dependency</h4>
+            <p>Teams that cannot ship AI features without their embedded expert have not been enabled. They have been supported. The goal of embedding is to make embedded experts unnecessary through knowledge transfer.</p>
+        </div>
+
+        <h2 id="knowledge-sharing">Knowledge Sharing Mechanisms</h2>
+
+        <p>
+            Effective knowledge sharing requires multiple channels optimized for different learning styles and use cases. No single mechanism is sufficient.
+        </p>
+
+        <h3 id="documentation">Living Documentation</h3>
+
+        <p>
+            Static documentation becomes stale quickly for AI products where capabilities and best practices evolve rapidly. Living documentation that teams contribute to and update continuously stays relevant.
+        </p>
+
+        <p>
+            Static documentation becomes stale quickly for AI products where capabilities and best practices evolve rapidly. Living documentation that teams contribute to and update continuously stays relevant. This includes decision logs recording significant AI decisions and the reasoning behind them, a pattern library documenting successful approaches to common AI product challenges, eval recipes as shareable eval configurations that teams can adapt, and post-mortems providing structured learning from AI incidents and failures.
+        </p>
+
+        <h3 id="internal-events">Internal Events</h3>
+
+        <p>
+            Effective knowledge sharing requires multiple channels optimized for different learning styles and use cases. Internal events provide important opportunities including AI showcases where teams demonstrate AI features and learnings to the broader organization, AI hackathons as cross-functional events to explore new AI opportunities, AI office hours as regular open sessions where CoE experts answer team questions, and AI book clubs as structured reading groups for emerging AI research and methodology.
+        </p>
+
+        <h3 id="peer-networks">Peer Networks</h3>
+
+        <p>
+            Connect AI practitioners across the organization through informal networks that transcend formal reporting structures.
+        </p>
+
+        <p>
+            Connect AI practitioners across the organization through informal networks that transcend formal reporting structures. Peer networks include an AI practitioner chat via Slack or Teams channel for day-to-day AI questions, cross-team AI sync through regular meetings where teams share updates and challenges, and mentorship matching connecting experienced AI practitioners with those learning.
+        </p>
+
+        <h2 id="capability-maturity">AI Capability Maturity</h2>
+
+        <p>
+            Organizations building AI capabilities progress through recognizable maturity stages. Understanding where your organization sits helps prioritize enablement investments.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">AI Capability Maturity Model</h4>
+            <p>Organizations building AI capabilities progress through recognizable maturity stages, and understanding where your organization sits helps prioritize enablement investments. Level 1, Ad Hoc, is where AI projects happen sporadically with no shared methodology or infrastructure and knowledge lives in individuals. Level 2, Repeatable, is where teams have repeated AI projects successfully, some shared infrastructure emerges, and methodology begins forming. Level 3, Defined, is where the organization has standard AI development methodology, shared infrastructure exists, and training programs begin. Level 4, Managed, is where AI development follows measured, predictable processes, metrics track AI quality and productivity, and CoE functions effectively. Level 5, Optimizing, is where the organization continuously improves AI capabilities, research contributes to organizational knowledge, and AI is a core competitive advantage.</p>
+        </div>
+
+        <h2 id="healthmetrics-enablement">Case Study: HealthMetrics AI Enablement Journey</h2>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">HealthMetrics AI Center of Excellence</h4>
+            <p><strong>Who:</strong> HealthMetrics, healthcare analytics platform with 12 product teams</p>
+            <p><strong>Situation:</strong> After initial AI success with care coordination, leadership decided to scale AI across all products</p>
+            <p><strong>Problem:</strong> Only 3 people in the organization had significant AI experience. Most teams had never shipped an AI feature.</p>
+            <p><strong>Decision:</strong> Create AI Center of Excellence with embedded expert program and structured training</p>
+            <p><strong>How:</strong> Hired 2 experienced AI leaders to run the CoE. Identified 8 AI champions across teams. Ran 6-week AI bootcamp for champions. Established monthly AI showcases and weekly office hours. Built shared eval framework and deployment templates.</p>
+            <p><strong>Result:</strong> Within 12 months, 10 of 12 teams had shipped AI features. Average time from AI feature concept to production dropped from 16 weeks to 6 weeks. Two champions from initial cohort became team ML engineers.</p>
+            <p><strong>Lesson:</strong> <strong>Central enablement accelerates organizational capability building, but only if it focuses on creating dependencies that become obsolete through knowledge transfer.</strong></p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-28-2.html">28.2 Platform Teams</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-28-4.html">28.4 PM/Design/Engineering Collaboration</a>
+        </nav>
+
+        <footer>
+            <p>Section 28.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

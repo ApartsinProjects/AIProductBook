@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13.1 When Multi-Agent Is Justified - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 13.1</div>
+        <h1>When Multi-Agent Is Justified</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Multi-agent systems add coordination overhead. Understanding when that overhead pays off is essential for making good architectural decisions.
+        </p>
+
+        <h2>Beyond Single-<a href="../../../part-1-why-ai-changes/chapter-2/sections/section-2-3.html" class="cross-ref">Agent</a> Ceilings</h2>
+
+        <p>Single-agent systems have ceilings. They can handle complex tasks within their <a href="../../../part-1-why-ai-changes/chapter-1/sections/section-1-3.html" class="cross-ref">context window</a>, but context windows are finite. They can use tools, but sequential tool use has latency costs. They can follow complex instructions, but instruction complexity reduces reliability.</p>
+
+        <p>Multi-agent systems break through these ceilings by distributing work across multiple agents. But distribution introduces coordination costs. The question is not whether multi-agent is better than single-agent, but whether the benefits exceed the costs.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Multi-Agent Justification Test</div>
+            <p>Multi-agent is justified when tasks can be parallelized to save time, when different expertise domains are required, when isolation improves reliability or security, or when scale exceeds single-agent capacity. If none of these conditions apply, single-agent is likely sufficient and the overhead of multi-agent coordination is not justified.</p>
+        </div>
+
+        <p>When evaluating whether to adopt multi-agent architecture, examine your specific use case against these conditions.</p>
+
+        <h2>When Multi-Agent Works</h2>
+
+        <h3>Parallelization Opportunities</h3>
+
+        <p>When a task can be broken into independent subtasks that run concurrently, multi-agent can provide linear speedup. Four agents working in parallel can theoretically complete four times the work in the same time.</p>
+
+        <p><strong>Example:</strong> Generating multiple feature prototypes concurrently. Each agent works on a different feature. Results are combined at the end.</p>
+
+        <h3>Expertise Separation</h3>
+
+        <p>When a task requires different knowledge domains, specialized agents for each domain can outperform a general agent trying to handle everything.</p>
+
+        <p><strong>Example:</strong> A code review system with separate agents for security, performance, and style. Each agent applies deep expertise in its domain.</p>
+
+        <h3>Isolation Requirements</h3>
+
+        <p>When tasks must be isolated from each other for reliability or security, multi-agent provides natural boundaries.</p>
+
+        <p><strong>Example:</strong> Processing user requests in separate agent contexts prevents data leakage between users.</p>
+
+        <h3>Scale Requirements</h3>
+
+        <p>When the volume of requests exceeds single-agent throughput, multi-agent provides horizontal scaling.</p>
+
+        <p><strong>Example:</strong> A customer service system handling thousands of concurrent conversations.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: QuickShip Logistics</div>
+            <p>QuickShip evaluated multi-agent for their exception handling system:</p>
+            <p><strong>Task:</strong> Process incoming exception emails, classify them, generate responses, and update the database.</p>
+            <p><strong>Single-agent approach:</strong> One agent handles everything sequentially.</p>
+            <p><strong>Multi-agent approach:</strong> Separate agents for classification, response generation, and database update.</p>
+            <p><strong>Analysis:</strong> Classification and response generation can overlap, providing approximately 30% time savings through parallelization. Response generation benefits from different expertise than classification, and multi-agent enables specialization in each domain. Database updates should be isolated from email processing, and multi-agent provides a natural boundary for this isolation.</p>
+            <p><strong>Decision:</strong> Multi-agent justified. They implemented a three-agent system.</p>
+        </div>
+
+        <p>This example illustrates how the justification test applies in practice.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: DataForge Enterprise</div>
+            <p>DataForge evaluated multi-agent for their enterprise data pipeline platform:</p>
+            <p><strong>Task:</strong> Process incoming data from multiple enterprise sources, transform according to customer-specific rules, validate quality, and deliver to downstream systems.</p>
+            <p><strong>Single-agent approach:</strong> One agent handles the entire pipeline sequentially.</p>
+            <p><strong>Multi-agent approach:</strong> Separate agents for ingestion, transformation, validation, and delivery.</p>
+            <p><strong>Analysis:</strong> Each pipeline stage can operate independently for different customers, providing four times throughput improvement through parallelization. Data validation requires different expertise than transformation logic, and multi-agent enables specialized agents for each. Customer data must be strictly isolated, and multi-agent provides natural security boundaries to enforce this requirement.</p>
+            <p><strong>Decision:</strong> Multi-agent justified. They implemented a four-agent architecture with per-customer isolation.</p>
+        </div>
+
+        <h2>When Single-Agent Suffices</h2>
+
+        <p>Many tasks do not justify multi-agent complexity. Sequential dependencies occur when subtasks must happen in order anyway, so parallelization provides no benefit. Simple tasks that are straightforward enough for one agent to handle add overhead without benefit when distributed. Low volume situations where throughput is already adequate make the complexity of multi-agent orchestration not worth the cost. Tight coupling between subtasks that share significant context makes passing context between agents expensive and may eliminate the benefits of distribution.</p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Over-Engineering Trap</div>
+            <p>Multi-agent architectures are architecturally interesting and often over-engineered. Teams adopt multi-agent because it seems sophisticated rather than because the problem requires it. Before implementing multi-agent, verify that single-agent has actually hit a ceiling, not just that multi-agent seems more advanced.</p>
+        </div>
+
+        <h2>Cost-Benefit Framework</h2>
+
+        <div class="callout algorithm">
+            <div class="callout-title">Multi-Agent Decision Matrix</div>
+            <pre>
+Benefits:
+  + Time savings from parallelization
+  + Quality improvements from specialization
+  + Reliability improvements from isolation
+  + Scale improvements from distribution
+
+Costs:
+  - Coordination complexity
+  - Context passing overhead
+  - System complexity
+  - Debugging difficulty
+
+Decision: Multi-agent if benefits > costs.
+        </pre>
+        </div>
+
+        <h2>Gradual Escalation</h2>
+
+        <p>Start with single-agent. Only escalate to multi-agent when you have evidence that single-agent has hit its ceiling. This avoids premature complexity while ensuring you can scale when needed.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">The Escalation Triggers</div>
+            <p>Watch for signals that single-agent is hitting its ceiling, including latency that exceeds targets even with optimization efforts, context limitations that prevent handling larger tasks or more complex problems, a single agent that cannot develop expertise in all required domains simultaneously, throughput that does not meet demand even at maximum concurrency, and failures where one task crashing brings down the entire system.</p>
+        </div>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Multi-agent is justified by parallelization opportunities, expertise separation requirements, isolation needs, or scale that exceeds single-agent capacity. Multi-agent adds coordination overhead, so benefits must exceed costs before adopting this complexity. Start with single-agent and escalate to multi-agent only when you hit ceilings rather than preemptively adopting multi-agent for perceived sophistication. Watch for the over-engineering trap: multi-agent is not inherently better than single-agent, just more complex. Establish escalation triggers to know objectively when to move to multi-agent architecture.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Evaluating Multi-Agent for Your System</div>
+            <p>Evaluate multi-agent for a current or planned system by working through a structured analysis. First, identify what tasks this system performs and their characteristics. Second, determine whether tasks can be parallelized and whether sequential dependencies exist that would prevent parallel execution. Third, assess whether tasks require different expertise domains that might benefit from specialized agents. Fourth, clarify the isolation requirements including any security or reliability boundaries that matter. Fifth, determine the scale requirement in terms of throughput and concurrency. Sixth, identify which ceiling single-agent would hit given these requirements. Seventh, evaluate whether the benefits of multi-agent genuinely exceed the costs given your specific situation.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 13.2, we examine <strong>Delegation Patterns and Tool Use</strong>, exploring how to design effective delegation between agents and with tools.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 13: Multi-Agent Flows</a>
+            <a class="up" href="../index.html">Chapter 13 Overview</a>
+            <a class="next" href="section-13-2.html">13.2 Delegation Patterns</a>
+        </nav>
+
+        <footer>
+            <p>Section 13.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

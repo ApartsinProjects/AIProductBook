@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.5 What Still Remains Expensive - Chapter 1: The New Economics of Building with AI</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
+        <div class="chapter-label">Chapter 1, Section 1.5</div>
+        <h1>What Still Remains Expensive</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Every revolution creates new winners and new losers. In the AI revolution, the winners are not those who use AI most, but those who understand what AI cannot replace. This section maps the persistent costs in AI product development.
+        </p>
+
+        <div class="epigraph">
+            <p>The marginal cost of an artifact approaches zero. The marginal cost of judgment approaches infinity. Choose which game you are playing.</p>
+            <cite>The fundamental AI economics dichotomy</cite>
+        </div>
+
+        <h2>Human Judgment: The Non-Compressible Core</h2>
+
+        <p>
+            AI can generate code, content, and designs, but it cannot generate strategic direction, contextual understanding, or moral accountability. These require human judgment that remains expensive precisely because it is rare and valuable. Good judgment comes from experience, and experience comes from living through situations that teach lessons.
+        </p>
+
+        <p>
+            AI can learn from experience in the aggregate, but individual judgment requires contextual understanding (knowing that this situation is different from that situation, even when the data looks similar), stakeholder navigation (understanding political dynamics, organizational culture, and personal motivations), accountability acceptance (being willing to be responsible for outcomes, including failures), and value articulation (translating abstract principles into specific decisions). These capabilities do not compress because they are fundamentally about human relationships and human experience.
+        </p>
+
+        <p>
+            Human judgment is expensive because expertise takes decades to develop (a senior product manager has 15+ years of experience; you cannot replicate that with a prompt), experts are scarce (the best product managers, designers, and engineers have many options and command premium compensation), judgment requires sustained attention (context switching degrades judgment quality; experts need protected time), and accountability has no substitute (someone must be willing to be wrong and bear the consequences).
+        </p>
+
+        <h3>Maximizing Return on Human Judgment</h3>
+
+        <p>
+            Given that human judgment is expensive and irreplaceable, maximize return on it by routing routine judgments to AI when a decision has been made before, reserving human judgment for novel situations. Prepare context for human decisions by using AI to gather data, summarize options, and present analysis, then letting humans decide. Build judgment amplification tools by creating systems that help experts make better judgments faster rather than replace them. Invest in judgment quality through training, diversity of perspectives, and psychological safety to improve judgment quality.
+        </p>
+
+        <h2>Quality Data: The Compounding Asset</h2>
+
+        <p>
+            AI systems are only as good as the data they are grounded in. As AI capabilities commoditize, data becomes a more important differentiator. Data remains expensive because collection requires effort (someone must acquire, clean, and structure data), quality is labor-intensive (automated data quality tools help but do not eliminate the need for human review), proprietary data is scarce (data that competitors cannot easily obtain provides lasting advantage), and data needs ongoing maintenance (business context changes; data must be updated).
+        </p>
+
+        <p>
+            A product with proprietary data and AI can create a compounding advantage. As users interact with the product, they generate data that improves the AI, which improves the product, which attracts more users. This flywheel is difficult for competitors to replicate. Not all data is equal. Consider a hierarchy when evaluating data investments. Labeled data (human-annotated examples for supervised learning) is highest quality but most expensive. Interaction data (user behavior signals) is valuable but requires careful interpretation. Content data (documents, images, and media) is useful for RAG but requires processing. Metadata (data about data) is often underutilized and surprisingly valuable.
+        </p>
+
+        <p>
+            When evaluating data investments, consider coverage (what percentage of your use cases does this data enable?), accuracy (how reliable is the data? What is the error rate?), freshness (how quickly does the data become stale? How expensive to update?), and exclusivity (can competitors obtain this data? How long would it take them?).
+        </p>
+
+        <h2>Evaluation Infrastructure: The Underestimated Cost</h2>
+
+        <p>
+            If there is one underestimated cost in AI product development, it is evaluation. Teams that underestimate evaluation struggle to ship reliably. Teams that over-invest in evaluation move slower but ship better products.
+        </p>
+
+        <p>
+            Traditional software testing verifies deterministic behavior: given input X, expect output Y. AI behavior is often probabilistic: given input X, expect output Y most of the time, but sometimes Z. This creates challenges because ground truth is elusive (for many tasks, there is no objectively correct answer), edge cases are infinite (AI can fail in unexpected ways that humans did not anticipate), behavior drifts over time (model updates can improve some outputs while degrading others), and human evaluation is expensive (having humans review AI outputs scales poorly).
+        </p>
+
+        <p>
+            The distinction between eval (singular, a specific evaluation of a specific output against specific criteria) and evals (plural, a systematic infrastructure for running many evaluations over time to measure and detect changes in AI system behavior) helps teams communicate precisely about evaluation work. Mature AI teams invest in a multi-layer evaluation stack. Unit evals assess individual output quality for specific inputs and are automated where possible. Integration evals check whether the AI system works correctly with other components. Human evals involve expert review of outputs for quality, safety, and appropriateness. Distribution evals examine how the AI behaves across different user segments and contexts. Regression evals detect whether behavior has changed since the last release.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">The Eval Investment Spectrum</div>
+            <p>
+                <strong>Minimal (5% of dev time)</strong>: Spot-check outputs manually, rely on user reports of failures.<br><br>
+                <strong>Moderate (15% of dev time)</strong>: Automated unit tests for critical paths, quarterly human review.<br><br>
+                <strong>Mature (30%+ of dev time)</strong>: Continuous evaluation pipeline, LLM-as-judge for automated quality scoring, dedicated eval engineering function.
+            </p>
+        </div>
+
+        <p>Investment level should match the stakes of your AI application.</p>
+
+        <h2>Deployment and Operations: The Production Tax</h2>
+
+        <p>
+            Building AI is expensive; running AI in production is also expensive. The costs continue long after the feature ships. Production AI requires ongoing investment in compute infrastructure (LLM inference is GPU-intensive; GPUs are expensive), latency management (users expect fast responses; AI often requires longer processing), scaling (traffic spikes require capacity planning; cold starts on serverless are slow), monitoring (tracking AI behavior in production to detect drift and failures), and incident response (AI failures can cascade; they require rapid response).
+        </p>
+
+        <p>
+            Managing production AI costs requires deliberate architecture decisions. Caching can reduce costs by 90% or more for repeated queries with same inputs. Model routing can reduce costs by 50-70% by directing simple queries versus complex queries to different resources. Output length limits can reduce costs by 30-50% when verbose responses are unnecessary. Batching can reduce costs by 40-60% for non-real-time use cases. Hybrid retrieval can reduce costs by 20-40% when relevant context is available.
+        </p>
+
+        <h2>Trust and Adoption: The Human Barrier</h2>
+
+        <p>
+            Perhaps the most persistent cost is human trust. Getting users, enterprises, and regulators to trust AI-powered products is expensive, time-consuming, and cannot be fully automated. Trust in AI products is not monolithic. It includes performance trust (will the AI do what it claims? Is it reliable?), safety trust (will the AI cause harm? Are there guardrails?), privacy trust (what happens to my data? Is it secure?), alignment trust (does the AI have my interests at heart?), and accountability trust (if something goes wrong, who is responsible?).
+        </p>
+
+        <p>
+            AI products often suffer from a trust deficit: the capability is high but trust is low. This gap cannot be closed by improving AI alone; it requires transparency, communication, and consistent behavior over time. Trust-building is expensive but necessary. Start with low-stakes use cases to build trust through small wins before tackling high-stakes applications. Be transparent about limitations because users trust honest products more than overconfident ones. Make AI decisions explainable because when users understand why AI made a decision, they trust it more. Provide override mechanisms because letting users override AI decisions increases trust in the system. Invest in documentation because clear documentation of AI behavior and limitations reduces support burden.
+        </p>
+
+        <h2>Managing Persistent Costs</h2>
+
+        <p>
+            Understanding persistent costs is only useful if you manage them well. Here is a framework for managing each cost category:
+        </p>
+
+        <div class="callout tip">
+            <div class="callout-title">Cost Management Framework</div>
+            <p>
+                <strong>Human Judgment</strong>: Route routine decisions to AI; protect expert time for novel decisions.<br><br>
+                <strong>Quality Data</strong>: Invest in proprietary data with compounding returns; maintain it rigorously.<br><br>
+                <strong>Evaluation Infrastructure</strong>: Build evaluation before building features; automate where possible.<br><br>
+                <strong>Deployment and Operations</strong>: Design for cost from the start; monitor continuously.<br><br>
+                <strong>Trust and Adoption</strong>: Build trust incrementally; be transparent about limitations.
+            </p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>Before building evaluation infrastructure, define the eval. For persistent costs like evals, this means building small, focused micro-evals before comprehensive eval pipelines. A micro-eval for evaluation infrastructure: test on 20 cases manually, establish baseline accuracy, then automate what humans verify. Building evals without this baseline is like building without blueprints.</p>
+        </div>
+
+        <h2>Chapter Summary</h2>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>AI creates near-zero marginal cost for artifact creation, meaning code, content, and design can be generated at a fraction of traditional costs. The expensive parts of AI products are judgment, data, evals, deployment, and trust, and these have not been compressed by AI. Faster prototyping enables more experiments, and the teams that experiment most will find product-market fit fastest. The build/buy/bake calculus has shifted because many capabilities that required vendors can now be built internally. AI is a platform, not a feature, and thinking AI-as-platform changes product strategy fundamentally. Real ROI comes from revenue growth and risk reduction because cost avoidance and efficiency are table stakes while growth is where value multiplies. Trust is the ultimate barrier because building user trust in AI products requires transparency, reliability, and time.</p>
+        </div>
+
+        <div class="bibliography">
+            <div class="bibliography-title">References and Further Reading</div>
+            <div class="bib-entry-card">
+                <p class="bib-ref">
+                    <a href="#">OpenAI API Pricing History (2022-2026)</a> &mdash; Documentation of the 50x cost reduction in LLM capabilities.
+                </p>
+                <p class="bib-annotation">The empirical foundation for the cost structure claims in this chapter. Available in the book's online appendix.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-ref">
+                    <a href="#">McKinsey AI Adoption Survey (2025)</a> &mdash; Cross-industry data on AI adoption rates and ROI.
+                </p>
+                <p class="bib-annotation">Provides benchmarks for AI adoption and ROI expectations. Survey of 1,200 enterprise leaders.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-ref">
+                    <a href="#">Andreessen Horowitz AI Product Playbook</a> &mdash; Framework for AI product economics.
+                </p>
+                <p class="bib-annotation">Industry framework for thinking about AI product costs and competitive dynamics.</p>
+            </div>
+        </div>
+
+        <div class="whats-next">
+            <h3>Continue Learning</h3>
+            <p>
+                <strong>Next chapter:</strong> <a href="../../chapter-2/index.html">Chapter 2: The Synergy Triangle Framework</a> &mdash; Learn the three pillars of AI product success: capability, reliability, and usability.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-1-4.html">1.4 The New Economics in Practice</a>
+            <a class="up" href="../index.html">Chapter 1 Overview</a>
+            <a class="next" href="../../chapter-2/index.html">Chapter 2: The Synergy Triangle</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 1, Section 1.5 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

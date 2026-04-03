@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 2: What AI Can and Cannot Reliably Do - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
+        <div class="chapter-label">Chapter 2</div>
+        <h1>What AI Can and Cannot Reliably Do</h1>
+    </header>
+
+    <main class="content">
+        <div class="opening-hook">
+            You ship an AI feature on Monday. By Tuesday morning, users report that your model is confidently making up product names that never existed. By Wednesday, you are firefighting. By Friday, you are questioning whether AI is ready for production at all. This scenario plays out in companies every week. Not because AI is broken, but because teams do not share a common understanding of what AI can reliably do.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-2-opener.png"
+                 alt="A humorous illustration showing a robot confidently giving a TED talk on quantum physics while the audience looks confused. The robot has a speech bubble saying 'I am 100% confident!' with a halo of overconfidence.">
+            <figcaption>
+                Understanding AI's actual capabilities prevents overconfidence that leads to production failures.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Model Capability Probing</div>
+            <p>Vibe-coding is ideal for probing the boundaries of what AI models can and cannot do reliably. Quickly assemble prompts that test edge cases, unusual inputs, and boundary conditions to understand where your model excels and where it fails. This hands-on exploration reveals capability limits faster than reading documentation alone, giving you intuition for model behavior before you commit to production architecture.</p>
+        </div>
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Build shared vocabulary on AI capabilities and limitations; understand hallucination mitigation strategies.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter grounds you in what AI can and cannot do reliably. You will learn about persistent hallucinations, multimodal capabilities, reasoning limits, and how to design products that fail gracefully.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> What AI can and cannot reliably do, and where hallucinations and failure modes require architectural safeguards.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> A simple AI feature prototype that demonstrates the gap between AI confidence and AI reliability in your specific use case.</li>
+                <li><strong>What would count as success or failure?</strong> Shared team vocabulary for AI capabilities and limitations, and documented failure modes that inform product design decisions.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Products must be designed with graceful degradation, uncertainty communication, and human oversight mechanisms that account for AI unreliability.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Understand the reliability spectrum for AI capabilities</li>
+                <li>Apply appropriate AI patterns (multimodal, tool use, agents)</li>
+                <li>Build shared vocabulary across teams for AI limitations</li>
+                <li>Design products that handle AI failures gracefully</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">2.1</span> <a href="sections/section-2-1.html">Foundation Model Capabilities and Limits</a></li>
+                <li><span class="sec-num">2.2</span> <a href="sections/section-2-2.html">Multimodal Abilities and Their Boundaries</a></li>
+                <li><span class="sec-num">2.3</span> <a href="sections/section-2-3.html">Reasoning and Tool Use Limits</a></li>
+                <li><span class="sec-num">2.4</span> <a href="sections/section-2-4.html">Failure Modes and Product Implications</a></li>
+            </ul>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../chapter-1/index.html">Ch 1: Economics</a>
+            <a class="up" href="../../part-1-why-ai-changes/index.html">Part I Overview</a>
+            <a class="next" href="sections/section-2-1.html">2.1 Foundation Model Capabilities</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

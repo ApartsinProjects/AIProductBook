@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10.1 From Coding Assistant to Intent Steering - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 10.1</div>
+        <h1>From Coding Assistant to Intent Steering</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            The first wave of AI coding tools positioned themselves as coding assistants. The second wave, vibe coding, positions AI as an intent steering system. The difference is not just semantic. It changes how you approach every problem.
+        </p>
+
+        <div class="callout fun-note">
+            <div class="callout-title">The Intent Steering Reality</div>
+            <p>You say: "Build me something amazing." AI builds a Hello World app. You say: "Build me a scalable system for Fortune 500 companies." AI builds a 50-file distributed system with Kubernetes configs. Intent steering is learning to say exactly what you mean without meaning exactly what you say.</p>
+        </div>
+
+        <h2>The Evolution from Assistant to Instrument</h2>
+
+        <p>Coding assistants operate on a request-response model. You ask, it generates. You review, it revises. The human remains the orchestrator throughout, directing each step. This model works well for well-defined tasks with clear specifications.</p>
+
+        <p>But it preserves the bottleneck of human intent translation even as it speeds up implementation.</p>
+
+        <p>Intent steering represents a fundamentally different mental model. Instead of translating your intent into discrete commands, you establish a direction and let the AI navigate within it. You are not specifying what to build step by step. You are pointing toward an outcome and trusting the AI to chart the course.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Intent Steering Spectrum</div>
+            <p>Intent steering exists on a spectrum from directive to emergent. At the directive end, you provide explicit implementation instructions such as "Write a function that takes a list of orders and returns the total value." At the guided end, you describe desired outcomes while allowing implementation flexibility, like "Create an order processing module with the usual calculations, error handling, and logging." At the emergent end, you express high-level goals without implementation constraints, such as "Build something that lets the operations team handle customer service faster."</p>
+            <p>Your position on this spectrum should vary based on your confidence in your understanding, the stakes of the outcome, and how much you want the AI to surprise you.</p>
+        </div>
+
+        <p>Understanding where a task falls on this spectrum helps you choose the right approach and set appropriate expectations.</p>
+
+        <h2>Why Intent Steering Works for Prototyping</h2>
+
+        <p>Prototyping is inherently exploratory. You do not know exactly what you want until you see it. Intent steering embraces this uncertainty rather than fighting it. By expressing goals at a higher level, you leave room for the AI to contribute unexpected solutions while still guiding toward useful outcomes.</p>
+
+        <p>The traditional assistant model creates friction during prototyping because every friction point requires human resolution. If the AI produces something slightly wrong, you either accept the deviation or spend time correcting it. With intent steering, you accept a broader range of outputs and filter them for what serves your goals.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: QuickShip Logistics</div>
+            <p>QuickShip's team was building a prototype for delivery route visualization. Initially, they used the directive approach:</p>
+            <p><em>"Create a React component that displays a map with delivery stops as numbered markers, each showing the customer name, address, and estimated delivery time. Use different colors for on-time, delayed, and exception stops."</em></p>
+            <p>This worked but the result was functional and uninspired. The AI followed instructions exactly but contributed nothing beyond them.</p>
+            <p>They shifted to intent steering:</p>
+            <p><em>"Build a dashboard that makes it immediately obvious which deliveries are at risk so the operations team can prioritize their day. Think of it like a mission control center for last-mile delivery."</em></p>
+            <p>The AI proposed color-coded risk indicators, summary statistics, and sorting algorithms that the team had not considered. The prototype was both more useful and more polished than what they would have designed themselves.</p>
+        </div>
+
+        <h2>Establishing Intent Without Specifying Implementation</h2>
+
+        <p>The skill in intent steering lies in calibration. Too vague and you get unpredictable results. Too specific and you eliminate the benefits. The art is stating what you want to achieve, what constraints matter, and what success looks like without dictating the path.</p>
+
+        <h3>Outcome Framing</h3>
+
+        <p>Describe the desired outcome in terms of user experience rather than implementation. Instead of "build a form with fields for name, email, and message," try "make it easy for customers to ask questions about their deliveries." The AI can invent form designs. You care about the experience.</p>
+
+        <h3>Constraint Expression</h3>
+
+        <p>State what must be true regardless of the implementation path. "The solution must work on mobile phones used by delivery drivers in bright sunlight" constrains the design without prescribing it. "Must process 10,000 orders per hour without data loss" establishes non-negotiables.</p>
+
+        <h3>Success Criteria</h3>
+
+        <p>Define what you are optimizing for without assuming a particular form. "Fastest time to first meaningful interaction" differs from "fewest support tickets after launch" and produces very different prototypes. Make your success criteria explicit even when your implementation preferences are not.</p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Over-Specification Trap</div>
+            <p>The most common failure in intent steering is over-specification. Engineers default to directive language because it feels safer. But verbose specifications that include implementation details defeat the purpose of intent steering by removing the AI's ability to contribute creative solutions.</p>
+            <p>Watch for over-specification patterns such as telling the AI to create a function with a specific name and parameters, specifying exact technology choices like React with TypeScript and styled-components, dictating file structure such as following the existing patterns in src/components, or referencing session-specific artifacts like importing from a utils folder created earlier. These statements are not wrong, but each one limits what the AI can contribute. Reserve specificity for genuine constraints that matter to the outcome.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Misconception</div>
+            <p>
+                Intent steering does not mean "let the AI decide everything." Some teams interpret "do not over-specify" as "say nothing specific and let the AI run wild." But intent steering without clear outcome framing produces unpredictable results. The skill is expressing what you want achieved and what constraints exist, while leaving room for the AI to surprise you with implementation approaches. Saying "build something amazing" is not intent steering; it is abandonment.
+            </p>
+        </div>
+
+        <h2>Calibrating <a href="../../../part-1-why-ai-changes/chapter-4/sections/section-4-6.html" class="cross-ref">Trust</a> Through Iterative Reveal</h2>
+
+        <p>Intent steering works best through iterative reveal. Start with vague intent and let the AI show you possibilities. Gradually add specificity based on what you learn. This creates a feedback loop where the AI educates you about the solution space while you guide it toward your goals.</p>
+
+        <p>The key is to distinguish between what you know and what you do not know. You know your users, your business, your constraints. You may not know what the best UI pattern is or how to structure a particular algorithm. Let the AI explore the unknown while you anchor the known.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">The Three-Layer Calibration Method</div>
+            <p>For each prototyping session, explicitly identify three layers. The fixed layer encompasses what must not change regardless of what the AI proposes, including business rules, brand constraints, and integrations. The influenced layer covers what you prefer but would compromise for better solutions, such as technology stack preferences, naming conventions, and UI patterns you favor. The exploration layer identifies what you are genuinely uncertain about and want the AI to contribute, such as architecture decisions, user experience approaches, and data models. Explicitly communicate these layers in your intent expression.</p>
+        </div>
+
+        <h2>When to Shift Back to Directive Mode</h2>
+
+        <p>Intent steering does not replace directive coding. There are specific situations where you should shift modes. Debugging requires directive mode when something is wrong and you need precise control over the fix. Compliance situations demand directive mode when code must follow specific patterns for security or regulatory reasons. Integration work calls for directive mode when connecting to existing systems with specific interface requirements. Refinement also suits directive mode when you have a specific improvement in mind and want to see it implemented exactly. Expert vibe coders fluidly shift between modes based on the task, defaulting to intent steering during exploration and switching to directive mode when they know what they want.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Intent steering repositions AI from a request-response tool to a navigation partner. The value lies in what you leave unspecified as much as what you specify, since the AI's contribution emerges from the space you create. Prototyping benefits most from intent steering because exploration requires flexibility rather than rigid specification. You should calibrate trust through iterative reveal rather than one-time specification, allowing understanding to develop gradually. Expert vibe coders fluidly shift between intent steering and directive modes depending on the task at hand. The three-layer calibration method with fixed, influenced, and exploration layers clarifies what to communicate and helps you express intent more effectively.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Reframing Your Next Request</div>
+            <p>Take a coding task you are considering and reframe it from directive to intent steering. Begin by writing your original directive request as a list of implementation instructions. Next, identify what user outcome or business goal those instructions actually serve. Then rewrite the request to express the outcome without implementation details, focusing on what you want to achieve rather than how to achieve it. Add explicit constraints that must be preserved, such as performance requirements or integration needs. Finally, note what you are genuinely uncertain about that the AI could explore, giving the system room to contribute unexpected solutions.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 10.2, we examine <strong>Where Vibe Coding Excels</strong>, identifying the specific contexts where intent steering produces outsized value and the conditions that enable success.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 10: What Vibe-Coding Is Really For</a>
+            <a class="up" href="../index.html">Chapter 10 Overview</a>
+            <a class="next" href="section-10-2.html">10.2 Where Vibe Coding Excels</a>
+        </nav>
+
+        <footer>
+            <p>Section 10.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

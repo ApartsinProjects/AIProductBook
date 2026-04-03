@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction - From AI-Assisted Development to AI-Powered Products</title>
+    <link rel="stylesheet" href="../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label">Front Matter</div>
+        <h1>Introduction: Defining the Journey from AI Assistant to AI Engine</h1>
+    </header>
+
+    <main class="content">
+        <figure class="illustration">
+            <img src="../images/illustrations/introduction-opener.png"
+                 alt="A humorous scene showing a user asking an AI 'Make me an app' and the AI responds by exploding into thousands of different app options flying everywhere, with a confused user trying to catch one">
+            <figcaption>
+                The gap between "make me an app" and a working product is where most teams get stuck.
+            </figcaption>
+        </figure>
+
+        <blockquote class="epigraph">
+            <p>"Vibe coding is when you essentially just write the software in English, tell the AI what you want, and it writes it for you. But you still need to know how to code, to verify and guide the process."</p>
+            <cite>Andrej Karpathy, February 2025</cite>
+        </blockquote>
+
+        <h2>The Evidence Loop: How AI Products Are Actually Built</h2>
+
+        <p>
+            This book presents a unified operating model for building AI products. At its center is a simple loop that repeats throughout every phase of work:
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The AI Product Operating Loop</div>
+            <p class="loop-diagram">
+                Frame &rarr; Prototype &rarr; Measure &rarr; Architect &rarr; Launch &rarr; Learn &rarr; Reframe
+            </p>
+            <p>This loop does not run once. It spirals. Each iteration produces evidence that reshapes the next cycle.</p>
+        </div>
+
+        <h3>What Each Stage Means</h3>
+
+        <ul>
+            <li><strong>Frame</strong>: Define the user problem, value hypothesis, risk profile, and confidence boundaries.</li>
+            <li><strong>Prototype</strong>: Instantiate the idea quickly enough to test workflows, feasibility, and product assumptions.</li>
+            <li><strong>Measure</strong>: Evaluate usefulness, correctness, robustness, cost, latency, and user repair burden.</li>
+            <li><strong>Architect</strong>: Choose the minimum durable system justified by evidence.</li>
+            <li><strong>Launch</strong>: Operationalize with safeguards, rollout plans, support flows, and instrumentation.</li>
+            <li><strong>Learn</strong>: Collect user corrections, failure traces, and operational signals.</li>
+            <li><strong>Reframe</strong>: Update requirements, UX, prototype strategy, and architecture based on evidence.</li>
+        </ul>
+
+        <p>
+            This loop is not a phase gate process. It is a recursive system where evidence from later stages changes earlier assumptions. A prototype result may invalidate a requirement. A launch failure may restart the framing conversation. Evaluation binds all stages together from the beginning.
+        </p>
+
+        <h3>Three Roles, One Loop</h3>
+
+        <p>
+            Every stage of the loop involves three simultaneous modes of working:
+        </p>
+
+        <ul>
+            <li><strong>Product Management</strong>: Framing the opportunity, defining success, interpreting evidence for business value.</li>
+            <li><strong>Vibe Coding</strong>: Rapid prototyping, probing desirability and feasibility, testing workflows.</li>
+            <li><strong>AI Engineering</strong>: Architecting for durability, building measurement systems, ensuring reliability.</li>
+        </ul>
+
+        <p>
+            These are not sequential handoffs. They are three lenses applied simultaneously to every problem. A requirement is not complete until it has been prototyped and evaluated. A prototype is not valid until it has been measured against engineering constraints. An architecture is not justified until evidence from the field confirms it.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Capstone: An Integrated Product Trace</div>
+            <p>
+                By the end of this book, you will have traced one realistic product through the complete loop. Each chapter contributes one layer: framing produces the eval-first PRD, prototyping produces a working artifact, measurement produces confidence data, architecture produces a system contract, launch produces operational evidence, learning produces updates.
+            </p>
+            <p>
+                The final capstone deliverable is not a report. It is a connected artifact stack: a PRD, a prototype, an eval suite, an architecture decision record, a launch plan, and a learning log, all linked and consistent.
+            </p>
+        </div>
+
+        <h3>Four Questions Every Chapter Answers</h3>
+
+        <p>
+            As you read, you will notice every major chapter returns to these four questions:
+        </p>
+
+        <ol>
+            <li><strong>What are we trying to learn?</strong> What decision does this work inform?</li>
+            <li><strong>What is the fastest prototype that could teach it?</strong> What artifact tests this assumption cheaply?</li>
+            <li><strong>What would count as success or failure?</strong> What eval captures this?</li>
+            <li><strong>What engineering consequence follows from the result?</strong> How does this change what we build?</li>
+        </ol>
+
+        <p>
+            These questions keep product decisions, prototype work, and engineering outcomes linked. They are the grammatical structure that makes the book feel like one coherent system rather than a collection of topics.
+        </p>
+
+        <figure class="illustration">
+            <img src="../images/illustrations/synergy-triangle.png"
+                 alt="The Synergy Triangle showing three pillars: Vibe Coding (development), AI PM (strategy), and AI Engineering (production) working in concert">
+            <figcaption>
+                The three pillars of the AI product operating loop. Each stage of the loop activates all three simultaneously.
+            </figcaption>
+        </figure>
+
+        <h2>Running Products: Seeing the Loop in Action</h2>
+
+        <p>
+            Throughout this book, three recurring products demonstrate the loop in action. Each one surfaces different tensions and decisions:
+        </p>
+
+        <ul>
+            <li><strong>QuickShip Logistics</strong> &mdash; a productivity copilot that helps dispatchers manage routes and handle exceptions. Shows how evaluation drives routing decisions and how prototype results reshape requirements.</li>
+            <li><strong>HealthMetrics Analytics</strong> &mdash; a workflow automation product that coordinates clinical data from multiple sources. Shows how product framing constrains architecture and how post-launch learning loops update both.</li>
+            <li><strong>DataForge Enterprise</strong> &mdash; an enterprise AI platform that embeds AI capabilities into data pipeline workflows. Shows how governance and security interact with prototype speed and how engineering decisions reshape PM prioritization.</li>
+        </ul>
+
+        <p>
+            You will see these products at different stages of the loop in different chapters. A chapter on discovery may show QuickShip being framed. A later chapter on architecture may show HealthMetrics being architected. The same product evolves under all three lenses across the book.
+        </p>
+
+        <h3>Where to Find Each Running Product</h3>
+
+        <p>
+            The table below maps each running product to the chapters where it appears, organized by the primary focus of each part:
+        </p>
+
+        <div class="comparison-table">
+            <div class="comparison-table-title">Running Products: Chapter Map</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Running Product</th>
+                        <th>Primary Focus</th>
+                        <th>Key Chapters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>QuickShip Logistics</strong></td>
+                        <td>Vibe coding, eval-driven requirements, cost-aware prototyping</td>
+                        <td>Ch 1 (economics), Ch 5 (discovery), Ch 10-12 (vibe coding), Ch 15-16 (routing decisions), Ch 21-23 (prototype evaluation)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HealthMetrics Analytics</strong></td>
+                        <td>Governance, reliability, post-launch learning</td>
+                        <td>Ch 1 (case study), Ch 6-8 (discovery/design), Ch 17-18 (reliability), Ch 24-25 (governance), Ch 28-30 (post-launch learning)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DataForge Enterprise</strong></td>
+                        <td>Architecture decisions, security, team topologies</td>
+                        <td>Ch 1 (case study), Ch 7-9 (PM framing), Ch 13-14 (RAG systems), Ch 19-20 (architecture), Ch 26-27 (security patterns)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Artifact Translation: The Same Object, Three Lenses</div>
+            <p>
+                Key artifacts in this book are not owned by one discipline. They are shared objects that change form as they move through the loop:
+            </p>
+            <ul>
+                <li><strong>Eval-first PRD</strong>: PM defines value hypothesis and acceptance logic. Vibe-coding uses it as a context packet. Engineering treats it as a system contract tied to measurement.</li>
+                <li><strong>User Journey</strong>: PM maps behavior and value path. Vibe-coding uses it as a scenario library for prototyping. Engineering converts it into test cases and instrumentation plan.</li>
+                <li><strong>Prototype Review</strong>: PM asks what changed in the opportunity. Vibe-coding records what was learned quickly and what stayed ambiguous. Engineering identifies what is now justified to harden.</li>
+                <li><strong>Postmortem</strong>: PM extracts product learning. Vibe-coding improves prompting and context. Engineering updates architecture and reliability patterns.</li>
+            </ul>
+            <p>
+                When you see an artifact in one chapter, expect to see it transformed in the next.
+            </p>
+        </div>
+
+        <h2>Anti-Patterns: How the Loop Breaks Down</h2>
+
+        <p>
+            The three-way interplay between framing, prototyping, and engineering is powerful, but it breaks down in predictable ways. Watch for these failure modes throughout the book:
+        </p>
+
+        <ul>
+            <li><strong>Deterministic requirements for probabilistic systems</strong> &mdash; Writing specifications as if outputs are guaranteed, not statistical.</li>
+            <li><strong>Demos mistaken for validated products</strong> &mdash; A working prototype shown once does not mean the problem is solved.</li>
+            <li><strong>Premature architecture</strong> &mdash; Building infrastructure before evidence justifies the complexity.</li>
+            <li><strong>Evaluation introduced too late</strong> &mdash; Defining quality after the product is already built.</li>
+            <li><strong>Launch without explicit confidence boundaries</strong> &mdash; Shipping without knowing what could go wrong and how to detect it.</li>
+            <li><strong>Product teams over-trusting benchmark scores</strong> &mdash; Benchmark performance does not guarantee user satisfaction.</li>
+            <li><strong>Engineering over-hardening ambiguous workflows</strong> &mdash; Building reliability into systems that have not been validated.</li>
+        </ul>
+
+        <p>
+            Each chapter highlights relevant anti-patterns and how to avoid them.
+        </p>
+
+        <h2>What Comes Next</h2>
+
+        <p>
+            The book follows the loop structure. Part I frames the opportunity and establishes the evidence loop as the organizing grammar. Part II shows how products are discovered and designed through the loop. Part III demonstrates how vibe coding accelerates prototyping at every stage. Part IV covers how architecture is justified by evidence. Part V formalizes evaluation as the discipline that binds all stages together. Part VI covers launching and learning. Part VII provides the capstone and teaching kit.
+        </p>
+
+        <p>
+            Chapter 1 begins with the economics of AI products and what AI can and cannot reliably do. It introduces the first of the four questions: What are we trying to learn?
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="introduction.html">Introduction</a>
+            <a class="up" href="index.html">Front Matter</a>
+            <a class="next" href="part-1-why-ai-changes/chapter-1/sections/section-1-1.html">Ch 1: The New Economics of Building with AI</a>
+        </nav>
+
+        <footer>
+            <p>First Edition, April 2026 &middot; <a href="../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

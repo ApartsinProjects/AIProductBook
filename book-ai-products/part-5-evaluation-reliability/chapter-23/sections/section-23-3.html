@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 23.3: Safe Degradation and Uncertainty Thresholds - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 23</div>
+        <h1>Safe Degradation and <a href="../../../part-1-why-ai-changes/chapter-4/sections/section-4-6.html" class="cross-ref">Uncertainty</a> Thresholds</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"The AI should know what it does not know. Building systems that recognize and communicate uncertainty is what separates reliable AI products from ones that fail in embarrassing ways."</p>
+            <cite>An AI Safety Engineer</cite>
+        </blockquote>
+
+        <h2 id="uncertainty-in-ai">Uncertainty in AI Systems</h2>
+
+        <p>
+            AI systems produce outputs with varying degrees of certainty. A model may confidently produce incorrect information (hallucination) or express uncertainty about correct information. Without understanding and managing uncertainty, you build systems that are either too aggressive (making confident errors) or too conservative (failing to provide useful responses).
+        </p>
+
+        <p>
+            Uncertainty in AI has two distinct sources. Epistemic uncertainty comes from what the model does not know, which could be reduced with more information. Aleatoric uncertainty comes from inherent randomness or ambiguity in the task itself.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Why Uncertainty Matters</h4>
+            <p>Every AI output carries uncertainty. If you treat all outputs as equally certain, you apply the same response to "the model is 99% confident" and "the model is 51% confident." Safe degradation requires recognizing these differences and responding appropriately.</p>
+        </div>
+
+        <h2 id="detecting-uncertainty">Detecting Uncertainty</h2>
+
+        <h3 id="log-probability">Log Probability Signals</h3>
+
+        <p>
+            Model log probabilities provide direct uncertainty signals. Lower average log probability of generated tokens indicates higher uncertainty.
+        </p>
+
+        <pre><code class="language-python">
+async def detect_uncertainty_via_logprob(
+    prompt: str,
+    response: str
+) -> dict:
+    """
+    Detect uncertainty using model log probabilities.
+    """
+    # Request logprobs for the response
+    result = await openai.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": prompt}],
+        logprobs=True,
+        top_logprobs=5
+    )
+    
+    choice = result.choices[0]
+    
+    # Calculate average log probability
+    token_logprobs = [
+        lp.logprob 
+        for lp in choice.logprobs.content 
+        if lp.logprob is not None
+    ]
+    
+    avg_logprob = sum(token_logprobs) / len(token_logprobs) if token_logprobs else 0
+    
+    # Convert to a confidence-like scale (0-1)
+    # Log prob of -1 per token roughly corresponds to 37% confidence
+    confidence = min(max(2 ** avg_logprob, 0), 1) if avg_logprob else 0.5
+    
+    # Count high-entropy tokens
+    high_entropy_count = sum(
+        1 for lp in choice.logprobs.content 
+        if lp.logprob > -2  # Unlikely token chosen
+    )
+    
+    return {
+        "confidence": confidence,
+        "avg_logprob": avg_logprob,
+        "high_entropy_tokens": high_entropy_count,
+        "uncertain": confidence < 0.7
+    }
+        </code></pre>
+
+        <h3 id="semantic-uncertainty">Semantic Uncertainty</h3>
+
+        <p>Beyond token probabilities, semantic uncertainty measures whether the model expresses uncertainty in its response through natural language cues. Hedging language such as "might", "could be", "possibly", or "unclear" often indicates the model is aware of uncertainty in its answer. Alternative framing such as "either A or B" suggests multiple interpretations without committing to one. Confidence calibration compares expressed probability versus actual accuracy to determine whether the model's stated confidence matches reality.</p>
+
+        <pre><code class="language-python">
+import re
+
+UNCERTAINTY_MARKERS = [
+    r"\b(might|may|could|possibly)\b",
+    r"\b(uncertain|unclear|ambiguous)\b",
+    r"\b(not sure|do not know|unaware)\b",
+    r"\b(either.*or)\b",
+    r"\b(it is possible that)\b",
+    r"\b(may depend on)\b",
+]
+
+def detect_semantic_uncertainty(text: str) -> float:
+    """
+    Detect uncertainty language in response text.
+    Returns uncertainty score 0-1.
+    """
+    text_lower = text.lower()
+    
+    matches = 0
+    total_patterns = len(UNCERTAINTY_MARKERS)
+    
+    for pattern in UNCERTAINTY_MARKERS:
+        if re.search(pattern, text_lower):
+            matches += 1
+    
+    return matches / total_patterns
+        </code></pre>
+
+        <h3 id="retrieval-uncertainty">Retrieval Uncertainty</h3>
+
+        <p>
+            For <a href="../../../part-4-engineering/chapter-17/sections/section-17-1.html" class="cross-ref">RAG</a> systems, measure retrieval confidence:
+        </p>
+
+        <pre><code class="language-python">
+@dataclass
+class RetrievalUncertainty:
+    """Uncertainty signals from retrieval stage"""
+    top_score: float
+    score_spread: float  # Gap between top and second result
+    results_count: int
+    score_variance: float  # Variance across top results
+
+def measure_retrieval_uncertainty(results: list[SearchResult]) -> RetrievalUncertainty:
+    if not results:
+        return RetrievalUncertainty(
+            top_score=0.0, score_spread=0.0, 
+            results_count=0, score_variance=0.0
+        )
+    
+    scores = [r.score for r in results]
+    
+    return RetrievalUncertainty(
+        top_score=scores[0],
+        score_spread=scores[0] - scores[1] if len(scores) > 1 else 0.0,
+        results_count=len(scores),
+        score_variance=variance(scores)
+    )
+
+def should_escalate(retrieval: RetrievalUncertainty, generation_confidence: float) -> bool:
+    """
+    Determine if uncertainty warrants human escalation.
+    """
+    # High generation uncertainty always escalates
+    if generation_confidence < 0.6:
+        return True
+    
+    # Low retrieval confidence
+    if retrieval.top_score < 0.7:
+        return True
+    
+    # Ambiguous top results
+    if retrieval.score_spread < 0.05:
+        return True
+    
+    return False
+        </code></pre>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Combine Uncertainty Signals</h4>
+            <p>No single uncertainty measure is perfect. Token probabilities miss semantic uncertainty. Semantic analysis misses numerical tasks. The most reliable approach combines multiple uncertainty signals from different sources.</p>
+        </div>
+
+        <h2 id="uncertainty-thresholds">Setting Uncertainty Thresholds</h2>
+
+        <h3 id="threshold-determination">Threshold Determination</h3>
+
+        <p>Thresholds should be set based on the cost of errors versus the cost of escalation for your specific application. For high-stakes applications in medical, legal, and financial domains, a confidence floor of 0.90 or higher is recommended because the error cost far exceeds the escalation cost. For medium-stakes applications involving business decisions, a confidence floor between 0.75 and 0.90 balances error cost against productivity. For low-stakes applications like entertainment or suggestions, a confidence floor between 0.50 and 0.75 is appropriate because productivity gains outweigh error cost.</p>
+
+        <h3 id="adaptive-thresholds">Adaptive Thresholds</h3>
+
+        <p>
+            Thresholds may vary based on request characteristics:
+        </p>
+
+        <pre><code class="language-python">
+def get_adaptive_threshold(request: Request) -> float:
+    """
+    Adjust confidence threshold based on request context.
+    """
+    base_threshold = 0.75
+    
+    # Higher stakes requests need higher thresholds
+    if request.domain in ["medical", "legal", "financial"]:
+        base_threshold += 0.15
+    
+    # New users get more conservative thresholds
+    if request.user.tenure_days < 7:
+        base_threshold += 0.10
+    
+    # Complex queries benefit from higher thresholds
+    if request.complexity_score > 0.7:
+        base_threshold += 0.05
+    
+    # Cap at reasonable maximum
+    return min(base_threshold, 0.95)
+        </code></pre>
+
+        <h2 id="degradation-patterns">Safe Degradation Patterns</h2>
+
+        <h3 id="confidence-gating">Confidence Gating</h3>
+
+        <p>
+            Only provide AI-generated responses when confidence exceeds threshold:
+        </p>
+
+        <pre><code class="language-python">
+async def confident_generate(
+    prompt: str,
+    threshold: float = 0.75
+) -> GenerationResult:
+    """
+    Generate only if confidence exceeds threshold.
+    """
+    uncertainty = await measure_uncertainty(prompt)
+    
+    if uncertainty.confidence >= threshold:
+        return GenerationResult(
+            response=uncertainty.response,
+            confidence=uncertainty.confidence,
+            source="ai"
+        )
+    else:
+        return GenerationResult(
+            response=None,
+            confidence=uncertainty.confidence,
+            source="degraded",
+            reason="Below confidence threshold"
+        )
+        </code></pre>
+
+        <h3 id="cascade-degradation">Cascade Degradation</h3>
+
+        <p>Degrade in stages, each more conservative than the last, to ensure users always receive the most appropriate response available. The first stage provides a full AI response when confidence is above the threshold. The second stage offers an AI response with an uncertainty flag when confidence is moderate, warning the user that the response may need verification. The third stage provides AI with sources included, allowing users to verify the information by checking the retrieval sources. The fourth stage presents structured uncertainty by showing multiple possibilities when the system cannot commit to a single answer. The final stage escalates to a human when confidence falls below all thresholds, ensuring critical queries receive human attention.</p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: HealthMetrics Clinical Decision Support</h4>
+            <p>The HealthMetrics team was implementing uncertainty-aware diagnosis support for a clinical decision support system that needed to know when to defer to physicians. The problem was that physicians were over-relying on AI suggestions even when confidence was low, creating a dilemma about how to build trust while maintaining appropriate skepticism.</p>
+            <p>The team decided to implement confidence-gated responses with visual indicators to communicate uncertainty clearly. For high confidence above 0.90, the AI suggestion was shown prominently. For moderate confidence between 0.75 and 0.90, the AI suggestion was displayed with caveat text explaining the uncertainty. For low confidence below 0.75, the AI defers to physician judgment rather than making a suggestion. All responses include relevant literature citations so physicians can verify the basis for any suggestion.</p>
+            <p>After implementation, the appropriate deference rate increased three times. Physicians reported higher trust in AI when it acknowledged uncertainty rather than presenting all responses with equal confidence. The lesson is that acknowledging uncertainty builds trust. Overconfident AI loses it.</p>
+        </div>
+
+        <h2 id="user-communication">Communicating Uncertainty to Users</h2>
+
+        <h3 id="explicit-uncertainty">Explicit Uncertainty Communication</h3>
+
+        <p>Tell users when the AI is uncertain so they can appropriately weight the information. Direct language uses phrases like "I am not certain about this" to clearly indicate low confidence. Confidence scores communicate specific probabilities such as "I am sixty-five percent confident this is correct" to help users make informed decisions. Alternative framing presents multiple possibilities such as "there are several possible interpretations" to set expectations about ambiguity.</p>
+
+        <h3 id="visual-indicators">Visual Uncertainty Indicators</h3>
+
+        <p>Use visual design to communicate uncertainty in ways that users can quickly interpret. Color coding provides intuitive communication with green for high confidence, yellow for moderate confidence, and red for low confidence. Iconography uses familiar symbols such as checkmarks for confident responses and question marks for uncertain responses. Typography displays confidence scores prominently so users see quantitative measures of certainty at a glance.</p>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>Research on "calibrated uncertainty" explores training models to express uncertainty that matches their actual accuracy. A well-calibrated model that says "80% confident" is correct 80% of the time. Calibration is difficult but essential for trustworthy AI.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-23-2.html">23.2 Retry Strategies</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-23-4.html">23.4 Policy Guardrails</a>
+        </nav>
+
+        <footer>
+            <p>Section 23.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

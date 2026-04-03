@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.3 Core Principles - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <div class="chapter-label">Chapter 3</div>
+        <h1>Understanding Vibe Coding Today</h1>
+        <p class="chapter-subtitle">3.3 Core Principles</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Demystify the shift from prompt engineering to agentic intent steering.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Basic programming knowledge helpful but not required. Completion of Sections 3.1-3.2 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Intent Over Implementation</div>
+            <p>Core principles like intent crafting and persistent context represent the essential skills that separate productive vibe coders from frustrated ones. These principles connect vibe coding to broader AI engineering practices, where clearly specifying desired outcomes becomes more important than specifying implementation details. Mastery of these principles enables the shift from coding helper to AI architect.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Longest English Sentence</div>
+            <p>The longest sentence ever published contained 16,284 words. Most humans would fail to parse such a request. The art of intent crafting is knowing when to expand and when to compress: more words for complex tasks, fewer words when the context already does the work.</p>
+        </div>
+
+        <h2 id="section-3-3">3.3 Core Principles</h2>
+
+        <p>
+            The effectiveness of vibe coding depends on mastering a few core principles that bridge the gap between AI capabilities and production-ready code. These principles are not optional techniques but foundational skills that determine whether your vibe coding efforts succeed or frustrate. Without them, you will spend hours in endless loops of AI-generated code that almost works but never quite gets there. With them, you can leverage AI as a genuine force multiplier, turning hours of coding work into minutes of intentional direction.
+        </p>
+
+        <h3>The Foundation: Why Principles Matter</h3>
+
+        <p>
+            Before diving into specific techniques, it's worth understanding why these principles matter so much. The core issue is that AI responds to what you say, not what you mean. If your instructions are ambiguous, the AI picks an interpretation - and that interpretation might not be what you intended. If you forget to mention important constraints, the AI doesn't know to respect them. If you don't provide enough context, the AI makes assumptions that might be wrong.
+        </p>
+
+        <p>
+            These aren't AI limitations - they're how the technology works. The AI is trying to be helpful, and the best way to be helpful is to fill in gaps. When you leave gaps, it fills them with something. Whether that something is right depends on whether you've given enough information to be right. This is why the quality of input so directly determines the quality of output - it's not the AI being difficult, it's the fundamental nature of how the system works.
+        </p>
+
+        <div class="callout aha-moment">
+    <div class="callout-title">&#128161; Aha Moment: The Specificity Test</div>
+    <p><strong>The shock:</strong> "Make a login page" versus "create a login page with email/password fields, a 'forgot password' link, styled with our company theme, using our existing Auth component." The difference in output quality comes entirely from the difference in input specificity.</p>
+    <p><strong>What this means:</strong> AI amplifies your expertise. A beginner using vague prompts gets beginner-quality results, just faster. An expert using specific prompts gets expert-quality results dramatically faster. The AI does not replace expertise; it multiplies it.</p>
+</div>
+
+        <h3>Intent Crafting: The Art of Clear Communication</h3>
+
+        <p>
+            The quality of your AI output depends directly on the quality of your input. Vague prompts produce vague code. Intent crafting is the art of specifying what you want with enough clarity that the AI can generate useful results. This means providing context about your project, explicit output specifications, and step-by-step decomposition for complex tasks.
+        </p>
+
+        <h4>Why Intent Crafting Is Different From Writing Prompts</h4>
+
+        <p>
+            Traditional prompt engineering focused on manipulating the AI's generation parameters - temperature, top-p, and similar controls. Intent crafting is fundamentally different: it's about clearly communicating what you want the output to be. This skill is closer to writing good requirements documents than to traditional programming. It requires understanding your own requirements clearly enough to explain them to something that doesn't know your context.
+        </p>
+
+        <h4>The Six Components of Effective Intent</h4>
+
+        <ol>
+            <li><strong>Role and context framing</strong>: "You are a senior React engineer at a fintech company..." - Establishing who the AI should be and what context it needs to understand helps it generate appropriate code. The AI can only generate code that fits your context if it knows what that context is.</li>
+            <li><strong>Explicit output specs</strong>: "Output: Single TSX file with TypeScript interfaces, styled with Tailwind..." - Telling the AI exactly what format you want the output in prevents it from guessing and potentially getting it wrong.</li>
+            <li><strong>Step-by-step decomposition</strong>: Break complex tasks into numbered steps - The AI handles simple tasks better than complex ones. Breaking a complex task into steps lets the AI handle each step correctly, then combine them correctly.</li>
+            <li><strong>Constraint definition</strong>: Explicitly state what NOT to do - What you don't want is as important as what you do want. Saying "don't use JavaScript" prevents a default that might otherwise happen.</li>
+            <li><strong>Example-driven prompting</strong>: Include input/output examples - When you can show rather than tell, the AI often understands better. An example of what good looks like guides the AI more effectively than a description.</li>
+            <li><strong>Reference existing code</strong>: Point to canonical examples - If you have code in your project that shows the right pattern, pointing to it helps the AI match your style and conventions.</li>
+        </ol>
+
+        <h3>Persistent Context: Solving The Memory Problem</h3>
+
+        <p>
+            Maintaining context across sessions is critical for vibe coding because AI models have no inherent memory of previous conversations. Each new session starts fresh, without knowledge of your project structure, coding conventions, or previous decisions. This is a fundamental technical limitation: the model doesn't retain state between sessions, and even within long sessions, <a href="../../part-1-foundations/chapter-1/sections/section-1-3.html">Context Windows</a> can overflow and drop older information.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Context Tax</div>
+            <p>Without persistent context mechanisms, every session incurs a "context tax" - the time spent re-explaining your project, your conventions, and your requirements. For a small project, this might be 30 seconds. For a large project with complex conventions, this might be 10 minutes. Over weeks of work, this tax adds up to hours of wasted time. Persistent context mechanisms eliminate this tax by automatically providing the AI with the context it needs.</p>
+        </div>
+
+        <div class="callout aha-moment">
+            <div class="callout-title">&#128161; Aha Moment: The Hidden Time Sink</div>
+            <p><strong>The shock:</strong> Re-explaining your project setup in every new session can cost you 10+ minutes per session. Over a 3-month project, that adds up to <strong>20+ hours</strong> of wasted time.</p>
+            <p><strong>What this means:</strong> Setting up Cursor Rules or CLAUDE.md is not optional housekeeping. It is a time investment that pays back immediately. The first session takes 5 minutes to set up; the next 100 sessions are instant.</p>
+        </div>
+
+        <p>
+            Persistent context mechanisms solve this problem by storing project-specific information that the AI can reference automatically. Without these mechanisms, you would need to re-explain your project setup every time you open a new session, making vibe coding inefficient and error-prone.
+        </p>
+
+        <h4>Cursor Rules: The Robust Solution</h4>
+
+        <p>
+            Cursor Rules provide the most sophisticated context management solution, storing rules in the `.cursor/rules/` directory where they are version-controlled alongside your code. This means every developer on your team works with the same rules, and changes to rules are tracked in git history. The system supports glob patterns so rules automatically apply only to relevant files, and the YAML frontmatter allows you to describe what each rule covers.
+        </p>
+
+        <p>
+            The power of Cursor Rules lies in their flexibility. You can create broad rules that apply to the entire project ("always use TypeScript, never use any") and specific rules that apply to particular file types ("when generating migrations, always include rollback scripts"). The combination creates a comprehensive context layer that guides AI behavior consistently across the project.
+        </p>
+
+        <h4>CLAUDE.md: The Claude Code Approach</h4>
+
+        <p>
+            CLAUDE.md serves a similar purpose for Claude Code, living in your project root and providing a natural language description of the project context. The format is less structured than Cursor Rules, which makes it easier to write but harder to make comprehensive. It's well-suited for projects where the context is relatively simple and doesn't need the structured approach that Cursor Rules enable.
+        </p>
+
+        <h4>AGENTS.md: The Cross-Platform Alternative</h4>
+
+        <p>
+            <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>.md has emerged as a simpler markdown alternative that works across multiple tools, specifying agent instructions in a format that various AI coding assistants can interpret. The appeal is portability - your context definitions work across tools rather than being locked into one. The trade-off is less sophisticated functionality than tool-specific mechanisms.
+        </p>
+
+        <h4>Windsurf's Context Engine: The Automatic Approach</h4>
+
+        <p>
+            Windsurf's Context Engine takes a different approach, automatically maintaining relevant context as you work, though with less explicit control. Rather than you defining what context to provide, the system observes what you're working on and surfaces relevant information. This can feel more fluid but requires trust in the system to provide the right context at the right time.
+        </p>
+
+        <ul>
+            <li><strong>Cursor Rules</strong>: Store in `.cursor/rules/`, version-controlled - Best for teams that want structured, consistent context management</li>
+            <li><strong>CLAUDE.md</strong>: Project context for Claude Code - Best for Claude Code users who want simple, natural language context</li>
+            <li><strong>Context Engine</strong>: Windsurf's automatic context management - Best for those who prefer the tool to handle context automatically</li>
+            <li><strong>AGENTS.md</strong>: Markdown alternative for agent instructions - Best for those who want portable context across tools</li>
+        </ul>
+
+        <h3>Beyond The Basics: Advanced Principles</h3>
+
+        <p>
+            Once you've mastered intent crafting and persistent context, there are additional principles that further improve vibe coding effectiveness. These aren't required for basic success, but they enable more sophisticated use of the paradigm.
+        </p>
+
+        <p>
+            <strong>Iterative refinement</strong> treats AI interactions as a conversation rather than a single transaction. Rather than trying to get the perfect prompt that produces perfect output, you accept that initial outputs will need adjustment. You generate, evaluate, provide feedback, and iterate. This approach often produces better results than trying to get everything right in one shot.
+        </p>
+
+        <p>
+            <strong>Contextual patience</strong> recognizes that AI doesn't always get things right immediately, but often gets closer with more information. When the output isn't right, providing more specific feedback often produces improvement. The key is not giving up after one attempt but providing enough guidance to help the AI understand what's needed.
+        </p>
+
+        <p>
+            <strong>Verification discipline</strong> means treating AI-generated code as requiring the same verification as any code. The AI might make mistakes, miss edge cases, or introduce bugs. You need to review, test, and verify the output just as you would with human-written code. The time savings come from generation speed, not from skipping verification.
+        </p>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we take a <strong>Cursor Deep Dive</strong> - the leading vibe coding IDE with its Automations and Rules system. This provides hands-on guidance for using one of the most popular vibe coding tools in detail.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-3-2.html">3.2 Tool Landscape</a>
+            <a class="up" href="index.html">Ch 3: Overview</a>
+            <a class="next" href="section-3-4.html">3.4 Cursor Deep Dive</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 3.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

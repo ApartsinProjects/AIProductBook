@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6.5 Eval-Driven Development Methodology - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 6</div>
+        <h1>AI Product Strategy and Value Proposition Design</h1>
+        <p class="chapter-subtitle">6.5 Eval-Driven Development Methodology</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Help define winning AI-native products with the right strategy and value proposition.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 6.4 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Evaluation as Development</div>
+            <p>Eval-driven development is not extra work but the core of building AI products. Without evaluation, you are building blind because you cannot test whether AI outputs meet requirements with simple pass/fail. Evaluation frameworks enable systematic improvement, catch regressions early, and provide the confidence needed for production deployment. The investment in evaluation pays back many times over.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Student Who Never Took Exams</div>
+            <p>Albert Einstein famously said exams were the death of imagination. He never took formal exams in mathematics or physics at ETH Zurich. Yet somehow the universe cooperated. But even Einstein needed some way to verify his ideas were right.</p>
+        </div>
+
+<h2 id="section-6-5">6.5 Eval-Driven Development Methodology</h2>
+
+        <p>
+            In Section 6.4, we explored how to measure success for probabilistic AI features using metrics like task completion rate, resolution rate, and helpfulness scores. Now we turn to the practical question: how do you actually build a product where you can measure these metrics reliably throughout development? The answer is <strong>eval-driven development</strong>.
+        </p>
+
+        <h3>Why Eval-Driven Development Matters</h3>
+
+        <p>
+            In traditional software, testing checks whether code meets requirements. If requirements are "user can log in" and code implements login, testing is straightforward. In AI products, requirements are probabilistic: "AI correctly answers questions" cannot be tested with simple pass/fail. You need to measure what "correctly answers questions" means across the range of questions users will ask. This requires evaluation frameworks that can assess AI outputs systematically.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Eval That Saved the Launch</h4>
+            <p>
+                A company building an AI support assistant implemented eval-driven development from the start. They defined success criteria, built a golden dataset of 500 support queries, and ran evaluation on every code change. Two weeks before launch, evaluation showed their AI was performing poorly on billing questions, which were 30% of expected traffic. They prioritized fixing this issue and shipped with a working product. Without eval-driven development, they would have launched with a critical gap that would have damaged user trust.
+            </p>
+        </div>
+
+        <h3>The Eval-Driven Development Cycle</h3>
+
+        <p>
+            The eval-driven development workflow begins with defining success criteria before building anything. What does good look like for your AI feature? This is not a vague question like "produces high-quality output" but specific, measurable criteria like "extracts the correct entity type in 95% of cases" or "responds to user questions within 2 seconds on average." These criteria become your specification, your test cases, and your definition of done. Everything else in development flows from these evaluation criteria.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Defining Success Criteria</h4>
+            <p>
+                <strong>Good success criteria are:</strong>
+            </p>
+            <ul>
+                <li>Specific: "extracts entities" not "understands text"</li>
+                <li>Measurable: "95% accuracy" not "mostly correct"</li>
+                <li>Time-bound: Include latency requirements</li>
+                <li>Complete: Cover all important output dimensions</li>
+            </ul>
+            <p>
+                <strong>Example success criteria:</strong>
+            </p>
+            <ul>
+                <li>Intent classification accuracy >= 90%</li>
+                <li>Entity extraction precision >= 85%, recall >= 80%</li>
+                <li>Response generation latency p95 <= 2 seconds</li>
+                <li>Helpful response rate >= 80% (human-assessed)</li>
+            </ul>
+        </div>
+
+        <h3>Building Evaluation Systems</h3>
+
+        <p>
+            Building evaluation systems requires creating golden datasets that represent the range of inputs your AI will encounter. A typical golden dataset should contain at minimum 30 to 50 examples, with approximately 60% representing normal cases, 25% edge cases, and 15% failure modes. Normal cases are the everyday inputs your system should handle easily. Edge cases are unusual but valid inputs that require careful handling. Failure modes are inputs that should produce errors or special handling rather than attempting to generate output. Each example in the golden dataset should have an expected output and specific scoring criteria.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Comprehensive Golden Dataset</h4>
+            <p>
+                A company building an AI financial advisor created a golden dataset with 1,000 examples: 600 normal investment questions, 250 edge cases (unusual financial situations, complex instruments), and 150 failure modes (illegal requests, dangerous advice requests, out-of-scope questions). When they tested their AI, performance varied dramatically: 98% accuracy on normal cases, 72% on edge cases, and only 40% handling failure modes correctly. This insight shaped their roadmap: they prioritized improving edge case handling and building robust failure mode responses.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Building Golden Datasets</h4>
+            <p>
+                <strong>Golden dataset structure:</strong>
+            </p>
+            <ol>
+                <li><strong>Input:</strong> The test case (user query, document, etc.)</li>
+                <li><strong>Expected output:</strong> What the AI should produce</li>
+                <li><strong>Scoring criteria:</strong> How to evaluate if output is correct</li>
+                <li><strong>Category:</strong> Normal, edge case, or failure mode</li>
+            </ol>
+            <p>
+                <strong>Distribution guidelines:</strong>
+            </p>
+            <ul>
+                <li>60% normal cases: Typical inputs that should work well</li>
+                <li>25% edge cases: Unusual but valid inputs</li>
+                <li>15% failure modes: Should produce errors or special handling</li>
+            </ul>
+            <p>
+                <strong>Quality requirements:</strong>
+            </p>
+            <ul>
+                <li>Realistic: Reflect actual production inputs</li>
+                <li>Covered: Represent the range of expected inputs</li>
+                <li>Validated: Expected outputs verified by experts</li>
+                <li>Maintained: Updated as product evolves</li>
+            </ul>
+        </div>
+
+        <h3>Continuous Evaluation Pipeline</h3>
+
+        <p>
+            Eval-driven development is not a one-time activity. You need a continuous evaluation pipeline that runs on every code change, every model update, and on a scheduled basis in production. This pipeline provides early warning when quality degrades and confidence when improvements work.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Automated Pipeline</h4>
+            <p>
+                A company implemented automated evaluation that ran on every commit to their AI service. The pipeline executed 500 test cases and compared outputs to expected results. If accuracy dropped more than 2%, the commit was blocked and the team received alerts. This caught regressions within minutes rather than weeks. Over time, the test suite grew to 2,000 cases, and the team had high confidence that changes did not degrade quality.
+            </p>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Pipeline Stage</th><th>What It Does</th><th>When It Runs</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Unit tests</td><td>Test individual components</td><td>On every commit</td></tr>
+                <tr><td>Integration tests</td><td>Test full pipeline</td><td>On every commit</td></tr>
+                <tr><td>Golden dataset eval</td><td>Measure against golden dataset</td><td>On every commit</td></tr>
+                <tr><td>Canary eval</td><td>Measure production quality</td><td>On deployment</td></tr>
+                <tr><td>Production monitoring</td><td>Track real-world quality</td><td>Continuous</td></tr>
+            </tbody>
+        </table>
+
+        <h3>From Evaluation to Improvement</h3>
+
+        <p>
+            The goal of evaluation is improvement. Use eval results to prioritize what to fix: focus on high-impact issues first (cases that matter most to users), then address high-frequency issues (cases that occur most often). Not all eval failures are equal: fixing a 5% error rate on 50% of queries is more valuable than fixing a 1% error rate on 1% of queries.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Prioritizing with Eval Data</h4>
+            <p>
+                An AI product had eval results showing 15 failure categories. Rather than trying to fix everything, they prioritized by impact: category 1 affected 40% of queries with 20% error rate; category 2 affected 10% of queries with 50% error rate. They fixed category 1 first because it affected the most users, then category 2 because the high error rate damaged trust. Lower-impact categories were deprioritized. This data-driven prioritization ensured maximum impact from engineering time.
+            </p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Key Insight</div>
+            <p>
+                Eval-driven development is not extra work; it is the work. Without evaluation, you are building AI products blind. With evaluation, you can see where you are, measure progress, and make data-driven decisions. The time invested in evaluation pays back many times over in faster iteration and higher-quality products.
+            </p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>LLM Evaluation Frameworks and Tools</strong> - the ecosystem of evaluation tools.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-6-4.html">6.4 Defining Success for Probabilistic Features</a>
+            <a class="up" href="index.html">Chapter 6 Index</a>
+            <a class="next" href="section-6-6.html">6.6 LLM Evaluation Frameworks and Tools</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 6.5 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

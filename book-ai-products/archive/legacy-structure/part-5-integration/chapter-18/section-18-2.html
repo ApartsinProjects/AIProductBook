@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18.2 Perplexity-like Search Tool - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-integration/index.html">Part V: Integration</a></div>
+        <div class="chapter-label">Chapter 18</div>
+        <h1>Real-World Case Studies</h1>
+        <p class="chapter-subtitle">18.2 Perplexity-like Search Tool</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn from real-world AI products and their journeys from vibe to production.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 18.1 recommended.
+        </div>
+
+        <h2 id="section-18-2">18.2 Architecture Comparison: Managed vs. Self-Hosted</h2>
+
+        <p>
+            When building a Perplexity-like search tool, one of your first decisions is 
+            whether to use managed services (APIs from OpenAI, Pinecone, etc.) or self-host 
+            open-source alternatives. This section compares both approaches with real trade-offs.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            This choice affects your costs, control, scaling ceiling, and team composition. 
+            A startup choosing managed services can move fast but face high costs at scale. 
+            Self-hosting reduces costs but requires more engineering investment.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Analogy: Renting vs. Buying a House</div>
+            <p>
+                Think of managed services like renting an apartment: you pay monthly, you can 
+                move in immediately, you call the landlord when something breaks, but you 
+                never build equity and rent can increase. Self-hosting is like buying a house: 
+                upfront costs are higher, you're responsible for maintenance, but over time 
+                costs are lower and you have full control. Most startups "rent" first (managed), 
+                then "buy" when they have the resources (self-host).
+            </p>
+        </div>
+
+        <div class="callout aha-moment">
+            <div class="callout-title">&#128161; Aha Moment: The Migration Pattern</div>
+            <p><strong>The shock:</strong> Most successful AI companies start with managed services and migrate to self-hosting when they hit scale. The pattern is nearly universal.</p>
+            <p><strong>What this means:</strong> Do not premature-optimize for self-hosting. Start with APIs, validate product-market fit, and only migrate when costs force the issue. The engineering cost of self-hosting rarely pays off until you are processing tens of millions of tokens per month.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Migration That Saved Nothing</div>
+            <p>A company proudly migrated from managed APIs to self-hosted models, expecting massive savings. After 3 months of engineering time, GPU costs, and DevOps overhead, they had saved $2,000/month but were spending $15,000/month in engineering. They migrated back to managed services. Sometimes the math just does not work out.</p>
+        </div>
+
+        <hr>
+
+        <h3>Managed vs. Self-Hosted Comparison</h3>
+
+        <table>
+            <thead>
+                <tr><th>Component</th><th>Managed Approach</th><th>Self-Hosted Approach</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Search Index</strong></td>
+                    <td>Algolia, Typesense (managed)</td>
+                    <td>SearXNG + vector DB (Qdrant)</td>
+                </tr>
+                <tr>
+                    <td><strong>Vector Database</strong></td>
+                    <td>Pinecone, Weaviate Cloud</td>
+                    <td>Qdrant, Milvus (self-hosted)</td>
+                </tr>
+                <tr>
+                    <td><strong>Reranking</strong></td>
+                    <td>Cohere Rerank API</td>
+                    <td>Cross-encoder (crossbert-base)</td>
+                </tr>
+                <tr>
+                    <td><strong>Generation</strong></td>
+                    <td>OpenAI, Anthropic, Google APIs</td>
+                    <td>Llama, Mistral (via Ollama)</td>
+                </tr>
+                <tr>
+                    <td><strong>Embeddings</strong></td>
+                    <td>OpenAI text-embedding-3</td>
+                    <td>sentence-transformers (local)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+
+        <h3>Detailed Component Analysis</h3>
+
+        <h4>1. Search Index</h4>
+
+        <div class="callout">
+            <div class="callout-title">Managed: Algolia</div>
+            <p><strong>Pros:</strong> Fast (<50ms), excellent typo tolerance, easy to use</p>
+            <p><strong>Cons:</strong> Expensive at scale, no semantic search, vendor lock-in</p>
+            <p><strong>Cost:</strong> $0.03-0.15 per 1K searches</p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Self-Hosted: SearXNG + Qdrant</div>
+            <p><strong>Pros:</strong> Free, full control, combines keyword + vector</p>
+            <p><strong>Cons:</strong> More ops overhead, requires maintenance</p>
+            <p><strong>Cost:</strong> Infrastructure only (~$200/month for small deployment)</p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Skill Demonstration: Hybrid Search Setup</div>
+            <pre><code>// Self-hosted hybrid search configuration
+const hybridConfig = {
+  // SearXNG for keyword search
+  keyword: {
+    engine: 'searxng',
+    endpoint: 'http://localhost:8888/search',
+    params: { format: 'json' }
+  },
+  
+  // Qdrant for vector search  
+  vector: {
+    engine: 'qdrant',
+    endpoint: 'http://localhost:6333',
+    collection: 'documents',
+    topK: 10
+  },
+  
+  // Fusion strategy
+  fusion: {
+    method: 'rrf', // Reciprocal Rank Fusion
+    k: 60 // Parameter for RRF
+  }
+};</code></pre>
+        </div>
+
+        <h4>2. Reranking</h4>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: The Reranking Decision</div>
+            <p>
+                A team building a medical search tool compared reranking approaches. The 
+                managed Cohere Rerank API cost ~$0.10 per 1K queries. Running a local 
+                cross-encoder model cost ~$0.01 per 1K but required GPU. For 1M queries/month, 
+                managed cost $100 vs. self-hosted cost $10 + $200 GPU = $210. At lower volumes, 
+                managed wins; at higher volumes, self-hosted makes sense.
+            </p>
+        </div>
+
+        <h4>3. Generation Models</h4>
+
+        <table>
+            <thead>
+                <tr><th>Model</th><th>Context</th><th>Price (per 1M tokens)</th><th>Best For</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>gpt-4o-mini</td><td>128K</td><td>$0.15/$0.60</td><td>Simple queries</td></tr>
+                <tr><td>Claude Haiku</td><td>200K</td><td>$0.25/$1.25</td><td>Fast responses</td></tr>
+                <tr><td>Llama 4 70B (self-hosted)</td><td>128K</td><td>~$0.50*</td><td>High volume</td></tr>
+            </tbody>
+        </table>
+        <p><em>*Self-hosted cost depends on infrastructure, assuming 8xA100</em></p>
+
+        <hr>
+
+        <h3>Decision Framework: Which Approach to Choose?</h3>
+
+        <div class="callout">
+            <div class="callout-title">Choose Managed If:</div>
+            <ul>
+                <li>Launching in 4-8 weeks is critical</li>
+                <li>Team has 1-3 engineers (not ML specialists)</li>
+                <li>Traffic is < 100K queries/month</li>
+                <li>Flexibility to switch models is important</li>
+            </ul>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Choose Self-Hosted If:</div>
+            <ul>
+                <li>Cost optimization is critical</li>
+                <li>Have ML/DevOps expertise</li>
+                <li>Data privacy requires full control</li>
+                <li>Traffic exceeds 500K queries/month</li>
+            </ul>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: Hybrid Approach</div>
+            <p>
+                A fintech company used a hybrid approach: managed for embeddings and generation 
+                (fast iteration), self-hosted for vector storage (data privacy requirements). 
+                They kept the most sensitive data in their own infrastructure while leveraging 
+                managed services for the AI components. This gave them the best of both worlds.
+            </p>
+        </div>
+
+        <hr>
+
+        <h3>Migration Path: Start Managed, Migrate Later</h3>
+
+        <p>
+            Most successful teams start with managed services and migrate to self-hosted 
+            as they scale. Here's a practical migration path:
+        </p>
+
+        <pre><code>// Migration path with abstractions
+class SearchBackend {
+  // Use strategy pattern to swap implementations
+  constructor(strategy: 'managed' | 'self-hosted') {
+    if (strategy === 'managed') {
+      this.retriever = new AlgoliaRetriever();
+      this.llm = new OpenAIClient();
+    } else {
+      this.retriever = new SearXNGRetriever();
+      this.llm = new OllamaClient();
+    }
+  }
+}
+
+// This allows gradual migration
+// Month 1-3: Fully managed (fast launch)
+// Month 4-6: Migrate storage to self-hosted
+// Month 7-9: Migrate reranking to self-hosted
+// Month 10+: Migrate generation (if needed)</code></pre>
+
+        <hr>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Key Takeaways</div>
+            <ul>
+                <li>Managed = faster to launch, easier to use, more expensive at scale</li>
+                <li>Self-hosted = more control, lower cost at scale, more ops overhead</li>
+                <li>Most teams should start with managed and migrate as they scale</li>
+                <li>Use abstraction layers to make migration easier later</li>
+                <li>Consider hybrid approaches based on specific constraints</li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Intercom Fin AI</strong> - a multi-agent vertical product case study.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-18-1.html">18.1 Simple AI Assistant (<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>-based)</a>
+            <a class="up" href="index.html">Chapter 18 Index</a>
+            <a class="next" href="section-18-3.html">18.3 Multi-Agent Vertical Product</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 18.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

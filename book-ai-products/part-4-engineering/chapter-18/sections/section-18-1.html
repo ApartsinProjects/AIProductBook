@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18.1 Prompts vs Workflow Graphs - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="section-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering</a></div>
+        <div class="chapter-label">Chapter 18</div>
+    </header>
+
+    <main class="content">
+        <h1>18.1 Prompts vs <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Workflow Graphs</a></h1>
+
+        <p class="section-opening">
+            Single prompts are powerful but limited. Workflow graphs transform isolated AI calls into coherent, stateful applications that can handle complex, multi-step tasks.
+        </p>
+
+        <section class="content-section">
+            <h2>The Limitation of Stateless Prompts</h2>
+            
+            <p>A stateless prompt interaction follows a simple pattern where you send a request, receive a response, and start fresh on the next interaction. This works well for discrete tasks like translation, summarization, or simple question answering. However, it breaks down when tasks require context continuity across multiple exchanges where the system must remember prior conversation history, intermediate state that accumulates during problem solving, conditional logic based on previous outcomes, and coordination between multiple AI capabilities.</p>
+
+            <div class="callout callout-warning">
+                <h4>The Stateless Trap</h4>
+                <p>Teams often build impressive demos with stateless prompts, then discover the architecture cannot scale to production requirements. A chatbot that works perfectly in demo mode may fail spectacularly when users expect it to remember their preferences, incomplete transactions, or prior context.</p>
+            </div>
+
+            <div class="callout warning">
+                <div class="callout-title">Common Misconception</div>
+                <p>
+                    Workflow graphs add complexity that may not pay off. Some teams default to building elaborate workflow architectures before confirming that simple prompts cannot handle the task. Workflows are harder to debug, require more engineering investment, and introduce more failure points. Start with prompts and only add workflow structure when you encounter specific limitations that require it.
+                </p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>When to Choose Prompts vs Workflows</h2>
+
+            <p>Complexity differs significantly between the two approaches. Stateless prompts handle single tasks with one response, while workflow graphs accommodate multi-step stateful processes.</p>
+
+            <p>Context handling follows similar logic. Prompts require all context bundled in a single prompt, whereas workflow graphs accumulate context across multiple interactions.</p>
+
+            <p>Failure recovery demonstrates the resilience advantage of workflow graphs. Stateless prompts require retrying the entire operation when something fails, but workflow graphs can resume from the last checkpoint, preserving intermediate progress.</p>
+
+            <p>Human oversight integrates differently as well. Prompts typically require minimal or no human intervention, while workflow graphs support approval gates and interruption points for human review.</p>
+
+            <p>Latency tolerance varies with architecture. Stateless prompts demand low latency since they involve a single call, while workflow graphs with sequential calls typically have higher tolerance for latency.</p>
+
+            <p>Cost predictability also differs. Stateless prompts are easier to estimate since costs are straightforward per-call calculations, while workflow graph costs vary based on the execution path taken through the graph.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Workflow Graph Fundamentals</h2>
+
+            <p>A workflow graph represents your AI application as a directed graph where nodes are operations (AI calls, tools, human tasks) and edges define the flow between them. Key concepts include:</p>
+
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <h4>Nodes</h4>
+                    <p>Operations that produce outputs: LLM calls, tool executions, data transformations, human approval steps.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>Edges</h4>
+                    <p>Transitions between nodes, often conditional based on previous outputs or state.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>State</h4>
+                    <p>Data accumulated as the workflow progresses, shared between nodes along execution paths.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>Checkpoints</h4>
+                    <p>Saved points in execution that enable resumption after interruption.</p>
+                </div>
+            </div>
+
+            <pre><code class="language-python">
+# Simple workflow graph representation
+class WorkflowGraph:
+    def __init__(self):
+        self.nodes = {}
+        self.edges = []
+        self.state = {}
+    
+    def add_node(self, name, operation):
+        self.nodes[name] = operation
+    
+    def add_edge(self, from_node, to_node, condition=None):
+        self.edges.append({
+            'from': from_node,
+            'to': to_node,
+            'condition': condition  # Optional routing function
+        })
+    
+    def execute(self, start_node, initial_input):
+        current_node = start_node
+        while current_node:
+            result = self.nodes[current_node](self.state, initial_input)
+            current_node = self.route(result)
+        return self.state
+
+# DataForge example: document processing workflow
+def document_processing_workflow():
+    wf = WorkflowGraph()
+    
+    wf.add_node('classify', classify_document)
+    wf.add_node('extract', extract_entities)
+    wf.add_node('validate', validate_extraction)
+    wf.add_node('store', store_results)
+    wf.add_node('notify', send_notification)
+    
+    wf.add_edge('classify', 'extract')
+    wf.add_edge('extract', 'validate')
+    wf.add_edge('validate', 'store', condition=lambda s: s['valid'])
+    wf.add_edge('validate', 'notify', condition=lambda s: not s['valid'])
+    wf.add_edge('store', 'notify')
+    
+    return wf
+            </code></pre>
+        </section>
+
+        <section class="content-section">
+            <h2>Benefits of Structured Workflow Graphs</h2>
+
+            <h3>Predictability and Testability</h3>
+            <p>Workflow graphs are explicit about execution paths, making it possible to test each node independently and verify edge conditions. You can enumerate all possible paths through your application.</p>
+
+            <h3>Observability</h3>
+            <p>Each node can emit logs, metrics, and traces. You know exactly where a workflow is executing and can debug failures with precision.</p>
+
+            <h3>Resumability</h3>
+            <p>State is preserved at checkpoints. If a workflow fails midway, you can resume from the last successful checkpoint rather than restarting entirely.</p>
+
+            <h3>Human-in-the-Loop</h3>
+            <p>Approval gates and interruption points integrate naturally. Human review becomes another node type in the graph.</p>
+
+            <h3>Composability</h3>
+            <p>Sub-workflows can be encapsulated and reused. Common patterns like approval-then-continue become reusable components.</p>
+
+            <div class="example-box">
+                <h4>DataForge: Multi-Stage Document Processing</h4>
+                <p>DataForge processes incoming documents through a workflow graph that classifies content, extracts structured data, validates results against business rules, and routes for human review when confidence is low. The workflow graph ensures each document is processed consistently while allowing exceptions to be handled appropriately.</p>
+                <p>When the extraction confidence falls below 0.85, the workflow automatically pauses for human review rather than proceeding with potentially incorrect data.</p>
+            </div>
+
+            <div class="callout practical-example">
+                <div class="callout-title">Running Product: QuickShip Exception Handling Workflow</div>
+                <p>QuickShip built their exception handling system as a workflow graph with four stages: classify exception type, retrieve relevant context, generate resolution options, and present to human or auto-resolve.</p>
+                <p>When they initially built this as stateless prompts, the system would forget context across stages and make inconsistent decisions. Converting to a workflow graph with state preserved at each node solved this: the classifier's output feeds directly into the context retriever, ensuring consistent understanding throughout the workflow.</p>
+                <p>The workflow graph also enabled checkpointing: if a customer escalated mid-resolution, the agent could resume from the last checkpoint rather than starting over. Customer resolution time dropped from 8 minutes to 90 seconds for complex exceptions.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Hybrid Approaches</h2>
+
+            <p>Most production AI applications benefit from combining prompts and workflows. Use prompts for flexible natural language generation within well-defined boundaries, rapid prototyping before committing to workflow structure, and components that genuinely benefit from maximum flexibility. Use workflow graphs for critical business logic that must execute consistently, multi-step processes with state dependencies, integration points requiring human oversight, and error recovery and retry logic.</p>
+
+            <div class="key-takeaway">
+                <h4>Key Takeaway</h4>
+                <p>Choose workflow graphs when reliability, observability, and resumability matter. Choose prompts when flexibility matters more than predictability. Most production systems use both.</p>
+            </div>
+        </section>
+
+        <nav class="section-nav">
+            <a class="prev" href="index.html">Chapter 18 Overview</a>
+            <a class="next" href="section-18-2.html">18.2 Session State and User Memory</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 18 &middot; Section 18.1 &middot; First Edition, April 2026</p>
+        </footer>
+    </main>
+</body>
+</html>

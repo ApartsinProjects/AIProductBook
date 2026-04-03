@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 22: Observability, Debugging, and Failure Analysis - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 22</div>
+        <h1>Observability, Debugging, and Failure Analysis</h1>
+        <p class="subtitle">Understanding and diagnosing AI system behavior in production</p>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"You cannot debug what you cannot see. In AI systems, observability is not optional. It is the foundation of every reliability practice."</p>
+            <cite>A Site Reliability Engineer</cite>
+        </blockquote>
+
+        <div class="opening-hook">
+            Traditional software debugging benefits from clear causality: a function call either succeeds or throws an exception, and the stack trace points you toward the problem. AI systems introduce a different challenge. A user complaint that "the AI gave a bad answer" requires tracing through embedding generation, retrieval from multiple sources, prompt assembly, model inference, and response parsing, all of which may involve non-deterministic behavior at each step. This chapter gives you the observability and debugging techniques to make AI failures diagnosable.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-22-opener.png"
+                 alt="Chapter 22 opener illustration">
+            <figcaption>
+                Observability reveals what's happening inside AI systems when things go wrong.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Observability Prototypes</div>
+            <p>Use vibe coding to rapidly prototype observability solutions before building full instrumentation. Test different tracing approaches, experiment with span-level diagnostics, and explore what data you actually need versus what seems useful in theory. Vibe coding observability prototypes helps you understand which signals matter for your specific AI behaviors, avoiding over-instrumentation that adds cost without insight.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe Coding for Rapid Eval Creation</div>
+            <p>When debugging AI behavior, first create a minimal eval that reproduces the failure. Use vibe coding to rapidly generate test prompts that trigger the problematic behavior, then systematically narrow down the cause. Building quick reproduction evals is faster than extensive manual investigation.</p>
+        </div>
+
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master observability tooling, debugging techniques, and failure analysis methods specific to AI systems, so you can diagnose issues quickly and maintain reliability in production.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter covers the full observability stack for AI products. You learn how to implement tracing that captures the AI request lifecycle, inspect prompts and tool calls to understand model behavior, debug retrieval failures that cause RAG systems to fail, and conduct thorough postmortems that prevent recurrence. These techniques apply to every AI system regardless of the underlying model or framework.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> How to diagnose AI failures in production when traditional debugging approaches do not work.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> Tracing a single user complaint through your AI system to see what observability data reveals versus what remains opaque.</li>
+                <li><strong>What would count as success or failure?</strong> Ability to answer "why did the AI do that?" with evidence rather than speculation.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Observability infrastructure must be built before you need it; debugging AI failures without it is slow and expensive.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Implement AI-native tracing with span-level diagnostics</li>
+                <li>Capture and inspect prompts and tool calls for debugging</li>
+                <li>Debug retrieval failures in RAG systems systematically</li>
+                <li>Classify AI failures using a structured error taxonomy</li>
+                <li>Conduct effective AI postmortems that drive systemic improvement</li>
+                <li>Apply these techniques using OpenTelemetry, LangSmith, and custom tooling</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">22.1</span> <a href="sections/section-22-1.html">Traces and Span-Level Diagnostics</a></li>
+                <li><span class="sec-num">22.2</span> <a href="sections/section-22-2.html">Prompt and Tool-Call Inspection</a></li>
+                <li><span class="sec-num">22.3</span> <a href="sections/section-22-3.html">Retrieval Debugging</a></li>
+                <li><span class="sec-num">22.4</span> <a href="sections/section-22-4.html">Error Taxonomy and Postmortems for AI Failures</a></li>
+            </ul>
+        </div>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The Observability Imperative</h4>
+            <p>AI systems fail in ways traditional software does not. The model can be confidently wrong, the retrieval can miss critical context, and the same input can produce different outputs. Without observability, you are blind to these failure modes. With observability, failures become diagnosable, debuggable, and preventable.</p>
+        </div>
+
+        <div class="role-specific-lenses">
+            <h3>Role-Specific Lenses</h3>
+            
+            <div class="callout note">
+                <h4 class="callout-title">For Product Managers</h4>
+                <p>Observability data tells you how your AI features are performing in the real world. User complaints become diagnosable incidents. You can quantify failure rates, track reliability over time, and make informed decisions about where to invest in reliability improvements.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Engineers</h4>
+                <p>Tracing and span diagnostics are production infrastructure. You implement the instrumentation that captures request lifecycle data, build the debugging tools that make failures diagnosable, and create the postmortem processes that prevent recurrence.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Designers</h4>
+                <p>Understanding how AI fails helps you design experiences that gracefully handle failures. When you know what can go wrong, you can design AI-augmented interactions that remain coherent even when the AI behaves unexpectedly.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Leaders</h4>
+                <p>Observability investment has compound returns. Teams with strong observability debug faster, maintain higher reliability, and make better prioritization decisions because they understand AI behavior in production, not just in development.</p>
+            </div>
+        </div>
+
+        <section class="bibliography" id="bibliography">
+            <h2>Bibliography</h2>
+            
+            <h3>Frameworks and Standards</h3>
+            <ol class="bib-list">
+                <li id="ref-1">
+                    <p class="bib-entry">
+                        <a href="https://opentelemetry.io/" target="_blank" rel="noopener">OpenTelemetry. (2024). "Observability Framework for Cloud-Native Software."</a>
+                    </p>
+                    <p class="bib-annotation">The standard for instrumenting cloud-native applications, including AI systems. Provides vendor-neutral tracing, metrics, and logging.</p>
+                </li>
+                <li id="ref-2">
+                    <p class="bib-entry">
+                        <a href="https://langchain.readthedocs.io/en/latest/tracing.html" target="_blank" rel="noopener">LangSmith. (2024). "AI-Native Tracing and Evaluation."</a>
+                    </p>
+                    <p class="bib-annotation">LangSmith provides AI-native tracing specifically designed for LLM applications, with built-in support for retrieval and tool call tracking.</p>
+                </li>
+            </ol>
+
+            <h3>Debugging and Reliability</h3>
+            <ol class="bib-list">
+                <li id="ref-3">
+                    <p class="bib-entry">
+                        <a href="https://arxiv.org/abs/2308.14264" target="_blank" rel="noopener">Zhang, M., et al. (2023). "Debugging AI Models in Production." <em>arXiv:2308.14264</em>.</a>
+                    </p>
+                    <p class="bib-annotation">Practical approaches to debugging AI systems when they fail in production environments.</p>
+                </li>
+            </ol>
+        </section>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-21/index.html">Ch 21: Evals</a>
+            <a class="up" href="../../part-5-evaluation-reliability/index.html">Part V Overview</a>
+            <a class="next" href="sections/section-22-1.html">22.1 Traces and Spans</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 22 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16.2 Guardrails and Fallbacks - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 16</div>
+        <h1>Scaling, Reliability, and Observability</h1>
+        <p class="chapter-subtitle">16.2 Guardrails and Fallbacks</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Production harden your AI systems for scale and reliability.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 16.1 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Safety Enables Trust</div>
+            <p>This section covers guardrails that ensure AI systems operate within safe boundaries and fallbacks that enable graceful degradation. In the context of AI engineering, these patterns are essential for production systems. Without guardrails, AI may generate harmful content; without fallbacks, a single failure cascades to all users.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Guardrail That Stopped Shakespeare</div>
+            <p>A content moderation AI had a guardrail blocking "harmful language." It blocked Shakespeare, Mark Twain, and the US Constitution. The word "murder" in Hamlet triggered the filter. Guardrails need exceptions for literature, education, and news. Context matters as much as content.</p>
+        </div>
+
+        <h2 id="section-16-2">16.2 Guardrails and Fallbacks</h2>
+
+        <p>
+            Guardrails ensure AI systems operate within safe boundaries. Fallbacks ensure graceful degradation when things go wrong. Together, they make your system resilient to unexpected inputs and failures.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            AI models are unpredictable. Without guardrails, they may generate harmful content, reveal sensitive information, or take unintended actions. Without fallbacks, a single failure cascades to all users. Both are essential for production systems.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Guardrails Can Be Bypassed</div>
+            <p>A common misconception is that guardrails are bulletproof. Sophisticated attackers can craft inputs designed to bypass your filters (adversarial attacks). Input and output guardrails reduce risk but do not eliminate it. For high-stakes applications, you need human-in-the-loop for sensitive operations and ongoing monitoring for new bypass techniques.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: PII Detection and Redaction</div>
+            <p>HealthMetrics must prevent PII from entering prompts due to HIPAA requirements:</p>
+            <pre>import re
+from typing import List
+
+class PHIDetector:
+    """Detect Personal Health Information in text"""
+    
+    def __init__(self):
+        self.patterns = {
+            'ssn': r'\b\d{3}-\d{2}-\d{4}\b',
+            'mrn': r'\bMRN[:\s]+\d{6,}\b',
+            'dob': r'\b(DOB|Date of Birth)[:\s]+(\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\w+ \d{1,2},? \d{4})\b',
+            'phone': r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b',
+            'email': r'\b[\w.-]+@[\w.-]+\.\w+\b',
+            'name': r'\b(Dr\.|Mr\.|Mrs\.|Ms\.)\s+[A-Z][a-z]+\s+[A-Z][a-z]+\b',
+        }
+    
+    def detect(self, text: str) -> List[PHIEntity]:
+        found = []
+        for phi_type, pattern in self.patterns.items():
+            for match in re.finditer(pattern, text):
+                found.append(PHIEntity(
+                    type=phi_type,
+                    text=match.group(),
+                    start=match.start(),
+                    end=match.end()
+                ))
+        return found
+    
+    def redact(self, text: str, entities: List[PHIEntity]) -> str:
+        result = text
+        for entity in sorted(entities, key=lambda e: e.start, reverse=True):
+            result = result[:entity.start] + f"[{entity.type.upper()}]" + result[entity.end:]
+        return result
+
+# Usage in HealthMetrics query pipeline
+async def sanitize_query(user_input: str) -> str:
+    detector = PHIDetector()
+    entities = detector.detect(user_input)
+    if entities:
+        logger.warning(f"PHI detected in query: {[e.type for e in entities]}")
+        return detector.redact(user_input, entities)
+    return user_input</pre>
+            <p>HealthMetrics found that 3% of queries contained accidental PHI (like "my patient John Smith's MRN"). The redaction system catches these cases before they enter the prompt, preventing potential HIPAA violations.</p>
+        </div>
+
+        <h3>1. Input Guardrails</h3>
+
+        <p>
+            Input guardrails filter harmful prompts before they reach the model. This prevents prompt injection attacks, limits abuse, and reduces costs from malicious use.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Input Filtering</div>
+            <pre class="code-block">class InputGuardrails:
+    """Filter harmful inputs before processing"""
+    
+    def __init__(self):
+        self.blocked_patterns = [
+            "ignore previous instructions",
+            "system prompt",
+            "you are now",
+        ]
+        self.safety_classifier = load_safety_model()
+        self.max_length = 10000
+    
+    async def check(self, user_input: str) -> GuardrailResult:
+        # Check length
+        if len(user_input) > self.max_length:
+            return GuardrailResult(
+                allowed=False,
+                reason="Input exceeds maximum length"
+            )
+        
+        # Check for prompt injection patterns
+        for pattern in self.blocked_patterns:
+            if pattern.lower() in user_input.lower():
+                return GuardrailResult(
+                    allowed=False,
+                    reason="Contains blocked pattern"
+                )
+        
+        # Run safety classifier
+        safety = await self.safety_classifier.classify(user_input)
+        if not safety.safe:
+            return GuardrailResult(
+                allowed=False,
+                reason=f"Safety violation: {safety.category}"
+            )
+        
+        return GuardrailResult(allowed=True)</pre>
+        </div>
+
+        <h3>2. Output Guardrails</h3>
+
+        <p>
+            Output guardrails filter model responses before returning them to users. This catches harmful content, sensitive information, and ensures quality standards.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Output Filtering</div>
+            <pre class="code-block">class OutputGuardrails:
+    """Filter model outputs before returning"""
+    
+    def __init__(self):
+        self.pii_detector = load_pii_detector()
+        self.content_filter = load_content_filter()
+    
+    async def check(self, output: str, context: dict) -> GuardrailResult:
+        # Detect PII
+        pii_found = await self.pii_detector.detect(output)
+        if pii_found:
+            # Redact or block based on policy
+            output = self.redact_pii(output, pii_found)
+        
+        # Check content policy
+        content_check = await self.content_filter.classify(output)
+        if not content_check.allowed:
+            return GuardrailResult(
+                allowed=False,
+                reason=f"Content policy violation: {content_check.category}",
+                replacement=self.get_safe_alternative(context)
+            )
+        
+        # Check for hallucinated facts (if context provided)
+        if context.get("verify_facts"):
+            verified = await self.verify_facts(output, context["sources"])
+            if not verified.all_valid:
+                output = self.add_disclaimer(output, verified.invalid_facts)
+        
+        return GuardrailResult(allowed=True, output=output)
+    
+    def redact_pii(self, text: str, pii_locations: list) -> str:
+        # Replace PII with [REDACTED]
+        for pii in pii_locations:
+            text = text.replace(pii.text, "[REDACTED]")
+        return text</pre>
+        </div>
+
+        <h3>3. Fallback Strategies</h3>
+
+        <p>
+            Fallbacks ensure the system degrades gracefully when errors occur. Users should always get some response, even if it's not ideal.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Multi-Layer Fallback</div>
+        <pre class="code-block">async def generate_with_fallback(prompt: str) -> str:
+    """Multi-layer fallback strategy"""
+    
+    try:
+        # Try primary model
+        return await primary_llm.generate(prompt)
+    
+    except RateLimitError:
+        # Layer 1: Try fallback model
+        try:
+            return await fallback_llm.generate(prompt)
+        except Exception:
+            pass
+    
+    except TimeoutError:
+        # Layer 2: Return cached response
+        cached = await cache.get(prompt)
+        if cached:
+            return cached
+    
+    except ModelError as e:
+        # Layer 3: Try simpler prompt
+        simpler_prompt = simplify(prompt)
+        try:
+            return await primary_llm.generate(simpler_prompt)
+        except Exception:
+            pass
+    
+    # Final fallback: Return polite error with next steps
+    return "I apologize, but I'm experiencing high demand. 
+    Please try again in a few moments, or contact support for immediate assistance."</pre>
+        </div>
+
+        <h3>4. Human-in-the-Loop (HITL)</h3>
+
+        <p>
+            For high-stakes decisions, route to humans for approval. This ensures critical actions have human oversight.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: Approval Workflow</div>
+            <pre class="code-block">async def process_request(request: UserRequest) -> Response:
+    """Human-in-the-loop for sensitive actions"""
+    
+    # Determine if human approval needed
+    if needs_human_approval(request):
+        # Create approval ticket
+        ticket = await create_approval_ticket(
+            user=request.user,
+            action=request.action,
+            details=request.details,
+            ai_recommendation=request.recommendation
+        )
+        
+        return Response(
+            requires_approval=True,
+            ticket_id=ticket.id,
+            message="This action requires manager approval. 
+            A ticket has been created and your manager will be notified."
+        )
+    
+    # Low-risk: proceed automatically
+    return await execute_action(request)
+
+def needs_human_approval(request: UserRequest) -> bool:
+    """Determine if approval is needed"""
+    high_risk_actions = [
+        "refund_over_1000",
+        "delete_data",
+        "modify_permissions",
+        "access_sensitive"
+    ]
+    
+    return (
+        request.action in high_risk_actions or
+        request.amount > APPROVAL_THRESHOLD or
+        request.user.risk_level == "high"
+    )</pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Guardrail Type</th><th>Purpose</th><th>Implementation</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Input filtering</td><td>Block harmful prompts</td><td>Pattern matching, classifiers</td></tr>
+                <tr><td>Output filtering</td><td>Block inappropriate responses</td><td>PII detection, content filter</td></tr>
+                <td>Fallbacks</td><td>Graceful degradation</td><td>Cascading retries, cached responses</td></tr>
+                <tr><td>Human-in-loop</td><td>High-stakes oversight</td><td>Approval workflows</td></tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Observability Tools</strong> - LangSmith, Langfuse, and more.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-16-1.html">16.1 Latency, Throughput, Multi-Tenancy</a>
+            <a class="up" href="index.html">Chapter 16 Index</a>
+            <a class="next" href="section-16-3.html">16.3 Observability Tools</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 16.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 27.3: User Feedback Harvesting - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 27</div>
+        <h1>User Feedback Harvesting</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Users tell you what is wrong if you give them the opportunity to tell you. But most products never ask, or ask in ways that discourage answers."</p>
+            <cite>A Product Designer Who Studied Feedback Fatigue</cite>
+        </blockquote>
+
+        <h2 id="feedback-value">The Value of User Feedback</h2>
+
+        <p>
+            User feedback is the bridge between what you built and what users actually need. Evals tell you if your AI works according to specifications. User feedback tells you if your specifications were worth building in the first place.
+        </p>
+
+        <p>
+            For AI products specifically, user feedback serves unique functions including edge case discovery where users encounter situations you never imagined testing, preference learning where what "good" means varies by user and context, trust calibration where users who trust your AI use it more effectively, and failure detection where users often know when AI is wrong before you have metrics to show it.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Feedback Is Not Optional</h4>
+            <p>Some teams treat user feedback as a nice-to-have. They ship, monitor basic metrics, and assume no news is good news. This is dangerous for AI products. Your users are your eval infrastructure. Without their feedback, you are flying blind.</p>
+        </div>
+
+        <h2 id="implicit-feedback">Implicit Feedback Signals</h2>
+
+        <p>
+            Implicit feedback is feedback users give without actively choosing to provide it. It is behavioral data that reveals user satisfaction through actions rather than explicit statements. Several types of implicit signals exist. Direct actions such as clicks, saves, shares, and purchases provide positive signal when a user takes a recommended action. Avoidance behaviors like ignoring recommendations, scrolling past suggestions, or using search instead of AI features indicate something is wrong when users bypass AI assistance. Correction behaviors including editing AI-generated content, choosing different options than recommended, or providing corrections reveal AI errors through the delta between AI output and user action. Re-engagement patterns show whether users return or use the feature once and abandon it, since churn after first AI interaction is a critical signal. Depth of interaction measures how much users engage with AI outputs, whether they expand details, ask follow-ups, or accept at face value. Support contacts through tickets, chat inquiries, and support calls often mention AI failures before you have metrics to show them.
+        </p>
+
+        <h3 id="implicit-collection">Collecting Implicit Feedback</h3>
+
+        <p>
+            Build implicit feedback collection into your product by tracking all user actions in relation to AI outputs, logging what the AI recommended, what the user did, and when. Instrument AI-specific interactions through thumbs up/down, copy/edit actions, and time spent considering AI suggestions. Monitor session behavior including length, depth, follow-up questions, and return visits. Correlate with outcomes by connecting AI interactions to long-term outcomes such as retention, conversion, and satisfaction.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: QuickShip Implicit Feedback System</h4>
+            <p><strong>Who:</strong> QuickShip engineering team building route suggestions</p>
+            <p><strong>Situation:</strong> Team needed to understand if drivers actually trusted and used route suggestions</p>
+            <p><strong>Problem:</strong> Drivers rarely gave explicit feedback, but the team suspected routes were being ignored</p>
+            <p><strong>Decision:</strong> Built implicit tracking of route acceptance vs. override behavior</p>
+            <p><strong>How:</strong> Tracked: did driver start navigation on suggested route? Did they modify it? Did they ignore it entirely? Correlated with delivery outcomes (on-time, customer feedback)</p>
+            <p><strong>Result:</strong> Found 23% of routes were modified. Analysis showed certain route types (highway vs. surface streets) had much higher override rates. Used insight to improve those specific route types.</p>
+            <p><strong>Lesson:</strong> <strong>Implicit behavior often reveals more than explicit feedback because it requires no effort from users.</strong></p>
+        </div>
+
+        <h2 id="explicit-feedback">Explicit Feedback Mechanisms</h2>
+
+        <p>
+            Explicit feedback is feedback users actively provide: ratings, reviews, written comments, survey responses. It is higher quality signal but lower volume than implicit feedback.
+        </p>
+
+        <h3 id="explicit-mechanism-design">Mechanism Design</h3>
+
+        <p>
+            The way you ask for feedback determines what you get. Timing matters because you should ask immediately after an AI interaction while context is fresh, as waiting too long degrades recall. Effort required affects outcomes since one-click feedback yields volume but little insight while detailed feedback yields insight but low volume, so design for your goal. Context means you should ask about specific interactions rather than general satisfaction, where "How was this route suggestion?" beats "How are you liking the app?" Channel matters because in-app feedback is convenient but low involvement while email surveys reach deeper but have lower response rates.
+        </p>
+
+        <h3 id="feedback-prompts-that-work">Feedback Prompts That Work</h3>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Effective Feedback Questions</h4>
+            <p>Generic: "Was this helpful?"<br/>Effective: "Was this route suggestion accurate for your delivery?"</p>
+            <p>Generic: "Rate your experience"<br/>Effective: "Did the AI understand what you were asking for?"</p>
+            <p>Generic: "Any comments?"<br/>Effective: "What would have made this suggestion better?"</p>
+        </div>
+
+        <h3 id="feedback-categories">Feedback Categories to Collect</h3>
+
+        <p>
+            Feedback categories to collect include accuracy feedback determining whether the AI output was correct, relevant, and appropriate, comprehension feedback assessing whether the AI understood the request correctly, presentation feedback evaluating whether the output was formatted well, clear, and actionable, timing feedback determining whether it was fast enough or too slow, and utility feedback assessing whether it helped accomplish the user's goal.
+        </p>
+
+        <h2 id="feedback-fatigue">Feedback Fatigue</h2>
+
+        <p>
+            Feedback fatigue occurs when users are asked for feedback so often or in such burdensome ways that they stop responding, or worse, develop negative associations with the product.
+        </p>
+
+        <h3 id="causes-of-fatigue">Causes of Feedback Fatigue</h3>
+
+        <p>
+            Feedback fatigue occurs when users are asked for feedback so often or in such burdensome ways that they stop responding, or worse, develop negative associations with the product. Several causes contribute to this fatigue. Over-asking exhausts users by requesting feedback after every interaction. Burden discourages participation through long surveys, complex rating systems, or invasive questions. Ignored feedback causes users who provided feedback and saw no changes to lose motivation to provide more. Guilt-tripping through manipulative messaging creates negative associations. Broken promises, where "Your feedback helps us build better products" is followed by no visible changes, further erode willingness to provide feedback.
+        </p>
+
+        <h3 id="preventing-fatigue">Preventing Feedback Fatigue</h3>
+
+        <p>
+            Preventing feedback fatigue involves several strategies. Limit frequency by asking for detailed feedback rarely and using implicit signals for continuous monitoring. Keep it simple by making most feedback one tap and reserving detailed surveys for important but infrequent research. Show impact by telling users what you changed based on their feedback, since nothing motivates continued feedback like seeing results. Randomize by asking different users at different times rather than hammering the same engaged users. Respect refusals by not asking again for a long time if a user declines to provide feedback.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: RetailMind Feedback Optimization</h4>
+            <p><strong>Who:</strong> RetailMind team optimizing feedback collection</p>
+            <p><strong>Situation:</strong> Initial feedback request appeared after every shopping assistant interaction. Response rate was 2%.</p>
+            <p><strong>Problem:</strong> Team needed more feedback to improve AI but users were fatigued</p>
+            <p><strong>Decision:</strong> Redesigned feedback collection based on user segment and interaction quality</p>
+            <p><strong>How:</strong> Only prompted for detailed feedback for high-stakes interactions, or randomly for low-stake ones. Simplified to 3 emoji reactions for most interactions. Showed users "You helped improve X" after feedback.</p>
+            <p><strong>Result:</strong> Response rate increased to 15%. Quality of feedback improved because users were not overloaded.</p>
+            <p><strong>Lesson:</strong> <strong>Less, well-designed feedback collection yields more and better feedback than constant asking.</strong></p>
+        </div>
+
+        <h2 id="feedback-quality">Feedback Quality Assessment</h2>
+
+        <p>
+            Not all feedback is equally valuable. You need systems to assess and prioritize feedback quality.
+        </p>
+
+        <h3 id="quality-dimensions">Quality Dimensions</h3>
+
+        <p>
+            Quality dimensions for assessing feedback include specificity determining whether the feedback identifies specific outputs or general impressions, actionability asking whether you can do something with this feedback, representativeness assessing whether this feedback represents a common experience or an edge case, credibility determining whether this user has enough experience to provide informed feedback, and consistency checking whether this feedback aligns with other signals you are receiving.
+        </p>
+
+        <h3 id="feedback-scoring">Feedback Scoring Template</h3>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Feedback Quality Scorecard</h4>
+            <p>Use this template to assess individual feedback items. For specificity, a low score (1) is "Bad AI", a medium score (3) is "Route was wrong", and a high score (5) is "Suggested I-95 but construction closed it for 3 miles". For actionability, a low score is "Make it better", a medium score is "Needs to check construction", and a high score is "Construction data source X needs to update Y". For credibility, a low score reflects a new user with one interaction, a medium score reflects a regular user with some interactions, and a high score reflects a power user with 100 or more interactions. Calculate the score as the average of specificity, actionability, and credibility, then prioritize feedback with scores above 3.5 for immediate action.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-27-2.html">27.2 Drift Detection</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-27-4.html">27.4 Data Flywheels</a>
+        </nav>
+
+        <footer>
+            <p>Section 27.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

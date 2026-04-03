@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 17: Vibe-to-Production Playbook - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-integration/index.html">Part V: Integration</a></div>
+        <div class="chapter-label">Chapter 17</div>
+        <h1>Integrated Vibe-to-Production Playbook</h1>
+        <p class="chapter-subtitle">Tying It All Together</p>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            You have completed every chapter in this book. You understand AI capabilities, you can vibe code a prototype, you know how to run evals, and you can build agentic systems. Now the question is: how do you bring all of this together into a repeatable process that actually ships?
+        </p>
+        <p>
+            The answer is this playbook. It integrates every skill from the previous chapters into one cohesive workflow that you can apply to any AI product from concept to launch.
+        </p>
+
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Tie everything together in a repeatable end-to-end process.
+        </p>
+
+        <figure class="illustration">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 460" style="max-width: 100%; margin: 1.5rem auto; display: block;">
+    <defs>
+        <linearGradient id="phase1Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#e94560;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#f39c12;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="phase2Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#f39c12;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#16a085;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="phase3Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#16a085;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#3498db;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="phase4Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#3498db;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#1a1a2e;stop-opacity:1" />
+        </linearGradient>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.15"/>
+        </filter>
+    </defs>
+    
+    <rect width="700" height="460" fill="#faf8f5"/>
+    
+    <text x="350" y="26" text-anchor="middle" fill="#1a1a2e" font-family="Georgia, serif" font-size="15" font-weight="bold">Vibe-to-Production Workflow</text>
+    
+    <g transform="translate(25, 45)">
+        <rect width="145" height="120" rx="10" fill="url(#phase1Grad)" filter="url(#shadow)"/>
+        <text x="72" y="23" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="12" font-weight="bold">PHASE 1</text>
+        <text x="72" y="42" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="10">Discovery</text>
+        <text x="72" y="62" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Define problem</text>
+        <text x="72" y="76" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Set quality metrics</text>
+        <text x="72" y="90" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Build eval criteria</text>
+        <text x="72" y="104" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Vibe code prototype</text>
+    </g>
+    
+    <path d="M175,105 L205,105" fill="none" stroke="#1a1a2e" stroke-width="2"/>
+    
+    <g transform="translate(210, 45)">
+        <rect width="145" height="120" rx="10" fill="url(#phase2Grad)" filter="url(#shadow)"/>
+        <text x="72" y="23" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="12" font-weight="bold">PHASE 2</text>
+        <text x="72" y="42" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="10">Prototype</text>
+        <text x="72" y="62" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Rapid iteration</text>
+        <text x="72" y="76" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Run evals</text>
+        <text x="72" y="90" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Tune prompts</text>
+        <text x="72" y="104" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Validate approach</text>
+    </g>
+    
+    <path d="M360,105 L390,105" fill="none" stroke="#1a1a2e" stroke-width="2"/>
+    
+    <g transform="translate(395, 45)">
+        <rect width="145" height="120" rx="10" fill="url(#phase3Grad)" filter="url(#shadow)"/>
+        <text x="72" y="23" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="12" font-weight="bold">PHASE 3</text>
+        <text x="72" y="42" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="10">Production</text>
+        <text x="72" y="62" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Build RAG/Agents</text>
+        <text x="72" y="76" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Setup monitoring</text>
+        <text x="72" y="90" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Add guardrails</text>
+        <text x="72" y="104" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Deploy to scale</text>
+    </g>
+    
+    <path d="M545,105 L575,105" fill="none" stroke="#1a1a2e" stroke-width="2"/>
+    
+    <g transform="translate(530, 45)">
+        <rect width="145" height="120" rx="10" fill="url(#phase4Grad)" filter="url(#shadow)"/>
+        <text x="72" y="23" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="12" font-weight="bold">PHASE 4</text>
+        <text x="72" y="42" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="10">Iterate</text>
+        <text x="72" y="62" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Monitor quality</text>
+        <text x="72" y="76" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Collect feedback</text>
+        <text x="72" y="90" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Update evals</text>
+        <text x="72" y="104" text-anchor="middle" fill="white" font-family="Georgia, serif" font-size="8">Ship improvements</text>
+    </g>
+    
+    <rect x="25" y="185" width="650" height="250" rx="10" fill="white" stroke="#ddd" stroke-width="1"/>
+    <text x="350" y="205" text-anchor="middle" fill="#1a1a2e" font-family="Georgia, serif" font-size="11" font-weight="bold">Role Involvement by Phase</text>
+    
+    <rect x="25" y="220" width="125" height="22" rx="5" fill="#f5f5f5"/>
+    <text x="87" y="236" text-anchor="middle" fill="#1a1a2e" font-family="Georgia, serif" font-size="9" font-weight="bold">Role</text>
+    
+    <rect x="150" y="220" width="125" height="22" rx="5" fill="#fef5f5"/>
+    <text x="212" y="236" text-anchor="middle" fill="#e94560" font-family="Georgia, serif" font-size="9" font-weight="bold">Discovery</text>
+    
+    <rect x="275" y="220" width="125" height="22" rx="5" fill="#fef9e7"/>
+    <text x="337" y="236" text-anchor="middle" fill="#f39c12" font-family="Georgia, serif" font-size="9" font-weight="bold">Prototype</text>
+    
+    <rect x="400" y="220" width="125" height="22" rx="5" fill="#f0faf8"/>
+    <text x="462" y="236" text-anchor="middle" fill="#16a085" font-family="Georgia, serif" font-size="9" font-weight="bold">Production</text>
+    
+    <rect x="525" y="220" width="125" height="22" rx="5" fill="#ebf5fb"/>
+    <text x="587" y="236" text-anchor="middle" fill="#3498db" font-family="Georgia, serif" font-size="9" font-weight="bold">Iterate</text>
+    
+    <rect x="25" y="247" width="125" height="40" rx="5" fill="#fef5f5"/>
+    <text x="87" y="263" text-anchor="middle" fill="#e94560" font-family="Georgia, serif" font-size="9" font-weight="bold">Vibe Coder</text>
+    <text x="87" y="277" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">Rapid build</text>
+    
+    <rect x="150" y="247" width="125" height="40" rx="5" fill="#f8d7da"/>
+    <text x="212" y="272" text-anchor="middle" fill="#e94560" font-family="Georgia, serif" font-size="12">HIGH</text>
+    
+    <rect x="275" y="247" width="125" height="40" rx="5" fill="#fff3cd"/>
+    <text x="337" y="272" text-anchor="middle" fill="#f39c12" font-family="Georgia, serif" font-size="12">MED</text>
+    
+    <rect x="400" y="247" width="125" height="40" rx="5" fill="#d4edda"/>
+    <text x="462" y="272" text-anchor="middle" fill="#16a085" font-family="Georgia, serif" font-size="12">LOW</text>
+    
+    <rect x="525" y="247" width="125" height="40" rx="5" fill="#d4edda"/>
+    <text x="587" y="272" text-anchor="middle" fill="#16a085" font-family="Georgia, serif" font-size="12">MED</text>
+    
+    <rect x="25" y="292" width="125" height="40" rx="5" fill="#fef9e7"/>
+    <text x="87" y="308" text-anchor="middle" fill="#f39c12" font-family="Georgia, serif" font-size="9" font-weight="bold">AI PM</text>
+    <text x="87" y="322" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">Strategy</text>
+    
+    <rect x="150" y="292" width="125" height="40" rx="5" fill="#fff3cd"/>
+    <text x="212" y="317" text-anchor="middle" fill="#f39c12" font-family="Georgia, serif" font-size="12">MED</text>
+    
+    <rect x="275" y="292" width="125" height="40" rx="5" fill="#f8d7da"/>
+    <text x="337" y="317" text-anchor="middle" fill="#e94560" font-family="Georgia, serif" font-size="12">HIGH</text>
+    
+    <rect x="400" y="292" width="125" height="40" rx="5" fill="#fff3cd"/>
+    <text x="462" y="317" text-anchor="middle" fill="#f39c12" font-family="Georgia, serif" font-size="12">MED</text>
+    
+    <rect x="525" y="292" width="125" height="40" rx="5" fill="#f8d7da"/>
+    <text x="587" y="317" text-anchor="middle" fill="#e94560" font-family="Georgia, serif" font-size="12">HIGH</text>
+    
+    <rect x="25" y="337" width="125" height="40" rx="5" fill="#f0faf8"/>
+    <text x="87" y="353" text-anchor="middle" fill="#16a085" font-family="Georgia, serif" font-size="9" font-weight="bold">AI Engineer</text>
+    <text x="87" y="367" text-anchor="middle" fill="#666" font-family="Georgia, serif" font-size="8">Infrastructure</text>
+    
+    <rect x="150" y="337" width="125" height="40" rx="5" fill="#d4edda"/>
+    <text x="212" y="362" text-anchor="middle" fill="#16a085" font-family="Georgia, serif" font-size="12">LOW</text>
+    
+    <rect x="275" y="337" width="125" height="40" rx="5" fill="#fff3cd"/>
+    <text x="337" y="362" text-anchor="middle" fill="#f39c12" font-family="Georgia, serif" font-size="12">MED</text>
+    
+    <rect x="400" y="337" width="125" height="40" rx="5" fill="#f8d7da"/>
+    <text x="462" y="362" text-anchor="middle" fill="#e94560" font-family="Georgia, serif" font-size="12">HIGH</text>
+    
+    <rect x="525" y="337" width="125" height="40" rx="5" fill="#fff3cd"/>
+    <text x="587" y="362" text-anchor="middle" fill="#f39c12" font-family="Georgia, serif" font-size="12">MED</text>
+  </svg>
+  <figcaption>
+    The vibe-to-production workflow moves through four phases, with different roles leading at each stage. Vibe Coders drive rapid prototyping, AI PMs guide quality and strategy, and AI Engineers build production systems.
+  </figcaption>
+</figure>
+
+        <figure class="illustration">
+            <img src="../../images/illustrations/chapter-17-opener.png"
+                 alt="Integrated Playbook: Connecting all the pillars of AI product development"
+                 style="max-width: 100%; border-radius: 12px; margin: 1.5rem auto; display: block;">
+            <figcaption>
+                The complete vibe-to-production workflow.
+            </figcaption>
+        </figure>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter integrates all the previous learning into a cohesive playbook. You will 
+                learn the complete vibe-to-production workflow across four phases, practical templates 
+                and checklists for eval creation and production readiness, and cross-role collaboration 
+                patterns for PMs, AI Engineers, and Vibe Developers. This is where everything comes 
+                together.
+            </p>
+            <p>
+                The key insight from earlier chapters is that successful AI products require all three 
+                pillars working in concert: vibe coding for rapid prototyping, AI PM for strategy and 
+                evaluation, and AI engineering for production systems. This chapter shows you how to 
+                orchestrate all three effectively.
+            </p>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Execute the complete vibe-to-production workflow</li>
+                <li>Create eval checklists for your AI products</li>
+                <li>Apply production readiness checklists</li>
+                <li>Enable effective cross-role collaboration</li>
+                <li>Define "trust architecture" for AI products</li>
+            </ul>
+        </div>
+
+        <div class="prerequisites">
+            <h3>Prerequisites</h3>
+            <p>
+                Readers should have completed Parts I-IV (Foundations, Vibe Coding, AI PM, AI Engineering) 
+                or have equivalent knowledge across all areas of AI product development. This chapter 
+                synthesizes knowledge from all previous parts.
+            </p>
+        </div>
+
+        <blockquote class="epigraph">
+            "The whole is greater than the sum of its parts." <cite>– Aristotle</cite>
+        </blockquote>
+
+        <div class="sections-list">
+            <h2>Chapter Sections</h2>
+            <ul>
+                <li><a href="section-17-1.html">17.1 End-to-End Workflow</a></li>
+                <li><a href="section-17-2.html">17.2 Templates and Checklists</a></li>
+                <li><a href="section-17-3.html">17.3 Cross-Role Collaboration</a></li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-18/index.html">Chapter 18: Real-World Case Studies</a> to learn 
+                from real AI product journeys including Perplexity-like search tools and multi-agent 
+                vertical products. These case studies provide concrete examples of how the playbook 
+                applies in practice.
+            </p>
+        </div>
+
+        <div class="bibliography">
+            <h3>Books</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title">Metaphysics</p>
+                <p class="bib-authors">Aristotle (350 BCE)</p>
+                <p class="bib-annotation">Why this is relevant: Foundational philosophical text on the nature of being; referenced for understanding AI product essence and first principles thinking.</p>
+            </div>
+
+            <h3>Organizations</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://partnershiponai.org">AI Product Development Best Practices</a></p>
+                <p class="bib-authors">Partnership on AI</p>
+                <p class="bib-annotation">Why this is relevant: Multi-stakeholder initiative providing best practices for responsible AI product development.</p>
+            </div>
+
+            <h3>Reports</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://sequoiacap.com">AI Product Playbook</a></p>
+                <p class="bib-authors">Sequoia Capital (2025)</p>
+                <p class="bib-annotation">Why this is relevant: Top-tier VC's framework for building AI products; essential reference for product strategy and market positioning.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://a16z.com">Building AI Products</a></p>
+                <p class="bib-authors">a16z (2025)</p>
+                <p class="bib-annotation">Why this is relevant: Andreessen Horowitz's insights on AI product development; valuable for understanding AI startup strategies and patterns.</p>
+            </div>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../../toc.html">Table of Contents</a>
+            <a class="up" href="../../part-5-integration/index.html">Part V: Integration</a>
+            <a class="next" href="chapter-18/index.html">Ch 18: Case Studies</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 17 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

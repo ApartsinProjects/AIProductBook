@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20.3 Tool Misuse and Sandboxing - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 20</div>
+        <h1>20.3 Tool Misuse and <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Sandboxing</a></h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            A research agent was given tool access to a code execution environment. A prompt injection attack instructed it to delete files, exfiltrate data through network requests, and mine cryptocurrency. The agent had not been designed with the assumption that its tools could be weaponized against its users.
+        </p>
+
+        <div class="overview">
+            <h2>Section Overview</h2>
+            <p>
+                AI agents interact with external tools: code interpreters, web browsers, file systems, APIs, and databases. Each tool is a potential attack vector. This section covers unauthorized tool access, tool poisoning, privilege escalation through tools, and sandboxing strategies to contain tool misuse.
+            </p>
+        </div>
+
+        <h2>Threat Vectors in Tool Use</h2>
+
+        <h3>Unauthorized Tool Access</h3>
+
+        <p>
+            When agents can invoke tools, they gain capabilities beyond text generation. Without proper controls, attackers can manipulate AI systems to call tools in unintended ways.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Tool Call Injection Problem</div>
+            <p>
+                If an attacker can influence the agent's reasoning, they can craft inputs that cause the agent to invoke tools with attacker-controlled parameters. The agent becomes a puppet executing attacker-chosen actions.
+            </p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: Code Interpreter Protection</div>
+            <p>
+                HealthMetrics provides an AI coding assistant for data analysis. The code interpreter tool is sandboxed: it cannot access network resources, file system is limited to designated directories, and execution time is capped. When a malicious prompt attempted to make HTTP requests to exfiltrate data, the sandbox blocked them.
+            </p>
+        </div>
+
+        <h3>Tool Poisoning</h3>
+
+        <p>
+            Tool poisoning occurs when the tools themselves are compromised before the agent uses them. This can happen through dependency confusion in tool libraries, man-in-the-middle attacks on tool update mechanisms, compromised tool configurations, or malicious tool updates pushed to registries.
+        </p>
+
+        <h3>Privilege Escalation Through Tools</h3>
+
+        <p>
+            An agent designed for limited operations can be manipulated to perform privileged actions. A simple file reader might be tricked into reading sensitive system files. A search tool might be used to enumerate directory structures for attack planning.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Principle of Least Privilege for Tools</div>
+            <p>
+                Each tool should have exactly the permissions it needs and no more. An agent that summarizes documents does not need write access to the file system. An agent that answers questions does not need network access.
+            </p>
+        </div>
+
+        <h2>Sandboxing Strategies</h2>
+
+        <h3>Process Isolation</h3>
+
+        <p>
+            Run tool execution in isolated processes with restricted capabilities. Use containerization, seccomp profiles, or gVisor for strong isolation.
+        </p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">Tool Execution Sandboxing</div>
+            <pre>
+function executeToolInSandbox(toolCall):
+    // Validate tool call parameters
+    validatedParams = validateToolParams(toolCall)
+
+    // Check parameter against allowed patterns
+    if not isAllowedToolUse(toolCall.tool, validatedParams):
+        logSecurityEvent("UNAUTHORIZED_TOOL_USE", toolCall)
+        return { error: "Tool use not permitted" }
+
+    // Execute in isolated environment
+    sandbox = createSandbox(
+        networkIsolation: true,
+        filesystemScope: tool.allowedPaths,
+        maxMemory: 512MB,
+        maxCpuTime: 30seconds
+    )
+
+    result = sandbox.execute(toolCall.function, validatedParams)
+    return result</pre>
+        </div>
+
+        <h3>Filesystem Restrictions</h3>
+
+        <p>
+            Limit filesystem access to specific directories. Validate all file paths to prevent directory traversal attacks.
+        </p>
+
+        <p>Use chroot or container root filesystems. Implement path allowlisting. Block symbolic links and named pipes. Monitor for anomalous file access patterns.</p>
+
+        <h3>Network Restrictions</h3>
+
+        <p>
+            Prevent tool-executed code from making network connections unless explicitly required. Block both inbound and outbound network traffic.
+        </p>
+
+        <div class="callout tip">
+            <div class="callout-title">Practical Tip</div>
+            <p>
+                For tools that legitimately need network access (web search, API calls), implement explicit allowlisting of destination domains. Log all network requests for audit purposes.
+            </p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">DataForge: Multi-Layer Tool Security</div>
+            <p>
+                DataForge's agent framework implements tool security in layers. First, tools are declared with explicit permission scopes. Second, the agent planner validates tool use against policy before execution. Third, the execution runtime applies sandbox restrictions. Fourth, audit logs capture all tool invocations for security review.
+            </p>
+        </div>
+
+        <h2>Tool Misuse Prevention Checklist</h2>
+
+        <div class="callout key-takeaway">
+            <div class="callout-title">Tool Security Checklist</div>
+            <p>Apply principle of least privilege to all tool permissions. Implement process isolation for tool execution. Restrict filesystem access to necessary directories. Block network access unless explicitly required. Validate and sanitize all tool parameters. Log all tool invocations for security monitoring. Regularly audit tool permissions and usage patterns. Implement rate limiting on expensive or risky tools.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-20-2.html">20.2 Data Leakage</a>
+            <a class="up" href="../index.html">Chapter 20 Overview</a>
+            <a class="next" href="section-20-4.html">20.4 Authorization</a>
+        </nav>
+
+        <footer>
+            <p>Section 20.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

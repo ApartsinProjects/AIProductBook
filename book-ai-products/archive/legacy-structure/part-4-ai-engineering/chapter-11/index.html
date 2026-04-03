@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 11: Core Principles - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <h1>Chapter 11</h1>
+        <p class="chapter-title">Core Principles of Modern AI Engineering</p>
+        <p class="chapter-subtitle">From PoC to Production</p>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Your proof-of-concept works perfectly in development. It uses the latest models, has perfect accuracy in testing, and impresses everyone in the demo. Then it hits production, and latency triples, costs explode, and the model starts producing outputs you cannot debug. The PoC becomes a cautionary tale.
+        </p>
+        <p>
+            PoC code is experimental. Production code is engineered. The difference is not the code, it is the mindset. This chapter gives you the core principles that shift you from PoC to production.
+        </p>
+
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Shift mindset from PoC to production with core engineering principles.
+        </p>
+
+        <figure class="illustration">
+            <img src="../../images/illustrations/chapter-11-opener.png"
+                 alt="AI Engineering Principles: Layered architecture diagram from compute to tooling"
+                 style="max-width: 100%; border-radius: 12px; margin: 1.5rem auto; display: block;">
+            <figcaption>
+                Production AI requires fundamentally different engineering principles.
+            </figcaption>
+        </figure>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter establishes the foundational principles for modern AI engineering. 
+                You will learn the essential skills for modern full-stack AI engineers, the three core 
+                principles (eval-driven, cost-aware, observable), and the layered architecture of the 
+                AI stack from compute to tooling. These principles will guide every technical decision 
+                you make in building production AI systems.
+            </p>
+            <p>
+                The transition from proof-of-concept to production AI systems requires a fundamental 
+                shift in thinking. Where PoC code can be messy and experimental, production systems 
+                must be reliable, cost-effective, and observable. This chapter provides the mental models 
+                and frameworks that enable that transition.
+            </p>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Develop the full-stack AI engineer skillset for today</li>
+                <li>Apply eval-driven development methodology</li>
+                <li>Implement cost-aware AI system design</li>
+                <li>Build observable AI systems with proper instrumentation</li>
+                <li>Understand the layers of the AI stack</li>
+            </ul>
+        </div>
+
+        <div class="prerequisites">
+            <h3>Prerequisites</h3>
+            <p>
+                Readers should have completed Part III (AI PM) or have equivalent knowledge of AI product 
+                development. Familiarity with software engineering fundamentals and basic Python is 
+                expected. If you are new to AI engineering, pay special attention to Section 11.2 on 
+                the three core principles.
+            </p>
+        </div>
+
+        <blockquote class="epigraph">
+            "You cannot improve what you cannot measure." <cite>– Peter Drucker</cite>
+        </blockquote>
+
+        <div class="sections-list">
+            <h2>Chapter Sections</h2>
+            <ul>
+                <li><a href="section-11-1.html">11.1 Full-Stack AI Engineer Skills</a></li>
+                <li><a href="section-11-2.html">11.2 Three Core Principles</a></li>
+                <li><a href="section-11-3.html">11.3 Layers of the AI Stack</a></li>
+                <li><a href="section-11-4.html">11.4 AI Antipatterns</a></li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-12/index.html">Chapter 12: Prompts, Chains, Agents, and Orchestration</a> 
+                to master the building blocks of AI systems including advanced prompting patterns, 
+                chains vs agents, and orchestration frameworks. This chapter is essential for anyone 
+                building complex AI applications that go beyond simple single-prompt interactions.
+            </p>
+        </div>
+
+        <div class="bibliography">
+            <h3>Books</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title">The Practice of Management</p>
+                <p class="bib-authors">Drucker, P. (1954)</p>
+                <p class="bib-annotation">Why this is relevant: Foundational management text that established product management as a discipline; still relevant for AI product strategy.</p>
+            </div>
+
+            <h3>Frameworks</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://python.langchain.com">LangChain Documentation</a></p>
+                <p class="bib-authors">LangChain</p>
+                <p class="bib-annotation">Why this is relevant: Comprehensive framework for building LLM applications; essential reference for AI engineering patterns.</p>
+            </div>
+
+            <h3>APIs</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://docs.anthropic.com">Claude API Documentation</a></p>
+                <p class="bib-authors">Anthropic</p>
+                <p class="bib-annotation">Why this is relevant: Official API reference for Claude models; primary documentation for integrating Claude into AI products.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://platform.openai.com">API Reference</a></p>
+                <p class="bib-authors">OpenAI</p>
+                <p class="bib-annotation">Why this is relevant: Official API reference for GPT models; comprehensive guide for OpenAI integration patterns.</p>
+            </div>
+
+            <h3>Tools</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://github.com/vllm-project/vllm">High-Throughput LLM Serving</a></p>
+                <p class="bib-authors">vLLM Project</p>
+                <p class="bib-annotation">Why this is relevant: Critical tool for production LLM serving with optimized throughput; essential for cost-effective AI product scaling.</p>
+            </div>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../../toc.html">Table of Contents</a>
+            <a class="up" href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a>
+            <a class="next" href="chapter-12/index.html">Ch 12: Orchestration</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 11 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

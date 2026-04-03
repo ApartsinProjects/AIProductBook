@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 24.3: Cost-Aware Routing - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 24</div>
+        <h1>Cost-Aware <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Routing</a></h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Not every AI request needs GPT-4. Cost-aware routing matches request complexity to model capability, delivering the right quality at the right cost."</p>
+            <cite>An ML Platform Engineer</cite>
+        </blockquote>
+
+        <h2 id="model-routing-problem">The Model Routing Problem</h2>
+
+        <p>
+            Different requests have different complexity and quality requirements. A simple classification task may not need a frontier model's capabilities, while a complex reasoning task cannot be handled by a smaller model. Model routing solves the problem of matching requests to the most cost-effective model that can handle them.
+        </p>
+
+        <p>
+            The naive approach is to use the most capable model for everything. This works but is expensive. The smart approach is to route each request to the model that best fits its complexity.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The Routing Sweet Spot</h4>
+            <p>Cost-aware routing finds the balance between quality and cost. Route too aggressively to cheap models and quality suffers. Route too conservatively and costs spiral. The right routing strategy depends on your quality requirements and cost constraints.</p>
+        </div>
+
+        <h2 id="routing-strategies">Routing Strategies</h2>
+
+        <h3 id="rule-based-routing">Rule-Based Routing</h3>
+
+        <p>
+            Use explicit rules to classify requests and select models:
+        </p>
+
+        <pre><code class="language-python">
+class RuleBasedRouter:
+    """
+    Route requests based on explicit rules.
+    Fast to implement, easy to audit.
+    """
+    def __init__(self):
+        self.rules = [
+            {
+                "condition": lambda r: r.task_type == "classification",
+                "model": "gpt-4o-mini",
+                "confidence_boost": 0.1
+            },
+            {
+                "condition": lambda r: r.task_type == "extraction" and r.field_count < 5,
+                "model": "gpt-4o-mini",
+                "confidence_boost": 0.05
+            },
+            {
+                "condition": lambda r: r.task_type == "reasoning",
+                "model": "gpt-4o",
+                "confidence_boost": 0.0
+            },
+            {
+                "condition": lambda r: r.domain in ["medical", "legal"],
+                "model": "gpt-4o",
+                "confidence_boost": 0.0
+            }
+        ]
+    
+    def route(self, request: Request) -> RoutingDecision:
+        for rule in self.rules:
+            if rule["condition"](request):
+                return RoutingDecision(
+                    model=rule["model"],
+                    confidence_adjustment=rule["confidence_boost"],
+                    routing_reason=self._explain_rule(rule)
+                )
+        
+        # Default fallback
+        return RoutingDecision(
+            model="gpt-4o",
+            confidence_adjustment=0.0,
+            routing_reason="No matching rule, using default"
+        )
+        </code></pre>
+
+        <h3 id="ml-based-routing">ML-Based Routing</h3>
+
+        <p>
+            Train a classifier to predict which model will perform best:
+        </p>
+
+        <pre><code class="language-python">
+class MLRouter:
+    """
+    Route requests using a trained classifier.
+    Better at handling complex, nuanced routing decisions.
+    """
+    def __init__(self, model_path: str):
+        self.classifier = load_model(model_path)
+        self.models = ["gpt-4o-mini", "gpt-4o"]
+    
+    def predict_model(self, request: Request) -> tuple[str, float]:
+        """
+        Predict which model will perform best.
+        Returns (model, confidence_score).
+        """
+        features = self._extract_features(request)
+        prediction = self.classifier.predict(features)
+        
+        confidence = self.classifier.predict_proba(features).max()
+        
+        return self.models[prediction], confidence
+    
+    def _extract_features(self, request: Request) -> dict:
+        return {
+            "task_complexity": estimate_complexity(request),
+            "token_count": len(request.prompt),
+            "has_reasoning": contains_reasoning(request.prompt),
+            "domain_risk": domain_risk_score(request.domain),
+            "output_length_expected": estimate_output_length(request),
+            "conversation_turns": len(request.history),
+        }
+    
+    def route(self, request: Request) -> RoutingDecision:
+        model, confidence = self.predict_model(request)
+        
+        return RoutingDecision(
+            model=model,
+            confidence=confidence,
+            routing_reason=f"ML classifier: {model} at {confidence:.2f} confidence"
+        )
+        </code></pre>
+
+        <h3 id="bandit-routing">Bandit-Based Routing</h3>
+
+        <p>
+            Treat routing as a multi-armed bandit problem and learn from outcomes:
+        </p>
+
+        <pre><code class="language-python">
+class BanditRouter:
+    """
+    Route using contextual bandits that learn from outcomes.
+    Balances exploration of new routing strategies with exploitation of known good strategies.
+    """
+    def __init__(self, models: list[str], epsilon: float = 0.1):
+        self.models = models
+        self.epsilon = epsilon  # Exploration rate
+        self.rewards = {m: [] for m in models}  # Rolling reward history
+    
+    def select_model(self, context: dict) -> str:
+        # Exploration: try random model
+        if random.random() < self.epsilon:
+            return random.choice(self.models)
+        
+        # Exploitation: choose model with highest expected reward
+        expected_rewards = {
+            m: self._expected_reward(m) for m in self.models
+        }
+        return max(expected_rewards, key=expected_rewards.get)
+    
+    def _expected_reward(self, model: str) -> float:
+        """Calculate expected reward based on historical performance."""
+        if not self.rewards[model]:
+            return 0.5  # Prior
+        
+        # Use exponential moving average
+        rewards = self.rewards[model]
+        alpha = 0.3
+        ema = rewards[0]
+        for r in rewards[1:]:
+            ema = alpha * r + (1 - alpha) * ema
+        return ema
+    
+    def record_outcome(self, model: str, quality_score: float, latency_ms: float):
+        """Record outcome for learning."""
+        # Reward = quality / (cost factor) - latency penalty
+        cost_factor = 1.0  # Normalize by model cost
+        reward = quality_score / cost_factor - (latency_ms / 10000)
+        
+        self.rewards[model].append(max(0, reward))
+        
+        # Keep rolling window of last 100 outcomes
+        if len(self.rewards[model]) > 100:
+            self.rewards[model] = self.rewards[model][-100:]
+        </code></pre>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Routing Accuracy Matters</h4>
+            <p>Routing errors have asymmetric costs. Routing a complex task to a weak model causes quality failure and requires retry. Routing a simple task to a strong model wastes money but still succeeds. Account for this asymmetry when designing routing strategies.</p>
+        </div>
+
+        <h2 id="quality-gates">Quality Gates</h2>
+
+        <p>
+            Every routing strategy needs a quality gate that catches routing failures:
+        </p>
+
+        <pre><code class="language-python">
+class QualityGatedRouter:
+    """
+    Router with quality verification that escalates on failure.
+    """
+    def __init__(
+        self,
+        base_router: Router,
+        quality_evaluator: QualityEvaluator,
+        max_retries: int = 2
+    ):
+        self.router = base_router
+        self.evaluator = quality_evaluator
+        self.max_retries = max_retries
+    
+    async def route(self, request: Request) -> RoutingDecision:
+        # Initial routing
+        decision = self.router.route(request)
+        
+        # Verify quality
+        result = await self._execute_and_verify(request, decision.model)
+        
+        if result.quality_ok:
+            return decision
+        
+        # Retry with stronger model if quality fails
+        for attempt in range(self.max_retries):
+            stronger_model = self._get_stronger_model(decision.model)
+            
+            result = await self._execute_and_verify(request, stronger_model)
+            
+            if result.quality_ok:
+                return RoutingDecision(
+                    model=stronger_model,
+                    confidence=0.5,  # Reduced confidence due to retry
+                    routing_reason=f"Upgraded from {decision.model} after quality check"
+                )
+        
+        # Final fallback to best model
+        return RoutingDecision(
+            model="gpt-4o",
+            confidence=0.9,
+            routing_reason="Quality gate: forced to best model"
+        )
+        </code></pre>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: QuickShip Customer Support Routing</h4>
+            <p>The QuickShip team was implementing cost-aware routing for their support AI after discovering that eighty percent of support requests were being routed to gpt-4o at high cost. Simple queries like "where is my package" were costing two cents each when gpt-4o-mini could handle them for $0.0002, creating a dilemma about how to route accurately without degrading customer experience.</p>
+            <p>The team decided to implement ML-based routing with quality gates to balance cost savings with service quality. They trained a classifier on ten thousand labeled support tickets to predict which model was appropriate for each query. The features used included query complexity, customer tier, and time sensitivity. They implemented a quality gate with a ninety-five percent accuracy threshold on gpt-4o-mini responses, and when the quality gate fails, the request escalates to gpt-4o.</p>
+            <p>After implementation, seventy-five percent of requests now use gpt-4o-mini while the quality gate catches the twenty-five percent that need gpt-4o. This achieved a net cost reduction of sixty-eight percent while maintaining customer satisfaction scores. The lesson is that quality gates are essential for conservative routing. They prevent cost savings from coming at the expense of customer experience.</p>
+        </div>
+
+        <h2 id="routing-analytics">Routing Analytics</h2>
+
+        <h3 id="routing-metrics">Key Routing Metrics</h3>
+
+        <p>Track key routing metrics to evaluate whether your routing strategy is achieving its goals. Routing accuracy measures the percentage of requests correctly routed to the appropriate model, with a target above ninety percent. Cost savings measures the cost compared to always using the best model, with a target above fifty percent savings. Quality retention measures quality compared to always using the best model, with a target above ninety-eight percent to ensure minimal quality degradation. Escalation rate measures the percentage of requests requiring upgrade to a stronger model, with a target below twenty-five percent to ensure the routing strategy is not overly conservative.</p>
+
+        <h3 id="routing-analysis">Analyzing Routing Decisions</h3>
+
+        <p>
+            Log routing decisions to enable analysis:
+        </p>
+
+        <pre><code class="language-python">
+@dataclass
+class RoutingDecisionLog:
+    request_id: str
+    timestamp: datetime
+    request_features: dict
+    selected_model: str
+    alternative_models: list[str]
+    confidence: float
+    quality_score: float | None
+    cost_saved: float
+    was_escalated: bool
+        </code></pre>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>Research on "speculative routing" explores using small, fast models to predict whether larger models are needed. By running both in parallel for uncertain cases, speculative routing can achieve both low latency and high quality for complex queries.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-24-2.html">24.2 Caching</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-24-4.html">24.4 Feature Margin Analysis</a>
+        </nav>
+
+        <footer>
+            <p>Section 24.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

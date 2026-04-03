@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.7 Advanced Context Management - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <div class="chapter-label">Chapter 3</div>
+        <h1>Understanding Vibe Coding in 2026</h1>
+        <p class="chapter-subtitle">3.7 Advanced Context Management</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Master Cursor Rules, .cursorr files, and context management strategies.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Sections 3.1-3.6 recommended. Basic understanding of Cursor.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Context as Competitive Advantage</div>
+            <p>Advanced context management through Cursor Rules and structured documentation represents the engineering discipline that separates hobbyist vibe coding from professional AI engineering. As projects scale, the ability to maintain context across sessions and team members becomes a significant competitive advantage, enabling consistent quality and reduced coordination overhead.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Library of Babel Problem</div>
+            <p>Borges imagined a library containing all possible books. Most were nonsense. The challenge was finding meaning in an ocean of possibility. Cursor Rules work the same way: too many rules drown the signal. The skill is knowing which context is essential versus which is noise.</p>
+        </div>
+
+        <h2 id="section-3-7">3.7 Advanced Context Management</h2>
+
+        <p>
+            As vibe coding projects grow in complexity, managing context becomes the difference between effective AI collaboration and frustrating context loss. This section explores advanced techniques for maintaining persistent context, configuring AI behavior through Cursor Rules, and structuring your project files for optimal AI understanding.
+        </p>
+
+        <h3>Cursor Rules and .cursorr Files</h3>
+
+        <p>
+            Cursor Rules are the most powerful context management mechanism available in vibe coding. They live in the `.cursorr` directory at your project root and are version-controlled alongside your code, ensuring every team member works with the same instructions. The system uses a YAML frontmatter format that allows you to specify which files each rule applies to, creating a powerful targeting mechanism.
+        </p>
+
+        <pre><code># .cursorr/project-setup.mdc
+---
+description: "React/Next.js project patterns and conventions"
+globs:
+  - "src/**/*.{ts,tsx}"
+  - "app/**/*.{ts,tsx}"
+---
+
+# React/Next.js Patterns
+
+## Component Structure
+- Use functional components with TypeScript
+- Prefer composition over inheritance
+- Keep components under 200 lines
+- Export default for page components, named for others
+
+## State Management
+- Use useState for local component state
+- Use useReducer for complex state logic
+- Prefer context for shared state across 3+ components
+- Use Zustand or Jotai for global state
+
+## Error Handling
+- Wrap async operations in try/catch
+- Create error boundary components
+- Use ErrorBoundary from react-error-boundary</code></pre>
+
+        <p>
+            The `.cursorr` directory can contain multiple rule files, each targeting different parts of your codebase. This modular approach lets you create specialized rules for different file types or directories. For example, you might have one rule file for frontend components, another for backend API routes, and a third for database schemas.
+        </p>
+
+        <h3>Custom Instructions for AI Behavior</h3>
+
+        <p>
+            Beyond file-specific rules, you can configure global behavior instructions that shape how the AI approaches every interaction. These instructions tell the AI about your team's preferences, coding standards, and development philosophy. The key is specificity: vague instructions produce vague results, while precise behavioral guidance creates consistent output.
+        </p>
+
+        <pre><code># .cursorr/global-behavior.mdc
+---
+description: "Global behavior and interaction patterns"
+globs: ["*"]
+---
+
+# Global Behavior
+
+## Response Style
+- Provide concise explanations before code changes
+- Always explain WHY along with WHAT
+- Suggest improvements, do not just implement
+- Ask clarifying questions for ambiguous requests
+
+## Code Quality
+- Prefer TypeScript strict mode
+- Use ESLint with Airbnb config
+- Add JSDoc comments for public APIs
+- Include error handling in all async functions
+
+## Review Process
+- Point out potential issues in generated code
+- Suggest alternative approaches when beneficial
+- Question requirements that seem problematic</code></pre>
+
+        <h3>Context Management Strategies</h3>
+
+        <p>
+            Effective context management requires understanding when to provide detailed instructions versus when to let the AI infer from existing code. The Vibe_Coding_Wrowflow pattern from the community addresses a critical challenge: context loss in long-running projects. This pattern uses file-driven collaboration to maintain project context across sessions.
+        </p>
+
+        <p>
+            The core principle is explicit documentation within your codebase. Create structured markdown files that document architectural decisions, naming conventions, and workflow patterns. When AI reads these files alongside your code, it understands not just what your code does but why it was written that way. This dramatically reduces the context loss that occurs when starting new sessions.
+        </p>
+
+        <div class="callout info">
+            <div class="callout-title">Context Management Best Practices</div>
+            <ul>
+                <li><strong>Layer your rules</strong>: Create global rules for team-wide standards, local rules for project-specific patterns</li>
+                <li><strong>Version control your rules</strong>: Treat .cursorr files like any other code</li>
+                <li><strong>Review rule effectiveness</strong>: Track which rules produce better AI outputs</li>
+                <li><strong>Document decisions</strong>: Add WHY comments that explain architectural choices</li>
+            </ul>
+        </div>
+
+        <p>
+            The awesome-ai-prompts repository contains over 500+ cursor rules for various frameworks including React, Next.js, Python, and Django. These community-curated rules provide proven patterns you can adapt for your own projects. Study the structure of these rules to understand what makes them effective, then customize them to match your team's specific needs.
+        </p>
+
+        <div class="bibliography">
+            <h3>Related GitHub Repositories</h3>
+            <ul>
+                <li><a href="https://github.com/awesome-cursorrules/awesome-ai-prompts">awesome-ai-prompts</a> - 500+ cursor rules for popular frameworks</li>
+                <li><a href="https://github.com/Charlie能为/Vibe_Coding_Wrowflow">Vibe_Coding_Wrowflow</a> - Engineering-grade workflow for long-running projects</li>
+                <li><a href="https://github.com/anthropics/claude-code">Claude Code</a> - Official Claude Code documentation</li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Now that you have mastered context management, <a href="../chapter-4/index.html">Chapter 4</a> 
+                takes you through practical workflows that leverage these context strategies to deliver 
+                production-ready code efficiently.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-3-6.html">3.6 Getting Started Checklist</a>
+            <a class="up" href="index.html">Ch 3: Overview</a>
+            <a class="next" href="../chapter-4/index.html">Ch 4: Vibe Coding Workflows</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 3.7 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 13: Advanced RAG - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 13</div>
+        <h1>Knowledge Retrieval and Advanced RAG</h1>
+        <p class="chapter-subtitle">Building Reliable Knowledge Systems</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Build reliable knowledge systems with advanced RAG techniques.
+        </p>
+
+        <figure class="illustration">
+            <img src="../../images/illustrations/chapter-13-opener.png"
+                 alt="Advanced RAG: Vector search and knowledge graph integration"
+                 style="max-width: 100%; border-radius: 12px; margin: 1.5rem auto; display: block;">
+            <figcaption>
+                RAG is the foundation for AI products that need external knowledge.
+            </figcaption>
+        </figure>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter dives deep into knowledge retrieval systems. You will learn the vector 
+                database landscape, chunking and embedding strategies, hybrid search with reranking, 
+                advanced RAG patterns like Graph RAG and self-correcting RAG, and when to go beyond RAG 
+                to fine-tuning. These techniques are essential for any AI product that needs to access 
+                and reason over external knowledge.
+            </p>
+            <p>
+                The quality of your RAG system directly impacts the quality of your AI product outputs. 
+                Even the most capable model cannot produce good answers if it does not have access to 
+                the right information. This chapter provides the systematic approaches needed to build 
+                reliable knowledge retrieval systems.
+            </p>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Choose the right vector database for your use case</li>
+                <li>Implement effective chunking and embedding strategies</li>
+                <li>Build hybrid search with BM25 and dense retrieval</li>
+                <li>Apply advanced RAG patterns (Graph, self-correcting, RAFT)</li>
+                <li>Decide between RAG, fine-tuning, or both</li>
+            </ul>
+        </div>
+
+        <div class="prerequisites">
+            <h3>Prerequisites</h3>
+            <p>
+                Readers should have completed Chapter 12 on orchestration. Understanding of basic ML 
+                concepts and experience with Python is expected. Familiarity with databases is helpful. 
+                If you are new to RAG, start with Section 13.1 on vector databases.
+            </p>
+        </div>
+
+        <blockquote class="epigraph">
+            "Knowledge is power." <cite>– Francis Bacon</cite>
+        </blockquote>
+
+        <div class="sections-list">
+            <h2>Chapter Sections</h2>
+            <ul>
+                <li><a href="section-13-1.html">13.1 Vector Database Landscape</a></li>
+                <li><a href="section-13-2.html">13.2 Chunking, Embeddings, Hybrid Search</a></li>
+                <li><a href="section-13-3.html">13.3 Advanced RAG Patterns</a></li>
+                <li><a href="section-13-4.html">13.4 When to Go Beyond RAG</a></li>
+                <li><a href="section-13-5.html">13.5 Evaluating RAG Systems</a></li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-14/index.html">Chapter 14: Model Selection, Customization, and Evaluation</a> 
+                to learn how to choose and improve models wisely with the right evaluation frameworks. 
+                Understanding model selection is critical for optimizing both quality and cost.
+            </p>
+        </div>
+
+        <div class="bibliography">
+            <h3>Books</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title">Novum Organum</p>
+                <p class="bib-authors">Bacon, F. (1620)</p>
+                <p class="bib-annotation">Why this is relevant: Foundational text on scientific methodology; relevant for understanding eval-driven development approaches.</p>
+            </div>
+
+            <h3>Tools</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://pinecone.io">Vector Database Guide</a></p>
+                <p class="bib-authors">Pinecone</p>
+                <p class="bib-annotation">Why this is relevant: Managed vector database essential for RAG implementations; key infrastructure for knowledge-enhanced AI products.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://weaviate.io">Weaviate Documentation</a></p>
+                <p class="bib-authors">Weaviate</p>
+                <p class="bib-annotation">Why this is relevant: Open-source vector database with built-in RAG capabilities; alternative for teams needing self-hosted solutions.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://python.langchain.com">RAG Documentation</a></p>
+                <p class="bib-authors">LangChain</p>
+                <p class="bib-annotation">Why this is relevant: Comprehensive documentation on Retrieval-Augmented Generation, essential for building knowledge-enhanced AI products.</p>
+            </div>
+
+            <h3>Research Papers</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://github.com/microsoft/graphrag">GraphRAG</a></p>
+                <p class="bib-authors">Microsoft (2024)</p>
+                <p class="bib-annotation">Why this is relevant: Microsoft's knowledge graph approach to RAG; advanced pattern for improving retrieval quality in complex domains.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://stanford.edu">RAFT: Retrieval-Augmented Fine-Tuning</a></p>
+                <p class="bib-authors">Stanford (2024)</p>
+                <p class="bib-annotation">Why this is relevant: UC Berkeley/Stanford research on combining RAG with fine-tuning for domain-specific AI products.</p>
+            </div>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-12/index.html">Ch 12: Orchestration</a>
+            <a class="up" href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a>
+            <a class="next" href="chapter-14/index.html">Ch 14: Model Selection</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 13 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

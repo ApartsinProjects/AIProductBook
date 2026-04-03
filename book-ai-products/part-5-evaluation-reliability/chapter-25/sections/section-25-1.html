@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 25.1: Governance Operating Models - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 25</div>
+        <h1>Governance Operating Models</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"AI governance is not a department. It is a capability that must be embedded in every team that builds AI products. The question is not whether to govern AI, but how to make governance enable rather than impede innovation."</p>
+            <cite>A Chief AI Officer</cite>
+        </blockquote>
+
+        <h2 id="governance-imperative">Why Governance Matters</h2>
+
+        <p>
+            AI products carry unique risks that traditional software does not. (see <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">evaluation</a> patterns) They can perpetuate bias, generate harmful content, make consequential decisions with limited transparency, and fail in unexpected ways. Without governance, organizations ship AI products that harm users and expose the organization to legal and reputational risk.
+        </p>
+
+        <p>
+            Effective governance is not about slowing down AI development. It is about building sustainable AI practices that prevent costly failures. Organizations with strong governance can move faster because they have confidence their AI products meet standards.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Governance as Enabler</h4>
+            <p>Strong governance reduces the risk of AI failures that would otherwise require emergency fixes, recalls, or PR crises. Governance overhead is an investment in reducing the total cost of AI ownership.</p>
+        </div>
+
+        <h2 id="governance-models">Governance Operating Models</h2>
+
+        <h3 id="centralized-model">Centralized Governance</h3>
+
+        <p>A centralized governance model has a central team that owns all AI governance decisions, providing consistency and clear accountability but potentially becoming a bottleneck for product teams. The advantages are consistent standards across the organization, clear accountability for decisions, and development of deep expertise in governance matters. The disadvantages are that it slows down teams who must go through a central body, and the central team may lack context on specific use cases. This model works best for organizations early in AI maturity and regulated industries that need strict consistency.</p>
+
+        <h3 id="federated-model">Federated Governance</h3>
+
+        <p>A federated governance model has a central team that sets standards while individual teams own implementation, balancing consistency with agility. The advantages are faster execution since teams can act without central approval for standard implementations, context-aware decisions since teams understand their specific use cases, and scaling capability since the model can grow with the organization. The disadvantages are that it requires strong coordination between central and local teams, and quality may vary across teams depending on their expertise. This model works best for organizations with multiple AI teams that need both coordination and autonomy.</p>
+
+        <h3 id="distributed-model">Distributed Governance</h3>
+
+        <p>A distributed governance model embeds governance in each team with light coordination, maximizing speed but risking inconsistency. The advantages are maximum speed since teams have full autonomy and decisions are fully context-aware since teams understand their specific needs. The disadvantages are inconsistent quality across teams and difficulty auditing compliance across the organization. This model works best for small teams with strong AI culture where governance practices are already embedded in how people work.</p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Model Selection</h4>
+            <p>Most organizations evolve from centralized (when starting) to federated (at scale). Choose the model based on your AI maturity, regulatory environment, and organizational structure. Do not copy what others do; build what works for you.</p>
+        </div>
+
+        <h2 id="governance-components">Governance Components</h2>
+
+        <h3 id="policies">Policies</h3>
+
+        <p>Written policies define what is and is not acceptable in AI development and deployment. The AI Use Policy specifies what AI can and cannot be used for within the organization. The Data Policy specifies what data can be used with AI, including restrictions on sensitive data categories. The Transparency Policy specifies when AI use must be disclosed to users or stakeholders. The Human Oversight Policy specifies when humans must review AI decisions before they take effect.</p>
+
+        <h3 id="standards">Standards</h3>
+
+        <p>Standards define how to implement policies by specifying technical requirements and procedures. Evaluation Standards specify what metrics must be measured for AI systems to be considered production-ready. Bias Standards specify what fairness metrics must pass before deployment to ensure AI systems do not discriminate. Documentation Standards specify what must be documented to provide traceability and auditability. Testing Standards specify what testing is required before deployment to ensure AI systems meet quality and safety requirements.</p>
+
+        <h3 id="processes">Processes</h3>
+
+        <p>Processes operationalize policies and standards by defining how work gets done. The Review Process specifies who reviews AI before deployment and what criteria they use for approval. The Escalation Process specifies how to handle policy exceptions when teams need to deviate from established standards. The Incident Process specifies how to handle AI failures including investigation, remediation, and reporting. The Audit Process specifies how to demonstrate compliance during internal audits and external regulatory reviews.</p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: HealthMetrics Governance Model</h4>
+            <p>HealthMetrics was implementing governance for clinical AI after the FDA required documented governance as part of their clearance process. There was no existing governance model to follow, creating a dilemma about whether to build a heavy compliance-focused model or a lightweight innovation-friendly one.</p>
+            <p>The team decided to build a federated model with centralized standards that balanced compliance with innovation velocity. The central AI Governance team set standards for clinical AI, ensuring consistency across all products. Each clinical product team implemented the standards within their own workflows, maintaining agility. The central team reviewed high-risk AI features directly while establishing self-service review processes for low-risk features, enabling faster iteration on lower-stakes changes. They embedded compliance engineers in product teams to provide ongoing guidance rather than acting as a gatekeeping bottleneck.</p>
+            <p>The result was maintaining FDA compliance while keeping innovation velocity high. Review time dropped from six weeks to two weeks through self-service for common cases. The lesson is that governance models must fit your context. A model too heavy stifles innovation while too light creates risk.</p>
+        </div>
+
+        <h2 id="governance-roles">Governance Roles</h2>
+
+        <h3 id="ai-governance-board">AI Governance Board</h3>
+
+        <p>An AI Governance Board is a cross-functional team that owns governance decisions across the organization. The members include representatives from legal, engineering, product, ethics, and compliance to ensure all perspectives are considered. The board meets on a regular cadence with provisions for ad-hoc meetings when urgent items arise. The board has authority to make final decisions on AI policy exceptions, ensuring that governance has real teeth rather than being merely advisory.</p>
+
+        <h3 id="ai-champions">AI Champions</h3>
+
+        <p>AI Champions are embedded team members who promote governance practices within their product teams. Their role is to serve as the first point of contact for AI governance questions, helping colleagues understand and follow governance requirements. They receive deep governance and ethics training to build expertise that they can share with their teams. Their responsibility is to help teams navigate governance requirements and embed good practices into everyday work rather than treating governance as an external imposition.</p>
+
+        <div class="callout warning">
+            <h4 class="callout-title">Governance Without Authority</h4>
+            <p>Governance that lacks authority becomes advisory. If the AI Governance Board cannot make decisions or enforce policies, it is a talking shop, not a governance body. Ensure your governance model has teeth.</p>
+        </div>
+
+        <h2 id="maturity-model">Governance Maturity Model</h2>
+
+        <p>Governance maturity can be measured across five levels that represent the evolution of governance capability. Level one, ad hoc, describes organizations with no formal governance that operate reactively with inconsistent practices and high risk. Level two, emerging, describes organizations where basic policies exist but are documented rather than enforced. Level three, defined, describes organizations where processes are defined and followed consistently with regular audits to ensure compliance. Level four, managed, describes organizations where governance is metrics-driven with governance performance measured against defined targets. Level five, optimizing, describes organizations at the highest maturity level where governance enables continuous improvement through proactive, predictive approaches rather than reactive responses.</p>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>Research on "automated governance" explores using AI to assist with governance tasks like policy compliance checking, documentation review, and risk assessment. While promising, automated governance raises questions about who governs the governance AI.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 25: Governance</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-25-2.html">25.2 NIST AI RMF</a>
+        </nav>
+
+        <footer>
+            <p>Section 25.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

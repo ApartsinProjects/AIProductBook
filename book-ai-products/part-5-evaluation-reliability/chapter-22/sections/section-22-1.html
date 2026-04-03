@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 22.1: Traces and Span-Level Diagnostics - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 22</div>
+        <h1>Traces and Span-Level Diagnostics</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"You cannot debug what you cannot see. In AI systems, the ability to trace a request from user input through every model call and tool invocation is the foundation of production reliability."</p>
+            <cite>A Site Reliability Engineer, After a Three-Hour Incident</cite>
+        </blockquote>
+
+        <h2 id="why-tracing-matters">Why Tracing Matters for AI Systems</h2>
+
+        <p>
+            Traditional software debugging benefits from clear causality: a function call either succeeds or throws an exception, and the stack trace points you toward the problem. AI systems introduce a different challenge. A user complaint that "the AI gave a bad answer" requires tracing through embedding generation, retrieval from multiple sources, prompt assembly, model inference, and response parsing, all of which may involve non-deterministic behavior at each step.
+        </p>
+
+        <p>
+            Tracing transforms this opacity into visibility. Each AI request becomes a trace containing multiple spans. A span represents a single operation: a vector search, an LLM call, a tool execution. The trace captures timing, inputs, outputs, and causal relationships between spans.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The Tracing Mental Model</h4>
+            <p>Think of a trace as a medical chart for your AI request. Just as a patient chart records each vital sign, medication, and procedure, a trace records each AI operation, its inputs, and its outputs. When something goes wrong, you read the chart.</p>
+        </div>
+
+        <h2 id="trace-structure">Trace Structure for AI Applications</h2>
+
+        <p>
+            A well-structured AI trace captures the full request lifecycle. At the top level is the trace itself, identified by a unique trace ID. Within the trace are spans, each representing a discrete operation.
+        </p>
+
+        <h3 id="span-anatomy">Span Anatomy</h3>
+
+        <p>Each span contains several essential elements that together provide a complete picture of an operation:</p>
+        <p><strong>Span name</strong> identifies the operation type such as vector_search, llm_call, or tool_execution.</p>
+        <p><strong>Start and end timestamps</strong> enable calculation of operation duration for latency analysis.</p>
+        <p><strong>Parent span ID</strong> establishes the causal hierarchy, showing which operation spawned this one.</p>
+        <p><strong>Attributes</strong> provide key-value metadata specific to the operation, such as model names or token counts.</p>
+        <p><strong>Events</strong> are timestamped log entries within the span that capture significant moments during execution.</p>
+        <p><strong>Status</strong> indicates success, failure, or error information to quickly identify problem areas.</p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Hierarchical Span Relationships</h4>
+            <p>Spans form a tree structure where parent spans contain child spans. A user request span might contain an LLM call span, which itself contains spans for prompt assembly, token counting, and response parsing. This hierarchy is essential for understanding causality, not just timing.</p>
+        </div>
+
+        <h3 id="ai-specific-spans">AI-Specific Span Types</h3>
+
+        <p>AI applications require specialized span types beyond standard HTTP or database spans to capture the unique operations that AI systems perform:</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">AI Span Type Reference</div>
+            <p><strong>embedding_generation:</strong> Tracks text to vector conversion. Attributes: model, text_length, dimension, embedding_tokens.</p>
+            <p><strong>vector_search:</strong> Covers retrieval from vector stores. Attributes: query_vector_id, top_k, similarity_threshold, results_count.</p>
+            <p><strong>llm_inference:</strong> Captures model response generation. Attributes: model, prompt_tokens, completion_tokens, temperature, latency_ms.</p>
+            <p><strong>tool_execution:</strong> Tracks external API or function calls. Attributes: tool_name, tool_input, tool_output, success.</p>
+            <p><strong>prompt_assembly:</strong> Monitors constructing the full prompt. Attributes: system_prompt_length, context_length, few_shot_examples.</p>
+            <p><strong>response_parsing:</strong> Handles structured output extraction. Attributes: output_format, parse_success, validation_errors.</p>
+        </div>
+
+        <h2 id="implementation-approaches">Implementation Approaches</h2>
+
+        <h3 id="opentelemetry">OpenTelemetry for AI Tracing</h3>
+
+        <p>
+            OpenTelemetry has become the standard for observability instrumentation in production systems. Its AI-specific extensions allow you to capture AI-specific attributes consistently across different providers.
+        </p>
+
+        <pre><code class="language-python">
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+
+# Configure OpenTelemetry for AI tracing
+provider = TracerProvider()
+processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://collector:4317"))
+provider.add_span_processor(processor)
+trace.set_tracer_provider(provider)
+
+tracer = trace.get_tracer(__name__)
+
+# Wrap AI operations with spans
+def retrieve_context(query: str, top_k: int = 5):
+    with tracer.start_as_current_span("vector_search") as span:
+        span.set_attribute("query_text", query)
+        span.set_attribute("top_k", top_k)
+        
+        with tracer.start_as_current_span("embedding_generation") as emb_span:
+            emb_span.set_attribute("model", "text-embedding-3-small")
+            embedding = embed_model.encode(query)
+            emb_span.set_attribute("embedding_dimension", len(embedding))
+        
+        with tracer.start_as_current_span("index_lookup") as idx_span:
+            results = vector_store.search(embedding, k=top_k)
+            idx_span.set_attribute("results_returned", len(results))
+        
+        return results
+        </code></pre>
+
+        <h3 id="langsmith">LangSmith Tracing</h3>
+
+        <p>
+            LangSmith provides AI-native tracing with built-in support for LLM calls, retrieval chains, and tool executions. It offers automatic span creation for common AI framework operations.
+        </p>
+
+        <pre><code class="language-python">
+from langsmith import traceable
+
+@traceable(name="customer-support_rag")
+def customer_support_rag(user_query: str) -> str:
+    """
+    <a href="../../../part-4-engineering/chapter-17/sections/section-17-1.html" class="cross-ref">RAG pipeline</a> with built-in LangSmith tracing.
+    Automatically captures retrieval, LLM calls, and tool usage.
+    """
+    # Retrieval span - automatically created
+    context_docs = retriever.get_relevant_documents(user_query)
+    
+    # LLM span - includes token counts and latency
+    response = llm_chain.invoke({
+        "question": user_query,
+        "context": format_documents(context_docs)
+    })
+    
+    return response
+        </code></pre>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: QuickShip Route Query Debugging</h4>
+            <p>The QuickShip engineering team was debugging slow route optimization queries after users reported that requests took eight to twelve seconds, far exceeding their two-second target. The problem was that the team could not identify which specific operation caused the delay without visibility into the individual components. They faced a dilemma: optimize blindly based on assumptions, or invest in tracing infrastructure to get precise diagnostics.</p>
+            <p>The team decided to add OpenTelemetry tracing to the route optimization pipeline. They instrumented each stage including vector search, LLM inference, route calculation, and result formatting. The traces revealed that vector search was taking six seconds due to a missing index on a critical filter field, which was not where they had assumed the problem lay.</p>
+            <p>After adding the index, vector search latency dropped to two hundred milliseconds and end-to-end latency improved to 1.8 seconds. The lesson is that traces revealed the bottleneck was not where they assumed. Never optimize without measurement.</p>
+        </div>
+
+        <h2 id="span-level-diagnostics">Span-Level Diagnostic Techniques</h2>
+
+        <h3 id="latency-breakdown">Latency Breakdown Analysis</h3>
+
+        <p>
+            Span timing data enables precise latency attribution. When a request is slow, span timestamps reveal exactly which operation consumed the time. This is essential for AI systems where total latency equals the sum of multiple asynchronous operations.
+        </p>
+
+        <div class="callout note">
+            <h4 class="callout-title">Parallel vs Sequential Spans</h4>
+            <p>In AI <a href="../../../part-4-engineering/chapter-17/sections/section-17-1.html" class="cross-ref">RAG pipelines</a>, retrieval and prompt preparation often run in parallel, while LLM inference is sequential. Trace trees make this distinction visible. Look for spans that overlap in time (parallel) versus spans that stack vertically (sequential).</p>
+        </div>
+
+        <h3 id="token-count-validation">Token Count Validation</h3>
+
+        <p>
+            AI spans naturally capture token counts, which serve as both performance indicators and cost proxies. Unexpectedly high token counts often indicate problems: excessive context injection, poorly scoped retrieval, or prompt leakage.
+        </p>
+
+        <h3 id="retrieval-quality">Retrieval Quality Signals</h3>
+
+        <p>
+            Vector search spans capture relevance scores and result counts. Low similarity scores on returned documents signal retrieval quality problems before they propagate to final responses.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">The Span as the Unit of AI Debugging</h4>
+            <p>Just as breakpoints debug traditional software, spans debug AI systems. You can examine individual span inputs, outputs, and timing to isolate where behavior diverges from expectations. The difference is that spans work in production, not just during development.</p>
+        </div>
+
+        <h2 id="distributed-tracing">Distributed Tracing Across AI Components</h2>
+
+        <p>
+            Production AI systems span multiple services: API gateways, inference servers, vector databases, tool execution environments. Distributed tracing connects spans across service boundaries using trace context propagation.
+        </p>
+
+        <h3 id="context-propagation">Trace Context Propagation</h3>
+
+        <p>
+            When a request crosses service boundaries, trace context must be propagated. This involves serializing the trace ID and span ID into the outgoing request headers so the receiving service can continue the trace.
+        </p>
+
+        <pre><code class="language-python">
+# Propagating trace context across async boundaries
+async def call_tool_with_context(tool_request: ToolRequest, current_span):
+    # Extract context from current span
+    ctx = trace.get_current_span().get_span_context()
+    
+    # Propagate via headers
+    headers = {
+        "traceparent": f"00-{ctx.trace_id}-{ctx.span_id}-01",
+        "tracestate": ""
+    }
+    
+    # Continue trace in tool service
+    return await tool_service.execute(tool_request, headers=headers)
+        </code></pre>
+
+        <div class="callout warning">
+            <h4 class="callout-title">Context Propagation Pitfalls</h4>
+            <p>AI systems often use async processing where trace context can be lost. Always verify that your observability framework properly propagates context across queue-based processing, batch operations, and webhook callbacks.</p>
+        </div>
+
+        <h2 id="trace-storage">Trace Storage and Analysis</h2>
+
+        <p>
+            Traces generate substantial data volume. A single user request might produce 20-50 spans. Without careful storage strategy, costs escalate quickly while query performance degrades.
+        </p>
+
+        <h3 id="sampling-strategies">Sampling Strategies</h3>
+
+        <p>Different sampling strategies balance cost and visibility depending on your needs:</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Sampling Strategy Comparison</div>
+            <p><strong>Head-based sampling</strong> decides what to sample before processing begins, providing consistent metrics and being cost-effective for happy path tracing where you primarily care about successful requests.</p>
+            <p><strong>Tail-based sampling</strong> decides after processing completes, allowing you to capture all failures but at higher cost since you must process everything to decide what to keep.</p>
+            <p><strong>Error-biased sampling</strong> always captures errors while sampling successes, making it ideal for debugging production issues where failures are the primary concern.</p>
+            <p><strong>Adaptive sampling</strong> dynamically adjusts based on traffic levels, maintaining visibility during high-traffic periods while reducing costs when traffic is low.</p>
+        </div>
+
+        <h3 id="trace-storage-systems">Storage Systems</h3>
+
+        <p>
+            Popular trace storage systems include Jaeger for self-hosted deployments, Zipkin for lightweight requirements, and managed services like Honeycomb, Datadog, and AWS X-Ray. For AI-specific analysis, LangSmith and Weights & Biases provide AI-native query capabilities.
+        </p>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>New research explores "semantic traces" that capture not just timing and inputs but also the semantic relationships between spans. By embedding span content, these systems enable queries like "find all traces where retrieval returned documents about pricing that did not appear in the final response."</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 22: Observability</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-22-2.html">22.2 Prompt and Tool-Call Inspection</a>
+        </nav>
+
+        <footer>
+            <p>Section 22.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

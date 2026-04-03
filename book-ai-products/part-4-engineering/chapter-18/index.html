@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 18: State, Memory, and Workflow Orchestration - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 18</div>
+        <h1>State, Memory, and Workflow Orchestration</h1>
+    </header>
+
+    <main class="content">
+        <div class="opening-hook">
+            A customer starts a conversation with your AI support agent. They explain they are building a kitchen renovation project. By message twelve, they mention "the kitchen" again, expecting context. The AI responds as if it has never heard of any kitchen. By message twenty, the customer is frustrated enough to call support. This is not a model failure. It is a state management failure. Traditional software handles session state through databases and cache. AI systems that cannot remember are condemned to start from scratch every time. Building stateful AI applications requires rethinking traditional software patterns for a probabilistic world where context, memory, and conversation flow become first-class engineering concerns.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-18-opener.png"
+                 alt="Chapter 18 opener illustration">
+            <figcaption>
+                State, memory, and orchestration manage the flow of information through AI systems.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Memory Pattern Testing</div>
+            <p>Vibe-coding enables rapid testing of memory patterns and state management strategies. Quickly prototype different session memory approaches, test how context accumulates errors over time, and explore agent handoff behaviors under various scenarios. Vibe-coding memory patterns reveals failure modes like context drift, memory corruption, and state inconsistency before they become production problems.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">PM Decision Points in State and Memory</div>
+            <p>PM decisions around state include: How long should conversations remain coherent to users? What happens to user data across sessions? When should context be retained versus forgotten? For multi-step workflows, PMs must define what constitutes a "complete" task and how long partial progress remains valid. These choices affect privacy, storage costs, user experience expectations, and the perception of AI as reliable versus flaky. Memory decisions are often irreversible from a user trust perspective.</p>
+        </div>
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn patterns for state management, memory, and workflow orchestration in AI applications.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                NEW content. This chapter covers memory patterns, state management, workflow orchestration frameworks, and patterns for building stateful AI applications.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> How to build AI applications that maintain appropriate state across interactions without accumulating errors or losing context.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> A conversation flow prototype that tests session memory, user memory, and agent handoff patterns in a realistic scenario.</li>
+                <li><strong>What would count as success or failure?</strong> Stateful AI applications that handle context appropriately across sessions without memory errors compounding over time.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Memory and state management require explicit architectural patterns; treating AI state as simple is a common source of subtle, damaging bugs.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Design memory patterns for AI applications</li>
+                <li>Manage state in probabilistic systems</li>
+                <li>Use workflow orchestration frameworks</li>
+                <li>Build conversation flows</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">18.1</span> <a href="sections/section-18-1.html">Prompts vs Workflow Graphs</a></li>
+                <li><span class="sec-num">18.2</span> <a href="sections/section-18-2.html">Session State and User Memory</a></li>
+                <li><span class="sec-num">18.3</span> <a href="sections/section-18-3.html">Task Memory and Agent Handoffs</a></li>
+                <li><span class="sec-num">18.4</span> <a href="sections/section-18-4.html">Durable Execution</a></li>
+                <li><span class="sec-num">18.5</span> <a href="sections/section-18-5.html">Workflow Orchestration Patterns</a></li>
+            </ul>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-17/index.html">Ch 17: Retrieval</a>
+            <a class="up" href="../../part-4-engineering/index.html">Part IV Overview</a>
+            <a class="next" href="sections/section-18-1.html">18.1 Memory Patterns</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 18 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 20: Security, Privacy, and Abuse Resistance - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 20</div>
+        <h1>Security, Privacy, and Abuse Resistance</h1>
+    </header>
+
+    <main class="content">
+        <div class="opening-hook">
+            Prompt injection attacks are the SQL injection of AI products. If you are not thinking about security from day one, you are building vulnerabilities into your product.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-20-opener.png"
+                 alt="Chapter 20 opener illustration">
+            <figcaption>
+                Security, privacy, and abuse resistance protect AI products and their users.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Red-Teaming</div>
+            <p>Use vibe coding for security red-teaming before attackers do. Quickly prototype prompt injection attempts, data leakage scenarios, and tool misuse patterns against your system. Vibe coding attack vectors lets you discover vulnerabilities in hours rather than weeks, enabling proactive defense rather than reactive cleanup. Regular vibe coding red-teaming sessions should be part of every AI security practice.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">PM Decision Points in Security and Privacy</div>
+            <p>Security decisions that require PM input: What data can and cannot be exposed to AI processing? How should the system behave when attacked or abused? What privacy trade-offs are acceptable for functionality? PMs must define the threat model for their product, establish clear boundaries on what the AI can and cannot do with sensitive data, and decide on incident response protocols. Security requirements must be specified before architecture, not retrofit after launch.</p>
+        </div>
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn to build secure AI products, protect against adversarial attacks, and implement enterprise-grade privacy safeguards.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter addresses AI-specific security, privacy, and abuse concerns that go beyond traditional software security. You will learn about prompt injection attacks, data leakage vectors, tool misuse patterns, authorization frameworks, enterprise boundaries, red team methodologies, and policy enforcement systems.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> How to build AI products that are secure against adversarial attacks and protect user privacy by design.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> A red team exercise attempting prompt injection and data leakage on your AI system to discover actual vulnerabilities.</li>
+                <li><strong>What would count as success or failure?</strong> Security posture where attack vectors are known, measured, and mitigated rather than hoped-away.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Security must be architected in from day one; retrofitting security onto AI products is expensive and often incomplete.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Understand prompt injection attacks and defense strategies</li>
+                <li>Implement data privacy measures and prevent leakage</li>
+                <li>Design secure tool integration patterns</li>
+                <li>Build AI-aware access control systems</li>
+                <li>Apply red team methodologies for AI security</li>
+                <li>Implement policy enforcement and abuse prevention</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">20.1</span> <a href="sections/section-20-1.html">Prompt Injection Defense</a></li>
+                <li><span class="sec-num">20.2</span> <a href="sections/section-20-2.html">Data Leakage Prevention</a></li>
+                <li><span class="sec-num">20.3</span> <a href="sections/section-20-3.html">Tool Misuse and Sandboxing</a></li>
+                <li><span class="sec-num">20.4</span> <a href="sections/section-20-4.html">Authorization and Enterprise Boundaries</a></li>
+                <li><span class="sec-num">20.5</span> <a href="sections/section-20-5.html">Red Teaming and Policy Enforcement</a></li>
+            </ul>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../chapter-19/index.html">Ch 19: Protocols</a>
+            <a class="up" href="../../part-4-engineering/index.html">Part IV Overview</a>
+            <a class="next" href="sections/section-20-1.html">20.1 Prompt Injection</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 20 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

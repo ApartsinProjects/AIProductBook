@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14.2 Fine-tuning vs Distillation - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 14</div>
+        <h1>Model Selection, Customization, and Evaluation</h1>
+        <p class="chapter-subtitle">14.2 Fine-tuning vs Distillation</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Choose and improve models wisely with the right evaluation frameworks.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 14.1 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Customization Tradeoffs</div>
+            <p>This section covers the decision between fine-tuning, distillation, and model merging for customizing AI behavior. In the context of AI engineering, these techniques enable you to balance capability, cost, and control. Understanding when each approach makes sense prevents costly customization mistakes.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The $500k Fine-Tuning Mistake</div>
+            <p>A healthcare company spent $500,000 fine-tuning a model for medical coding, only to discover that better prompting achieved 95% of the same results at 1% of the cost. The lesson: always exhaust prompt engineering before resorting to fine-tuning.</p>
+        </div>
+
+        <h2 id="section-14-2">14.2 Fine-tuning vs Distillation</h2>
+
+        <p>
+            Customization options exist on a spectrum from simple prompt optimization to full model fine-tuning. Understanding when each approach makes sense is essential for making cost-effective engineering decisions.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Fine-tuning is expensive and changes are hard to reverse. Distillation can give you a smaller, cheaper model but may lose capability. Making the wrong choice wastes significant development time and money.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Fine-Tuning Is Irreversible (Mostly)</div>
+            <p>Once you fine-tune a model, you cannot "un-tune" it. If you fine-tune on bad data or with wrong parameters, the only solution is to re-fine-tune from the base model. LoRA adapters help by keeping base model weights intact, but the fine-tuned behavior is still hard to reverse. Always test extensively on held-out data before committing to a fine-tuned model in production.</p>
+        </div>
+
+        <h3>Option 1: Fine-tuning</h3>
+
+        <p>
+            Fine-tuning adapts a pre-trained model to your specific data and requirements. This is appropriate when you need consistent behavior that can't be achieved through prompting alone.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Legal Document Processor</div>
+            <p>A legal tech company needed consistent extraction of specific clauses from contracts. They fine-tuned a 7B model on 500 annotated examples:</p>
+            <pre class="code-block"># Fine-tuning setup with LoRA
+from unsloth import FastLanguageModel
+from trl import SFTTrainer
+from transformers import TrainingArguments
+
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name="meta-llama/Llama-3.2-7B-Instruct",
+    max_seq_length=2048,
+    dtype=None,
+    load_in_4bit=True,
+)
+
+# Add LoRA adapters for efficient fine-tuning
+model = FastLanguageModel.get_peft_model(
+    model,
+    r=16,
+    lora_alpha=16,
+    target_modules=["q_proj", "v_proj"],
+    lora_dropout=0,
+)
+
+# Train on contract data
+trainer = SFTTrainer(
+    model=model,
+    tokenizer=tokenizer,
+    train_dataset=contract_dataset,
+    dataset_text_field="text",
+    max_seq_length=2048,
+    args=TrainingArguments(
+        per_device_train_batch_size=2,
+        gradient_accumulation_steps=4,
+        warmup_steps=10,
+        num_train_epochs=3,
+        learning_rate=2e-4,
+    ),
+)
+trainer.train()</pre>
+            <p>After fine-tuning, the model consistently extracted clause types with 92% accuracy vs 70% with prompting alone.</p>
+        </div>
+
+        <h4>When Fine-tuning is Appropriate</h4>
+        <ul>
+            <li>Consistent output format required across thousands of queries</li>
+            <li>Domain-specific reasoning patterns needed</li>
+            <li>Cost optimization for high-volume inference</li>
+            <li>Clear, stable requirements that won't change frequently</li>
+        </ul>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Fine-Tuning vs <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Knowledge</div>
+            <p>Fine-tuning does not inject knowledge. If you need the model to know specific facts (like your company's return policy), fine-tuning will not help unless those facts appear in your training data. For knowledge injection, use <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>. Fine-tuning is about how to respond, not what to respond with.</p>
+        </div>
+
+        <h3>Option 2: Distillation</h3>
+
+        <p>
+            Distillation trains a smaller model (student) to mimic a larger model (teacher). The student learns to approximate the teacher's outputs, preserving most capability at lower cost.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Creating an SLM</div>
+            <pre class="code-block">from distilbert import DistilBertForQuestionAnswering
+import torch
+
+# Teacher: Large model that generates outputs
+teacher_model = load_pretrained("gpt-4o")
+
+# Student: Smaller model to train
+student_model = DistilBertForQuestionAnswering.from_pretrained(
+    "distilbert-base-uncased"
+)
+
+# Distillation training
+def distillation_loss(student_logits, teacher_logits, temperature=2.0):
+    """Knowledge distillation loss"""
+    # Soft targets from teacher (with temperature)
+    soft_teacher = F.softmax(teacher_logits / temperature, dim=-1)
+    soft_student = F.log_softmax(student_logits / temperature, dim=-1)
+    
+    # KL divergence loss
+    loss = F.kl_div(soft_student, soft_teacher, reduction='batchmean')
+    return loss * (temperature ** 2)
+
+# Train student to mimic teacher
+for batch in training_data:
+    # Get teacher predictions
+    with torch.no_grad():
+        teacher_output = teacher_model(batch.input_ids)
+    
+    # Get student predictions
+    student_output = student_model(batch.input_ids)
+    
+    # Compute distillation loss
+    loss = distillation_loss(
+        student_output.logits,
+        teacher_output.logits
+    )
+    
+    loss.backward()
+    optimizer.step()</pre>
+            <p>After distillation, the student model (3B params) retained 85% of the teacher (70B params) capability while being 10x faster and 20x cheaper to run.</p>
+        </div>
+
+        <h3>Option 3: Model Merging</h3>
+
+        <p>
+            Model merging combines weights from multiple specialized models without additional training. This can create models that perform well across multiple tasks.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: Merging Specialized Models</div>
+            <p>A team had three fine-tuned models:</p>
+            <ul>
+                <li>Model A: Great at code generation</li>
+                <li>Model B: Excellent at math reasoning</li>
+                <li>Model C: Best at creative writing</li>
+            </ul>
+            <p>They merged them using TIES merging:</p>
+            <pre class="code-block">from mergekit import MergeConfiguration
+
+config = MergeConfiguration(
+    models=[
+        {"model": "code-model", "weight": 1.0},
+        {"model": "math-model", "weight": 1.0},
+        {"model": "writing-model", "weight": 1.0},
+    ],
+    merge_method="ties",
+    normalize=True,
+)
+
+merged_model = mergekit.merge(config)</pre>
+            <p>The merged model performed at 90% of each specialized model in their domain while being a single unified model.</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Approach</th><th>When to Use</th><th>Cost</th><th>Tradeoffs</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Fine-tuning</td><td>Specific output style, domain patterns</td><td>High</td><td>Expensive to train, changes hard to reverse</td></tr>
+                <tr><td>Distillation</td><td>Create efficient SLMs from large models</td><td>Medium</td><td>May lose some capability</td></tr>
+                <tr><td>Model merging</td><td>Combine specialized models</td><td>Low</td><td>Less predictable results</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Start with Prompting</div>
+            <p>Before investing in fine-tuning, exhaust prompt engineering options. Most behavior can be achieved through clever prompting at a fraction of the cost. Only fine-tune when you have clear evidence that prompting can't achieve your quality bar.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Evaluation Frameworks</strong> - LLM-as-judge, human evaluation, and regression testing.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-14-1.html">14.1 Model Router Strategies</a>
+            <a class="up" href="index.html">Chapter 14 Index</a>
+            <a class="next" href="section-14-3.html">14.3 Evaluation Frameworks</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 14.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12.3 Repository Conventions for Teams - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 12.3</div>
+        <h1>Repository Conventions for Teams</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Individual AI interaction practices do not scale to teams. Repository conventions transform personal productivity into team capability.
+        </p>
+
+        <h2>The Team Scaling Problem</h2>
+
+        <p>When one person uses AI tools, conventions emerge organically through personal practice. When teams use AI tools, conventions must be explicit and shared. Without explicit conventions, teams duplicate effort, produce inconsistent artifacts, and cannot leverage each other's work.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Convention Hierarchy</div>
+            <p>Team conventions should be organized hierarchically from most to least constraining. Principles are overarching guidelines that inform decisions across situations. Policies are specific rules that must be followed without exception. Practices are recommended approaches that can be adapted to specific contexts. Patterns are proven solutions to recurring problems that teams can apply directly.</p>
+        </div>
+
+        <h2>Directory Structure Conventions</h2>
+
+        <p>Establish a consistent directory structure for AI interaction artifacts. This makes it easy to find and reuse work across the team.</p>
+
+        <h3>Recommended Structure</h3>
+
+        <pre>
+.ai/
+  skills/           # Reusable skill definitions
+  templates/        # Prompt templates
+  rules/            # Behavioral rules
+  memory/           # Cross-session context
+  docs/             # AI interaction documentation
+  prompts/          # One-off prompts (reference)
+  experiments/      # Exploration and testing
+CONTEXT.md         # Project-level context
+RULES.md           # Project-level rules
+SKILLS.md          # Index of available skills
+        </pre>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Directory Convention</div>
+            <p>QuickShip established the <code>.ai/</code> directory structure for their exception handler project:</p>
+            <pre>
+.ai/
+  skills/
+    email-classifier/
+      SKILL.md
+      examples/
+    response-generator/
+      SKILL.md
+  templates/
+    classification-template.md
+    response-template.md
+  rules/
+    security-rules.md
+    performance-rules.md
+  memory/
+    classification-history.md
+CONTEXT.md
+RULES.md
+SKILLS.md
+            </pre>
+            <p>Any team member could navigate the AI artifacts, find relevant skills, and understand the project context.</p>
+        </div>
+
+        <h2>Skill Documentation Conventions</h2>
+
+        <p>Skills should be documented consistently so team members can find, understand, and use them. Define a standard skill template.</p>
+
+        <h3>Skill Template</h3>
+
+        <pre>
+# Skill: [Name]
+
+## Purpose
+[One sentence describing what this skill does]
+
+## Inputs
+- [Input name]: [Description], [Format/type], [Required/Optional]
+
+## Outputs
+- [Output name]: [Description], [Format/type]
+
+## Behavior Rules
+- [Rule 1]
+- [Rule 2]
+
+## Context Requirements
+- [Context element 1]
+- [Context element 2]
+
+## Usage Examples
+### Example 1: [Description]
+[Prompt or invocation]
+[Expected output]
+
+### Example 2: [Description]
+[Prompt or invocation]
+[Expected output]
+
+## Related Skills
+- [Other skill name]: [Relationship]
+        </pre>
+
+        <h2>Naming Conventions</h2>
+
+        <p>Consistent naming makes artifacts findable and understandable. Establish naming conventions for skill files and directories, template files, rule files, and prompt references. Use descriptive, hyphenated names such as email-classifier-skill.md, classification-prompt-template.md, and security-rules.md. Avoid cryptic abbreviations or single words, favoring clarity over brevity.</p>
+
+        <h2>Context Document Conventions</h2>
+
+        <p>Context documents should follow a consistent structure. This enables team members to quickly understand project state and AI interaction patterns.</p>
+
+        <h3>Context Document Template</h3>
+
+        <pre>
+# [Project Name] - Context
+
+## Last Updated
+[Date] by [Author]
+
+## Project Overview
+[What this project does, who it serves]
+
+## Tech Stack
+- [Technology 1]
+- [Technology 2]
+
+## Architecture
+[High-level architecture description]
+
+## AI Interaction Patterns
+[How AI is used in this project]
+
+## Key Conventions
+[Important patterns team should follow]
+
+## Current State
+[What is working, what is being worked on]
+
+## Team Contact
+[Who to ask questions about this project]
+        </pre>
+
+        <h2>Rule Conventions</h2>
+
+        <p>Rules should be categorized and documented consistently, separated by type. Security rules cover data handling, access control, and privacy requirements. Quality rules define output standards and validation requirements. Performance rules specify latency, throughput, and resource limits. Compliance rules address regulatory requirements and audit needs.</p>
+
+        <h2>Onboarding Integration</h2>
+
+        <p>AI conventions should be part of team onboarding. New team members should understand where AI artifacts are located, how to use existing skills and templates, how to contribute new skills, and what rules apply and why they exist.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Onboarding Checklist</div>
+            <p>QuickShip includes AI tooling in their engineering onboarding:</p>
+            <ol>
+                <li>Read PROJECT_CONTEXT.md and .ai/CONTEXT.md</li>
+                <li>Review SKILLS.md index of available skills</li>
+                <li>Complete tutorial: classify an email using email-classifier skill</li>
+                <li>Review RULES.md and understand security rules</li>
+                <li>Pair with existing team member on an AI task</li>
+            </ol>
+        </div>
+
+        <h2>Maintenance and Evolution</h2>
+
+        <p>Conventions are not static; they evolve as the project and team mature. Establish processes for adding new skills including who creates them, who reviews them, and how to share them across the team. Define when to update context and who bears responsibility for keeping it current. Create a process for deprecating skills that are no longer used, removing them cleanly without losing institutional knowledge. Establish how to resolve convention disagreements when team members have conflicting views on practices.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Individual AI practices do not scale to teams; explicit conventions transform personal productivity into team capability. The convention hierarchy moves from principles through policies and practices to patterns, each with different levels of constraint. Establish a .ai/ directory structure for organizing AI interaction artifacts so team members can find what they need. Standardize skill documentation with a template to ensure consistency and completeness. Use consistent naming conventions for findability, preferring descriptive hyphenated names over cryptic abbreviations. Integrate AI conventions into team onboarding so new members become productive quickly. Establish maintenance processes for convention evolution to keep artifacts current as the project matures.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Establishing Team Conventions</div>
+            <p>Evaluate your team's AI convention readiness by asking several diagnostic questions. First, consider where AI artifacts are currently stored and whether they are organized in a findable structure. Second, assess whether you have skill documentation and if it follows consistent standards. Third, examine what naming conventions exist and whether they are consistently followed. Fourth, determine how new team members learn AI practices and whether onboarding addresses AI tooling. Fifth, define what a minimal viable convention set would look like for your team, focusing on the essential elements that would provide immediate value.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Chapter 13, we examine <strong>Multi-Agent and Tool-Based Build Flows</strong>, exploring when multi-agent architectures are justified and how to design them.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-12-2.html">12.2 Prompts, Rules, Skills</a>
+            <a class="up" href="../index.html">Chapter 12 Overview</a>
+            <a class="next" href="../../chapter-13/sections/section-13-1.html">Ch 13: Multi-Agent Flows</a>
+        </nav>
+
+        <footer>
+            <p>Section 12.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

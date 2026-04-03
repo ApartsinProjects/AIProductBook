@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.5 Common Anti-Patterns - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-1-foundations/index.html">Part I: Foundations</a></div>
+        <div class="chapter-label">Chapter 2</div>
+        <h1>The Synergy Triangle</h1>
+        <p class="chapter-subtitle">2.5 Common Anti-Patterns</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Introduce the book's core framework and show the interdependence between the three pillars.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Basic familiarity with software development concepts. Completion of Sections 2.1-2.4 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Avoiding the Common Failure Modes</div>
+            <p>This section covers common anti-patterns in AI product development, from vibe-only PoCs to eval-less shipping to cost ignorance. In the context of the Synergy Triangle, these anti-patterns emerge when one pillar is weak or missing: without evals, PM cannot guide Engineering; without engineering, prototypes cannot ship; without vibe coding, PM has no way to rapidly test hypotheses. Recognizing these patterns early is the first step to preventing them.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The First-Mover Anti-Pattern</div>
+            <p>Webvan spent $1.2 billion building out grocery delivery infrastructure before proving the model worked at scale. They were not alone. Many dot-com-era companies confused being first with being right. The graveyard of failed first-movers should be required reading for every PM before they claim "we need to move fast."</p>
+        </div>
+
+        <h2 id="section-2-5">2.5 Common Anti-Patterns</h2>
+
+        <p>
+            Teams fail when one pillar is weak or missing. These failures aren't mysterious - they follow patterns that are predictable and avoidable. Understanding these anti-patterns helps you recognize them in your own work and take corrective action before it's too late.
+        </p>
+
+        <h3>The Anti-Pattern Concept</h3>
+
+        <p>
+            An anti-pattern is a common response to a problem that is ineffective and often counterproductive. The term comes from software development, where teams repeatedly chose solutions that seemed reasonable but created more problems than they solved. The AI product development space has its own set of anti-patterns, and recognizing them is the first step to avoiding them.
+        </p>
+
+        <p>
+            What's notable about these anti-patterns is that they often seem like the sensible thing to do at the time. The team building a demo without evals isn't being stupid - they're being rational given their incentives: show progress quickly, demonstrate capability, win budget. The team using the most powerful model for everything isn't being wasteful - they're trying to deliver the best quality. The anti-pattern emerges from reasonable decisions made without full context of the consequences.
+        </p>
+
+        <h3>Anti-Pattern 1: Vibe-Only PoCs</h3>
+
+        <p>
+            <strong>What happens:</strong> The team builds impressive demos that wow stakeholders in testing environments. The AI responds beautifully to carefully curated test queries. The demo looks like a ship-ready product. But when released to real users in real conditions, everything falls apart. The AI hallucinates on real queries. The system crashes under real load. The costs spiral beyond expectations.
+        </p>
+
+        <p>
+            This anti-pattern typically follows a predictable arc. First, there's excitement: look how fast we built this! Then there's demos: look how well it works! Then there's launch: this is going to be great! Then there's failure: why is this not working? Finally, there's scramble: how do we fix this mess?
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Demo Trap</div>
+            <p>The danger of vibe-only PoCs is that they succeed at their immediate goal (demonstrating capability) while failing to reveal what actually matters (whether the product works in production). A demo can look perfect while being fundamentally unsound. The more impressive the demo, the more dangerous the trap - you've built expectation that will be harder to reset when reality doesn't match the demo.</p>
+        </div>
+
+        <p>
+            <strong>The Fix:</strong> Define success criteria (evals) before building. Plan for production from the start. The key insight is that evaluation should happen during prototyping, not after. You're not building a prototype to see if the concept works - you're building it to see if it works under the conditions it will face in production. Define those conditions upfront, build evals that test for them, and use those evals to guide development.
+        </p>
+
+        <p>
+            <strong>Why this works:</strong> When you define success criteria upfront, you have a target to hit. When you plan for production from the start, you're not making a separate transition later. The prototype and the product become the same thing - you're just iterating on quality rather than rebuilding from scratch.
+        </p>
+
+        <h3>Anti-Pattern 2: Eval-Less Shipping</h3>
+
+        <p>
+            <strong>What happens:</strong> The PM defines requirements with clear intent: the AI should be helpful, accurate, and safe. The engineering team implements what was asked. But then the question becomes: did we achieve the goal? There's no objective way to measure success. Debates become endless: is this response better than that one? Engineers implement changes that seem like improvements but might not be. The team spirals into debugging without clear goals.
+        </p>
+
+        <p>
+            This anti-pattern often manifests as a particular kind of organizational frustration. Everyone agrees the product should be "better" but nobody can agree on what "better" means. Feature requests become arguments about subjective quality. Improvements are gut checks rather than measurements. The team works hard but makes no progress that anyone can see.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Debates That Never End</div>
+            <p>Without evals, every decision becomes a philosophical debate. "Is this response accurate?" becomes a question about interpretation and nuance that has no resolution. With evals, the question becomes concrete: does this response match the golden set? This shifts the entire dynamic - instead of arguing about subjective impressions, you're checking objective measures. Debates become about the eval itself (is this the right test?) rather than the output (is this good?).</p>
+        </div>
+
+        <p>
+            <strong>The Fix:</strong> Implement eval-first development. Create golden datasets before writing prompts. The key is to define what good looks like before you try to achieve it. Build a set of test cases that represent what the product should do. Use those test cases as the specification for development. Measure every change against the test cases.
+        </p>
+
+        <p>
+            <strong>Why this works:</strong> When you have evals, every change can be measured. Every decision has a clear target. Debates resolve to evidence rather than opinions. The team moves from "I think this is better" to "our eval score improved by 15%." This transforms the team's productivity and focus.
+        </p>
+
+        <h3>Anti-Pattern 3: Engineering-Waterfall for AI</h3>
+
+        <p>
+            <strong>What happens:</strong> The team treats AI like traditional software, with months-long specification cycles. The PM writes detailed requirements. The designers create detailed mockups. The engineers implement according to spec. The process takes 6 months. By the time the product ships, the AI landscape has changed - models have improved, techniques have evolved, and what seemed like a good approach is now outdated.
+        </p>
+
+        <p>
+            This anti-pattern loses the very advantage that AI provides: the ability to iterate quickly. Traditional software development uses long spec cycles because building is expensive - you want to get it right before investing in implementation. But when building is cheap (as it is with vibe coding), the economics flip. You want to build fast, test fast, and iterate based on evidence rather than speculation.
+        </p>
+
+        <p>
+            The other problem with the waterfall approach is that AI behavior is emergent - you can't fully predict how a model will respond to a given prompt until you try it. A specification that seems clear might produce unexpected results. Rather than trying to anticipate everything, it's more effective to build, test, and adjust.
+        </p>
+
+        <p>
+            <strong>The Fix:</strong> Embrace rapid iteration. Use vibe coding for exploration, then apply engineering discipline for production. The key is to separate the exploration phase from the production phase. In exploration, move fast, try many things, learn quickly. In production, apply the engineering rigor that's needed for shipped software. But don't conflate the two - the wrong approach for one phase applied to the other creates problems.
+        </p>
+
+        <p>
+            <strong>Why this works:</strong> Fast iteration lets you find what actually works rather than guessing what will work. The investment in engineering for production is only made for features that have proven their value. The overall process is faster because you're not optimizing the wrong thing for months.
+        </p>
+
+        <h3>Anti-Pattern 4: Cost Ignorance</h3>
+
+        <p>
+            <strong>What happens:</strong> The team builds with the most powerful model for everything. The product works great - the AI is capable, accurate, helpful. But the costs are astronomical. Every user interaction costs dollars. Multiply by thousands of users and millions of interactions, and the product becomes economically unviable. Either the business model can't support the costs, or the company has to raise prices to the point where customers leave.
+        </p>
+
+        <p>
+            This anti-pattern is particularly insidious because the symptoms appear slowly. At low usage, costs seem manageable. As usage grows, costs grow linearly or worse. By the time the problem becomes apparent, the product is already being used in ways that make it hard to change. The team is now locked into an expensive architecture that needs to be rethought at the worst possible time - when it's already in production.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Success That Kills You</div>
+            <p>Cost ignorance can turn success into failure. A product that users love but costs too much to serve is not a viable business. The worst part is that this often isn't apparent until the product is already popular. The team has invested in building something users want, only to discover that serving those users costs more than they can pay. This is the opposite of the problem most startups face - they're usually trying to get users, not trying to afford the users they have.</p>
+        </div>
+
+        <p>
+            <strong>The Fix:</strong> Implement multi-model routing. Use cheap models for simple tasks, reserve expensive models for complex ones. Most AI interactions are actually quite simple - they don't need the most capable model. A simple question can be answered by a cheap model just as well as an expensive one. Save the expensive models for the complex cases where their capabilities actually matter.
+        </p>
+
+        <p>
+            <strong>Why this works:</strong> The cost difference between models can be 10-100x. If 80% of your interactions can be handled by a cheap model, you reduce costs by 80% while only sacrificing quality on the 20% that needed the expensive model. This is one of the most impactful optimizations available - it's worth investing in.
+        </p>
+
+        <h3>Recognizing Anti-Patterns in Your Work</h3>
+
+        <p>
+            The key to avoiding these anti-patterns is recognizing them early. Here's what to watch for:
+        </p>
+
+        <p>
+            <strong>Watch for impressive demos that don't test production conditions.</strong> If your testing only uses curated queries in controlled environments, you're building a demo, not a product.
+        </p>
+
+        <p>
+            <strong>Watch for debates that never resolve.</strong> If your team keeps arguing about whether changes are improvements without being able to measure, you have an eval problem.
+        </p>
+
+        <p>
+            <strong>Watch for long specification cycles before any building.</strong> If you're spending months planning before any code is written, you're optimizing the wrong thing.
+        </p>
+
+        <p>
+            <strong>Watch for single-model architectures.</strong> If everything goes through your most expensive model, you're wasting money.
+        </p>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we walk through a <strong>Synergy in Action</strong> mini example - applying the triangle to build a simple RAG assistant. This concrete example shows how all three pillars work together in practice.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-2-4.html">2.4 How Engineering Makes Prototypes Shippable</a>
+            <a class="up" href="index.html">Ch 2: Overview</a>
+            <a class="next" href="section-2-6.html">2.6 Synergy in Action</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 2.5 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

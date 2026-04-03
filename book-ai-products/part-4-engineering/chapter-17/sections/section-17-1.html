@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17.1 RAG Foundations - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+    <style>
+        .diagram-block {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .rag-flow {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .rag-step {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .rag-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 17.1</div>
+        <h1>RAG Foundations</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"RAG turns your document store into a conversational knowledge base. But like any powerful tool, it amplifies both your data quality and your data problems. Garbage in, garbage out scales faster with RAG than without it."</p>
+            <cite>Head of AI, DataForge</cite>
+        </blockquote>
+
+        <h2>Introduction</h2>
+        <p>
+            Retrieval-Augmented Generation (RAG) is the architectural pattern that grounds Large Language Model responses in your actual data. Rather than relying solely on knowledge encoded during training, a RAG system retrieves relevant documents at inference time and uses them to inform the model's response. This approach reduces hallucination, enables questions about proprietary information, and allows your AI product to stay current without expensive model retraining.
+        </p>
+        <p>
+            This section establishes foundational RAG concepts: the retrieval-generation pipeline, the role of embeddings and vector databases, and the critical importance of relevance in retrieved context. Understanding these fundamentals prepares you for the advanced patterns covered in subsequent sections.
+        </p>
+
+        <h2>The RAG Pipeline</h2>
+        <p>
+            A RAG system operates in two distinct phases: indexing time and query time. Understanding both phases is essential for building effective systems.
+        </p>
+
+        <h3>Indexing Phase</h3>
+        <p>
+            At indexing time, your documents are processed and stored in a way that enables fast retrieval. The pipeline proceeds as follows:
+        </p>
+
+        <div class="diagram-block">
++------------------------------------------------------------------+
+|                    RAG INDEXING PIPELINE                            |
++------------------------------------------------------------------+
+|                                                                   |
+|  [Documents] --> [Chunking] --> [Embedding] --> [Vector Store]    |
+|       |              |              |               |             |
+|       v              v              v               v             |
+|  Raw PDFs,     Split into    Generate       Store vectors       |
+|  web pages,    overlapping   vector         with metadata       |
+|  databases     chunks        representations                   |
+|                                                                   |
++------------------------------------------------------------------+
+        </div>
+
+        <p>
+            During indexing, documents are first split into chunks (pieces of text small enough to be relevant to a single query but large enough to contain context). Each chunk is then passed through an embedding model that converts the text into a dense vector representation. These vectors are stored in a vector database alongside metadata that enables filtering and tracking.
+        </p>
+
+        <h3>Query Phase</h3>
+        <p>
+            At query time, the system retrieves the most relevant chunks and uses them to augment the LLM's response.
+        </p>
+
+        <div class="diagram-block">
++------------------------------------------------------------------+
+|                    RAG QUERY PIPELINE                              |
++------------------------------------------------------------------+
+|                                                                   |
+|  [Query] --> [Embedding] --> [Vector Search] --> [Generation]    |
+|       |         |              |                  |               |
+|       v         v              v                  v               |
+|  User      Generate    Find k most        Prompt LLM            |
+|  question  query      similar chunks     with retrieved         |
+|            vector                         context                 |
+|                                                                   |
++------------------------------------------------------------------+
+        </div>
+
+        <p>
+            When a user asks a question, it is first embedded into a vector. This query vector is compared against all stored chunk vectors using a similarity metric (typically cosine similarity or dot product). The top-k most similar chunks are retrieved and inserted into a prompt along with the original question. The LLM generates a response conditioned on this retrieved context.
+        </p>
+
+        <div class="callout big-picture">
+            <h4>Key Insight: The Two Truths of RAG</h4>
+            <p>Every RAG system embodies a trade-off between two competing truths. The retrieval must be precise (returning only highly relevant chunks) while also being comprehensive (returning enough context to fully answer the question). Optimizing for one typically sacrifices the other, and the right balance depends on your use case.</p>
+        </div>
+
+        <h2>Embeddings and Vector Representations</h2>
+        <p>
+            Embeddings are the language that RAG systems use to represent meaning. An embedding model maps text to a dense vector in a high-dimensional space where semantically similar texts are positioned near each other. This spatial arrangement enables retrieval by proximity.
+        </p>
+
+        <h3>How Embeddings Work</h3>
+        <p>
+            Modern embedding models are typically transformer-based neural networks trained on massive text corpora. The training objective is to place texts with similar meanings close together in the embedding space. For example, the vectors for "How do I reset my password?" and "Password reset instructions" would be positioned very close to each other, even though they share few exact words.
+        </p>
+
+        <h3>Embedding Model Selection</h3>
+        <p>
+            Choosing an embedding model involves trade-offs between performance, cost, and speed.
+        </p>
+
+        <p>
+            <strong>OpenAI text-embedding-3-large</strong> produces 3072-dimensional embeddings and excels at general-purpose use cases with mixed content types. Its high quality and strong generalization make it suitable for diverse document collections where you do not know in advance what kinds of queries users will submit. The trade-off is higher cost and slower embedding generation compared to smaller models.
+        </p>
+        <p>
+            <strong>text-embedding-3-small</strong> generates 1536-dimensional embeddings and prioritizes speed and cost efficiency over maximum quality. This model works well for high-volume applications where the cost savings compound significantly and where the slightly lower semantic precision does not meaningfully impact retrieval quality.
+        </p>
+        <p>
+            <strong>Cohere embed-multilingual-v3</strong> produces 1024-dimensional embeddings with strong multilingual support built into the model architecture. This makes it ideal for global applications serving users in multiple languages, where a single model handles queries and documents in diverse linguistic contexts without requiring separate indexes per language.
+        </p>
+        <p>
+            <strong>sentence-transformers</strong> is an open-source option with variable dimensionality depending on the specific model variant you choose. This family of models offers full customization potential for enterprise teams with specific domain requirements, though it requires more engineering investment to deploy and maintain compared to managed API options.
+        </p>
+
+        <h2>Vector Databases</h2>
+        <p>
+            A vector database is specialized storage designed for efficient similarity search on high-dimensional vectors. Unlike traditional databases that excel at exact matches, vector databases enable approximate nearest neighbor (ANN) search, finding vectors that are most similar to a query vector.
+        </p>
+
+        <h3>Key Vector Database Options</h3>
+
+        <p>
+            <strong>Pinecone</strong> is a managed cloud vector database that offers zero operational overhead with automatic scaling handled by the vendor. This convenience comes with the risk of vendor lock-in and potentially high costs at scale, making it best suited for teams that prioritize speed of development over long-term infrastructure flexibility.
+        </p>
+        <p>
+            <strong>Weaviate</strong> is an open-source option that includes built-in hybrid search capabilities and GraphQL API support. It can be deployed either as self-hosted infrastructure or as a managed service, giving teams flexibility in how they balance operational control against convenience.
+        </p>
+        <p>
+            <strong>Qdrant</strong> is an open-source vector database known for high performance and advanced filtering capabilities. The trade-off is that it requires your team to manage infrastructure, making it suitable for organizations with the engineering capacity to operate their own databases while benefiting from the performance characteristics.
+        </p>
+        <p>
+            <strong>Chroma</strong> is an open-source option designed for simplicity and excels at prototyping scenarios where you need to get a vector search system running quickly. It is not hardened for production use at scale, so it is appropriate for early-stage development and exploration rather than high-volume production systems.
+        </p>
+        <p>
+            <strong>pgvector</strong> extends PostgreSQL to support vector operations within your existing database infrastructure. This enables a single database to handle both your application data and vector storage, which simplifies architecture for teams already invested in PostgreSQL. The limitation is performance at very high vector counts, where specialized vector databases have advantages.
+        </p>
+
+        <h3>Indexing Strategies</h3>
+        <p>
+            Vector databases use approximate nearest neighbor (ANN) algorithms to balance search speed against accuracy. HNSW (Hierarchical Navigable Small World) is a graph-based index offering excellent query speed at the cost of higher memory usage and slower indexing, making it best for scenarios where query latency is critical. IVF (Inverted File Index) is a cluster-based index that partitions vectors into groups and offers faster indexing than HNSW but slightly slower queries, which makes it suitable for frequently updated corpora. PQ (Product Quantization) compresses vectors for memory efficiency, enabling larger indexes in constrained environments with a slight accuracy trade-off.
+        </p>
+
+        <h2>DataForge: RAG Architecture in Practice</h2>
+        <p>
+            DataForge provides a useful illustration of RAG fundamentals. Their system helps enterprise users query their data pipelines using natural language. When a user asks "Which pipelines touched customer data last week?", the system must retrieve the relevant pipeline configurations, execution logs, and data lineage information to generate an accurate answer.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>Practical Example: DataForge RAG Indexing</h4>
+            <p><strong>Challenge:</strong> DataForge indexes terabytes of pipeline configurations, SQL queries, execution logs, and data lineage graphs across hundreds of enterprise tenants.</p>
+            <p><strong>Solution:</strong> They use a tiered indexing strategy:</p>
+            <p><strong>Hot tier:</strong> Recent execution logs from the last seven days stored in Weaviate with HNSW indexing for sub-50ms queries.</p>
+            <p><strong>Warm tier:</strong> Pipeline configurations and lineage stored in PostgreSQL with pgvector for consistency.</p>
+            <p><strong>Cold tier:</strong> Historical archives in object storage with on-demand embedding generation.</p>
+            <p><strong>Result:</strong> Query latency p95 under 200ms across their entire knowledge base, with perfect tenant isolation.</p>
+        </div>
+
+        <h2><a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Evaluating</a> RAG: Retrieval vs Generation</h2>
+        <p>
+            RAG systems have two distinct failure modes: retrieval failures and generation failures. Retrieval failures occur when the system fails to find relevant chunks. Generation failures occur when the LLM fails to correctly use the retrieved context. Evaluating both is essential.
+        </p>
+
+        <h3>Retrieval Metrics</h3>
+        <p>
+            <strong>Recall</strong> measures what fraction of relevant documents were retrieved, which you measure by annotating which chunks are actually relevant to a sample of queries. <strong>Precision</strong> measures what fraction of retrieved documents are relevant, where high precision means less noise in the context provided to the model. <strong>MRR (Mean Reciprocal Rank)</strong> indicates how highly the first relevant result is ranked, which matters when only the top result is used. <strong>NDCG (Normalized Discounted Cumulative Gain)</strong> accounts for position in ranking, making it useful when retrieving multiple results where the ordering matters for the final answer quality.
+        </p>
+
+        <h3>Generation Metrics</h3>
+        <p>
+            <strong>Answer faithfulness</strong> evaluates whether the generated answer accurately reflects the retrieved context rather than adding information not present in the documents. <strong>Answer relevance</strong> measures whether the generated answer actually addresses the user's original question and provides what they were looking for. <strong>Context utilization</strong> assesses whether the model appropriately uses all relevant information available in the retrieved context, rather than focusing on only part of it or ignoring critical details.
+        </p>
+
+        <div class="callout key-insight">
+            <h4>The Golden Rule of RAG Evaluation</h4>
+            <p>Always <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">evaluate</a> retrieval and generation separately. A perfect retrieval score means nothing if the model ignores the context. Conversely, a brilliant model cannot compensate for irrelevant retrieval. Set retrieval thresholds independently and only measure end-to-end quality once both components meet their baseline.</p>
+        </div>
+
+        <h2>Common RAG Failure Modes</h2>
+
+        <h3>1. Semantic Drift</h3>
+        <p>
+            Over multiple retrieval cycles or long conversations, the query's semantic intent can drift from the original question. The system retrieves context that is topically related but not actually answering what the user meant to ask.
+        </p>
+
+        <h3>2. Mid-Context Forgetting</h3>
+        <p>
+            When using a sliding window or iterative retrieval approach, information from earlier in the conversation or document set can be lost. The system forgets critical context that was established earlier.
+        </p>
+
+        <h3>3. Chunk Boundary Issues</h3>
+        <p>
+            When documents are split into chunks, important information can span chunk boundaries. The retrieval system might retrieve only the part that lacks the full context needed to answer the question.
+        </p>
+
+        <h3>4. Query-Document Vocabulary Mismatch</h3>
+        <p>
+            Users often ask questions using different vocabulary than the documents. A question about "price" might not retrieve documents that use the term "cost" or "valuation."
+        </p>
+
+        <div class="callout warning">
+            <h4 class="callout-title">Warning: The Chunking Death Spiral</h4>
+            <p>Teams often try to fix retrieval problems by reducing chunk size. Smaller chunks seem to improve precision but reduce context completeness. This leads to retrieval failures on complex questions, prompting even smaller chunks, until the system retrieves fragments that no longer contain enough information for coherent generation. The fix is not smaller chunks but better chunking strategies and potentially query expansion.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Misconception</div>
+            <p>
+                RAG does not eliminate hallucination. Some teams assume that because the LLM is grounded in retrieved documents, its outputs will be factual. But RAG only constrains what the model talks about; it does not guarantee the model correctly interprets or reasons about the retrieved content. A RAG system can confidently retrieve relevant documents and then generate an answer that misrepresents them. Evaluation must cover both retrieval accuracy and generation faithfulness.
+            </p>
+        </div>
+
+        <h2>Hybrid Retrieval: Combining Search Paradigms (see <a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">architecture</a>)</h2>
+        <p>
+            Pure vector search excels at semantic similarity but can miss exact keyword matches. Hybrid retrieval combines vector search with traditional keyword-based search (BM25 or TF-IDF) to capture both semantic and lexical matching.
+        </p>
+
+        <div class="diagram-block">
++------------------------------------------------------------------+
+|                    HYBRID RETRIEVAL FLOW                            |
++------------------------------------------------------------------+
+|                                                                   |
+|  [Query]                                                          |
+|      |                                                           |
+|      +---> [Vector Search] -------+                               |
+|      |                           |                               |
+|      |                           v                               |
+|      +---> [Keyword Search] ---> [Fusion] ---> [Top-k Chunks]    |
+|                                       |                           |
+|                                   Reciprocal                                             |
+|                                   Rank Fusion                                            |
+|                                                                   |
++------------------------------------------------------------------+
+        </div>
+
+        <p>
+            Fusion strategies like Reciprocal Rank Fusion (RRF) combine results from multiple retrieval methods by rank rather than raw score. This approach is robust to scale differences between methods and often outperforms either method alone.
+        </p>
+
+        <h2>Section Summary</h2>
+        <p>
+            RAG systems retrieve relevant documents from a knowledge base and use them to ground LLM responses. The indexing pipeline transforms documents into embedded vectors stored in specialized databases. At query time, the user's question is embedded and matched against the vector store. Hybrid retrieval combining semantic and keyword search typically outperforms either alone. Evaluation must separately measure retrieval quality (recall, precision, MRR) and generation quality (faithfulness, relevance). Common failure modes include semantic drift, mid-context forgetting, chunk boundary issues, and vocabulary mismatch.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Chapter 17 Overview</a>
+            <a class="up" href="index.html">Chapter 17 Overview</a>
+            <a class="next" href="section-17-2.html">17.2 Chunking, Indexing, and Hybrid Retrieval</a>
+        </nav>
+
+        <footer>
+            <p>Section 17.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

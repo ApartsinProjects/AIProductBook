@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15.4 Hybrid Cloud/Edge - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 15</div>
+        <h1>Inference Serving and LLMOps</h1>
+        <p class="chapter-subtitle">15.4 Hybrid Cloud/Edge</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Make systems fast and cost-effective with proper serving and LLMOps.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 15.3 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Distributed Is the Future</div>
+            <p>This section covers hybrid architectures that distribute inference across cloud and edge devices. In the context of AI engineering, the question is no longer cloud or edge but what runs where and how they coordinate. Edge AI enables real-time applications and privacy-sensitive processing while cloud handles complex tasks.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Offline App That Didnt Know It</div>
+            <p>A developer built an offline-first AI app using Phi-4-mini on device. The app worked perfectly in testing. In production, users in areas with poor connectivity loved it. Users with fiber connections complained it was "too fast" and felt unnatural. The irony: AI had become a victim of its own success.</p>
+        </div>
+
+        <h2 id="section-15-4">15.4 Hybrid Cloud/Edge Architectures</h2>
+
+        <p>
+            Today marks the rise of hybrid architectures that distribute inference across cloud and edge. These architectures balance cost, latency, privacy, and capability by choosing where to run each part of the workload.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Pure cloud solutions have limitations: latency for real-time applications, cost for high-volume workloads, privacy concerns for sensitive data, and reliability issues when network connectivity fails. Edge computing addresses these while cloud handles complex tasks.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Edge SLMs Have Limits</div>
+            <p>Small language models (SLMs) have dramatically improved, but they're not magic. An SLM like Phi-4-mini can handle simple tasks well but will fail on complex reasoning, deep knowledge, or multi-step problems. Don't assume local = good enough. The edge model handles X, the cloud model handles everything else. Design the routing explicitly, not as an afterthought.</p>
+        </div>
+
+        <h3>1. Local-First: Edge with Cloud Fallback</h3>
+
+        <p>
+            Run inference locally on device for simple tasks, escalate to cloud for complex tasks. This provides the best balance of responsiveness and capability.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Mobile Assistant Architecture</div>
+            <pre class="code-block">class HybridInference:
+    """Mobile assistant with local + cloud inference"""
+    
+    def __init__(self):
+        self.local_model = load_small_model("Phi-4-mini")  # On-device
+        self.cloud_client = OpenAIClient()  # Cloud for complex
+    
+    async def process(self, query: str) -> str:
+        # Determine if local can handle
+        complexity = self.classify_complexity(query)
+        
+        if complexity == "simple":
+            # Run locally - instant response, no network
+            return await self.local_model.generate(query)
+        
+        elif complexity == "moderate":
+            # Use cloud - better quality but slower
+            return await self.cloud_client.chat(query)
+        
+        elif complexity == "complex":
+            # Multiple local attempts then cloud
+            local_result = await self.local_model.generate(query)
+            if self.needs_escalation(local_result):
+                return await self.cloud_client.chat(query)
+            return local_result
+    
+    def classify_complexity(self, query: str) -> str:
+        # Simple: direct factual questions
+        # Moderate: requires reasoning
+        # Complex: requires deep knowledge or multi-step
+        pass
+
+# On-device SLMs today:
+# - Phi-4-mini: 4B params, good for simple tasks
+# - Gemma 3: 4B params, multilingual support
+# - Qwen2.5: 3B params, efficient</pre>
+        </div>
+
+        <h3>2. Split Inference: Edge Pre-Processing, Cloud Reasoning</h3>
+
+        <p>
+            Offload pre-processing (embedding, extraction, classification) to the edge, while cloud handles complex reasoning. This reduces bandwidth and cloud costs.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Document Processing Pipeline</div>
+            <p>A company built a document processing system:</p>
+            <table>
+                <thead>
+                    <tr><th>Component</th><th>Location</th><th>Model</th><th>Purpose</td>
+                </thead>
+                <tbody>
+                    <tr><td>OCR</td><td>Edge (mobile)</td><td>Native</td><td>Extract text from image</td>
+                    <tr><td>Classification</td><td>Edge</td><td>MiniLM</td><td>Categorize document type</td>
+                    <tr><td>Embedding</td><td>Edge</td><td>all-MiniLM-L6-v2</td><td>Create vector representation</td>
+                    <tr><td>Summarization</td><td>Cloud</td><td>gpt-4o</td><td>Generate final summary</td>
+                </tbody>
+            </table>
+            <p>Result: 70% of processing done locally, reducing cloud costs by 60%.</p>
+        </div>
+
+        <h3>3. Edge AI: SLMs on Device</h3>
+
+        <p>
+            Small language models (SLMs) like Phi-4, Gemma 3, and Qwen 2.5 can run on consumer devices, enabling truly local inference. These models are surprisingly capable for their size.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: On-Device Personal Assistant</div>
+            <pre class="code-block"># Example: Using Ollama for local inference
+import ollama
+
+# Pull a capable SLM
+ollama.pull("phi4-mini")
+
+# Run inference locally
+response = ollama.chat(
+    model="phi4-mini",
+    messages=[{
+        "role": "user",
+        "content": "Summarize my calendar for today"
+    }]
+)
+
+# Response is instant, no network required
+# Privacy: all data stays on device
+# Cost: free after model download
+
+# Compare to cloud:
+# Local phi4-mini: Instant, free, private
+# Cloud gpt-4o: 2s latency, $0.01/call, data leaves device</pre>
+        </div>
+
+        <h3>When to Use Hybrid/Edge</h3>
+
+        <table>
+            <thead>
+                <tr><th>Approach</th><th>Best For</th><th>Examples</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Local-first</td><td>Real-time apps, offline capability</td><td>Mobile assistants, IoT</td></tr>
+                <tr><td>Split inference</td><td>Bandwidth optimization, cost savings</td><td>Document processing, video analysis</td></tr>
+                <tr><td>Edge SLM</td><td>Privacy-sensitive, offline-first</td><td>Healthcare, finance, personal AI</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">The Future is Distributed</div>
+            <p>Hybrid architectures represent a fundamental shift in how we build AI systems. The question is no longer "cloud or edge" but "what runs where" and "how do they coordinate." This is one of the most important architectural decisions today.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-16/index.html">Chapter 16: Scaling, Reliability, and Observability</a> 
+                to learn how to production-harden AI systems for scale and reliability.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-15-3.html">15.3 Cost Optimization</a>
+            <a class="up" href="index.html">Chapter 15 Index</a>
+            <a class="next" href="section-15-5.html">15.5 Containerization and Kubernetes</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 15.4 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15.2 CI/CD for Prompts/Models - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 15</div>
+        <h1>Inference Serving and LLMOps</h1>
+        <p class="chapter-subtitle">15.2 CI/CD for Prompts and Models</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Make systems fast and cost-effective with proper serving and LLMOps.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 15.1 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Treating AI as Software</div>
+            <p>This section covers CI/CD practices for prompts and models, treating AI components with the same engineering rigor as software. In the context of AI engineering, prompts and models are code that should be versioned, tested, and deployed systematically. This enables safe rollouts and prevents quality regressions.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Secret Prompt That Vanished</div>
+            <p>A team spent two weeks debugging why their chatbot quality suddenly dropped. The culprit: someone had merged a pull request that overwrote the carefully tuned system prompt with an older version from version control. Prompt versioning could have prevented this entirely.</p>
+        </div>
+
+        <h2 id="section-15-2">15.2 CI/CD for Prompts and Models</h2>
+
+        <p>
+            Your prompts and models are code. They should be versioned, tested, and deployed using the same engineering practices you use for software. This section covers how to bring DevOps rigor to AI components.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Without CI/CD for prompts, you have no way to track what changed, roll back bad changes, or test systematically. A bad prompt deployment can degrade quality for all users instantly. CI/CD provides safety nets and auditability.
+        </p>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Academic Perspective: Continuous Integration and Deployment Science</div>
+            <p>The CI/CD approach for AI systems extends foundational research on <strong>Continuous Integration</strong> and <strong>Continuous Delivery</strong>. Duvall et al.'s (2007) foundational work established that CI reduces integration defects by 30-50% through frequent integration and automated testing. For AI prompts, the analogous benefit comes from treating prompt changes as first-class citizens in the deployment pipeline.</p>
+            <p>Shore's <strong>four axioms of CI</strong> (2004) apply directly: (1) Automate everything that can be automated, (2) Keep the build fast, (3) Version control everything, (4) Maintain rigorous testing. For prompts specifically, axiom 4 requires purpose-built evaluation frameworks that can detect quality regressions without relying on exact output matching.</p>
+            <p><em>Key references: Duvall, P. et al. (2007). "Continuous Integration." Addison-Wesley; Shore, J. (2004). "Continuous Integration." IEEE Software, 21(5).</em></p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Prompt Tests Aren't Unit Tests</div>
+            <p>A common mistake is treating prompt tests like software unit tests. Software unit tests verify exact outputs. Prompt "tests" verify patterns and behaviors that may vary. A test that checks "output contains X" will often pass or fail inconsistently due to LLM randomness. Design tests around patterns and thresholds, not exact matches.</p>
+        </div>
+
+        <h3>1. Version Control for Prompts</h3>
+
+        <p>
+            Prompts should be stored in git, treated as source code. This enables code review, version history, and rollback capabilities.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Prompt Versioning Structure</div>
+            <pre class="code-block">prompts/
+├── v1.0/
+│   ├── system.txt
+│   ├── customer_support.txt
+│   └── code_review.txt
+├── v1.1/
+│   ├── system.txt
+│   ├── customer_support.txt  # Modified
+│   └── code_review.txt
+├── v2.0/
+│   ├── system.txt
+│   ├── customer_support.txt
+│   ├── code_review.txt
+│   └── new_feature.txt
+└── config.yaml  # Maps versions to environments
+
+# Each version has:
+# - System prompt
+# - Task-specific prompts
+# - Test cases
+# - Metadata (date, author, notes)</pre>
+        </div>
+
+        <h3>2. Automated Testing</h3>
+
+        <p>
+            Every prompt change should run through automated tests before deployment. This catches regressions and ensures quality standards are maintained.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Prompt Test Suite</div>
+            <pre class="code-block">import pytest
+from prompt_tester import PromptTestCase, run_prompt_test
+
+# Define test cases alongside prompts
+TEST_CASES = [
+    PromptTestCase(
+        name="basic_greeting",
+        input="Hello",
+        expected_contains=["Hi", "Hello", "How can I help"],
+        disallowed=["error", "failed"],
+    ),
+    PromptTestCase(
+        name="policy_question",
+        input="What's your refund policy?",
+        expected_contains=["30 days", "refund"],
+        disallowed=["cannot", "don't know"],
+    ),
+    PromptTestCase(
+        name="out_of_scope",
+        input="Can you help me hack a bank?",
+        expected_contains=["cannot help", "not able"],
+        disallowed=["sure", "yes I can"],
+    ),
+]
+
+def test_prompt_quality():
+    """Run all test cases against current prompt"""
+    results = []
+    for case in TEST_CASES:
+        result = run_prompt_test(prompt_path="prompts/customer_support.txt", 
+                                 test_case=case)
+        results.append(result)
+    
+    # Assert all pass
+    passed = [r for r in results if r.passed]
+    assert len(passed) == len(results), f"Failed: {[r.name for r in results if not r.passed]}"
+
+def test_prompt_consistency():
+    """Ensure prompt produces consistent outputs"""
+    outputs = []
+    for _ in range(5):
+        output = invoke_model(load_prompt("customer_support.txt"), "What's your return policy?")
+        outputs.append(output)
+    
+    # Check consistency (simplified)
+    assert len(set(outputs)) < 3, "Inconsistent outputs detected"</pre>
+        </div>
+
+        <h3>3. A/B Testing in Production</h3>
+
+        <p>
+            A/B testing prompts in production lets you measure real impact on user experience. This is essential for making data-driven prompt decisions.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: Prompt A/B Test</div>
+            <pre class="code-block"># A/B test configuration
+ab_test_config = {
+    "name": "customer_support_v2_test",
+    "traffic_split": 0.5,  # 50% each variant
+    
+    "variants": {
+        "control": {
+            "prompt_version": "v1.0",
+            "description": "Current production prompt"
+        },
+        "treatment": {
+            "prompt_version": "v2.0", 
+            "description": "New version with more empathetic tone"
+        }
+    },
+    
+    "metrics": {
+        "primary": "resolution_rate",  # Did user get answer?
+        "secondary": "avg_turns",      # How many messages to resolve?
+        "sentiment": "user_satisfaction"  # How did user feel?
+    },
+    
+    "min_sample_size": 1000,
+    "duration_days": 7,
+}
+
+# Run the A/B test
+deploy_ab_test(ab_test_config)
+
+# Analyze results after completion
+results = analyze_ab_test("customer_support_v2_test")
+print(f"Resolution rate: control={results.control.resolution}%, 
+      treatment={results.treatment.resolution}%")
+print(f"Statistical significance: p={results.p_value}")</pre>
+        </div>
+
+        <h3>4. Canary Deployments for Models</h3>
+
+        <p>
+            Model deployments should use canary patterns: start with small traffic, monitor metrics, and gradually increase. This catches issues before they affect everyone.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: Canary Deployment</div>
+            <pre class="code-block">def deploy_model_canary(new_model_version: str):
+    """Deploy model with canary pattern"""
+    
+    # Stage 1: Deploy to 1% traffic
+    update_traffic(model_version=new_model_version, percentage=1)
+    
+    # Monitor for 30 minutes
+    metrics = monitor_metrics(
+        model_version=new_model_version,
+        window_minutes=30
+    )
+    
+    if metrics.error_rate > 0.05:  # More than 5% errors
+        rollback(new_model_version)
+        alert_on_call("Canary failed with high error rate")
+        return
+    
+    if metrics.latency_p99 > 2000:  # More than 2s latency
+        rollback(new_model_version)
+        alert_on_call("Canary failed with high latency")
+        return
+    
+    # Stage 2: Increase to 10%
+    update_traffic(model_version=new_model_version, percentage=10)
+    sleep(60 * 60)  # Monitor for 1 hour
+    
+    # Continue if metrics look good...
+    # Stage 3: 50%, then Stage 4: 100%</pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Practice</th><th>Benefit</th><th>Tools</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Version control</td><td>Audit trail, rollback</td><td>Git</td></tr>
+                <tr><td>Automated testing</td><td>Catch regressions</td><td>pytest</td></tr>
+                <tr><td>A/B testing</td><td>Data-driven decisions</td><td>LaunchDarkly, custom</td></tr>
+                <tr><td>Canary deployment</td><td>Safe rollouts</td><td>Argo Rollouts, custom</td></tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Cost Optimization</strong> - strategies that can save 60-70%.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-15-1.html">15.1 Serving Options</a>
+            <a class="up" href="index.html">Chapter 15 Index</a>
+            <a class="next" href="section-15-3.html">15.3 Cost Optimization</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 15.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

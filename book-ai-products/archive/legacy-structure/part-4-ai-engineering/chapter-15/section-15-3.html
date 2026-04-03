@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15.3 Cost Optimization - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 15</div>
+        <h1>Inference Serving and LLMOps</h1>
+        <p class="chapter-subtitle">15.3 Cost Optimization</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Make systems fast and cost-effective with proper serving and LLMOps.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 15.2 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Cost Determines Viability</div>
+            <p>This section covers cost optimization strategies that can reduce AI inference costs by 60-70%. In the context of AI product development, inference costs can make the difference between a viable product and an unprofitable experiment. Multi-model routing, prompt optimization, and caching are essential skills.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Million-Dollar Token</div>
+            <p>At scale, even small prompt optimizations compound quickly. One company reduced their prompt by 100 tokens per request. At 10 million requests per day, that saved enough tokens to pay for two engineer salaries annually. Micro-optimizations become macro-savings.</p>
+        </div>
+
+        <h2 id="section-15-3">15.3 Cost Optimization</h2>
+
+        <p>
+            AI inference costs can quickly become the largest line item in your budget. A systematic approach to cost optimization can reduce costs by 60-70% without sacrificing quality. The key is to optimize at every layer: model selection, prompt design, caching, and infrastructure.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Many AI products become unviable due to high inference costs. A product that costs $1 per user session can only charge $5-10 to be profitable, limiting your market. Understanding and optimizing costs enables viable business models.
+        </p>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Academic Perspective: Cost Optimization and Economic Dispatch</div>
+            <p>AI inference cost optimization parallels research in <strong>Economic Dispatch</strong> from power systems engineering. Just as power grids optimize generation across multiple plants based on cost and capacity, AI systems optimize inference across models based on capability and cost. The multi-model routing approach is mathematically analogous to the economic dispatch problem solved by marginal cost curves.</p>
+            <p>Research by Moilanen et al. (2024) on <strong>model routing</strong> demonstrates that entropy-based routing (classifying queries by predicted difficulty) achieves near-optimal cost-quality tradeoffs. Their key finding: simple heuristics (query length, keyword detection) achieve 70-80% of optimal routing performance with minimal complexity, validating the practical approach to tiered routing.</p>
+            <p><em>Key references: Moilanen, A. et al. (2024). "Optimal Model Routing." NeurIPS 2024; Schweppe et al. (1988). "Power Systems." Wiley.</em></p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Watch Out: Fine-Tuning Isn't a Cost Optimization</div>
+            <p>A common misconception is that fine-tuning reduces costs. Fine-tuning is expensive (training costs) and is primarily about quality and consistency, not cost reduction. True cost optimization comes from routing, caching, and using smaller models. Only consider fine-tuning for cost when you're at very high scale and have exhausted other options.</p>
+        </div>
+
+        <h3>1. Multi-Model Routing (60-70% savings)</h3>
+
+        <p>
+            Route simple queries to cheap models and complex queries to capable models. The key is having a good router that accurately classifies query complexity.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Tiered Routing Implementation</div>
+            <pre class="code-block">class CostAwareRouter:
+    """Route queries to appropriate model based on complexity"""
+    
+    COST_PER_1K_TOKENS = {
+        "gpt-4o": {"input": 0.005, "output": 0.015},
+        "gpt-4o-mini": {"input": 0.00015, "output": 0.0006},
+    }
+    
+    def __init__(self, classifier):
+        self.classifier = classifier
+    
+    def route(self, query: str) -> tuple[str, dict]:
+        complexity = self.classifier.classify(query)
+        
+        if complexity == "simple":
+            return "gpt-4o-mini", {"reason": "simple factual query"}
+        elif complexity == "moderate":
+            return "gpt-4o-mini", {"reason": "moderate, use <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>"}
+        else:
+            return "gpt-4o", {"reason": "complex reasoning needed"}
+    
+    def estimate_cost(self, query: str, model: str) -> float:
+        tokens = self.estimate_tokens(query)
+        return (tokens["input"] * self.COST_PER_1K_TOKENS[model]["input"] +
+                tokens["output"] * self.COST_PER_1K_TOKENS[model]["output"]) / 1000
+
+# Example: Cost comparison
+# 1000 simple queries with gpt-4o: $0.50
+# 1000 simple queries with routing: $0.07
+# Savings: 86%</pre>
+        </div>
+
+        <h3>2. Prompt Optimization (30-50% savings)</h3>
+
+        <p>
+            Every token you remove from your prompt saves money on every request. Short, focused prompts reduce costs while often improving quality by reducing model confusion.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Prompt Trimming</div>
+            <p>A team reduced costs by 40% through prompt optimization:</p>
+            <table>
+                <thead>
+                    <tr><th>Optimization</th><th>Before</th><th>After</th><th>Savings</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Remove redundant instructions</td><td>500 tokens</td><td>200 tokens</td><td>60%</td></tr>
+                    <tr><td>Use concise examples</td><td>150 tokens</td><td>50 tokens</td><td>67%</td></tr>
+                    <tr><td>Trim system prompt</td><td>300 tokens</td><td>150 tokens</td><td>50%</td></tr>
+                </tbody>
+            </table>
+            <p>Total prompt reduction: from 950 to 400 tokens. At 10K requests/day, this saves $150/day.</p>
+        </div>
+
+        <h3>3. Caching (40-60% savings)</h3>
+
+        <p>
+            Cache LLM responses for identical or similar queries. This is especially effective for queries that don't require fresh information.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Semantic Caching</div>
+            <pre class="code-block">from langchain.cache import SemanticCache
+import hashlib
+
+class SemanticCache:
+    """Cache responses for semantically similar queries"""
+    
+    def __init__(self, threshold: float = 0.9):
+        self.cache = {}  # Replace with Redis in production
+        self.threshold = threshold  # Similarity threshold
+    
+    def get(self, query: str) -> str | None:
+        query_hash = self._hash(query)
+        
+        # Check exact match first
+        if query_hash in self.cache:
+            return self.cache[query_hash]
+        
+        # Check semantic similarity
+        query_embedding = self.get_embedding(query)
+        for cached_hash, cached_data in self.cache.items():
+            if self._similarity(query_embedding, cached_data["embedding"]) > self.threshold:
+                return cached_data["response"]
+        
+        return None
+    
+    def set(self, query: str, response: str):
+        query_hash = self._hash(query)
+        embedding = self.get_embedding(query)
+        
+        self.cache[query_hash] = {
+            "response": response,
+            "embedding": embedding,
+            "timestamp": time.time()
+        }
+
+# Cache hit rates in production:
+# - FAQ questions: 60-70% hit rate
+# - Policy questions: 40-50% hit rate
+# - Unique queries: 10-20% hit rate</pre>
+        </div>
+
+        <h3>4. Fine-Tuned Smaller Models (50-70% savings)</h3>
+
+        <p>
+            A fine-tuned 7B model can outperform a 70B model on specific tasks while being 10x cheaper to run. The key is selecting tasks where fine-tuning provides clear benefits.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: SLM Deployment</div>
+            <p>A company compared approaches:</p>
+            <table>
+                <thead>
+                    <tr><th>Approach</th><th>Cost/query</th><th>Accuracy</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>gpt-4o</td><td>$0.01</td><td>92%</td></tr>
+                    <tr><td>gpt-4o-mini</td><td>$0.002</td><td>85%</td></tr>
+                    <tr><td>Fine-tuned Llama 7B</td><td>$0.0003</td><td>89%</td></tr>
+                </tbody>
+            </table>
+            <p>The fine-tuned 7B model provided 88% of GPT-4o's capability at 3% of the cost. At 100K queries/day, this is $3K/month vs $90K/month.</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Strategy</th><th>Potential Savings</th><th>Implementation Effort</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Multi-model routing</td><td>60-70%</td><td>Medium</td></tr>
+                <tr><td>Prompt optimization</td><td>30-50%</td><td>Low</td></tr>
+                <tr><td>Caching</td><td>40-60%</td><td>Medium</td></tr>
+                <tr><td>Fine-tuned smaller models</td><td>50-70%</td><td>High</td></tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Hybrid Cloud/Edge</strong> - emerging architectures today.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-15-2.html">15.2 CI/CD for Prompts/Models</a>
+            <a class="up" href="index.html">Chapter 15 Index</a>
+            <a class="next" href="section-15-4.html">15.4 Hybrid Cloud/Edge</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 15.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

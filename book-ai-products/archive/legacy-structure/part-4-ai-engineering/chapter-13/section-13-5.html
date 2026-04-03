@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13.5 Evaluating <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Systems - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 13</div>
+        <h1>Knowledge Retrieval and Advanced <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></h1>
+        <p class="chapter-subtitle">13.5 Evaluating <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Systems</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn systematic approaches to measuring and improving retrieval quality in <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> systems.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 13.4 recommended. Understanding of <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> architecture.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Measuring What Matters</div>
+            <p>This section covers systematic approaches to evaluating retrieval quality, including hit rate, MRR, and end-to-end <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> evaluation. In the context of AI engineering, you cannot improve what you cannot measure. Retrieval metrics are the foundation for optimizing <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> systems and preventing quality regressions.</p>
+        </div>
+
+        <h2 id="section-13-5">13.5 Evaluating <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Systems</h2>
+
+        <p>
+            <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> systems have two failure modes that are hard to distinguish without systematic evaluation: poor retrieval and poor generation. A <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> system that retrieves irrelevant documents will produce poor answers regardless of how good the language model is. This section covers how to measure retrieval quality specifically, independent of generation quality.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Without retrieval metrics, you cannot distinguish between retrieval failures and generation failures. Teams that skip retrieval evaluation waste months optimizing the wrong component. You might improve generation quality only to find that 80% of queries are retrieving the wrong documents in the first place.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">The Retrieval-Generation Confusion</div>
+            <p>When users complain about poor answers, it is tempting to blame the LLM. In practice, most <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> quality problems stem from retrieval. Before you change your model or prompt, measure your retrieval quality. You might be surprised how often the retrieved documents simply do not match the query.</p>
+        </div>
+
+        <h3>1. Retrieval Metrics: Hit Rate and MRR</h3>
+
+        <p>
+            Hit rate measures whether the correct document appears in the retrieved set at all. Mean Reciprocal Rank (MRR) measures where in the ranking the correct document appears. Together, they give a complete picture of retrieval quality.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: Computing Retrieval Metrics</div>
+            <pre class="code-block">def evaluate_retrieval(
+    retriever,
+    test_queries: list[tuple[str, list[str]]]
+) -> dict:
+    """
+    Evaluate retriever on test queries.
+    Each test query is (query_text, relevant_doc_ids)
+    """
+    hits = 0
+    reciprocal_ranks = []
+    
+    for query, relevant_ids in test_queries:
+        # Retrieve documents
+        results = retriever.invoke(query)
+        retrieved_ids = [doc.id for doc in results]
+        
+        # Hit rate: did we retrieve any relevant document?
+        if any(doc_id in relevant_ids for doc_id in retrieved_ids):
+            hits += 1
+            
+            # MRR: what was the rank of the first relevant document?
+            for rank, doc_id in enumerate(retrieved_ids, 1):
+                if doc_id in relevant_ids:
+                    reciprocal_ranks.append(1 / rank)
+                    break
+        else:
+            reciprocal_ranks.append(0)
+    
+    return {
+        "hit_rate": hits / len(test_queries),
+        "mrr": sum(reciprocal_ranks) / len(test_queries),
+        "avg_reciprocal_rank": sum(r for r in reciprocal_ranks if r > 0) / hits if hits > 0 else 0
+    }
+
+# Example output:
+# {
+#     "hit_rate": 0.85,     # 85% of queries retrieve at least one relevant doc
+#     "mrr": 0.72,          # Average reciprocal rank is 0.72
+#     "avg_reciprocal_rank": 0.85  # When we hit, average rank is ~1.2
+# }</pre>
+        </div>
+
+        <h3>2. Precision at K and NDCG</h3>
+
+        <p>
+            For production systems, you care not just about hitting the right document but about the quality ranking. Precision at K (P@K) measures what fraction of the top K retrieved documents are relevant. Normalized Discounted Cumulative Gain (NDCG) measures ranking quality accounting for the position of relevant documents.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: Precision at K and NDCG</div>
+            <pre class="code-block">import numpy as np
+
+def precision_at_k(retrieved: list, relevant: set, k: int) -> float:
+    """What fraction of top-K results are relevant?"""
+    if k == 0:
+        return 0.0
+    retrieved_k = set(retrieved[:k])
+    return len(retrieved_k & relevant) / k
+
+def ndcg_at_k(retrieved: list, relevance_scores: dict, k: int) -> float:
+    """
+    NDCG@K: Measures ranking quality.
+    Relevance scores: {doc_id: 0-1 relevance score}
+    """
+    # DCG: discounted cumulative gain
+    def dcg(rets, scores, k):
+        dcg_val = 0.0
+        for i, doc_id in enumerate(rets[:k]):
+            rel = scores.get(doc_id, 0)
+            dcg_val += rel / np.log2(i + 2)  # i+2 because log2(1) = 0
+        return dcg_val
+    
+    # IDCG: ideal DCG (best possible ranking)
+    ideal_order = sorted(relevance_scores.keys(), key=lambda x: relevance_scores[x], reverse=True)
+    idcg_val = dcg(ideal_order, relevance_scores, k)
+    
+    if idcg_val == 0:
+        return 0.0
+    
+    actual_dcg = dcg(retrieved, relevance_scores, k)
+    return actual_dcg / idcg_val
+
+# Usage
+test_case = {
+    "query": "What is the return policy?",
+    "retrieved_doc_ids": ["doc_1", "doc_2", "doc_3", "doc_4", "doc_5"],
+    "relevance": {
+        "doc_1": 1.0,  # Perfectly relevant
+        "doc_2": 0.8,  # Very relevant
+        "doc_3": 0.3,  # Somewhat relevant
+        "doc_4": 0.0,  # Irrelevant
+        "doc_5": 0.0   # Irrelevant
+    }
+}
+
+p_at_5 = precision_at_k(test_case["retrieved_doc_ids"], {"doc_1", "doc_2"}, 5)
+ndcg = ndcg_at_k(test_case["retrieved_doc_ids"], test_case["relevance"], 5)
+print(f"P@5: {p_at_5}")  # 0.4 (2 relevant out of 5)
+print(f"NDCG@5: {ndcg}")  # High if relevant docs are ranked first</pre>
+        </div>
+
+        <h3>3. Building an Evaluation Dataset</h3>
+
+        <p>
+            Retrieval metrics require a test dataset with ground truth relevance judgments. Building this dataset is the most time-consuming part but also the most valuable investment.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: Building a <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Evaluation Dataset</div>
+            <p>A team building a customer support <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> system created their evaluation dataset:</p>
+            <pre class="code-block">class RAGEvaluationDataset:
+    """Build and manage <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> evaluation datasets"""
+    
+    def __init__(self):
+        self.queries = []
+        self.relevant_docs = {}
+    
+    def add_query(self, query: str, relevant_doc_ids: list[str]):
+        """Add a query with known relevant documents"""
+        self.queries.append(query)
+        self.relevant_docs[query] = relevant_doc_ids
+    
+    def add_from_production_logs(self, logs: list, threshold: float = 0.8):
+        """
+        Extract query-doc pairs from production logs.
+        Use click-through or satisfaction signals as relevance proxy.
+        """
+        for log in logs:
+            if log.clicks and log.satisfaction_score > threshold:
+                self.add_query(log.query, [click.doc_id for click in log.clicks])
+    
+    def add_synthetic(self, retriever, llm, documents: list, num_queries: int = 100):
+        """
+        Generate synthetic queries using LLM.
+        Useful when you have documents but no queries.
+        """
+        for doc in documents[:num_queries]:
+            query = llm.invoke(f"""
+                Generate a natural language question that this document would answer.
+                Make it specific, not generic.
+                
+                Document: {doc.content[:500]}
+                
+                Question:""")
+            
+            # Verify the document is retrieved for this query
+            results = retriever.invoke(query)
+            retrieved_ids = [r.id for r in results]
+            
+            if doc.id in retrieved_ids:
+                self.add_query(query, [doc.id])
+    
+    def save(self, path: str):
+        with open(path, "w") as f:
+            json.dump({
+                "queries": self.queries,
+                "relevant_docs": self.relevant_docs
+            }, f)
+    
+    @classmethod
+    def load(cls, path: str):
+        data = json.load(open(path))
+        dataset = cls()
+        dataset.queries = data["queries"]
+        dataset.relevant_docs = data["relevant_docs"]
+        return dataset</pre>
+        </div>
+
+        <h3>4. Retrieval Quality by Query Type</h3>
+
+        <p>
+            Different query types have different retrieval challenges. Analyzing retrieval quality broken down by query type reveals where to focus optimization effort.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Query-Type Analysis</div>
+            <pre class="code-block">def analyze_retrieval_by_query_type(
+    retriever,
+    test_queries: list[dict]
+) -> dict:
+    """
+    Analyze retrieval quality broken down by query type.
+    Each test query has: {query, relevant_docs, query_type}
+    Query types: factual, conceptual, procedural, comparative
+    """
+    results_by_type = {}
+    
+    for query_data in test_queries:
+        qtype = query_data["query_type"]
+        query = query_data["query"]
+        relevant = set(query_data["relevant_docs"])
+        
+        if qtype not in results_by_type:
+            results_by_type[qtype] = {"hits": 0, "total": 0, "mrrs": []}
+        
+        results = retriever.invoke(query)
+        retrieved_ids = [doc.id for doc in results]
+        
+        results_by_type[qtype]["total"] += 1
+        
+        if any(doc_id in relevant for doc_id in retrieved_ids):
+            results_by_type[qtype]["hits"] += 1
+            for rank, doc_id in enumerate(retrieved_ids, 1):
+                if doc_id in relevant:
+                    results_by_type[qtype]["mrrs"].append(1 / rank)
+                    break
+        else:
+            results_by_type[qtype]["mrrs"].append(0)
+    
+    # Aggregate results
+    summary = {}
+    for qtype, data in results_by_type.items():
+        summary[qtype] = {
+            "hit_rate": data["hits"] / data["total"],
+            "mrr": sum(data["mrrs"]) / len(data["mrrs"]),
+            "sample_size": data["total"]
+        }
+    
+    return summary
+
+# Example output:
+# {
+#     "factual": {"hit_rate": 0.95, "mrr": 0.91, "sample_size": 50},
+#     "conceptual": {"hit_rate": 0.72, "mrr": 0.65, "sample_size": 30},
+#     "procedural": {"hit_rate": 0.88, "mrr": 0.82, "sample_size": 40},
+#     "comparative": {"hit_rate": 0.55, "mrr": 0.48, "sample_size": 20}
+# }
+# Insight: Comparative queries have poor retrieval. Investigate why.</pre>
+        </div>
+
+        <h3>5. End-to-End <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Evaluation</h3>
+
+        <p>
+            Retrieval metrics measure retrieval quality, but the end user cares about answer quality. LLM-as-judge evaluation connects retrieval quality to final answer quality.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Answer Evaluation</div>
+            <pre class="code-block">class RAGEvaluator:
+    """Evaluate full <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> pipeline from query to answer"""
+    
+    def __init__(self, rag_system, judge_llm):
+        self.<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> = rag_system
+        self.judge = judge_llm
+    
+    def evaluate_query(self, query: str, ground_truth_answer: str) -> dict:
+        """Evaluate a single query through the full <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> pipeline"""
+        # Execute <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>
+        result = self.<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>.answer(query)
+        
+        # Judge retrieval quality
+        retrieved_context = result.retrieved_docs
+        retrieval_judgment = self.judge.invoke(f"""
+            Given the query: "{query}"
+            
+            Retrieved context:
+            {retrieved_context}
+            
+            Does the retrieved context contain information relevant to answering the query?
+            Rate: Excellent / Good / Partial / Poor / Irrelevant
+        """)
+        
+        # Judge answer quality
+        answer_judgment = self.judge.invoke(f"""
+            Query: "{query}"
+            
+            Ground truth answer: "{ground_truth_answer}"
+            
+            <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> answer: "{result.answer}"
+            
+            Rate the <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> answer on:
+            - Accuracy: Does it match the ground truth?
+            - Completeness: Does it cover all aspects of the query?
+            - Hallucination: Does it include information not supported by the query?
+            
+            Overall rating: Excellent / Good / Adequate / Poor
+            Explanation: [brief explanation]
+        """)
+        
+        return {
+            "query": query,
+            "retrieval_quality": retrieval_judgment,
+            "answer_quality": answer_judgment,
+            "retrieved_docs": [doc.id for doc in retrieved_context],
+            "fully_answered": "Excellent" in answer_judgment or "Good" in answer_judgment
+        }
+    
+    def evaluate_dataset(self, test_cases: list[dict]) -> dict:
+        """Evaluate on test dataset"""
+        results = []
+        for case in test_cases:
+            result = self.evaluate_query(case["query"], case["ground_truth"])
+            results.append(result)
+        
+        return {
+            "total": len(results),
+            "answerable": sum(1 for r in results if r["fully_answered"]),
+            "avg_retrieval_quality": self._aggregate_judgments([r["retrieval_quality"] for r in results]),
+            "avg_answer_quality": self._aggregate_judgments([r["answer_quality"] for r in results])
+        }
+    
+    def _aggregate_judgments(self, judgments: list[str]) -> float:
+        score_map = {"Excellent": 1.0, "Good": 0.75, "Adequate": 0.5, "Poor": 0.25, "Irrelevant": 0.0}
+        return sum(score_map.get(j.split()[0], 0) for j in judgments) / len(judgments)</pre>
+        </div>
+
+        <h3>6. Regression Testing for <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></h3>
+
+        <p>
+            As you optimize your <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> system, automated regression tests catch degradation before it reaches production. Run retrieval metrics on every change.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Code Example: <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Regression Suite</div>
+            <pre class="code-block">class RAGRegressionSuite:
+    """Automated regression tests for <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> systems"""
+    
+    def __init__(self, retriever, test_dataset):
+        self.retriever = retriever
+        self.dataset = test_dataset
+        self.baseline_metrics = None
+    
+    def set_baseline(self):
+        """Establish baseline metrics"""
+        self.baseline_metrics = evaluate_retrieval(
+            self.retriever,
+            self.dataset.test_queries()
+        )
+        print(f"Baseline set: hit_rate={self.baseline_metrics['hit_rate']:.3f}, mrr={self.baseline_metrics['mrr']:.3f}")
+    
+    def run_regression_check(self, max_regression: float = 0.05) -> bool:
+        """Check if current retrieval is within tolerance of baseline"""
+        current = evaluate_retrieval(self.retriever, self.dataset.test_queries())
+        
+        hit_rate_delta = abs(current["hit_rate"] - self.baseline_metrics["hit_rate"])
+        mrr_delta = abs(current["mrr"] - self.baseline_metrics["mrr"])
+        
+        print(f"Current: hit_rate={current['hit_rate']:.3f}, mrr={current['mrr']:.3f}")
+        print(f"Delta: hit_rate={hit_rate_delta:.3f}, mrr={mrr_delta:.3f}")
+        
+        if hit_rate_delta > max_regression or mrr_delta > max_regression:
+            print("REGRESSION DETECTED: Retrieval quality degraded")
+            return False
+        
+        print("PASS: No significant regression")
+        return True
+
+# Usage in CI/CD
+def test_rag_on_deployment():
+    suite = RAGRegressionSuite(current_retriever, golden_dataset)
+    suite.set_baseline()
+    # Make changes...
+    assert suite.run_regression_check(), "<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> regression detected - do not deploy"</pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Metric</th><th>What It Measures</th><th>When to Use</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Hit Rate</td><td>Did we retrieve any relevant doc?</td><td>Minimum quality threshold</td></tr>
+                <tr><td>MRR</td><td>Where is the first relevant doc?</td><td>Ranking quality</td></tr>
+                <tr><td>P@K</td><td>Quality of top-K results</td><td>Show me top-N quality</td></tr>
+                <tr><td>NDCG</td><td>Ranking with graded relevance</td><td>Most complete ranking metric</td></tr>
+                <tr><td>LLM Judge</td><td>End-to-end answer quality</td><td>User-facing quality</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Measure Retrieval First</div>
+            <p>Before changing your embedding model, chunking strategy, or retrieval algorithm, establish retrieval metrics. You need a baseline before you can measure improvement. The most common mistake is optimizing blind, then discovering you were improving one metric while degrading another.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="../chapter-14/index.html">Chapter 14: Model Selection, Customization, and Evaluation</a> 
+                to learn model routing, fine-tuning, and systematic evaluation frameworks.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-13-4.html">13.4 When to Go Beyond RAG</a>
+            <a class="up" href="index.html">Chapter 13 Index</a>
+            <a class="next" href="../chapter-14/sections/section-14-1.html">14.1 Model Router Strategies</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 13.5 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 21.1: Why Evals Are Central to AI Products - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 21</div>
+        <h1>Why Evals Are Central to AI Products</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"The moment you ship an AI feature without evaluation infrastructure, you have no way to know whether you just made your product better or worse."</p>
+            <cite>A Product Manager Who Learned This the Hard Way</cite>
+        </blockquote>
+
+        <h2 id="probabilistic-reality">The Probabilistic Reality</h2>
+        
+        <p>
+            Traditional software engineering builds on a fundamental assumption: given the same inputs and state, code produces the same outputs. This determinism is what makes testing tractable. You write a test once, run it a thousand times, and trust the result.
+        </p>
+
+        <p>
+            AI systems shatter this assumption. A language model responding to the same user query can produce different outputs on different calls. Not because of bugs, but because of the probabilistic nature of the underlying mathematics. This is not a flaw. It is how these systems work. And it fundamentally changes what quality assurance means.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Why Traditional QA Fails for AI</h4>
+            <p>When you test a traditional software feature, you check: does the code do what the specification says? For AI systems, the specification itself is probabilistic. The question becomes: does the system behave correctly on average, in the tails, across different user populations, over time as the model updates?</p>
+        </div>
+
+        <h2 id="evals-as-knowledge">Evals as the Only Way to Know What You Built</h2>
+
+        <p>
+            In traditional software, you can read the code to understand what it does. The code is the specification. If you want to know if the login function works, you read the login function code.
+        </p>
+
+        <p>
+            AI systems do not work this way. When you build a <a href="../../../part-4-engineering/chapter-17/sections/section-17-1.html" class="cross-ref">RAG system</a>, you cannot read the vector database, the embedding model, and the language model and predict exactly what answer they will produce for a given query. The behavior emerges from the interaction of components in ways that are not reducible to any single component.
+        </p>
+
+        <p>
+            The only way to know what your AI product does is to observe it in action. Evals are structured observation. They give you the vocabulary to describe what you are seeing, the metrics to quantify it, and the automation to catch regressions.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">The Eval is the Specification</h4>
+            <p>For AI features, the eval is not a test of the specification. The eval IS the specification. When you can precisely measure whether a behavior is correct, you know what correct means. Until then, you have aspirations, not requirements.</p>
+        </div>
+
+        <h2 id="evals-as-feedback">Evals as Feedback Mechanisms</h2>
+
+        <p>
+            Evals serve multiple feedback roles in AI product development. They tell you when something is broken, when something is improving, and when you are measuring the wrong thing.
+        </p>
+
+        <h3 id="correctness-feedback">Correctness Feedback</h3>
+
+        <p>
+            The most obvious role: evals tell you if your system is working. When you make a change to your prompt or your retrieval system or your model version, evals tell you if the change made things better or worse. Without this feedback, you are navigating blind.
+        </p>
+
+        <h3 id="direction-feedback">Direction Feedback</h3>
+
+        <p>
+            Evals tell you which direction to head. When you are deciding between two approaches, the eval that measures what actually matters gives you evidence to decide. Not opinions, not intuitions, but measured outcomes on representative tasks.
+        </p>
+
+        <h3 id="regression-feedback">Regression Feedback</h3>
+
+        <p>
+            Evals catch regressions before they ship. The regression eval suite runs on every change and alerts you when a change degrades behavior that was previously working. This is how you maintain quality as you iterate rapidly.
+        </p>
+
+        <h2 id="eval-first-development">Examples of Eval-First Development</h2>
+
+        <p>
+            Eval-first development means writing the eval before you write the feature code. The workflow begins by defining the eval with representative test cases that capture the desired behavior. You then run the eval against a baseline, often a simpler solution or the current system, to establish a performance benchmark. After implementing the feature, you run the eval again to verify improvement, and finally add the eval to the regression suite to prevent future regressions.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: Route Optimization</h4>
+            <p><strong>The challenge:</strong> The QuickShip engineering team was building a delivery route optimization feature and needed to improve their routing algorithm to reduce delivery times. Team members could not agree on whether their changes were actually improving routes, since "better" was subjective and difficult to quantify.</p>
+            <p><strong>The dilemma:</strong> Trust gut feel and qualitative feedback, or invest time building evaluation infrastructure that could provide objective measurements?</p>
+            <p><strong>The approach:</strong> Build eval infrastructure first. Establish metrics for route efficiency, driver satisfaction, and customer wait times. Create 500 historical scenarios with known optimal routes. Measure algorithm performance against these baselines.</p>
+            <p><strong>The result:</strong> Within three months, they identified that their algorithm was performing 12% worse than baselines on rural routes. After fixing this issue, they saw measurable improvement across their key metrics.</p>
+            <p><strong>The lesson:</strong> Defining what good looks like before building is the fastest path to getting there.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: Clinical Safety Evals</h4>
+            <p>The HealthMetrics team was building AI-assisted diagnosis support when regulatory requirements demanded that they prove their AI did not increase diagnostic error rates. Their problem was that they had no baseline measurement of their AI's accuracy across different patient populations. Manual chart review was slow and expensive, but they needed concrete evidence for their FDA submission.</p>
+            <p>The team built a structured eval system with clinician-reviewed test cases spanning 50 diagnostic categories. They created golden standard datasets with expert clinician labels and ran their AI against these to measure concordance rates. In validation, they achieved 94% concordance with expert diagnosis, and these eval results were central to achieving FDA clearance.</p>
+            <p>This demonstrates that eval infrastructure is not just for internal quality. It is often the evidence that matters most to regulators and customers.</p>
+        </div>
+
+        <h2 id="eval-development-connection">Connecting Evals to Product Development</h2>
+
+        <p>
+            Evals connect to every part of the development process. They inform prompt engineering decisions, model selection, system architecture, and product requirements. When evaluation is central, development becomes empirical rather than speculative.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">The Eval-Driven Development Loop</h4>
+            <p>Eval-driven development creates a tight loop: you define what good looks like (the eval), you build toward it (feature development), you measure whether you achieved it (run the eval), and you iterate. This loop is the operational core of high-quality AI product development.</p>
+        </div>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>New research on "evals-first" development argues that the most effective AI teams spend 30-40% of their engineering time on evaluation infrastructure. This seems high until you realize that these teams also ship faster because they have confidence in their changes and catch regressions before they reach production.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Misconception</div>
+            <p>
+                Evals are not a one-time setup. Many teams build an eval suite during development, then stop updating it as the product evolves. But AI behavior changes with model updates, prompt changes, and data distribution shifts. A static eval suite becomes increasingly inaccurate over time. Evals require ongoing maintenance and calibration, just like the AI systems they measure. Budget ongoing engineering time for eval maintenance, not just initial creation.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 21: Evals as Core</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-21-2.html">21.2 Types of Evaluations</a>
+        </nav>
+
+        <footer>
+            <p>Section 21.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

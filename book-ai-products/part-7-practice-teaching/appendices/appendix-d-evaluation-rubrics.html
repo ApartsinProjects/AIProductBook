@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appendix D: Evaluation Rubrics - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../index.html">Part VII: Practice and Teaching Kit</a></div>
+        <div class="chapter-label">Appendix D</div>
+        <h1>Evaluation Rubrics</h1>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Provide detailed rubrics for assessing AI product work.
+        </p>
+
+        <h2>D.1 AI Product Prototype Quality Rubric</h2>
+
+        <p>
+            Use this rubric to assess the quality of an AI product prototype.
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Dimension</th>
+                    <th>1 - Inadequate</th>
+                    <th>2 - Developing</th>
+                    <th>3 - Competent</th>
+                    <th>4 - Exemplary</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Problem Definition</strong></td>
+                    <td>Vague or unvalidated user need</td>
+                    <td>Problem stated but not research-backed</td>
+                    <td>Problem validated with evidence</td>
+                    <td>Deep user insight with quantified impact</td>
+                </tr>
+                <tr>
+                    <td><strong>AI Integration</strong></td>
+                    <td>AI used as gimmick</td>
+                    <td>AI added superficially</td>
+                    <td>AI core to value proposition</td>
+                    <td>AI essential and thoughtfully designed</td>
+                </tr>
+                <tr>
+                    <td><strong>Core Functionality</strong></td>
+                    <td>Does not run or core feature missing</td>
+                    <td>Works partially with significant gaps</td>
+                    <td>Core feature works reliably</td>
+                    <td>Feature polished and robust</td>
+                </tr>
+                <tr>
+                    <td><strong>User Experience</strong></td>
+                    <td>No clear UX; confusing</td>
+                    <td>Basic UX but friction exists</td>
+                    <td>Clear, intuitive interaction</td>
+                    <td>Delightful and accessible</td>
+                </tr>
+                <tr>
+                    <td><strong>Eval Coverage</strong></td>
+                    <td>No automated testing</td>
+                    <td>Minimal test coverage</td>
+                    <td>Core paths covered</td>
+                    <td>Comprehensive with edge cases</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="caption">AI product prototype quality rubric</p>
+
+        <h2>D.2 Eval Pipeline Completeness Rubric</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>1 - Missing</th>
+                    <th>2 - Partial</th>
+                    <th>3 - Complete</th>
+                    <th>4 - Comprehensive</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Test Dataset</strong></td>
+                    <td>No dataset</td>
+                    <td>Under 50 examples</td>
+                    <td>100+ diverse examples</td>
+                    <td>500+ with expert verification</td>
+                </tr>
+                <tr>
+                    <td><strong>Automated Checks</strong></td>
+                    <td>None</td>
+                    <td>Basic correctness only</td>
+                    <td>Correctness + safety</td>
+                    <td>Full quality dimensions</td>
+                </tr>
+                <tr>
+                    <td><strong>Baseline Metrics</strong></td>
+                    <td>No baseline</td>
+                    <td>Single naive baseline</td>
+                    <td>Multiple baselines</td>
+                    <td>Industry benchmarks included</td>
+                </tr>
+                <tr>
+                    <td><strong>Regression Detection</strong></td>
+                    <td>No monitoring</td>
+                    <td>Manual spot checks</td>
+                    <td>Automated on PR</td>
+                    <td>Continuous monitoring</td>
+                </tr>
+                <tr>
+                    <td><strong>Human Review Integration</strong></td>
+                    <td>None</td>
+                    <td>Ad hoc reviews</td>
+                    <td>Regular sampling</td>
+                    <td>Systematic review program</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="caption">Eval pipeline completeness rubric</p>
+
+        <h2>D.3 RAG System Performance Rubric</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>1 - Poor</th>
+                    <th>2 - Acceptable</th>
+                    <th>3 - Good</th>
+                    <th>4 - Excellent</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Retrieval Precision</strong></td>
+                    <td>&lt;60%</td>
+                    <td>60-75%</td>
+                    <td>75-90%</td>
+                    <td>&gt;90%</td>
+                </tr>
+                <tr>
+                    <td><strong>Retrieval Recall</strong></td>
+                    <td>&lt;50%</td>
+                    <td>50-70%</td>
+                    <td>70-85%</td>
+                    <td>&gt;85%</td>
+                </tr>
+                <tr>
+                    <td><strong>Hallucination Rate</strong></td>
+                    <td>&gt;20%</td>
+                    <td>10-20%</td>
+                    <td>5-10%</td>
+                    <td>&lt;5%</td>
+                </tr>
+                <tr>
+                    <td><strong>Context Relevance</strong></td>
+                    <td>&lt;40%</td>
+                    <td>40-60%</td>
+                    <td>60-80%</td>
+                    <td>&gt;80%</td>
+                </tr>
+                <tr>
+                    <td><strong>Answer Faithfulness</strong></td>
+                    <td>&lt;50%</td>
+                    <td>50-70%</td>
+                    <td>70-85%</td>
+                    <td>&gt;85%</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="caption">RAG system performance rubric</p>
+
+        <h2>D.4 UX Design for AI Products Rubric</h2>
+
+        <p>
+            Based on the PEEK framework (Predict, Explain, Execute, Keep in loop):
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>PEEK Element</th>
+                    <th>1 - Missing</th>
+                    <th>2 - Rudimentary</th>
+                    <th>3 - Implemented</th>
+                    <th>4 - Polished</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Predict</strong></td>
+                    <td>No transparency about AI actions</td>
+                    <td>Basic status indicators</td>
+                    <td>Clear progress and confidence signals</td>
+                    <td>Rich context and timing expectations</td>
+                </tr>
+                <tr>
+                    <td><strong>Explain</strong></td>
+                    <td>No explanation of AI reasoning</td>
+                    <td>Minimal explanation provided</td>
+                    <td>Clear reasoning when requested</td>
+                    <td>Proactive, contextual explanations</td>
+                </tr>
+                <tr>
+                    <td><strong>Execute</strong></td>
+                    <td>User must do everything manually</td>
+                    <td>AI does some work</td>
+                    <td>AI handles routine tasks</td>
+                    <td>Smart delegation with user control</td>
+                </tr>
+                <tr>
+                    <td><strong>Keep in Loop</strong></td>
+                    <td>AI acts without user awareness</td>
+                    <td>Post-hoc notifications</td>
+                    <td>Appropriate timing of updates</td>
+                    <td>Seamless handoffs with context</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="caption">PEEK UX design rubric for AI products</p>
+
+        <h2>D.5 Team AI Readiness Assessment</h2>
+
+        <div class="callout tip">
+            <div class="callout-title">Team AI Readiness Checklist</div>
+            <p>Technical Skills require that the team can prompt engineer effectively, understands AI limitations, can debug AI behavior, and is familiar with eval methodologies. Process Maturity requires that the team uses structured product discovery, has rapid prototyping capability, practices iterative development, and conducts regular retrospectives. Organizational readiness requires that leadership supports AI experimentation, cross-functional collaboration exists, user feedback loops are established, and risk tolerance is balanced appropriately.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="appendix-c-templates.html">Appendix C: Templates</a>
+            <a class="up" href="../index.html">Part VII Overview</a>
+            <a class="next" href="appendix-e-architecture-checklists.html">Appendix E: Checklists</a>
+        </nav>
+
+        <footer>
+            <p>Appendix D &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

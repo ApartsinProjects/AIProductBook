@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15.1 Architecture Spectrum and Pattern Selection - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+    <style>
+        .diagram-block {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .decision-matrix {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        .decision-matrix th, .decision-matrix td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .decision-matrix th {
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+        }
+        .decision-matrix tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .complexity-badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .complexity-low { background: #d4edda; color: #155724; }
+        .complexity-medium { background: #fff3cd; color: #856404; }
+        .complexity-high { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 15.1</div>
+        <h1>Architecture Spectrum and Pattern Selection</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"The best architecture is the simplest one that meets your requirements. Complexity is the enemy of reliability, but underengineering is the enemy of scalability. Know where you are on the spectrum."</p>
+            <cite>A Pragmatic AI Architect</cite>
+        </blockquote>
+
+        <h2>Introduction</h2>
+        <p>
+            When building AI products, teams often make one of two mistakes. The first is overengineering: building elaborate multi-agent systems with orchestration layers, vector databases, and autonomous decision-making when a well-crafted prompt would solve the problem. The second is underengineering: wrapping an LLM call in a Flask endpoint and calling it production-ready, only to discover scale problems, hallucination risks, and zero observability when things go wrong.
+        </p>
+        <p>
+            This section establishes a framework for thinking about AI product architectures. You will learn to map requirements to architectural complexity, apply YAGNI (You Are Not Going to Need It) principles to AI systems, and understand the spectrum from simple LLM wrappers to complex multi-agent architectures.
+        </p>
+
+        <h2>The Architecture Spectrum</h2>
+        <p>
+            AI product architectures fall along a spectrum from trivial to complex. Understanding this spectrum helps you choose the right starting point and know when to evolve.
+        </p>
+
+        <div class="diagram-block">
++------------------------------------------------------------------+
+|                    AI ARCHITECTURE SPECTRUM                        |
++------------------------------------------------------------------+
+|                                                                   |
+|  [1] Simple      [2] Prompted      [3] RAG       [4] Agentic    |
+|  LLM Wrapper     LLM+Tool          Based         Multi-Agent     |
+|                                                                   |
+|  |------------|---------------|-------------|------------------|  |
+|  v            v               v             v                    v  |
+|  Chatbot     GitHub          DataForge     Autonomous          |
+|  FAQ Bot     Copilot         Legal RAG     Research Agent      |
+|                                                                   |
+|  Complexity: LOW -------------------------------------- HIGH      |
+|                                                                   |
++------------------------------------------------------------------+
+        </div>
+
+        <h3>Level 1: Simple LLM Wrapper</h3>
+        <p>
+            The simplest architecture wraps an LLM API call in a web service. The user sends a prompt, the service forwards it to the LLM, and returns the response. This pattern suits internal tools, prototypes, and low-stakes applications where errors have no significant consequences.
+        </p>
+        <p>
+            <span class="complexity-badge complexity-low">Low Complexity</span> Ideal for: FAQ bots, internal chatbots, prototyping experiments
+        </p>
+
+        <h3>Level 2: Prompted LLM with Tools</h3>
+        <p>
+            This architecture adds tool use capabilities to the LLM. The model can call external APIs, search the web, run code, or access databases. GitHub Copilot exemplifies this pattern: the IDE provides context, the model suggests completions, and the human accepts or rejects. The architecture maintains human oversight through suggestion-and-approval flows.
+        </p>
+        <p>
+            <span class="complexity-badge complexity-low">Low-Medium Complexity</span> Ideal for: Coding assistants, document processing, customer service augmentation
+        </p>
+
+        <h3>Level 3: Retrieval-Augmented Generation (RAG)</h3>
+        <p>
+            RAG architectures add a retrieval layer that provides context to the LLM. When a user asks a question, the system retrieves relevant documents from a knowledge base, augments the prompt with this context, and generates an answer grounded in retrieved information. This pattern dramatically reduces hallucination risk and enables the system to answer questions about proprietary information.
+        </p>
+        <p>
+            <span class="complexity-badge complexity-medium">Medium Complexity</span> Ideal for: Customer support, legal research, medical information systems, enterprise knowledge management
+        </p>
+
+        <h3>Level 4: Agentic Multi-Agent Systems</h3>
+        <p>
+            At the most complex end of the spectrum, agents can plan, use tools, delegate subtasks to other agents, and execute multi-step workflows with minimal human intervention. These systems require sophisticated orchestration, robust error handling, and careful design to ensure alignment and safety.
+        </p>
+        <p>
+            <span class="complexity-badge complexity-high">High Complexity</span> Ideal for: Autonomous research, complex document processing, end-to-end workflow automation
+        </p>
+
+        <div class="callout big-picture">
+            <h4>Key Insight: Start Simple, Evolve as Needed</h4>
+            <p>The most successful AI products start at the simplest level that meets requirements and evolve when actual usage reveals the need for additional complexity. Premature optimization, especially in AI systems, wastes development time and adds maintenance burden without proportionate benefit.</p>
+        </div>
+
+        <h2>YAGNI Applied to AI Architecture</h2>
+        <p>
+            YAGNI (You Are Not Going to Need It) originated in extreme programming, but it applies with special force to AI systems. Unlike traditional software where you can anticipate scale requirements, AI products often discover their actual needs only after deployment. User behavior, query patterns, and failure modes are difficult to predict without production data.
+        </p>
+
+        <h3>The YAGNI AI Decision Tree</h3>
+        <p>Before adding architectural complexity, ask these questions:</p>
+
+        <div class="diagram-block">
++------------------------------------------------------------------+
+|                  YAGNI AI DECISION TREE                           |
++------------------------------------------------------------------+
+|                                                                   |
+|  [Do you have hallucinations in production?]                      |
+|       |                                                          |
+|   YES-+---> [Can context window solve it?]                       |
+|       |         |                                                |
+|      NO    YES-+---> Simple prompting fix. STOP.                 |
+|       |         |                                                |
+|      ???    NO-+----> [Is it domain-specific knowledge?]         |
+|                   |                                              |
+|              YES--+---> [Update frequency requirements?]          |
+|                   |         |                                     |
+|              NO   |    LOW--+---> Static context injection       |
+|                   |         |                                     |
+|                   |    HIGH-+---> RAG architecture                |
+|                   |         |                                     |
+|              NO---+----> [Does task require multi-step reasoning?]|
+|                           |                                       |
+|                      YES--+---> [Need autonomous execution?]     |
+|                           |         |                             |
+|                      NO   |    MAYBE-+---> Tool-augmented LLM    |
+|                           |         |                             |
+|                      DONE |    YES--+---> Agentic architecture   |
+|                           |                                       |
++------------------------------------------------------------------+
+        </div>
+
+        <h3>When YAGNI Leads to Overengineering</h3>
+        <p>
+            Common overengineering patterns in AI products include building multi-agent systems for single-step tasks, implementing vector databases when simple keyword search would suffice, adding complex memory systems when stateless interactions are appropriate, and designing for millions of users when the product has hundreds of active users.
+        </p>
+
+        <h3>When YAGNI Leads to Underengineering</h3>
+        <p>
+            Underengineering manifests as skipping observability because the prototype works fine in development, ignoring latency optimization because response times seem acceptable, omitting guardrails because the test cases pass, and deferring security review because access is limited to internal users. These shortcuts compound into production incidents.
+        </p>
+
+        <div class="callout key-insight">
+            <h4>The Production Maturity Line</h4>
+            <p>Regardless of architectural complexity, every production AI product needs three things: observability (you can see what is happening), evaluability (you can measure quality), and recoverability (you can fix problems). These non-functional requirements apply to a one-prompt prototype and a hundred-agent system alike.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Misconception</div>
+            <p>
+                The "start simple" advice is sometimes misinterpreted as "simple architectures are always better." But starting too simple can be underengineering. A simple LLM wrapper may be inappropriate for a high-stakes medical application, even though it is cheaper and faster to build. The right architecture matches your requirements for accuracy, safety, and reliability. YAGNI applies to speculative future scale, not to known present risks.
+            </p>
+        </div>
+
+        <h2>Choosing the Right Architecture</h2>
+        <p>
+            Architecture selection depends on multiple factors working in concert. When evaluating latency budgets, simple LLM wrappers can accept response times under two seconds, while tool-augmented systems and RAG architectures typically tolerate up to five seconds, particularly when retrieval operations are involved. Agentic multi-agent systems operate on a fundamentally different time scale where minutes may be acceptable since complex reasoning and multi-step execution naturally require more time.
+        </p>
+        <p>
+            Hallucination tolerance varies significantly across architectures and use cases. Simple LLM wrappers present the highest risk when the application involves high-stakes decisions, requiring careful prompt engineering and evaluation. Tool-augmented systems offer medium-low hallucination tolerance since external tool calls provide verification mechanisms. RAG architectures can achieve very low hallucination rates by grounding responses in retrieved documents. Agentic systems vary widely depending on the specific task and the guardrails implemented.
+        </p>
+        <p>
+            Domain knowledge requirements create a clear differentiation point. Simple LLM architectures work well when general knowledge suffices. Tool-augmented systems extend this to combine general knowledge with tool-accessed information. RAG architectures excel when proprietary documents and domain-specific knowledge bases are central to the use case. Agentic systems span the full range depending on their intended purpose.
+        </p>
+        <p>
+            Human oversight requirements scale with autonomy and complexity. Simple LLM wrappers typically require minimal or no human oversight. Tool-augmented systems benefit from approval flows where the human reviews and validates suggestions before actions are taken. RAG systems work best with output review mechanisms. Agentic architectures need escalation paths that allow human intervention when the system encounters situations beyond its competence or requiring judgment.
+        </p>
+        <p>
+            Operational complexity increases substantially across the spectrum. Simple LLM wrappers maintain low operational overhead. Tool-augmented systems introduce medium complexity due to tool integration and state management. RAG architectures demand medium-high operational investment for index management, embedding pipelines, and retrieval optimization. Agentic multi-agent systems carry the highest operational burden, requiring sophisticated orchestration, error handling, and monitoring infrastructure.
+        </p>
+
+        <h2>Architectural Evolution Patterns</h2>
+        <p>
+            As AI products mature, architectures typically evolve along predictable paths. Understanding these evolution patterns helps you plan ahead without overbuilding.
+        </p>
+
+        <h3>Common Evolution Paths</h3>
+        <p>
+            <strong>Path A: Simple to RAG.</strong> A customer service chatbot starts with general LLM responses. After launch, users ask about order status and refund policies. The team adds a RAG system for policy documents and integrates with the order database through tools.
+        </p>
+        <p>
+            <strong>Path B: RAG to Agentic.</strong> A legal research assistant begins as a document retrieval system. Users begin asking complex questions requiring multi-step research across multiple databases. The team adds agentic capabilities for autonomous research flows.
+        </p>
+        <p>
+            <strong>Path C: Single to Multi-Agent.</strong> A coding assistant starts with one agent reviewing code. As the product grows, separate agents handle security scanning, performance analysis, and documentation generation, coordinated by an orchestration layer.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: HealthMetrics Analytics</div>
+            <p><strong>Who:</strong> A healthcare analytics startup building an AI assistant for hospital administrators</p>
+            <p><strong>Situation:</strong> The team prototyped a simple LLM wrapper that answered questions about hospital metrics using general medical knowledge</p>
+            <p><strong>Problem:</strong> In beta testing, administrators needed answers about their specific patients and operational data, not general medical information</p>
+            <p><strong>Dilemma:</strong> Adding patient data raised HIPAA compliance concerns, but administrators needed those capabilities to do their jobs</p>
+            <p><strong>Decision:</strong> They evolved to a RAG architecture with strict access controls, retrieving only de-identified aggregate data, and added human-in-the-loop approval for any query touching individual patient records</p>
+            <p><strong>How:</strong> The system now has three tiers: public FAQ (simple LLM), aggregate reports (RAG with hospital data), individual records (human-in-the-loop approval required)</p>
+            <p><strong>Result:</strong> 40% reduction in time for administrators to generate operational reports, with full audit trails for compliance</p>
+            <p><strong>Lesson:</strong> Architecture evolution should be driven by actual user needs, not anticipated ones. Start simple, measure usage, and evolve based on real gaps.</p>
+        </div>
+
+        <h2>Section Summary</h2>
+        <p>
+            AI product architectures exist on a spectrum from simple LLM wrappers to complex multi-agent systems. The right architecture depends on your requirements for latency, accuracy, cost, and oversight. YAGNI principles apply strongly to AI systems because actual needs are often revealed only in production. Every production AI product needs observability, evaluability, and recoverability regardless of complexity level.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Chapter 15 Overview</a>
+            <a class="up" href="index.html">Chapter 15 Overview</a>
+            <a class="next" href="section-15-2.html">15.2 Copilot Architecture</a>
+        </nav>
+
+        <footer>
+            <p>Section 15.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

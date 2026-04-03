@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8.4 Data Strategy for <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 8</div>
+        <h1>Discovery, Prioritization, and Roadmapping</h1>
+        <p class="chapter-subtitle">8.4 Data Strategy for <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Handle uncertainty in AI products through adapted research, prioritization, and data strategies.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 8.3 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Choosing Your AI Knowledge Architecture</div>
+            <p>The choice between <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, fine-tuning, and hybrid approaches fundamentally shapes your product's capabilities, development timeline, and maintenance burden. <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> provides flexibility and fresh knowledge but adds latency and infrastructure cost. Fine-tuning produces consistent behavior but requires significant upfront investment and loses flexibility. The recommended approach for most products is to start with <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> and optimize with fine-tuning after proving product-market fit.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Magician's Secret</div>
+            <p>Every magic trick relies on the audience looking at the wrong thing. <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> works similarly: users focus on the polished response while ignoring how the magician (retrieval system) chose which rabbit (context) to pull from the hat.</p>
+        </div>
+
+        <h2 id="section-8-4">8.4 Data Strategy for <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></h2>
+
+        <p>
+            Choosing the right data strategy for your AI product is one of the most consequential decisions you will make. The choice between <strong>Retrieval-Augmented Generation (<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>)</strong> (see <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">Section 13.1</a>), <strong>fine-tuning</strong> (see <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">Section 14.2</a>), or hybrid approaches will fundamentally shape your product's capabilities, development timeline, and ongoing maintenance burden. <strong>RAG</strong> (see <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">Section 13.1</a>) is a technique where the AI retrieves relevant information from a knowledge base (like a document database) before generating responses, giving it access to up-to-date information without modifying the model. <strong>Fine-tuning</strong> involves training a pre-existing model on your specific data to make it behave in a particular way. Making this decision requires understanding not just the technical differences between approaches, but the business implications of each choice.
+        </p>
+
+        <p>
+            In Section 8.3, we discussed how data collection is often the longest lead item in AI product development. That discussion focused on when to start collecting data. This section addresses a different question: once you have data, how should you use it to power your AI? The choice between <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a>, and hybrid approaches answers that question.
+        </p>
+
+        <h3>When to Use <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></h3>
+
+        <p>
+            <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> is the right choice when your AI product needs to access knowledge that changes frequently or that you do not want to bake into model weights. Consider <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> when your use case involves any of the following: company documentation that changes weekly, product catalogs that update daily, user-generated content that grows continuously, or any knowledge base where fresh information matters more than pattern learning.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Notion AI</h4>
+            <p>
+                Notion AI uses <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> to access each customer's specific workspace content. When a user asks questions about their documents, Notion AI retrieves relevant passages from the user's own workspace rather than relying on general model knowledge. This approach means the AI can answer questions about specific projects, meeting notes, and documents that exist only in that user's workspace. The <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> pipeline must handle permissions correctly, ensuring the AI only retrieves content the user has access to.
+            </p>
+            <p>
+                <strong>Why <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> worked here:</strong> Every Notion customer has different content. Training a model on each customer's data would be impractical. <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> allows the same model to answer questions across all customers by retrieving relevant content at query time.
+            </p>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Legal Research AI</h4>
+            <p>
+                A legal tech startup building an AI research assistant chose <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> over fine-tuning because case law changes constantly. New court decisions are published daily, and precedents can be overturned. <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">Fine-tuning</a> a model would require retraining every time new case law is added, which would be both expensive and create version control challenges. With <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, new case law can be added to the vector database within hours, and the AI immediately can reference it in responses.
+            </p>
+            <p>
+                <strong>Key insight:</strong> If your knowledge base grows by more than a few percent monthly, <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> is almost certainly the right choice. The overhead of retraining <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuned</a> models for incremental updates is rarely worth it.
+            </p>
+        </div>
+
+        <h4>When <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> is the Right Choice</h4>
+
+        <ul>
+            <li><strong>Fast-changing knowledge:</strong> Daily or weekly content updates that would require frequent retraining</li>
+            <li><strong>Need for citations:</strong> Users must verify where information came from</li>
+            <li><strong>Large knowledge scale:</strong> More than a few million tokens of domain knowledge</li>
+            <li><strong>Multi-tenant scenarios:</strong> Different users need different knowledge bases</li>
+            <li><strong>Regulatory requirements:</strong> Must explain exactly what data informed each response</li>
+        </ul>
+
+        <h3>When to Use Fine-Tuning</h3>
+
+        <p>
+            If <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> is about giving the AI access to external knowledge, <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> is about changing how the AI itself behaves. <strong>Fine-tuning</strong> takes a pre-trained model and continues training it on a smaller dataset specific to your use case, adjusting the model's internal weights to produce outputs with particular characteristics. This is different from <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> because the knowledge becomes part of the model itself rather than being retrieved at query time.
+        </p>
+
+        <p>
+            Fine-tuning excels when you need the model to learn consistent patterns, styles, or behaviors that are difficult to capture through prompts alone. Unlike <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, which retrieves external information, <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> modifies the model's internal representations to produce outputs with specific characteristics. This is valuable when you need the AI to behave in a particular way across all interactions, not just when answering questions about specific content.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Claude for Enterprise</h4>
+            <p>
+                Anthropic offers <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> for enterprise customers who need Claude to follow specific communication styles, comply with particular formatting requirements, or handle domain-specific terminology consistently. An enterprise might <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tune</a> to ensure Claude always uses their company terminology, follows their specific response templates, or avoids certain phrasing that does not match brand voice.
+            </p>
+            <p>
+                <strong>Why fine-tuning worked here:</strong> The desired behavior needs to be consistent across every interaction, not just when retrieving specific information. Prompt engineering could achieve some of this, but fine-tuning produces more reliable results for high-volume, consistent-output scenarios.
+            </p>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Code Generation Specialization</h4>
+            <p>
+                A DevTools company built a specialized code assistant for a specific programming framework. They <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuned</a> a base model on 10,000 examples of high-quality code written in their framework's style. The <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuned</a> model consistently produced code that followed framework conventions, used appropriate abstractions, and avoided anti-patterns that a general model might suggest.
+            </p>
+            <p>
+                <strong>Key insight:</strong> If your domain has distinct patterns that appear consistently across examples, <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> can learn those patterns more reliably than prompt-based retrieval. The investment in creating quality training data pays off in consistent output quality.
+            </p>
+        </div>
+
+        <h4>When Fine-Tuning is the Right Choice</h4>
+
+        <ul>
+            <li><strong>Stable patterns:</strong> Consistent domain logic that does not change frequently</li>
+            <li><strong>Specific output style:</strong> Particular tone, format, or structure required always</li>
+            <li><strong>Limited domain scope:</strong> Focused enough to create representative training data</li>
+            <li><strong>Latency requirements:</strong> Cannot afford the additional latency of retrieval</li>
+            <li><strong>Cost optimization:</strong> High volume of similar queries makes retrieval overhead significant</li>
+        </ul>
+
+        <h3>When to Use Both <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> and Fine-Tuning</h3>
+
+        <p>
+            The most sophisticated AI products often combine both approaches, using <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> for knowledge retrieval and <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> for behavior optimization. This hybrid approach leverages the strengths of both methods: <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> provides access to up-to-date, specific information while fine-tuning ensures consistent quality, style, and reasoning patterns.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Medical Diagnosis Assistant</h4>
+            <p>
+                A healthcare AI company built a diagnostic assistant that uses <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> to access the latest medical literature, clinical guidelines, and patient-specific history. Simultaneously, they <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuned</a> the model on medical conversations to ensure it asked appropriate follow-up questions, expressed appropriate uncertainty, and communicated in the empathetic but precise tone required for healthcare interactions.
+            </p>
+            <p>
+                <strong>Why hybrid worked here:</strong> The medical knowledge changes frequently (new research, updated guidelines), but the communication behavior should be consistent. <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> handles the knowledge component while <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> handles the behavior component.
+            </p>
+        </div>
+
+        <div class="case-study">
+            <h4>Case Study: Financial Services Chatbot</h4>
+            <p>
+                A wealth management firm built an AI that retrieves client-specific portfolio data, holdings, and transaction history through <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>. They separately <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuned</a> the model to follow SEC compliance language requirements, avoid making specific investment recommendations, and flag conversations that might require human advisor involvement.
+            </p>
+            <p>
+                <strong>Technical implementation:</strong> The <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuned</a> model handles the compliance guardrails at the output stage, ensuring that even if retrieved content contains problematic suggestions, the final output follows regulatory requirements.
+            </p>
+        </div>
+
+        <h3>Decision Framework</h3>
+
+        <p>
+            Use this decision tree to choose your data strategy:
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Question</th><th>Answer</th><th>Recommended Approach</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Does knowledge change frequently (weekly or more)?</td><td>Yes</td><td>RAG (or hybrid)</td></tr>
+                <tr><td>Do you need to cite specific sources?</td><td>Yes</td><td>RAG</td></tr>
+                <tr><td>Is consistent output style critical?</td><td>Yes</td><td>Fine-tuning</td></tr>
+                <tr><td>Is low latency critical?</td><td>Yes</td><td>Fine-tuning</td></tr>
+                <tr><td>Do different users need different knowledge?</td><td>Yes</td><td>RAG (multi-tenant)</td></tr>
+                <tr><td>Is domain pattern consistent and stable?</td><td>Yes</td><td>Fine-tuning</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Implementation Considerations</h3>
+
+        <h4>RAG Implementation Costs</h4>
+
+        <p>
+            <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> is not free. Beyond the model API costs, you must factor in vector database hosting, embedding model costs, chunking and indexing pipelines, retrieval infrastructure, and ongoing maintenance. A typical <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> implementation adds $0.50-$2.00 per 1,000 queries in additional infrastructure costs beyond the LLM API itself.
+        </p>
+
+        <h4>Fine-Tuning Costs</h4>
+
+        <p>
+            <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">Fine-tuning</a> requires significant upfront investment: 1,000-10,000 high-quality training examples typically cost $10,000-$50,000 to create (either through expert annotation or synthetic generation). Training runs on dedicated infrastructure add another $1,000-$10,000 per training run. Ongoing maintenance costs include periodic retraining as the model degrades or requirements evolve.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Start with <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, Optimize with Fine-Tuning</div>
+            <p>
+                The recommended approach for most products is to start with <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, prove product-market fit, then consider <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> if you have consistent behavior requirements that <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> cannot achieve. This minimizes upfront investment while you validate the product.
+            </p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-9/index.html">Chapter 9: Ethics, Trust, Governance, and Responsible AI</a> 
+                to learn how to build trustworthy AI products with proper governance frameworks. Understanding 
+                the ethical considerations and governance requirements is essential before taking any AI 
+                product to market.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-8-3.html">8.3 AI-Enhanced Roadmapping</a>
+            <a class="up" href="index.html">Chapter 8 Index</a>
+            <a class="next" href="chapter-9/index.html">Ch 9: Ethics</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 8.4 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

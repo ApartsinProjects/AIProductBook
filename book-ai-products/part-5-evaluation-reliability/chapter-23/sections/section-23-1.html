@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 23.1: Structured Outputs and Validation - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 23</div>
+        <h1>Structured Outputs and <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Validation</a></h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"An AI that can generate JSON is not the same as an AI that generates correct JSON. Structured output validation is the bridge between what the model can produce and what your system can safely use."</p>
+            <cite>A Backend Engineer Who Learned to Validate</cite>
+        </blockquote>
+
+        <h2 id="structured-output-challenge">The Structured Output Challenge</h2>
+
+        <p>
+            AI models generate text. Your systems need structured data. This fundamental mismatch requires explicit conversion. Without validation, you assume the conversion is correct. With validation, you verify it.
+        </p>
+
+        <p>
+            Structured output failures fall into several categories: format failures where the output does not match the expected schema, semantic failures where the format is correct but values are nonsensical, and boundary failures where values are outside acceptable ranges.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Validation is Not Optional</h4>
+            <p>Every structured output from an AI system must be <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">validated</a> before use. This is not optional extra security. It is the minimum bar for production systems. Models generate invalid outputs regularly, and the only thing standing between a bad output and a system failure is your validation layer.</p>
+        </div>
+
+        <h2 id="output-format-methods">Output Format Methods</h2>
+
+        <h3 id="constrained-decoding">Constrained Decoding</h3>
+
+        <p>
+            Some providers support constrained decoding where the output is forced to follow a grammar or schema during generation. This reduces but does not eliminate invalid outputs.
+        </p>
+
+        <h3 id="json-mode">JSON Mode</h3>
+
+        <p>
+            Many providers offer JSON mode where the model is instructed to output only JSON. While this reduces format errors, it does not guarantee schema compliance.
+        </p>
+
+        <pre><code class="language-python">
+# JSON mode reduces but does not eliminate format errors
+response = openai.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "Extract order details"}],
+    response_format={"type": "json_object"},
+    # Model will output valid JSON, but may not match your schema
+)
+        </code></pre>
+
+        <h3 id="function-calling">Function Calling</h3>
+
+        <p>
+            Function calling provides structured output with named parameters. The model generates arguments that match the function signature. This is more reliable than free-form JSON but still requires validation.
+        </p>
+
+        <pre><code class="language-python">
+# Function calling provides structured output
+tools = [{
+    "type": "function",
+    "function": {
+        "name": "extract_order",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "order_id": {"type": "string"},
+                "total": {"type": "number"},
+                "items": {"type": "array"}
+            },
+            "required": ["order_id", "total"]
+        }
+    }
+}]
+
+response = openai.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "Order 12345 for $49.99 with 2 items"}],
+    tools=tools,
+    tool_choice={"type": "function", "function": {"name": "extract_order"}}
+)
+        </code></pre>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">All Methods Need Validation</h4>
+            <p>Whether you use constrained decoding, JSON mode, or function calling, you must validate outputs. No generation method is perfect, and validation is the safety net that catches failures before they propagate.</p>
+        </div>
+
+        <h2 id="validation-strategies">Validation Strategies</h2>
+
+        <h3 id="schema-validation">Schema Validation</h3>
+
+        <p>
+            Validate structure using a schema validator like JSON Schema:
+        </p>
+
+        <pre><code class="language-python">
+from pydantic import BaseModel, ValidationError
+from typing import List, Optional
+
+class OrderDetails(BaseModel):
+    order_id: str
+    total: float
+    items: List[str]
+    discount_code: Optional[str] = None
+
+def validate_order(raw_output: str) -> OrderDetails:
+    """
+    Parse and validate AI output against OrderDetails schema.
+    Raises ValidationError if validation fails.
+    """
+    import json
+    
+    # First, parse the raw output
+    try:
+        data = json.loads(raw_output)
+    except json.JSONDecodeError as e:
+        raise ValidationError(f"Invalid JSON: {e}")
+    
+    # Then validate against schema
+    try:
+        return OrderDetails.model_validate(data)
+    except ValidationError as e:
+        raise ValidationError(f"Schema validation failed: {e}")
+        </code></pre>
+
+        <h3 id="semantic-validation">Semantic Validation</h3>
+
+        <p>Schema validation checks structure while semantic validation checks meaning to ensure values make sense in context. Semantic validation checks whether the total is positive, catching nonsensical negative values. It verifies that identifiers like order_id match expected formats. It confirms that dates are in the future for scheduling use cases. It checks whether dependent fields agree, such as ensuring currency and amount are consistent with each other.</p>
+
+        <pre><code class="language-python">
+class OrderDetails(BaseModel):
+    order_id: str
+    total: float
+    currency: str
+    
+    @field_validator('total')
+    @classmethod
+    def total_must_be_positive(cls, v):
+        if v <= 0:
+            raise ValueError('Total must be positive')
+        return v
+    
+    @field_validator('currency')
+    @classmethod
+    def currency_must_be_valid(cls, v):
+        valid_currencies = {'USD', 'EUR', 'GBP', 'JPY'}
+        if v.upper() not in valid_currencies:
+            raise ValueError(f'Currency must be one of {valid_currencies}')
+        return v.upper()
+    
+    @model_validator(mode='after')
+    def check_consistency(self):
+        # Semantic check: high-value orders should be reviewed
+        if self.total > 10000:
+            logger.warning(f"High-value order detected: {self.total} {self.currency}")
+        return self
+        </code></pre>
+
+        <h3 id="business-rule-validation">Business Rule Validation</h3>
+
+        <p>
+            Beyond schema and semantic validation, enforce business rules:
+        </p>
+
+        <pre><code class="language-python">
+class OrderBusinessValidator:
+    def __init__(self, business_rules: BusinessRules):
+        self.rules = business_rules
+    
+    def validate(self, order: OrderDetails) -> list[ValidationIssue]:
+        issues = []
+        
+        # Check minimum order value
+        if order.total < self.rules.minimum_order_value:
+            issues.append(ValidationIssue(
+                field="total",
+                severity="error",
+                message=f"Order below minimum {self.rules.minimum_order_value}"
+            ))
+        
+        # Check maximum items
+        if len(order.items) > self.rules.max_items_per_order:
+            issues.append(ValidationIssue(
+                field="items",
+                severity="warning",
+                message=f"Order exceeds typical capacity"
+            ))
+        
+        # Check restricted items
+        for item in order.items:
+            if item in self.rules.restricted_items:
+                issues.append(ValidationIssue(
+                    field="items",
+                    severity="error",
+                    message=f"Item {item} requires additional verification"
+                ))
+        
+        return issues
+        </code></pre>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: QuickShip Rate Calculation</h4>
+            <p>The QuickShip engineering team was validating AI-generated shipping rates after discovering the AI occasionally generated rates outside reasonable bounds. Some rates were negative while others exceeded the maximum chargeable amount, creating a dilemma about whether to rely on the model to get rates right or always validate regardless of trust in the model.</p>
+            <p>The team decided to implement multi-layer validation as a protective measure. The first layer used schema validation to ensure the JSON structure was correct. The second layer applied range validation requiring the rate to be between $0.01 and $999.99. The third layer performed business rule validation requiring the AI rate to match internal calculation within five percent tolerance. The fourth layer handled discrepancies by flagging for review when the AI rate differed from the calculation.</p>
+            <p>This approach caught one hundred percent of invalid rates before customer exposure and resulted in no revenue impact from rate errors. The lesson is that validation is not about distrusting the model. It is about protecting your system and customers from edge cases that would otherwise cause harm.</p>
+        </div>
+
+        <h2 id="validation-failure-handling">Validation Failure Handling</h2>
+
+        <h3 id="retry-with-reprompt">Retry with Reprompt</h3>
+
+        <p>
+            If validation fails, retry with a corrected prompt:
+        </p>
+
+        <pre><code class="language-python">
+async def generate_with_validation(
+    prompt: str,
+    schema: type[BaseModel],
+    max_retries: int = 3
+) -> BaseModel:
+    for attempt in range(max_retries):
+        raw_output = await generate_json_output(prompt)
+        
+        try:
+            return validate_order(raw_output)
+        except ValidationError as e:
+            logger.warning(f"Validation failed on attempt {attempt + 1}: {e}")
+            
+            if attempt < max_retries - 1:
+                # Add corrective instruction to prompt
+                prompt = f"""{prompt}
+                
+IMPORTANT: Your previous response failed validation. 
+Error: {e}
+Please ensure your response matches the required format and constraints."""
+    
+    # Final fallback
+    raise ValidationError(f"Failed after {max_retries} attempts")
+        </code></pre>
+
+        <h3 id="fallback-strategies">Fallback Strategies</h3>
+
+        <p>When retries fail, having a predefined fallback prevents validation failures from becoming system failures. The null result fallback returns empty or null structured output, allowing the calling code to handle the absence of data gracefully. The default values fallback returns safe default values that allow the system to continue operating with known-good defaults. The human escalation fallback routes to a human for manual handling when automation cannot produce a valid result. The simplified output fallback requests a simpler, less error-prone format that is more likely to pass validation on retry.</p>
+
+        <div class="callout warning">
+            <h4 class="callout-title">Fallback is Not Failure</h4>
+            <p>A fallback is a designed behavior, not a bug. When validation fails, having a predefined fallback is good engineering. Failing to handle validation failures and letting exceptions propagate is poor engineering.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Misconception</div>
+            <p>
+                Validation failures are not rare events. Some teams assume that if the AI outputs valid JSON, it is probably correct. But schema validation only confirms structure, not meaning. An AI can output perfectly valid JSON that is completely wrong semantically. You need both schema validation and semantic validation. Without semantic validation, you catch format errors but miss the errors that actually break your business logic.
+            </p>
+        </div>
+
+        <h2 id="output-quality-monitoring">Output Quality Monitoring</h2>
+
+        <p>Track validation failures over time to identify patterns that reveal systemic issues. The failure rate tracks the percentage of outputs failing validation, giving an overall picture of output quality. Failure types analyze the distribution of failure categories to understand whether problems are concentrated in specific areas. Failure by input analyzes whether certain inputs are more likely to cause failures, which can reveal edge cases or problematic input patterns. Retry success rate measures how often retries fix validation failures, indicating whether retries are an effective strategy for your use case.</p>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>Research explores "self-validation" where models are trained to output confidence scores for their structured outputs. By learning when they are likely to be wrong, models can flag uncertainty before validation even runs.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 23: Reliability</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-23-2.html">23.2 Retry Strategies</a>
+        </nav>
+
+        <footer>
+            <p>Section 23.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

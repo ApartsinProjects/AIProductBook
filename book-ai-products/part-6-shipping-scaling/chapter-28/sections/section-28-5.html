@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 28.5: AI Review Boards - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 28</div>
+        <h1>AI Review Boards</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Governance should enable AI innovation, not impede it. The review board is a forcing function for quality, not a gate that blocks progress."</p>
+            <cite>Chief Product Officer at an Enterprise SaaS Company</cite>
+        </blockquote>
+
+        <h2 id="governance-bureaucracy">Governance Without Bureaucracy</h2>
+
+        <p>
+            AI products carry risks that traditional software does not: model behavior can be unpredictable, failures can be hard to detect, and AI can perpetuate or amplify biases present in training data. Effective governance addresses these risks without creating bureaucratic delays that undermine the agility AI products require.
+        </p>
+
+        <p>
+            <a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">Chapter 25</a> introduced <a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">AI governance frameworks</a> and risk management. This section focuses on the organizational mechanism for implementing governance: the AI Review Board.
+        </p>
+
+        <h3 id="governance-goals">What Governance Should Achieve</h3>
+
+        <p>
+            AI products carry risks that traditional software does not: model behavior can be unpredictable, failures can be hard to detect, and AI can perpetuate or amplify biases present in training data. Effective governance addresses these risks without creating bureaucratic delays that undermine the agility AI products require. Chapter 25 introduced AI governance frameworks and risk management, and this section focuses on the organizational mechanism for implementing governance: the AI Review Board. What governance should achieve includes risk identification to surface AI risks that individual teams may not recognize or may underweight, cross-team learning to spread learnings about AI successes and failures across the organization, consistency to ensure minimum standards for AI quality and safety across all AI features, and accountability to create clear ownership of AI quality outcomes.
+        </p>
+
+        <h3 id="governance-pitfalls">What Governance Should Avoid</h3>
+
+        <p>
+            What governance should avoid includes single point of approval becoming a bottleneck that blocks AI feature delivery, ivory tower decision-making making decisions without understanding product context, one-size-fits-all applying the same standards to low-stakes and high-stakes AI features, and compliance theater creating paperwork that provides false assurance without real risk reduction.
+        </p>
+
+        <h2 id="review-board-model">AI Review Board Models</h2>
+
+        <p>
+            Different organizations adopt different review board models based on their AI maturity, risk tolerance, and scale of AI deployment.
+        </p>
+
+        <h3 id="advisory-board">Advisory Board Model</h3>
+
+        <p>
+            The lightest-touch model: a review board that advises and recommends but does not approve. Teams are encouraged but not required to follow board recommendations. This model works for organizations just starting to think about AI governance.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Advisory Board Characteristics</h4>
+            <p><strong>Best for:</strong> Early-stage AI organizations, small teams, low-stakes AI features</p>
+            <p><strong>Composition:</strong> 3-5 volunteers from different disciplines interested in AI quality</p>
+            <p><strong>Meeting cadence:</strong> Bi-weekly or monthly optional reviews</p>
+            <p><strong>Output:</strong> Recommendations, best practice guidance, learning summaries</p>
+        </div>
+
+        <h3 id="required-review-board">Required Review Board</h3>
+
+        <p>
+            Certain AI features require board review before launch. The board evaluates risk, ensures appropriate evaluation exists, and may require mitigations before deployment. This model scales as AI deployment grows.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Required Review Board Characteristics</h4>
+            <p><strong>Best for:</strong> Organizations with multiple AI teams, moderate risk tolerance, established AI governance needs</p>
+            <p><strong>Composition:</strong> Rotating members from AI, Legal, Ethics, Product, with required expertise matched to review type</p>
+            <p><strong>Meeting cadence:</strong> Weekly or as needed to meet team release cycles</p>
+            <p><strong>Output:</strong> Approved/Conditional/Rejected with specific requirements</p>
+        </div>
+
+        <h3 id="delegated-board">Delegated Review Board</h3>
+
+        <p>
+            The board delegates reviews to designated reviewers who have authority to approve on behalf of the board. Full board review is reserved for high-risk or novel cases. This model scales to large AI organizations while maintaining governance.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Delegated Review Board Characteristics</h4>
+            <p><strong>Best for:</strong> Large AI organizations, mature governance frameworks, high AI deployment volume</p>
+            <p><strong>Composition:</strong> Board sets policy, designates reviewers with specific domain authority</p>
+            <p><strong>Meeting cadence:</strong> Quarterly board reviews of reviewer decisions, plus exception reviews as needed</p>
+            <p><strong>Output:</strong> Delegated approvals, escalated exceptions, policy updates</p>
+        </div>
+
+        <h2 id="review-scope">Review Scope and Criteria</h2>
+
+        <p>
+            Not all AI features require the same review intensity. Calibrating scope prevents both under-governance and over-bureaucratization.
+        </p>
+
+        <h3 id="risk-tiers">Risk Tier Classification</h3>
+
+        <p>
+            Not all AI features require the same review intensity. Calibrating scope prevents both under-governance and over-bureaucratization. Classify AI features by risk tier and apply appropriate review requirements. Tier 1, Low Risk, covers AI features with reversible impacts, limited user exposure, and no safety implications such as AI-generated text suggestions in low-stakes contexts and personalized content ranking, and review is self-certification with standard checklist. Tier 2, Moderate Risk, covers AI features with meaningful impacts on user experience or business outcomes such as AI product recommendations and automated message drafting, and review is designated reviewer approval. Tier 3, High Risk, covers AI features with significant impacts on user wellbeing, financial outcomes, or that make consequential decisions such as AI in healthcare, lending, hiring, and safety systems, and review is full board review required. Tier 4, Critical Risk, covers AI features with potential for serious harm, legal implications, or that affect protected characteristics such as AI in medical diagnosis, criminal justice, and credit decisions, and review is multi-stakeholder review with external consultation as needed.
+        </p>
+
+        <h3 id="review-criteria">Standard Review Criteria</h3>
+
+        <p>
+            Regardless of tier, all AI reviews should assess evaluation completeness asking whether the team has appropriate evaluation for the AI feature and whether eval thresholds are defined, training data provenance asking where training data came from, whether there are known biases, and whether data handling is compliant, failure modes asking what happens when the AI fails and whether failure modes are acceptable and mitigated, user communication asking whether users are informed when they are interacting with AI and whether AI capabilities and limitations are communicated appropriately, human oversight asking where human oversight exists and whether it is in the right places, and monitoring plan asking how AI performance will be monitored in production and what will trigger intervention.
+        </p>
+
+        <h2 id="scaling-reviews">Scaling Review Processes</h2>
+
+        <p>
+            As AI deployment scales, review processes must scale with it. The key is building capacity while maintaining quality.
+        </p>
+
+        <h3 id="self-service">Self-Service with Templates</h3>
+
+        <p>
+            As AI deployment scales, review processes must scale with it. The key is building capacity while maintaining quality. Low-risk reviews should be self-service by providing clear templates and checklists that teams can complete without board involvement. Self-service works when criteria are clear and unambiguous, checklist completion genuinely indicates adequate review, and teams have enough experience to recognize edge cases requiring escalation.
+        </p>
+
+        <h3 id="rotating-reviewers">Rotating Reviewer Pool</h3>
+
+        <p>
+            Instead of a fixed board, maintain a pool of trained reviewers who can conduct moderate-risk reviews. This scales capacity while distributing governance knowledge.
+        </p>
+
+        <p>
+            Instead of a fixed board, maintain a pool of trained reviewers who can conduct moderate-risk reviews. This scales capacity while distributing governance knowledge. The rotating reviewer pool includes training where reviewers complete training on review criteria and organizational AI values, calibration with regular sessions where reviewers review the same cases and compare decisions, and rotation where reviewers serve 6-12 month terms then return to product teams, spreading governance awareness.
+        </p>
+
+        <h3 id="automated-screening">Automated Screening</h3>
+
+        <p>
+            For very high volume, automated checks can pre-screen submissions including whether eval documentation exists, whether bias evaluations are complete, whether user communication is present in the design, and whether production monitoring dashboards are configured.
+        </p>
+
+        <div class="callout warning">
+            <h4 class="callout-title">Automation Has Limits</h4>
+            <p>Automated screening catches documentation and process gaps. It cannot assess whether the AI behavior is appropriate, whether eval thresholds are meaningful, or whether failure modes are adequately mitigated. Human review remains essential for meaningful governance.</p>
+        </div>
+
+        <h2 id="governance-culture">Governance Culture</h2>
+
+        <p>
+            The most effective governance mechanisms work through culture rather than control. When teams internalize AI quality values, external enforcement becomes less necessary.
+        </p>
+
+        <h3 id="psychological-safety">Psychological Safety for AI Failures</h3>
+
+        <p>
+            Teams must feel safe reporting AI problems. If the review board is perceived as punitive, teams will hide issues rather than surface them. Create mechanisms that reward proactive identification of problems.
+        </p>
+
+        <h3 id="learning-orientation">Learning Orientation</h3>
+
+        <p>
+            Review boards should generate learnings, not just approvals. Regular summaries of review patterns, common issues, and successful mitigations help all teams improve.
+        </p>
+
+        <h3 id="board-visibility">Board Visibility and Accessibility</h3>
+
+        <p>
+            Review board members should be accessible for pre-review consultation. Early conversations prevent downstream surprises and build trust between governance and product teams.
+        </p>
+
+        <h2 id="cross-ref-ch25">Connecting to Chapter 25</h2>
+
+        <p>
+            Chapter 25, "Governance and Compliance," provides the foundational framework for AI governance, including risk assessment methodologies, compliance requirements, and organizational policies. This section focuses on the organizational mechanism for implementing that framework.
+        </p>
+
+        <p>
+            The AI Review Board operationalizes governance policy. The board does not set policy; it ensures policy is followed and escalates policy gaps to leadership. Understanding this distinction prevents the board from becoming a political battleground rather than a governance mechanism.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: Enterprise Retailer AI Review Board</h4>
+            <p><strong>Who:</strong> Major retailer with 15 product teams shipping AI features</p>
+            <p><strong>Situation:</strong> AI features were launching with inconsistent evaluation, no standard for bias assessment, and no clear accountability for AI quality</p>
+            <p><strong>Problem:</strong> One AI feature made headlines for recommending inappropriate product combinations. The board had no mechanism to catch this before launch.</p>
+            <p><strong>Decision:</strong> Implement tiered AI Review Board with designated reviewers for moderate risk and full board for high risk</p>
+            <p><strong>How:</strong> Created 4-tier risk classification. Trained 12 designated reviewers from existing staff. Built self-service checklist for Tier 1. Established weekly board slot for Tier 3 reviews. Required eval documentation for all AI launches.</p>
+            <p><strong>Result:</strong> 18 months in, 3 AI features caught significant issues in review before launch. Average review time: 3 days for Tier 2, 2 weeks for Tier 3. Team satisfaction with process high ( governance not seen as bottleneck).</p>
+            <p><strong>Lesson:</strong> <strong>Governance mechanisms work when they are proportionate to risk, fast for low-stakes cases, and focused on enabling quality rather than just preventing shipments.</strong></p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-28-4.html">28.4 PM/Design/Engineering Collaboration</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="../index.html">Ch 28: Team Topologies</a>
+        </nav>
+
+        <footer>
+            <p>Section 28.5 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

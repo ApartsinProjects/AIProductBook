@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 6.5: Skill Organization for Teams - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <h1>Chapter 6: Claude Code Skills</h1>
+        <p class="chapter-subtitle">6.5 Skill Organization for Teams</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn to manage and scale skill libraries across an organization.
+        </p>
+
+        <div class="prerequisites">
+            <h3>Prerequisites</h3>
+            <p>
+                This section builds on all previous sections in this chapter. You should have experience installing skills, building custom skills, and configuring MCP connectors before learning team organization.
+            </p>
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Skill Libraries as Team Assets</div>
+            <p>A well-organized skill library becomes a team asset that appreciates over time, capturing institutional knowledge and enabling consistent workflows across the organization. This transforms individual productivity gains into team capabilities, reducing onboarding time and ensuring best practices spread organically. The compound effect of accumulated skills creates lasting competitive advantage.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Library of Alexandria</div>
+            <p>The Library of Alexandria burned because it had no backup. Your skill library should learn from this: git clone is the new manuscript copying. Version control your prompts, or lose them to the next disk failure.</p>
+        </div>
+
+        <h2 id="section-6-5">6.5 Skill Organization for Teams</h2>
+
+        <p>
+            As your team grows its AI capabilities, managing skills becomes crucial. A well-organized skill library can be a significant competitive advantage, enabling consistent workflows across the team and reducing onboarding time for new members. This section covers best practices for organizing, versioning, and sharing skills at scale.
+        </p>
+
+        <p>
+            The difference between a team with ad-hoc skills and one with an organized skill library is dramatic. In an ad-hoc scenario, each developer has their own collection of prompts and workflows, knowledge is siloed, and onboarding new team members requires manual setup. In an organized approach, everyone shares a common foundation, improvements are collective, and new team members get productive immediately.
+        </p>
+
+        <h3>Team Skill Repository</h3>
+
+        <p>
+            The foundation of team skill management is a shared skill repository. This is typically a Git repository that contains all your team's custom skills. Each skill is a subdirectory with its SKILL.md and supporting files. The repository is then cloned to each team member's ~/.claude/skills/ directory.
+        </p>
+
+        <p>
+            Structure your repository logically. Group skills by category (development, testing, deployment, documentation) rather than by project. This makes skills discoverable and reusable. Include a README that documents each skill's purpose, usage, and any configuration requirements.
+        </p>
+
+        <h4>Repository Structure</h4>
+
+        <pre><code>team-skills/
+├── README.md                    # Skills catalog and getting started
+├── LICENSE                      # MIT or your preferred license
+├── .gitignore                   # Ignore local config files
+├── SKILLS.md                    # Skills catalog
+├── foundation/                  # Category: Foundation skills
+│   ├── code-review/
+│   │   ├── SKILL.md
+│   │   └── config.json
+│   ├── security-scan/
+│   │   └── SKILL.md
+│   └── documentation/
+│       └── SKILL.md
+├── development/                 # Category: Development skills
+│   ├── backend/
+│   │   └── SKILL.md
+│   ├── frontend/
+│   │   └── SKILL.md
+│   └── testing/
+│       └── SKILL.md
+├── deployment/                  # Category: Deployment skills
+│   ├── staging/
+│   │   └── SKILL.md
+│   └── production/
+│       └── SKILL.md
+├── domain/                      # Category: Domain-specific skills
+│   ├── fintech/
+│   │   └── SKILL.md
+│   └── healthcare/
+│       └── SKILL.md
+└── experimental/                # Category: Experimental skills
+    └── new-idea/
+        └── SKILL.md</code></pre>
+
+        <h4>Setup Instructions</h4>
+
+        <pre><code># New team member onboarding
+git clone https://github.com/yourcompany/team-skills.git ~/.claude/skills/team
+# Or use the team's installation script:
+./scripts/install.sh
+
+# Update skills regularly
+cd ~/.claude/skills/team
+git pull origin main
+
+# Or add as a submodule in your main project
+cd your-project
+git submodule add https://github.com/yourcompany/team-skills.git .claude/skills/team</code></pre>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Team Skill Manifesto</div>
+            <p>
+                Treat skills like code: version control, code review, and documentation. Skills should have owners responsible for maintenance. Breaking changes should be communicated clearly. The skill repository is a living product that evolves with your team.
+            </p>
+        </div>
+
+        <h4>Case Study: Scaling Skills at a 50-Person Team</h4>
+
+        <p>
+            A mid-sized startup implemented a team skill repository and saw dramatic improvements:
+        </p>
+
+        <pre><code># Before team skill repository:
+- New developer onboarding: 2 weeks
+- Inconsistent coding standards across projects
+- Knowledge lost when developers left
+-重复 work on common tasks
+- No way to share improvements
+
+# After team skill repository:
+- New developer onboarding: 2 days
+- Consistent standards enforced via skills
+- Knowledge captured in skills
+- Shared solutions, not duplicated work
+- Collective improvement via PRs
+
+# Key metrics:
+- 45 custom skills in the repository
+- 100% of team members use shared skills
+- 30% reduction in repetitive tasks
+- 2x faster onboarding</code></pre>
+
+        <h3>Skill Taxonomy</h3>
+
+        <p>
+            Create a consistent taxonomy for organizing skills. A useful structure includes foundation skills (always-on, used by everyone), domain skills (specific to your industry or product), project skills (specific to individual projects), and experimental skills (new skills being tested). This hierarchy helps team members find the right skill for their context.
+        </p>
+
+        <p>
+            Document your taxonomy in a skills catalog. This can be a simple Markdown file or a more elaborate internal wiki. The catalog should describe each skill, its category, who owns it, and how to use it. Update the catalog when skills are added, modified, or deprecated.
+        </p>
+
+        <h4>Skills Catalog Example</h4>
+
+        <pre><code># Team Skills Catalog
+
+## How to Use This Catalog
+
+This document lists all available team skills. Each skill
+includes a description, usage instructions, and owner contact.
+
+---
+
+## Foundation Skills (Always-On)
+
+### code-review
+- **Owner**: @sarah-tech
+- **Description**: Standardized code review process
+- **Usage**: "Review this code for security issues"
+- **Triggers**: "review", "code review"
+
+### security-scan  
+- **Owner**: @mike-security
+- **Description**: Automated security vulnerability scanning
+- **Usage**: "Run security scan on this PR"
+- **Triggers**: "security", "vulnerability"
+
+### testing-standards
+- **Owner**: @alex-test
+- **Description**: Enforces team testing conventions
+- **Usage**: "Generate tests for this module"
+- **Triggers**: "test", "generate tests"
+
+---
+
+## Development Skills
+
+### backend-api
+- **Owner**: @jordan-backend
+- **Description**: Python FastAPI development workflow
+- **Usage**: "Create a new API endpoint"
+- **Triggers**: "api", "endpoint"
+
+### frontend-react
+- **Owner**: @sam-frontend
+- **Description**: React component generation
+- **Usage**: "Create a React component for user profile"
+- **Triggers**: "component", "react"
+
+---
+
+## Deployment Skills
+
+### deploy-staging
+- **Owner**: @ops-team
+- **Description**: Deploy to staging environment
+- **Usage**: "Deploy to staging"
+- **Triggers**: "staging", "deploy staging"
+
+### deploy-production
+- **Owner**: @ops-team
+- **Description**: Production deployment with approval
+- **Usage**: "Deploy to production"
+- **Triggers**: "production", "deploy prod"</code></pre>
+
+        <h3>Versioning and Updates</h3>
+
+        <p>
+            Skills evolve over time. Establish a versioning strategy that allows teams to benefit from improvements while maintaining stability. Semantic versioning (major.minor.patch) works well: major changes are breaking, minor changes add features, and patch changes fix bugs.
+        </p>
+
+        <p>
+            Communicate skill updates through team channels. When a skill changes significantly, announce it and explain what changed. Consider maintaining a changelog for your skill repository. This helps team members understand what is new and when they should update their local copies.
+        </p>
+
+        <h4>Versioning Strategy</h4>
+
+        <pre><code># Semantic Versioning for Skills
+
+## Version Format
+MAJOR.MINOR.PATCH (e.g., 2.1.0)
+
+## When to Increment
+
+### MAJOR (2.0.0 → 3.0.0)
+- Breaking changes to instruction format
+- Removed or renamed triggers
+- Changed output format significantly
+- Removed tools or changed tool signatures
+
+### MINOR (2.0.0 → 2.1.0)
+- Added new triggers
+- Added new tools
+- Improved instructions (non-breaking)
+- Added new examples
+
+### PATCH (2.0.0 → 2.0.1)
+- Bug fixes in instructions
+- Fixed typos or unclear wording
+- Improved examples
+- Minor tool fixes
+
+## Changelog Example
+
+# Changelog
+
+## [2.1.0] - 2026-03-15
+### Added
+- New trigger: "security audit"
+- Tool: check_dependencies for vulnerable packages
+
+### Changed
+- Improved code review focus areas
+
+## [2.0.1] - 2026-03-01
+### Fixed
+- Fixed example in documentation
+- Updated security check patterns</code></pre>
+
+        <h4>Update Communication</h4>
+
+        <pre><code># Team notification channels
+
+## When to notify:
+- New skill added to repository
+- Major version changes
+- Deprecated skills
+
+## How to notify:
+# Slack example
+@channel Skill Update: security-scan v2.1.0
+- Added: New check for SQL injection patterns
+- Changed: Now scans all file types
+- Action: Run `git pull` to update
+
+## Automated notifications:
+# GitHub releases with release notes
+# Slack bot posting new commits</code></pre>
+
+        <h3>Onboarding New Team Members</h3>
+
+        <p>
+            A well-organized skill repository makes onboarding much faster. New team members can clone the repository and immediately have access to all team skills. Create an onboarding guide that walks through skill installation, configuration, and basic usage. Include a "getting started" skill that provides an interactive tutorial.
+        </p>
+
+        <p>
+            Consider creating a "baseline skills" set that every team member should install. This ensures consistent baseline capabilities across the team. Additional skills can be optional based on role and project needs.
+        </p>
+
+        <h4>Onboarding Checklist</h4>
+
+        <pre><code># New Developer Skill Onboarding
+
+## Day 1: Setup (30 minutes)
+- [ ] Clone team skills repository
+- [ ] Install required community skills
+- [ ] Configure MCP connectors (if needed)
+- [ ] Set up environment variables
+- [ ] Verify skills are loaded
+
+## Day 1: Tutorial (1 hour)
+- [ ] Run the "getting-started" skill
+- [ ] Try basic skill invocation
+- [ ] Review skills catalog
+- [ ] Ask questions in team channel
+
+## Week 1: Exploration (as needed)
+- [ ] Explore foundation skills
+- [ ] Learn role-specific skills
+- [ ] Set up project-specific skills
+- [ ] Test MCP connectors
+
+## First Month: Contribution
+- [ ] Identify a repetitive task
+- [ ] Propose a new skill
+- [ ] Submit PR to skill repository</code></pre>
+
+        <h4>Interactive Getting Started Skill</h4>
+
+        <pre><code># getting-started skill - SKILL.md excerpt
+
+## Description
+Interactive tutorial for new team members learning the team's
+skill library. Walks through basic usage and key capabilities.
+
+## Instructions
+When activated, guide the user through a series of mini-tutorials:
+
+1. First: Show available skills (ls ~/.claude/skills/)
+2. Explain skill categories
+3. Demonstrate a simple skill invocation
+4. Guide them through their first skill use
+5. Show how to discover more skills
+
+## Interaction Pattern
+- Ask what their role is (frontend/backend/ops)
+- Recommend relevant skills
+- Show examples specific to their work
+- Leave them with a quick reference card</code></pre>
+
+        <h3>Skill Governance</h3>
+
+        <p>
+            As skill libraries grow, governance becomes important. Establish clear ownership for each skill. Define review processes for new skills (peer review helps catch issues). Set quality standards (documentation, testing, security review). Create a process for deprecating skills that are no longer needed.
+        </p>
+
+        <p>
+            Security is particularly important for team skills. Review skills before adding them to the team repository. Ensure no hardcoded secrets or dangerous tool definitions. Consider a security review for any skill that executes commands or accesses sensitive resources.
+        </p>
+
+        <h4>Skill Ownership Template</h4>
+
+        <pre><code># Each skill should have an owner who is responsible for:
+
+1. Maintaining the skill (bug fixes, updates)
+2. Responding to issues and questions
+3. Reviewing proposed changes
+4. Documenting changes in changelog
+5. Deprecating when no longer needed
+
+# Ownership assignment:
+
+| Skill | Owner | Backup | Contact |
+|-------|-------|--------|---------|
+| code-review | @sarah | @alex | #team-skills |
+| security-scan | @mike | @jordan | #security |
+| deploy-staging | @ops-team | - | #devops |
+| documentation | @sam | @taylor | #docs |</code></pre>
+
+        <h4>Review Process</h4>
+
+        <pre><code># Adding a new skill to team repository
+
+## Step 1: Proposal
+Submit a PR with:
+- SKILL.md
+- README.md
+- Test cases
+- Security review (for tools)
+
+## Step 2: Review
+- Technical review: Does it work as intended?
+- Quality review: Is it well-documented?
+- Security review: Any dangerous tool definitions?
+- Usability review: Is it easy to use?
+
+## Step 3: Approval
+- Requires 2 approvals
+- Owner must be one of approvers
+- Must pass all review checks
+
+## Step 4: Merge
+- Add to skills catalog
+- Announce in team channel</code></pre>
+
+        <div class="callout warning">
+            <div class="callout-title">Security Review Checklist</div>
+            <p>
+                Before adding any skill to the team repository, verify:
+                - No hardcoded API keys or secrets
+                - Tool definitions don't allow arbitrary command execution
+                - Sensitive file access is limited and documented
+                - Network calls use secure protocols
+                - No credentials logged or exposed
+            </p>
+        </div>
+
+        <h3>Measuring Skill Effectiveness</h3>
+
+        <p>
+            Track how skills are being used to prioritize development and maintenance. Simple metrics like usage frequency, reported issues, and feature requests help identify which skills are most valuable. Regularly survey team members about their skill needs and pain points.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>Skill Usage Tracking</h4>
+            <p>
+                Some teams add logging to their skills to track usage. When a skill is invoked, it can record the event (anonymously if needed). Over time, this data reveals which skills are most valuable and where to invest in new skill development.
+            </p>
+        </div>
+
+        <h4>Metrics to Track</h4>
+
+        <pre><code># Usage Metrics
+- How often each skill is invoked
+- Which triggers are most common
+- Success rate (did the skill complete successfully?)
+- Time saved (compare to manual task time)
+
+# Quality Metrics
+- Number of issues reported
+- Time to resolve issues
+- Documentation quality scores
+
+# Adoption Metrics
+- How many team members use each skill
+- New skill adoption rate
+- Skill覆盖率 (what % of tasks use skills)
+
+# Example survey questions:
+1. Which skills do you use daily? Weekly? Occasionally?
+2. What skills are missing that you wish you had?
+3. Which skills need improvement?
+4. What tasks take too long without AI assistance?</code></pre>
+
+        <h3>Building a Skill-First Culture</h3>
+
+        <p>
+            The ultimate goal is to build a culture where team members naturally reach for skills to solve problems. Encourage skill creation as part of normal development work. Celebrate when someone builds a useful skill. Share skill discoveries in team communications. Make skill development a visible part of your team identity.
+        </p>
+
+        <p>
+            When skills become part of your team's DNA, the productivity gains compound. Tasks that used to take hours become minutes. Knowledge that used to be lost when people leave is captured in skills. Your team becomes faster, more consistent, and more capable over time.
+        </p>
+
+        <h4>Culture Building Activities</h4>
+
+        <pre><code># Regular activities to build skill-first culture:
+
+## Weekly
+- Skill showcase: 5 minutes in standup to demo a useful skill
+- Share discoveries: Any new skills found this week?
+
+## Monthly
+- Skill review: Review which skills need updates
+- New skill proposals: What should we build next?
+
+## Quarterly
+- Skillathon: Dedicated time to build new skills
+- Skill awards: Recognize useful skill contributions
+
+## Ongoing
+- Include skill development in project planning
+- Add "create a skill" as a task option
+- Document lessons learned as potential skills</code></pre>
+
+        <h4>Case Study: From Individual to Team Capability</h4>
+
+        <pre><code># The evolution of a skill-first culture:
+
+## Phase 1: Individual experiments (Month 1-2)
+- Developer creates a skill for their own workflow
+- Shares with a few teammates who ask for it
+
+## Phase 2: Team adoption (Month 3-4)
+- Skill added to team repo
+- More developers start using it
+- Others request similar skills for their workflows
+
+## Phase 3: Systematic approach (Month 5-6)
+- Team creates skill governance
+- Regular skill reviews
+- Proactive skill development
+
+## Phase 4: Culture (Month 7+)
+- New hires bring skill ideas
+- Skills are part of project planning
+- Team has competitive advantage from accumulated skills</code></p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Compound Effect</div>
+            <p>
+                Each skill you create or adopt makes your team incrementally more productive. Over time, these increments compound. A team with 50 skills is fundamentally more capable than a team with 5. Invest in your skill library consistently, and the returns will grow exponentially.
+            </p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                You have completed Chapter 6 on Claude Code Skills, Plugins, and Connectors. The next chapter continues with AI in the Software Development Lifecycle, exploring how to apply AI at every stage from requirements to deployment.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-6-4.html">6.4: MCP Connectors</a>
+            <a class="up" href="index.html">Ch 6: Skills Overview</a>
+            <a class="next" href="../../part-3-ai-pm/chapter-7/index.html">Ch 7: AI PM</a>
+        </nav>
+
+        <footer>
+            <p>Section 6.5 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

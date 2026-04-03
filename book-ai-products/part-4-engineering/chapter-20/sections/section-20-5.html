@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20.5 Red Teaming and Policy Enforcement - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 20</div>
+        <h1>20.5 Red Teaming and <a href="../../../part-5-evaluation-reliability/chapter-25/sections/section-25-1.html" class="cross-ref">Policy Enforcement</a></h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Before launching their AI assistant, a healthcare company assembled a red team to attack it. Within two hours, they had discovered that medical case data could be extracted through carefully crafted queries, that the appointment booking tool could be used to enumerate patient identities, and that the model's safety instructions could be gradually eroded through multi-turn conversations. Their users would never have found these vulnerabilities, but attackers would have.
+        </p>
+
+        <div class="overview">
+            <h2>Section Overview</h2>
+            <p>
+                Red teaming is essential for AI security. This section covers building red team methodologies, common AI attack vectors, automated adversarial testing, security evaluations, runtime policy enforcement, output validation, content moderation, and abuse prevention through rate limiting.
+            </p>
+        </div>
+
+        <h2>Red Teaming for AI Systems</h2>
+
+        <p>
+            AI red teaming applies adversarial security testing to AI systems. Unlike traditional penetration testing, AI red teams must consider prompt injection, model manipulation, and emergent behaviors that have no traditional analog.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Red Team vs. Traditional Pen Testing</div>
+            <p>
+                Traditional pen testing targets software vulnerabilities. AI red teaming targets model behavior, prompt robustness, information leakage, and system-level vulnerabilities that emerge from the AI stack.
+            </p>
+        </div>
+
+        <h3>Building Red Team Methodologies</h3>
+
+        <p>
+            An effective AI red team program includes diverse team composition with security experts, ML researchers, and domain experts, structured attack frameworks providing systematic approaches to uncover vulnerabilities, documentation to capture attack techniques, findings, and severity, remediation tracking to close the loop on discovered vulnerabilities, and continuous testing with regular red teaming as the system evolves.
+        </p>
+
+        <h3>Common AI Attack Vectors</h3>
+
+        <div class="callout warning">
+            <div class="callout-title">Attack Taxonomy</div>
+            <p>Common attack vectors include prompt injection through malicious instructions in user input or retrieved content, jailbreaking to circumvent safety measures through crafted prompts, data poisoning to influence model behavior through training data, model extraction to steal model capabilities or weights, membership inference to determine if specific data was in training set, adversarial inputs designed to cause misclassification, and privilege escalation using AI to perform unauthorized actions.</p>
+        </div>
+
+        <h3>Automated Adversarial Testing</h3>
+
+        <p>
+            Manual red teaming is essential but insufficient. Build automated test suites that continuously probe for vulnerabilities.
+        </p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">Adversarial Test Suite Structure</div>
+            <pre>
+class AdversarialTestSuite:
+    def __init__(self, targetSystem):
+        self.target = targetSystem
+        self.attackPatterns = []
+
+    def addAttackPattern(self, pattern):
+        self.attackPatterns.append(pattern)
+
+    def runAutomatedTests(self):
+        results = []
+        for pattern in self.attackPatterns:
+            testCases = pattern.generateTestCases()
+            for testCase in testCases:
+                response = self.target.sendQuery(testCase.input)
+                if pattern.isSuccessful(testCase, response):
+                    results.append({
+                        "attack": pattern.name,
+                        "testCase": testCase,
+                        "severity": pattern.severity,
+                        "response": response
+                    })
+        return results
+
+    def generateReport(self, results):
+        # Group by severity, generate remediation recommendations
+        pass</pre>
+        </div>
+
+        <h3>Security Evaluations</h3>
+
+        <p>
+            Security evaluations (sec evals) provide measurable benchmarks for security posture. Use established frameworks where available, and develop custom evals for your specific threats.
+        </p>
+
+        <p>LLM Security Benchmark provides open-source frameworks for measuring attack success. Custom domain evals address domain-specific attacks relevant to your use case. Regression evals ensure security fixes do not introduce new vulnerabilities. Red team findings are converted into automated test cases.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: Continuous Security Evals</div>
+            <p>
+                HealthMetrics runs security evaluations daily. Their eval suite includes 200+ prompt injection patterns, 50+ data leakage scenarios, and 30+ tool misuse attempts. Each production deployment triggers the eval suite. Security scorecards track vulnerability trends over time.
+            </p>
+        </div>
+
+        <h2>Policy Enforcement</h2>
+
+        <p>
+            Policy enforcement ensures that AI systems operate within defined boundaries. This includes runtime policy checking, output validation, content moderation, and rate limiting.
+        </p>
+
+        <h3>Runtime Policy Checking</h3>
+
+        <p>
+            Evaluate each request against policy before processing. Policies encode business rules, compliance requirements, and security boundaries.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Policy as Code</div>
+            <p>
+                Express policies in machine-readable formats that your system can evaluate programmatically. Version control policies alongside code. Test policies before deployment.
+            </p>
+        </div>
+
+        <h3>Output Validation</h3>
+
+        <p>
+            Do not trust model outputs. Validate all outputs before they reach users. Output validation includes schema validation for structured outputs to ensure responses conform to expected formats, PII detection and redaction to remove sensitive personal information, toxicity and content classification to filter harmful content, and consistency checks against known facts to catch hallucinations and misinformation.
+        </p>
+
+        <h3>Content Moderation</h3>
+
+        <p>
+            Content moderation systems classify and filter content based on policy. For AI systems, moderation must handle both inputs and outputs.
+        </p>
+
+        <div class="callout tip">
+            <div class="callout-title">Practical Tip</div>
+            <p>
+                Use multiple moderation classifiers with different approaches. Single classifiers can be circumvented. Ensemble methods provide stronger defense.
+            </p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">DataForge: Content Moderation Pipeline</div>
+            <p>
+                DataForge's moderation pipeline evaluates every AI response through multiple stages. First, PII detection scans for sensitive data. Second, toxicity classifiers check for harmful content. Third, a custom classifier validates responses against company policies. Fourth, a human review queue samples responses for quality assurance.
+            </p>
+        </div>
+
+        <h3>Rate Limiting and Abuse Prevention</h3>
+
+        <p>
+            Rate limiting prevents abuse by controlling request volume. For AI systems, abuse can take forms like credential stuffing with AI login assistance, mass content generation for spam or disinformation, automated vulnerability scanning of AI endpoints, and excessive resource consumption to cause denial of service.
+        </p>
+
+        <div class="callout note">
+            <div class="callout-title">Related Chapter</div>
+            <p>
+                For reliability patterns including availability and denial of service protection, see Chapter 23: Reliability and Safety.
+            </p>
+        </div>
+
+        <h2>Final Security Checklist</h2>
+
+        <div class="callout key-takeaway">
+            <div class="callout-title">Comprehensive Security Checklist</div>
+            <p>Before launching an AI system, teams should establish an AI red team with diverse expertise, document attack vectors and develop countermeasures, implement automated adversarial testing suites, run security evaluations before each deployment, enforce policies at runtime before processing, validate all outputs before delivery to users, implement content moderation for inputs and outputs, apply rate limiting to prevent abuse, monitor for anomalous patterns indicating attacks, and maintain incident response procedures for AI security events.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-20-4.html">20.4 Authorization</a>
+            <a class="up" href="../index.html">Chapter 20 Overview</a>
+            <a class="next" href="../../chapter-19/index.html">Ch 19: Protocols</a>
+        </nav>
+
+        <footer>
+            <p>Section 20.5 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

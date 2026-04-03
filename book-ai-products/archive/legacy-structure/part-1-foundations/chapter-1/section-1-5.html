@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.5 Product Implications - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-1-foundations/index.html">Part I: Foundations</a></div>
+        <div class="chapter-label">Chapter 1</div>
+        <h1>AI Capabilities and Limitations That Shape Products</h1>
+        <p class="chapter-subtitle">1.5 Product Implications</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Ground readers in what AI can (and cannot) do reliably today; build shared vocabulary across your team.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Basic programming knowledge helpful but not required. Completion of Sections 1.1-1.4 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Making AI Architecture Decisions</div>
+            <p>This section covers product architecture decisions, including when to use <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, fine-tuning, or <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, and how to approach build/buy/bake strategy. In the context of AI product development, architecture decisions made early are hard to reverse. Understanding the trade-offs between approaches, and connecting those choices to your specific product requirements, will save you from expensive rewrites and missed opportunities.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Build Paradox</div>
+            <p>RAG stands for Retrieval-Augmented Generation, but some engineers jokingly call it "Read-Aim-Generate" because the retrieval step so often misses the mark. The acronym is accurate; the execution is the hard part.</p>
+        </div>
+
+        <h2 id="section-1-5">1.5 Product Implications</h2>
+
+        <p>
+            We have covered the capabilities (reasoning, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a>, long context) and the limitations (<a href="section-1-4.html">hallucinations</a>, latency, knowledge cutoffs). Now comes the critical question: how do these technical factors translate into product architecture decisions? This section provides a framework for making those decisions, covering when to use different AI approaches and the strategic build/buy/bake considerations that shape AI product development.
+        </p>
+
+        <h3>Choosing Your AI Architecture: A Decision Framework</h3>
+
+        <p>
+            The three main architectural approaches - simple <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, fine-tuned models, and <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> - each have distinct strengths, costs, and use cases. Understanding when to use each is essential for building effective products.
+        </p>
+
+        <h4>Simple <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>: The Foundation</h4>
+        <p>
+            <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> (Retrieval-Augmented Generation) is the workhorse of AI product development. It works by retrieving relevant information from your documents or data, then using that information as context for the AI model to generate a response. This approach is ideal when you need the AI to answer questions about specific content - your documentation, your knowledge base, your product catalog.
+        </p>
+
+        <p>
+            <strong>Why <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> is the starting point for most products:</strong> Most products need to answer questions about specific information - your company policies, your product details, your customer data. <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> handles this by giving the model access to exactly the information it needs, without requiring you to retrain the model. It's the lowest-complexity approach that provides grounded accuracy. The trade-off is that quality depends entirely on retrieval quality - if your search returns wrong or incomplete results, the answer will be wrong or incomplete.
+        </p>
+
+        <p>
+            The economics of <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> are favorable for most products. You don't need to train a custom model; you use a pre-trained model with your data as context. The infrastructure requirements are manageable: you need a vector database to store embeddings, a retrieval system to find relevant content, and a way to format retrieved content for the model. This stack is well-established and available from many vendors.
+        </p>
+
+        <h4>Fine-tuned Models: When You Need Specialization</h4>
+        <p>
+            <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">Fine-tuning</a> takes a pre-trained model and continues training it on your specific data. This creates a model that understands your domain, your style, and your requirements. Fine-tuning makes sense when you need consistent behavior across many interactions and when the pre-trained model doesn't quite match your needs.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">&#128161; Mental Model: Training a New Employee</div>
+            <p><strong>Think of <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> like onboarding a new employee who already knows the basics.</strong> A pre-trained model is like a new hire who graduated from a general coding bootcamp: they know programming concepts but not your company, your codebase, or your style. <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">Fine-tuning</a> is like the onboarding process: you give them examples of how your team writes code, what your coding standards are, and what patterns you use. After <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a>, the model "knows" your specific way of doing things, just like an employee who completed onboarding knows your company's workflows.</p>
+            <p><em>Where this model breaks down:</em> Just like onboarding cannot fix fundamental skill gaps, <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> cannot fix fundamental model limitations. If the base model is not capable of something, fine-tuning will not magically make it capable.</p>
+        </div>
+
+        <div class="callout aha-moment">
+            <div class="callout-title">&#128161; Aha Moment: The Fine-Tuning Trap</div>
+            <p><strong>The shock:</strong> The most common mistake is <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> too early, before validating that simpler approaches do not work. You need thousands of high-quality examples just to start.</p>
+            <p><strong>What this means:</strong> If <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> can solve your problem, use <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>. <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">Fine-tuning</a> is for when you need consistent style or behavior across thousands of interactions and <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> cannot achieve that. Start simple.</p>
+        </div>
+
+        <p>
+            <strong>Why <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> changes behavior:</strong> <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">Fine-tuning</a> adjusts the model's internal weights based on your examples. If you give the model 1,000 examples of "good responses" in your style, it will shift toward producing similar responses. Think of it like teaching by example rather than by instruction. The pre-trained model had general patterns; after <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a>, those patterns are biased toward your specific patterns. The strength of fine-tuning is that the behavior becomes more consistent - it doesn't require you to explain the context every time. The weakness is that fine-tuning requires high-quality examples (thousands of them) and the model can learn the wrong patterns if your examples are inconsistent.
+        </p>
+
+        <p>
+            However, <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> has significant costs. You need training data (often thousands of examples), compute resources for training, and expertise to prepare data and tune hyperparameters. The economics only make sense when you have high volume and specific requirements that generic models don't meet. A common mistake is <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> too early, before validating that simpler approaches don't work.
+        </p>
+
+        <h4>Agents: When You Need Action</h4>
+        <p>
+            <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> are appropriate when you need the AI to take multi-step actions, not just generate responses. If your product requires the AI to gather information from multiple sources, make decisions based on that information, and then execute actions, you likely need an agent architecture. <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> add complexity - you need to define what tools are available, how the agent decides which tool to use, and how to handle failures.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Approach</th><th>Best For</th><th>Complexity</th><th>Cost</th><th>When to Use</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Simple <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a></td><td>Answering questions from documents</td><td>Low</td><td>Low ($500-5K/mo)</td><td>Most initial AI features</td></tr>
+                <tr><td>Fine-tuned model</td><td>Specific output style/format</td><td>Medium</td><td>Medium ($5K-50K setup)</td><td>High-volume, specialized needs</td></tr>
+                <tr><td>Single agent</td><td>Multi-step tasks with tool use</td><td>Medium</td><td>Medium ($2K-20K/mo)</td><td>Task completion, automation</td></tr>
+                <tr><td>Multi-agent</td><td>Complex workflows, research</td><td>High</td><td>High ($10K-100K/mo)</td><td>Enterprise, complex domains</td></tr>
+            </tbody>
+        </table>
+
+<div class="callout signature-phrase">
+            <div class="callout-title">Memory Aid: Architecture Decision Spectrum</div>
+            <p><strong>RAG for facts, Fine-tune for voice, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> for action.</strong></p>
+            <p>Use <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> when you need accurate answers from your documents. Use <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> when the model needs to speak in your specific voice or style. Use <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> when you need the AI to take actions across multiple steps.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Architecture Decision Example</div>
+            <p>Consider a customer support product. A simple <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> approach can answer common questions by retrieving from your help documentation. If you need the AI to adopt a specific tone or format, <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> might help. If you want the AI to actually process returns, update tickets, and escalate issues, you need an agent. Many products start with <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>, then add <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> as they prove value. The key is starting simple and evolving as requirements clarify.</p>
+        </div>
+
+        <h3>Build/Buy/Bake: Strategic Technology Decisions</h3>
+
+        <p>
+            Every AI product must decide which capabilities to build internally, which to buy from vendors, and which to partner on. This decision framework applies to every layer of the AI stack, from models to infrastructure to applications.
+        </p>
+
+        <h4>Build: When You Need Control</h4>
+        <p>
+            In-house development makes sense when you need core IP, competitive differentiation, or have proprietary data that cannot leave your infrastructure. Building gives you maximum control over behavior, performance, and cost. However, building is expensive and slow - you need engineering expertise, compute resources, and time to iterate.
+        </p>
+
+        <p>
+            The economic case for building is strongest when you have unique data advantages that competitors can't replicate. If your product uses specialized domain knowledge, proprietary user interactions, or confidential business information, building may be necessary to leverage those advantages. However, be honest about whether your data is truly unique - often, the same public data that powers vendor products can power your own.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Build</div>
+            <p>In-house development when you need core IP, competitive differentiation, or have proprietary data that cannot leave your infrastructure. Build when you have unique data advantages, need tight control over behavior, or when AI is your core competitive advantage. Budget 6-18 months for a competitive system.</p>
+        </div>
+
+        <h4>Buy: When You Need Speed</h4>
+        <p>
+            Pre-built platforms or APIs make sense when you need to reduce time-to-market or need commodity capabilities. Using APIs from OpenAI, Anthropic, Google, and others is the fastest way to add AI capabilities. You don't need ML expertise, you don't need infrastructure, and you can iterate quickly.
+        </p>
+
+        <p>
+            The trade-off is less control and potentially higher costs at scale. At low to medium volumes, API costs are manageable. At very high volumes, the per-token costs can exceed what you'd pay to run your own models. But for most products in the early stages, buying is the right default. The speed of iteration often matters more than the optimization of marginal costs.
+        </p>
+
+        <div class="callout signature-phrase">
+            <div class="callout-title">Rule of Thumb: Start with Buy (<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>)</div>
+            <p><strong>Buy first, build only when you must, bake for enterprise.</strong></p>
+            <p>Use pre-built APIs (Buy) to validate product-market fit. Only invest in custom training (Build) when you have high volume and specific needs. Partner (Bake) for complex enterprise requirements.</p>
+        </div>
+
+        <h4>Bake: When You Need Partnership</h4>
+        <p>
+            Partner with vendors to co-develop solutions, blending customizability with scalability. This approach makes sense when you have specific requirements that off-the-shelf products don't meet, but you don't want to build everything from scratch. Many AI vendors offer enterprise partnerships that provide customization while leveraging their platform investments.
+        </p>
+
+        <p>
+            The "bake" approach is particularly relevant for larger enterprises with complex requirements. You get more customization than buying off-the-shelf, more speed than building from scratch, and a partner invested in your success. The key is choosing partners whose incentives align with yours and whose technology roadmaps match your needs.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Bake</div>
+            <p>Partner with vendors to co-develop solutions, blending customizability with scalability. Bake when you have specific requirements that don't fit standard products, when you need enterprise support, or when co-development creates mutual value. Good for complex enterprise needs and long-term strategic relationships.</p>
+        </div>
+
+        <h3>The Evolution Path</h3>
+
+            <p>
+            The most successful AI products follow an evolution path. They start with simple <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> (buy) to validate product-market fit. As they understand user needs better, they add more sophisticated capabilities. Some evolve to <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuned models</a> (build/bake) for differentiation. Others add <a href="../../part-4-ai-engineering/chapter-12/sections/section-12-2.html">agents</a> (build) for more complex automation. The key insight is that you don't need to decide everything upfront - you can evolve your architecture as you learn.
+            </p>
+
+        <h2>Chapter 1 Summary</h2>
+
+        <div class="callout signature-phrase">
+            <div class="callout-title">Core Takeaways: The Current AI Landscape</div>
+            <ul>
+                <li><strong>Reasoning models</strong> excel at complex tasks but require more compute - use for complex problems, faster models for simple ones</li>
+                <li><strong>Multimodal</strong> capabilities are now native in leading models - enables new product categories requiring visual/auditory understanding</li>
+                <li><strong>Open-source</strong> models are competitive with proprietary alternatives - expands options but adds infrastructure complexity</li>
+                <li><strong>Agents</strong> are crossing from experimental to production - transforms AI from passive to active, enabling automation</li>
+                <li><strong>Context windows</strong> up to 2 million tokens are practical - enables comprehensive document and conversation understanding</li>
+                <li><strong>Costs</strong> have dropped over 150x but usage has exploded - expect costs to continue falling, plan for scale</li>
+                <li><strong>Hallucinations</strong> remain the key challenge requiring ongoing mitigation - design with limitations in mind</li>
+                <li><strong>Protocols</strong> (<a href="../../part-4-ai-engineering/chapter-12/sections/section-12-3.html">MCP, A2A</a>) enable interoperability - build for an interconnected AI ecosystem</li>
+            </ul>
+        </div>
+
+        <div class="callout signature-phrase">
+            <div class="callout-title">Contrast Pair: <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> vs Fine-tuning vs <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></div>
+            <p><strong><a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> is for what the model knows, <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tuning</a> is for how the model speaks.</strong></p>
+            <p><a href="../../part-4-ai-engineering/chapter-12/sections/section-12-2.html">Agents</a> are for what the model does. Use <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> to give the model access to specific facts (your documents). Use fine-tuning to change how the model behaves (your style, voice, format). Use <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a> when the model needs to take action (use tools, make decisions, complete tasks).</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Product Takeaway</div>
+            <p>AI today is powerful enough to transform most products, but success requires understanding both capabilities and limitations. Build products that leverage what AI does well (pattern recognition, synthesis, generation) while designing for what it struggles with (grounded accuracy, real-time knowledge, complex reasoning without errors). The winning products will be those that effectively combine AI capabilities with thoughtful human oversight.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                With this foundation in place, <strong>Chapter 2</strong> introduces the <a href="../../part-1-foundations/chapter-2/sections/section-2-1.html">Synergy Triangle</a> - the core framework that ties together Vibe Coding, AI PM, and AI Engineering. This framework will guide our exploration of how these three disciplines work together to build successful AI products.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-1-4.html">1.4 Persistent Limitations</a>
+            <a class="up" href="index.html">Ch 1: Overview</a>
+            <a class="next" href="../../part-1-foundations/chapter-2/sections/section-2-1.html">Ch 2: Synergy Triangle</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 1.5 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

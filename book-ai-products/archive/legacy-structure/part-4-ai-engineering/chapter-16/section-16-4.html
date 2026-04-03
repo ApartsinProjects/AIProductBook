@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16.4 Security and Compliance - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 16</div>
+        <h1>Scaling, Reliability, and Observability</h1>
+        <p class="chapter-subtitle">16.4 Security and Compliance</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Production harden your AI systems for scale and reliability.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 16.3 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Security Is Not Optional</div>
+            <p>This section covers security and compliance considerations for AI systems including API security, data privacy, and compliance frameworks like SOC2, HIPAA, and GDPR. In the context of AI engineering, security failures can be existential risks. Compliance violations can halt product launches and damage reputation.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The API Key That cost $2 Million</div>
+            <p>A developer accidentally committed an API key to a public GitHub repository. Within 24 hours, someone had found it and run up $2 million in charges. The fix took 5 minutes. The bill took months to negotiate. Always use environment variables and secret managers, never commit keys.</p>
+        </div>
+
+        <h2 id="section-16-4">16.4 Security and Compliance</h2>
+
+        <p>
+            AI systems face unique security and compliance challenges. Beyond traditional application security, you must protect against prompt injection, data leakage through outputs, and model-specific vulnerabilities. Compliance requirements like SOC2, HIPAA, and GDPR add additional obligations.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            Security failures in AI systems can expose sensitive data, allow unauthorized access, or enable harmful outputs. Compliance violations can halt product launches, result in fines, and damage reputation. Both are existential risks for AI products.
+        </p>
+
+        <h3>1. API Security</h3>
+
+        <p>
+            Secure your AI APIs with proper authentication, authorization, and rate limiting. This is the first line of defense against abuse.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Practical Example: API Security Implementation</div>
+            <pre class="code-block">class SecureAIAPI:
+    """Secure API implementation with multiple layers"""
+    
+    def __init__(self):
+        self.auth_provider = Auth0Client()
+        self.rate_limiter = TokenBucketLimiter()
+        self.api_key_manager = APIKeyManager()
+    
+    async def handle_request(self, request: Request) -> Response:
+        # Layer 1: Authentication
+        user = await self.auth_provider.authenticate(request.headers)
+        if not user:
+            return Response(status=401, error="Unauthorized")
+        
+        # Layer 2: Rate limiting
+        if not self.rate_limiter.check(user.id):
+            return Response(status=429, error="Rate limit exceeded")
+        
+        # Layer 3: Authorization
+        if not self.can_access(user, request.endpoint):
+            return Response(status=403, error="Forbidden")
+        
+        # Layer 4: Process request
+        result = await self.process(request, user)
+        
+        # Layer 5: Audit logging
+        await self.audit_log.log(user.id, request, result)
+        
+        return result
+    
+    def can_access(self, user: User, endpoint: str) -> bool:
+        # Check user's permissions
+        permissions = user.get_permissions()
+        return endpoint in permissions
+
+# API key best practices:
+# - Rotate keys regularly (90 days)
+# - Use scopes to limit capabilities
+# - Monitor usage patterns
+# - Revoke compromised keys immediately</pre>
+        </div>
+
+        <h3>2. Data Privacy</h3>
+
+        <p>
+            AI systems often process sensitive data. Implement proper PII handling, encryption, and data minimization to protect user privacy.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Case Study: PII Handling</div>
+            <pre class="code-block">class PrivacyProtector:
+    """Protect privacy throughout the AI pipeline"""
+    
+    def __init__(self):
+        self.pii_detector = load_pii_detector()
+        self.encryption = AESEncryption()
+    
+    async def process(self, user_input: str, user_id: str) -> ProcessedInput:
+        # Detect PII in input
+        pii_locations = await self.pii_detector.detect(user_input)
+        
+        # If PII found, either block or anonymize based on policy
+        if pii_locations and not self.user_consents_to_pii(user_id):
+            return ProcessedInput(
+                allowed=False,
+                reason="Contains detected PII - please remove personal information"
+            )
+        
+        # Anonymize PII for processing
+        anonymized = self.anonymize(user_input, pii_locations)
+        
+        # Store only anonymized data for improvement
+        await self.store_anonymized(anonymized)
+        
+        return ProcessedInput(text=anonymized, contains_pii=bool(pii_locations))
+    
+    def anonymize(self, text: str, pii_locations: list) -> str:
+        for pii in pii_locations:
+            if pii.type == "email":
+                text = text.replace(pii.text, f"user_{hash(pii.text)}@redacted")
+            elif pii.type == "phone":
+                text = text.replace(pii.text, "REDACTED")
+            # ... other types
+        return text
+    
+    # Encrypt data at rest and in transit
+    def encrypt_for_storage(self, data: str) -> str:
+        return self.encryption.encrypt(data)
+    
+    def decrypt_for_use(self, encrypted_data: str) -> str:
+        return self.encryption.decrypt(encrypted_data)</pre>
+        </div>
+
+        <h3>3. Compliance Frameworks</h3>
+
+        <p>
+            Different compliance frameworks apply to different contexts. Understand which apply to your product and how to meet their requirements.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Real-World Scenario: Compliance Implementation</div>
+            <table>
+                <thead>
+                    <tr><th>Framework</th><th>Applies To</th><th>Key Requirements</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>SOC 2</td><td>Service organizations</td><td>Security, availability, confidentiality</td></tr>
+                    <tr><td>HIPAA</td><td>Healthcare data</td><td>PHI protection, access controls, audit trails</td></tr>
+                    <tr><td>GDPR</td><td>EU user data</td><td>Consent, data portability, deletion rights</td></tr>
+                    <tr><td>PCI-DSS</td><td>Payment data</td><td>Card data protection, secure processing</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>SOC 2 Compliance for AI</h4>
+        <ul>
+            <li><strong>Security controls:</strong> Access controls, encryption, network security</li>
+            <li><strong>Availability:</strong> Uptime guarantees, incident response plans</li>
+            <li><strong>Processing integrity:</strong> Accurate AI processing, quality controls</li>
+            <li><strong>Confidentiality:</strong> Data classification, retention policies</li>
+            <li><strong>Privacy:</strong> Data handling, consent management</li>
+        </ul>
+
+        <h3>4. Audit Trails</h3>
+
+        <p>
+            Complete logging enables security audits, incident investigation, and compliance demonstration. Every significant action should be logged.
+        </p>
+
+        <div class="example-box">
+            <div class="example-title">Skill Demonstration: Comprehensive Audit Logging</div>
+            <pre class="code-block">class AuditLogger:
+    """Complete audit logging for compliance"""
+    
+    async def log(self, event: AuditEvent):
+        entry = {
+            "timestamp": datetime.now().isoformat(),
+            "event_type": event.type,
+            "user_id": event.user_id,
+            "ip_address": event.ip_address,
+            "action": event.action,
+            "resource": event.resource,
+            "result": event.result,
+            "metadata": event.metadata,
+            # Hash for integrity verification
+            "content_hash": hash(event.serialize())
+        }
+        
+        # Write to tamper-proof storage
+        await self.secure_store.write(entry)
+    
+    def generate_audit_report(
+        self, 
+        start_date: datetime, 
+        end_date: datetime,
+        user_id: str = None
+    ) -> AuditReport:
+        # For compliance audits
+        entries = self.secure_store.query(
+            start=start_date,
+            end=end_date,
+            user=user_id
+        )
+        
+        return AuditReport(
+            entries=entries,
+            summary=generate_summary(entries),
+            certificate=self.generate_integrity_certificate(entries)
+        )
+
+# What to log:
+# - Authentication (login, logout, failures)
+# - Authorization (access grants/denials)
+# - Data access (read, write, delete)
+# - AI operations (queries, responses)
+# - Admin actions (config changes, deployments)
+# - Security events (suspected attacks)</pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Concern</th><th>Implementation</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>API security</td><td>Authentication, rate limiting, authorization</td></tr>
+                <tr><td>Data privacy</td><td>PII detection, encryption, anonymization</td></tr>
+                <tr><td>Compliance</td><td>SOC2, HIPAA, GDPR controls</td></tr>
+                <tr><td>Audit trails</td><td>Complete logging, integrity verification</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Security is Continuous</div>
+            <p>Security and compliance are not one-time achievements. New vulnerabilities emerge, regulations evolve, and threats change. Build security into your development process and maintain ongoing monitoring and improvement.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Congratulations on completing Part IV on AI Engineering! Continue to 
+                <a href="../../part-5-integration/chapter-17/index.html">Part V: Integration</a> to tie 
+                everything together.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-16-3.html">16.3 Observability Tools</a>
+            <a class="up" href="index.html">Chapter 16 Index</a>
+            <a class="next" href="section-16-5.html">16.5 Distributed Tracing and Resilience</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 16.4 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

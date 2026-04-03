@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5.1 Problem-First vs Tech-First - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-2-discovery-design/index.html">Part II: Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 5.1</div>
+        <h1>Problem-First vs Tech-First</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            The most common failure mode in AI product development is not technical. It is a failure of imagination constrained by excitement about what AI can do rather than what users need. Starting with the technology rather than the problem leads to solutions that are technically impressive and practically useless.
+        </p>
+
+        <h2>The Tech-First Trap</h2>
+
+        <p>Tech-first thinking begins with a fascinating technology and seeks problems to apply it to. This approach produces products that are showcase demonstrations rather than useful tools. The appeal is obvious: AI is exciting, capabilities are expanding rapidly, and it feels innovative to lead with technology.</p>
+
+        <p>The trap springs closed when teams fall in love with their technical approach. They spend months building sophisticated solutions only to discover that users have simpler, cheaper, more reliable ways to accomplish their goals. The AI becomes a solution looking for a problem.</p>
+
+        <div class="callout warning">
+            <div class="callout-title">Signs You Are Falling Into the Tech-First Trap</div>
+            <p>Several warning signs indicate you may be caught in the tech-first trap. Your product description leads with technology rather than user outcome, revealing that the technology has become the focal point rather than the benefit to users. You struggle to articulate the problem your AI solves in one sentence, which suggests the problem statement has not been clearly defined. User research reveals that users do not think they have the problem you are solving, meaning you have assumed a problem that does not actually exist in users' lives. Early users try the product once and never return, indicating the product does not deliver ongoing value. You find yourself explaining what the AI does rather than what users accomplish, which means the value proposition is centered on technology rather than outcomes. Finally, competitors with simpler non-AI solutions have better user retention, suggesting that your AI-driven approach has added complexity without proportional user benefit.</p>
+        </div>
+
+        <p>Avoiding the tech-first trap requires a different starting point and a different set of questions.</p>
+
+        <h2>Problem-First Thinking</h2>
+
+        <p>Problem-first thinking begins with a genuine user problem and works backward to solutions. The question is never "what can AI do?" but rather "what stands between users and their goals?" and only then "could AI help here?"</p>
+
+        <p>This approach is harder because it requires discipline. It is easier to be excited about a neural network than about understanding why hospital administrators struggle with patient discharge timing. But that excitement fades when the product nobody wants sits idle.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Problem-First Hierarchy</div>
+            <p>Ask questions in this order. First, determine what job the user needs to get done, focusing not on what feature they want but on what progress they are trying to make in their work or life. Second, identify what prevents them from getting it done today, which reveals the actual problem rather than the assumed one. Third, assess whether this problem is worth solving by examining its frequency, impact, and urgency. Fourth, consider whether AI could help solve this problem, asking specifically whether AI has unique advantages here that simpler approaches cannot match. Fifth, determine what the simplest solution might be, recognizing that AI is often not the answer and that elegant simplicity often outperforms complex sophistication.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before validating any problem statement, build a <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">micro-eval</a> that measures baseline performance. For problem-first discovery, this means: tracking how often users encounter the problem today, measuring the current time-to-resolution or effort required, and establishing ground truth about whether users actually want this solved. QuickShip's eval-first insight: they measured exception handling frequency and effort for 2 weeks before building anything, which gave them the confidence that their problem-first approach was actually solving a real pain point, not an assumed one.
+            </p>
+        </div>
+
+        <h2>QuickShip: Tech-First vs Problem-First</h2>
+
+        <p>QuickShip is a logistics startup that manages last-mile delivery for e-commerce companies. Their operations team spends hours each day manually adjusting routes and handling customer service issues. They were excited about AI and initially explored several tech-first directions.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: QuickShip Logistics</div>
+            <p><strong>Tech-First Ideas They Considered:</strong></p>
+            <p>The team initially explored computer vision for package tracking on delivery trucks, which was technically impressive but did not solve any urgent operational problem. They also considered a natural language interface for all operations queries, though user research revealed that operations staff were already fine with their existing tools and saw no need for a more sophisticated interface. Additionally, they contemplated predictive models for every possible delivery scenario, which represented significant overengineering for their actual needs and would have added substantial complexity without proportional benefit.</p>
+            <p><strong>Problem-First Analysis:</strong></p>
+            <p>Through user research, QuickShip discovered that their operations team spent 40% of their time on a single problem: handling delivery exception requests from customers. When a package was delayed, redirected, or damaged, customers emailed or called, and agents had to manually look up status, make decisions, and respond.</p>
+            <p>This was high-frequency, high-frustration, and solvable with AI. They built a simple AI system that automatically handled 80% of exception requests with instant responses. The technology was less impressive than their original ideas but the impact was transformational.</p>
+        </div>
+
+        <h2>Problem Decomposition Methods</h2>
+
+        <p>Once you have identified a genuine problem worth solving, the next step is decomposition. Large, vague problems must be broken into specific, addressable components. This is where the problem-first approach intersects with AI capability assessment.</p>
+
+        <h3>The Five Whys</h3>
+
+        <p>Root cause analysis through successive questioning reveals whether the problem you are tackling is the real problem or a symptom of something deeper.</p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">Five Whys Applied to QuickShip</div>
+            <pre>
+Problem: Customer exception requests take too long to resolve
+
+Why 1: Agents must manually look up package status
+Why 2: Status information is scattered across multiple systems
+Why 3: No unified API connects tracking, warehouse, and delivery data
+Why 4: The original architecture treated these as separate concerns
+Why 5: We built incrementally without anticipating integration needs
+
+Real Problem: Fragmented data architecture causing manual lookup work
+            </pre>
+        </div>
+
+        <p>Root cause analysis often reveals that the obvious problem is merely a symptom of deeper architectural issues.</p>
+
+        <h3>Jobs-to-be-Done Analysis</h3>
+
+        <p>The Jobs-to-be-Done framework focuses on the functional, emotional, and social jobs that customers hire products to do. Rather than asking what features users want, you ask what progress they are trying to make in their lives or work.</p>
+
+        <p>For QuickShip, the job was not "respond to exception requests." The job was "minimize customer effort to resolve delivery issues." These sound similar but lead to very different solutions.</p>
+
+        <h3>Assumption Reversal</h3>
+
+        <p>Challenge every assumption about how a problem must be solved. If your solution assumes a particular approach, ask whether that assumption is valid or self-imposed.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Assumption Reversal</div>
+            <p>The Assumption Reversal method challenges every assumption about how a problem must be solved:</p>
+            <p>Instead of assuming users need more information, consider that they may actually need fewer decisions to make.</p>
+            <p>Instead of believing more automation is always better, recognize that the right level of automation depends on the stakes involved.</p>
+            <p>Instead of positioning AI to replace human work, explore how AI might augment human capabilities.</p>
+            <p>Instead of treating accuracy as the primary metric, evaluate usefulness while considering accuracy trade-offs.</p>
+            <p>Instead of assuming real-time processing is necessary, consider whether batch processing might suffice for the use case at hand.</p>
+        </div>
+
+        <h2>When AI Is and Is Not the Right Solution</h2>
+
+        <p>AI is not always the answer. Understanding when AI genuinely adds value versus when it adds unnecessary complexity is a critical skill. This is not an argument against using AI. It is an argument for using AI only when it earns its complexity.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">AI Is Worth Considering When:</div>
+            <p>AI is worth considering when the problem involves pattern recognition across complex, ambiguous data that humans cannot efficiently process. It makes sense when human expertise is scarce, expensive, or inconsistent, as AI can provide reliable expertise at scale. AI becomes necessary when scale makes human-only solutions economically impossible, as the cost of human labor would be prohibitive. When personalization at scale would require prohibitive human effort, AI can deliver customized experiences efficiently. The cost of AI errors must be acceptable and manageable, meaning the system can tolerate some imperfection without catastrophic consequences. Finally, AI is appropriate when users need to understand or verify AI reasoning for trust, which requires explainability capabilities.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">AI Should Be Avoided When:</div>
+            <p>AI should be avoided when rules-based logic achieves comparable results with less complexity, as simpler solutions are preferable when they deliver equivalent outcomes. When 100% accuracy is required and achievable with simpler methods, the probabilistic nature of AI becomes a liability rather than an asset. If the problem is low-stakes and infrequent enough that human judgment is fine, adding AI introduces unnecessary complexity. When explainability is required and current AI methods cannot provide it, the black-box nature of the system creates unacceptable risks. If regulatory constraints prohibit probabilistic outputs, AI cannot be used regardless of its other merits. And when the cost of AI infrastructure and maintenance exceeds the value gained, the economic case for AI simply does not hold.</p>
+        </div>
+
+        <h2>The Kill Criteria</h2>
+
+        <p>Before investing heavily in AI solutions, establish kill criteria that would indicate a problem is not worth pursuing further. These are conditions that, if met, mean you should pivot or stop rather than continue.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: QuickShip Logistics</div>
+            <p>Before building their exception handling AI, QuickShip established three kill criteria:</p>
+            <p><strong>1. Resolution threshold:</strong> If automated resolution rate fell below 60%, the AI would not be providing enough value to justify its complexity.</p>
+            <p><strong>2. Satisfaction baseline:</strong> Customer satisfaction with AI responses must meet or exceed the human agent baseline, otherwise the AI would be hurting rather than helping the customer experience.</p>
+            <p><strong>3. Engineering burden:</strong> If handling edge cases required more than 20% of engineering time, the solution would not be scalable and would need to be rethought.</p>
+            <p><strong>Result:</strong> The first version achieved 78% automated resolution with customer satisfaction exceeding the human baseline. The narrowly scoped solution delivered clear value.</p>
+        </div>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>Tech-first thinking leads to impressive solutions that nobody uses because the technology becomes the focus rather than user needs. Problem-first thinking begins with genuine user needs and works backward to solutions, ensuring that the technology serves a real purpose. Problem decomposition methods like Five Whys and Jobs-to-be-Done reveal the real problem beneath surface-level symptoms, allowing teams to address root causes rather than manifestations. AI should be considered only after understanding the genuine problem and its constraints, ensuring that the technology is applied where it genuinely adds value. Establishing kill criteria before building focuses effort on high-value opportunities and prevents investing in solutions that cannot deliver sufficient impact. The simplest solution that solves the problem is usually better than the most sophisticated one, as elegance and pragmatism often outperform complexity and overengineering.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Auditing Your Current AI Project</div>
+            <p>Apply the problem-first framework to an AI project you are currently working on or considering. Begin by writing the problem you are trying to solve in one sentence without mentioning AI, which forces you to articulate the actual user need rather than the technological solution. Next, ask the Five Whys to find the root cause, drilling down through successive layers of why to understand the true problem. Then identify three non-AI solutions and explain why they might be insufficient, which ensures you have genuinely considered alternatives before defaulting to AI. Establish kill criteria before proceeding further, defining upfront what would indicate the project should be abandoned or pivoted. If you cannot write a clear problem statement, you may be suffering from tech-first thinking and should revisit the problem definition phase.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 5.2, we explore <strong>Task Decomposition for AI</strong>, examining how to break problems into AI-appropriate units, identify where AI adds unique value, and recognize when human judgment remains essential.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 5: Finding Problems</a>
+            <a class="up" href="../index.html">Chapter 5 Overview</a>
+            <a class="next" href="section-5-2.html">5.2 Task Decomposition</a>
+        </nav>
+
+        <footer>
+            <p>Section 5.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

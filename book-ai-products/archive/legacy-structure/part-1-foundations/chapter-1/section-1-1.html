@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.1 Evolution of Foundation Models - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-1-foundations/index.html">Part I: Foundations</a></div>
+        <div class="chapter-label">Chapter 1</div>
+        <h1>AI Capabilities and Limitations That Shape Products</h1>
+        <p class="chapter-subtitle">1.1 Evolution of Foundation Models</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Ground readers in what AI can (and cannot) do reliably today; build shared vocabulary across your team.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Basic familiarity with software development concepts. No prior AI/ML experience required.
+        </div>
+
+        <h2 id="section-1-1">1.1 Evolution of Foundation Models</h2>
+
+        <p>
+            The foundation model landscape has transformed dramatically since 2023. Understanding this evolution is essential for making informed product decisions. The changes are not merely incremental improvements but represent a fundamental shift in what is computationally and economically feasible for product teams.
+        </p>
+
+        <p>
+            In 2023, building a sophisticated AI-powered feature meant budgeting tens of thousands of dollars monthly for API calls and hoping the technology would mature. Today, the same capabilities are available at a fraction of the cost, enabling a much broader range of products and use cases to leverage AI effectively.
+        </p>
+
+        <h3>Why This Matters for Products</h3>
+        
+        <p>
+            The evolution of foundation models directly impacts product strategy in three fundamental ways. First, the declining cost structure means you can now integrate AI into products that previously would have been economically unviable. A startup building a productivity app in 2023 might have spent $50,000 annually on AI APIs. Today, the same functionality might cost $500. This democratization enables far more products to include intelligent features, changing competitive dynamics across industries.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">QuickShip: Why Logistics Is Ripe for AI Disruption</div>
+            <p>Consider QuickShip, a two-person logistics startup helping small e-commerce businesses optimize shipping routes. In 2023, building an AI-powered route optimizer would have cost tens of thousands monthly in API fees. Today, the same capability costs hundreds. This cost collapse enables startups to compete with established logistics giants, bringing AI-powered optimization to small businesses that previously could not afford it. The logistics domain is particularly well-suited to AI because it involves complex optimization problems (routing, carrier selection) where small improvements translate directly to cost savings.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The 50x Challenge</div>
+            <p>If you printed all the tokens in GPT-4 training data and stacked them, the paper tower would reach the moon twice. That is a lot of reading, and the model still cannot tell you what it had for breakfast.</p>
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">EduGen: The $30B Vocational Training Market Opportunity</div>
+            <p>The vocational training market represents a massive opportunity largely overlooked by AI products. The market size exceeds $30 billion globally, with millions of workers needing skill upgrades that traditional apprenticeship systems cannot provide at scale. Maria Chen, founder of EduGen, saw this firsthand as an electrician: "The apprenticeship system hasn't changed in 50 years. Young workers learn on the job, slowly. I thought: what if AI could accelerate skilled trades training?" This domain is ideal for AI because learning paths can be personalized, outcomes can be measured, and the cost of human tutors is prohibitive at scale.</p>
+        </div>
+
+        <p>
+            Second, the capabilities themselves have expanded beyond simple text generation into reasoning, planning, and multi-step task execution. This means products can now offload more complex cognitive work to AI, moving from augmentation to automation in many domains. The implications for user experience are profound: tasks that previously required expert human judgment can now be handled automatically, lowering barriers to complex workflows.
+        </p>
+
+            <p>
+                Third, the emergence of open-source models that rival proprietary alternatives has fundamentally changed the build-versus-buy calculus. Product teams can now host powerful models themselves, giving them more control over data privacy, latency, and customization. This shift enables industries with strict data handling requirements, such as healthcare and finance, to adopt AI more confidently.
+            </p>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Research Spotlight: The Commoditization of AI</div>
+            <p>Academic research on technology commoditization provides insight into the current AI landscape. Arthur's <strong>Complementary Change Theory</strong> (2009) describes how technologies tend toward commoditization as they mature, with value shifting from the technology itself to complementary capabilities. The AI market follows this trajectory: as model capabilities commoditize, competitive advantage increasingly derives from data assets, domain expertise, and integration capabilities rather than raw model performance.</p>
+            <p>This has profound implications for product strategy. Companies that invested heavily in proprietary AI capabilities in 2023 are discovering that their advantage erodes rapidly as open-source models close the capability gap. The sustainable differentiators are now those that leverage AI within specific domain contexts, proprietary data moats, and superior user experience.</p>
+            <p><em>Key reference: Arthur, W.B. (2009). "The Nature of Technology." Free Press.</em></p>
+        </div>
+
+        <h3>Reasoning Models</h3>
+
+        <p>
+            The most significant advancement has been the emergence of <strong>reasoning models</strong> that "think before answering." These models use chain-of-thought reasoning to break down complex problems into manageable steps, much like a human would approach a challenging puzzle. The difference from earlier models is profound. Earlier 2023-era models would attempt to generate an answer immediately, often missing nuance. Reasoning models pause to decompose the problem, consider multiple approaches, and verify their conclusions before presenting an answer.
+        </p>
+
+        <p>
+            <strong>Why chain-of-thought works:</strong> Standard language models generate text one token at a time, predicting the most likely next word based on patterns seen during training. This is like answering a complex math problem by instantly guessing the answer. You might get simple problems right, but you will fail on multi-step problems that require intermediate steps.
+        </p>
+
+        <p>
+            Chain-of-thought prompts the model to show its work by generating reasoning tokens before generating the final answer. Think of it like a student showing their steps on a math test rather than just writing the final answer. The model still does the same prediction task, but now it breaks the problem into smaller steps, checking each step before moving to the next. The model does not suddenly become smarter. It simply uses more compute to make better predictions by considering more context before committing to an answer.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">&#128161; Mental Model: The Slow Thinking Student</div>
+            <p><strong>Think of chain-of-thought as a student working through a complex problem out loud.</strong> Imagine a student solving "If Alice has 3 apples and buys 2 more, then gives half to Bob, how many does she have left?" Without showing work, the student might guess incorrectly. By talking through each step (3 + 2 = 5, half of 5 is 2.5), the student catches mistakes before finalizing the answer. Language models work similarly: reasoning tokens are the model "thinking out loud," and each step can be verified before proceeding to the next.</p>
+            <p><em>Where this model breaks down:</em> The model does not truly "understand" math like a human does. It is still predicting the most likely next token, but by generating more tokens, it has more opportunities to arrive at correct predictions through pattern matching rather than true reasoning.</p>
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Reasoning Revolution</div>
+            <p>Reasoning models represent a paradigm shift from "fast thinking" to "slow thinking" in AI. Daniel Kahneman's distinction between System 1 (intuitive, fast) and System 2 (deliberate, slow) thinking now maps onto AI capabilities. Early language models operated like System 1: rapid pattern matching but prone to errors on complex tasks. Reasoning models bring System 2 capabilities to AI, fundamentally changing what problems can be delegated to AI systems.</p>
+        </div>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Academic Perspective: Cognitive Load and AI Assistance</div>
+            <p>            The emergence of AI-assisted development connects to Sweller's <strong>Cognitive Load Theory</strong> (1988), which distinguishes between intrinsic, extraneous, and germane cognitive load. <a href="../../part-2-vibe-coding/chapter-3/sections/section-3-1.html">Vibe coding</a> reduces extraneous load by eliminating syntax transcription, allowing developers to focus germane load on architectural problem-solving. Research by Sweller et al. (2019) demonstrates that reducing extraneous cognitive load significantly improves learning and problem-solving outcomes, providing theoretical validation for the AI-assisted development approach.</p>
+            <p><em>Key reference: Sweller, J. (1988). "Cognitive Load During Problem Solving." Cognitive Science, 12(2), 257-285.</em></p>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Model</th><th>Release</th><th>Key Capability</th><th>Best For</th><th>Economic Impact</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>OpenAI o1</td><td>Sep 2024</td><td>Reasoning before response</td><td>Math, science, coding</td><td>First mass-market reasoning model</td></tr>
+                <tr><td>OpenAI o3/o4-mini</td><td>Apr 2025</td><td>Advanced reasoning</td><td>Complex multi-step tasks</td><td>10x improvement in math/science benchmarks</td></tr>
+                <tr><td>DeepSeek R1</td><td>Jan 2025</td><td>Open-source reasoning</td><td>Cost-effective deployment</td><td>Broke proprietary reasoning monopoly</td></tr>
+                <tr><td>Qwen QwQ-32B</td><td>Mar 2025</td><td>Chain-of-thought reasoning</td><td>Open-source alternatives</td><td>Competent local deployment possible</td></tr>
+                <tr><td>Claude 4 (or 4.0)</td><td>Recent</td><td>1M token context, agentic</td><td>Long documents, <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></td><td>Enterprise-grade reasoning + <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agents</a></td></tr>
+                <tr><td>Gemini 2.5 Pro</td><td>Mar 2025</td><td>Thinking-native, 1M tokens</td><td>Long-context tasks</td><td>Reasoning + context combined</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Key Insight</div>
+            <p>Reasoning models excel at complex tasks but have higher latency due to multi-step computation. Use them for complex problems; use faster models for simple, high-volume requests. The cost difference is significant: reasoning models may take 10-30 seconds for complex tasks that a non-reasoning model completes in 1-2 seconds. However, for tasks where accuracy matters more than speed, the additional compute time is worthwhile.</p>
+        </div>
+
+        <div class="callout aha-moment">
+    <div class="callout-title">&#128161; Aha Moment: The 50x Price Drop</div>
+    <p><strong>The shock:</strong> The GPT-4 equivalent that cost $20 per million tokens in 2022 now costs $0.40 per million tokens. That is a <strong>50x reduction</strong> in just four years.</p>
+    <p><strong>What this means:</strong> An AI feature that would have cost $100,000 per month to run in 2022 now costs $2,000. Features that were economically impossible are now routine. If you built an AI product in 2023 and found it too expensive, try again now.</p>
+</div>
+
+        <h4>Why Reasoning Models Are Slower</h4>
+        <p>
+            The latency increase is not arbitrary. It reflects a fundamental trade-off in how reasoning works. When a reasoning model thinks, it generates intermediate tokens that do not appear in the final response. A complex problem might require 500 reasoning tokens before a 100-token answer emerges.
+        </p>
+
+        <p>
+            Each token generation requires a full pass through the model neural network. More thinking tokens means exponentially more computation. This is why reasoning models are billed separately. More neural network operations occur, so the compute cost is genuinely higher.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">&#128161; Mental Model: The Thinking Budget</div>
+            <p><strong>Think of reasoning tokens as a budget for "mental effort."</strong> Just as a human solving a hard problem might scribble notes, double-check calculations, and talk through the approach before writing the final answer, a reasoning model uses tokens as scratch space. Every token the model generates requires compute time, like every note a student writes takes time. Simple problems need little scratch space (fast answers). Complex problems need extensive scratch space (slower but more accurate answers).</p>
+            <p><em>Where this model breaks down:</em> The model cannot "think" about whether to think more or less. It follows a fixed pattern. Some simple problems waste reasoning tokens, and some hard problems run out of reasoning tokens before finding the answer.</p>
+        </div>
+
+        <p>
+            The practical implication: route simple, high-volume requests to faster models and reserve reasoning models for complex tasks where the additional accuracy justifies the wait.
+        </p>
+
+        <h3>The Economic Implications of Reasoning</h3>
+
+        <p>
+            The emergence of reasoning models creates new economic considerations for product teams. The additional compute time translates directly to higher per-request costs, often 3-10x more than standard language model inference. This cost premium only makes sense when the quality difference is substantial.
+        </p>
+
+        <p>
+            For a product handling 1 million requests daily, using a reasoning model for all requests could increase monthly costs from $5,000 to $35,000 or more. The strategic question becomes: which requests genuinely benefit from reasoning, and can you route them intelligently?
+        </p>
+
+            <p>
+            The answer typically involves a triage strategy. Simple, high-volume requests like greeting customers or answering common FAQs can use faster, cheaper models. Complex requests involving diagnosis, analysis, or multi-step planning should use reasoning models. The technical implementation involves building a classifier that routes requests appropriately, and this pattern has become standard in production AI systems.
+            </p>
+
+            <p>
+            The key insight: not every task needs deep reasoning. Cost optimization through intelligent routing can dramatically improve the economics of AI product features.
+            </p>
+
+            <hr>
+
+            <h3>Multimodal Models</h3>
+
+        <p>
+            Modern models process and generate text, images, audio, and video. This capability represents a fundamental expansion of what AI products can do.
+        </p>
+
+        <p>
+            Consider the implications: a customer service product in 2023 could only process text. Today, the same product can understand screenshots uploaded by users, analyze images of products to identify issues, and even process voice calls with the same underlying AI capabilities.
+        </p>
+
+        <p>
+            <strong>Why multimodal matters:</strong> Most human communication is not purely text. We point at things, show pictures, speak aloud, and gesture at diagrams. Before multimodal models, AI products had to use separate systems for each modality. A text model handled conversation, a vision model handled images, and a speech model handled audio. These systems were disconnected, making it impossible to connect the meaning across modalities.
+        </p>
+
+        <p>
+            A support ticket with a screenshot of an error message required two separate AI systems that might give inconsistent answers. Multimodal models understand the whole picture at once, creating coherent responses that bridge what you see, say, and write.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">&#128161; Mental Model: The Polyglot Translator</div>
+            <p><strong>Think of multimodal AI as a translator who sees, hears, and reads simultaneously.</strong> Imagine a meeting where someone shows a slide, speaks about it, and answers questions. A single-purpose translator would need separate interpreters for the slide (visual), the speech (audio), and the questions (text). They might give conflicting translations. A multimodal AI is like a translator who experiences the entire meeting at once, understanding how the visual supports the verbal and informs the written response.</p>
+            <p><em>Where this model breaks down:</em> The model still processes different modalities through separate components internally. It does not truly "see" or "hear" like a human; it converts all inputs to a common format for processing.</p>
+        </div>
+
+        <p>
+            The multimodal shift creates entirely new product categories. In healthcare, AI can now analyze medical images alongside patient notes, combining visual and textual reasoning. In retail, products can understand both the visual appearance and textual descriptions of items, enabling more accurate search and recommendations. In education, AI can explain diagrams, analyze handwritten work, and provide audio explanations alongside text.
+        </p>
+
+        <ul>
+            <li><strong>GPT-4o</strong> (May 2024): Unified multimodal input/output - the first model to seamlessly process text, images, audio, and video in a single conversation</li>
+            <li><strong>Meta Llama 4</strong> (Apr 2025): First natively multimodal open-source models - enabled enterprises to build multimodal AI without relying on proprietary APIs</li>
+            <li><strong>Claude 4.6</strong>: 1M token context with native multimodal - combined massive context with multimodal capabilities for enterprise use cases</li>
+            <li><strong>Gemini 2.5 Pro</strong>: 2M token experimental <a href="../../part-1-foundations/chapter-1/sections/section-1-3.html">Context Window</a> - pushing boundaries of what can be processed in a single context</li>
+        </ul>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Multimodal in Production</div>
+            <p>Consider a real estate application that lets users upload photos of rooms. With multimodal AI, the product can automatically identify the room type (kitchen, bedroom, bathroom), estimate the quality of finishes, detect potential issues (water damage, cracks), and generate listing descriptions. This would have required separate computer vision systems in 2023; today, a single multimodal model handles everything.</p>
+        </div>
+
+        <h3>Open-Source Progress</h3>
+
+        <p>
+            Open-source models have closed the gap with proprietary alternatives. This development has massive implications for product economics. When the best models were only available via API, you paid per token and had no control over the underlying technology. Open-source models change this fundamentally: you can run them on your own infrastructure, <a href="../../part-4-ai-engineering/chapter-14/sections/section-14-2.html">fine-tune</a> them on your specific data, and optimize them for your use case.
+        </p>
+
+        <p>
+            The cost implications are substantial. Running an open-source model on your own infrastructure involves upfront compute costs (GPU servers) but eliminates per-token API fees. For high-volume applications, this can mean the difference between $100,000 annually in API costs and $20,000 annually in compute costs. The break-even point typically comes at around 10-50 million tokens per month, depending on the specific model and use case.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">&#128161; Mental Model: Buying a Coffee Machine</div>
+            <p><strong>Think of open-source versus API models like buying a coffee machine versus going to a cafe.</strong> The API model is like buying coffee at a cafe: you pay per cup, no upfront cost, but it adds up over time (like paying per token). The open-source model is like buying an espresso machine: expensive upfront (GPU servers), but once you own it, each cup costs almost nothing. At low volume, the cafe is cheaper. At high volume, owning the machine pays off. The crossover point is where you need to do the math for your specific situation.</p>
+            <p><em>Where this model breaks down:</em> The cafe (API) also provides expertise, maintenance, and new recipe upgrades (model improvements). Your coffee machine (open-source) needs you to handle all of that yourself, which takes time and skill.</p>
+        </div>
+
+        <ul>
+            <li><strong>Llama 4</strong>: Native multimodal, competitive with GPT-4o - Meta's flagship model brings multimodal capabilities to the open-source world</li>
+            <li><strong>Qwen3</strong>: Strong multilingual, vision-language models - Alibaba's contribution to open-source offers excellent performance especially for non-English use cases</li>
+            <li><strong>DeepSeek R1</strong>: Reasoning model comparable to o1, available for local deployment - the first open-source model to challenge proprietary reasoning capabilities</li>
+        </ul>
+
+        <div class="callout warning">
+            <div class="callout-title">HealthMetrics: Regulatory Constraints in Healthcare AI</div>
+            <p>Healthcare AI faces unique regulatory challenges that other domains do not. HealthMetrics, a B2B platform for hospital administrators analyzing patient flow, must comply with HIPAA, FDA guidelines for clinical decision support, and state medical board requirements. Unlike a logistics app where AI errors mean delayed packages, healthcare AI errors can affect patient safety. This regulatory environment means HealthMetrics cannot move as fast as QuickShip: every AI feature requires compliance review, clinical advisor sign-off, and documented risk assessments. Healthcare AI teams must budget 3-6 months for compliance checkpoints that other industries do not have.</p>
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">RetailMind: Why Physical Retail Is a Different AI Challenge</div>
+            <p>RetailMind helps brick-and-mortar retailers personalize in-store experiences using AI. Unlike e-commerce where every interaction is digitally tracked, physical retail presents unique challenges: customers do not log in, shopping behavior must be inferred from sensors, and trust issues arise when AI interacts with shoppers on the floor. RetailMind discovered that in-store AI requires handling edge cases that e-commerce AI does not face: intermittent connectivity in old stores, associates who distrust AI recommendations, and customers uncomfortable with facial recognition. Physical retail AI is not simply "e-commerce AI in stores" - it requires fundamentally different approaches to data collection, model training, and user experience design.</p>
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">DataForge: Enterprise Data Pipelines Transformed</div>
+            <p>DataForge helps enterprises automate data pipelines using natural language. Users describe data transformations in plain English, and DataForge's AI generates and maintains ETL code. This represents a fundamental shift in how enterprises handle data engineering: instead of requiring specialized SQL and Python skills, business analysts can now describe what they need in natural language. The enterprise data ETL market exceeds $15 billion annually, and AI-native approaches are capturing increasing share. DataForge's <a href="../../part-4-ai-engineering/chapter-12/sections/section-12-2.html">multi-agent architecture</a> (Parser Agent, Code Generator Agent, Validator Agent) demonstrates how AI can handle complex, multi-step workflows that previously required entire data engineering teams.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">The Total Cost of Ownership Trap</div>
+            <p>While open-source models have lower inference costs, they come with hidden costs: infrastructure management, optimization expertise, monitoring systems, and maintenance. A startup might spend $50,000 on API calls but could spend $200,000 on ML engineering time to run the same model open-source. The decision depends on your team's capabilities and scale.</p>
+        </div>
+
+        <h3>Why Costs Have Declined Dramatically</h3>
+
+        <p>
+            The barrier to entry for AI development has dropped dramatically. A product that required $100K/month in API costs in 2023 can now be built for a fraction of that. Understanding why requires understanding the economics of AI infrastructure. Three factors have converged:
+        </p>
+
+        <p>
+            First, hardware efficiency has improved dramatically. The same GPU that cost $15,000 in 2023 might cost $5,000 today, while delivering 2-3x the performance. This follows Moore's Law-like trajectory but specifically for AI workloads, where specialized chips (like NVIDIA's H100 and B200 series) have optimized the attention mechanisms that drive language model performance.
+        </p>
+
+        <p>
+            Second, model optimization techniques have matured. Quantization (reducing model precision from 16-bit to 8-bit or even 4-bit), distillation (training smaller models to mimic larger ones), and speculative decoding (using smaller models to predict larger model outputs) have all become standard. These techniques can reduce inference costs by 5-20x while maintaining acceptable quality.
+        </p>
+
+        <p>
+            Third, competition has driven prices down. When OpenAI dominated in 2023, prices were high. Today, dozens of providers compete for your business, including open-source alternatives. This competition has compressed margins and passed savings to customers. TheGPT-4 equivalent that cost $20/million tokens in 2022 now costs $0.40/million tokens, a 50x reduction.
+        </p>
+
+        <h3>What This Means for Your Product Strategy</h3>
+
+        <p>
+            The economic shifts described above have direct implications for how you should think about AI in your product. First, assume that AI capabilities will become ubiquitous in your category. If you are building a product that could benefit from AI, your competitors likely will too. The declining cost curve means that adding AI features is increasingly a baseline expectation rather than a differentiator.
+        </p>
+
+        <p>
+            Second, focus on differentiation through domain expertise and data advantages. The models themselves are commoditizing; what matters is how you apply them to your specific domain. A healthcare AI product wins not because it uses a better model but because it understands medical terminology, follows clinical workflows, and integrates with healthcare systems. This domain knowledge becomes your defensible position.
+        </p>
+
+            <p>
+                Third, plan for the cost trajectory. Costs will continue to decline, so avoid making long-term architectural decisions based on current pricing. The features that are too expensive today may be economically viable in 12-18 months. Build flexible systems that can incorporate more AI capabilities as costs decrease.
+            </p>
+
+            <div class="callout key-insight">
+                <div class="callout-title">Key Takeaway</div>
+                <p>The three key shifts in AI economics are: hardware efficiency improvements, model optimization techniques like quantization, and intense competition among providers. These combine to make AI capabilities increasingly affordable. Plan your product architecture knowing that today expensive features will be cheap tomorrow.</p>
+            </div>
+
+        <div class="callout exercise">
+            <div class="callout-title">Exercise: Evaluate Reasoning Model Trade-offs</div>
+            <p><strong>Scenario:</strong> You're building a customer service product that handles 10,000 requests per day. Simple FAQs need 1-second response time. Complex troubleshooting needs high accuracy but can tolerate 15 seconds.</p>
+            <ol>
+                <li>Design a routing strategy that routes simple requests to fast models and complex requests to reasoning models.</li>
+                <li>Estimate the monthly cost difference between using only reasoning models versus using the routing strategy.</li>
+                <li>What eval metrics would you track to validate this approach?</li>
+            </ol>
+            <p><strong>Hint:</strong> Consider using a classifier model to determine request complexity before routing.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore how these foundation models enable <strong>Agentic AI and Tool Use</strong> - the ability for AI systems to take autonomous actions and interact with external tools. This capability transforms AI from a passive assistant that responds to queries into an active participant that can accomplish tasks on your behalf.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Ch 1: Overview</a>
+            <a class="up" href="index.html">Chapter 1 Index</a>
+            <a class="next" href="section-1-2.html">1.2 <a href="../../part-1-foundations/chapter-1/sections/section-1-2.html">Agentic AI</a> and Tool Use</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 1.1 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

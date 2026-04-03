@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 22.4: Error Taxonomy and Postmortems for AI Failures - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 22</div>
+        <h1>Error Taxonomy and Postmortems for AI Failures</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Every AI failure is a gift if you learn from it. The team that conducts thorough AI postmortems builds immune systems against future failures."</p>
+            <cite>A Head of AI Who Has Seen Incidents</cite>
+        </blockquote>
+
+        <h2 id="why-ai-postmortems">Why AI Postmortems Are Different</h2>
+
+        <p>
+            Traditional software postmortems focus on code defects, infrastructure failures, and human errors with clear causality. AI postmortems must grapple with probabilistic behavior, emergent failures from component interactions, and the challenge that the same input can produce different outputs over time.
+        </p>
+
+        <p>
+            An AI failure often has no single root cause in the traditional sense. It emerges from the interaction of model behavior, prompt design, retrieval quality, and user expectations. Effective AI postmortems must map this complex causality without falsely reducing it to a single factor.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The AI Failure Challenge</h4>
+            <p>When a traditional system fails, the code points to what went wrong. When an AI system fails, the code often works exactly as written. The failure is in the behavior that emerges from the interaction of components. This requires a different debugging and postmortem approach.</p>
+        </div>
+
+        <h2 id="error-taxonomy">Error Taxonomy for AI Systems</h2>
+
+        <p>
+            Classifying AI errors by type enables targeted fixes. A quality taxonomy also supports aggregate analysis: understanding which error types are most common, most impactful, and most cost-effective to fix.
+        </p>
+
+        <h3 id="generation-errors">Generation Errors</h3>
+
+        <p>Generation errors are errors in the content produced by the AI that cause incorrect or problematic outputs. Hallucination occurs when the model makes a confident false statement, such as claiming a law was passed that does not exist, typically caused by missing or conflicting context and overconfident generation. Fact errors are incorrect factual statements like stating the wrong date for a historical event, caused by training data staleness or retrieval gaps. Reasoning errors involve logical flaws in the model's reasoning, such as incorrectly concluding that C is greater than A when A is greater than B and B is greater than C, often due to model capability limitations or prompt framing issues. Format errors occur when output does not match required formats, such as JSON missing required fields, typically caused by prompt ambiguity or output validation gaps. Consistency errors happen when the model contradicts itself within the same response, such as saying yes in one paragraph and no in another, often caused by context length leading to attention drift.</p>
+
+        <h3 id="retrieval-errors">Retrieval Errors</h3>
+
+        <p>Retrieval errors are errors in the retrieval component of RAG systems that prevent the right context from being available to the model. Miss errors occur when relevant documents are not retrieved, such as when a drug interaction warning is missed, caused by embedding gaps, chunk boundary issues, or index coverage problems. False positive errors happen when irrelevant documents are retrieved, like a contract clause being retrieved for an unrelated query, caused by semantic similarity without actual relevance. Rank degradation occurs when relevant documents are retrieved but ranked low, such as when the correct answer is in context but the model ignores it, caused by ranking model weakness or context length bias. Staleness errors happen when outdated documents are retrieved, like old pricing being returned as current prices, caused by indexes not being updated or metadata filter errors.</p>
+
+        <h3 id="task-errors">Task Errors</h3>
+
+        <p>Task errors are errors in task decomposition and execution that cause agents to fail at multi-step processes. Misuse errors occur when the wrong tool is selected for the task, such as using a calculator instead of a database lookup, caused by tool selection reasoning failure. Tool error propagation happens when a tool failure cascades to affect the output, such as when a weather API timeout causes an unrelated response, caused by missing error handling in the tool chain. State confusion occurs when the agent loses track of task progress, such as re-asking for information already provided, caused by context management failure. Escalation failure happens when the agent does not escalate to human review when it should, such as providing medical advice instead of deferring to a professional, caused by safety instruction weakness or capability miscalibration.</p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">The Taxonomy Enables Prioritization</h4>
+            <p>Not all errors are equal. Hallucinations in a customer-facing chatbot are more impactful than format errors. A good taxonomy lets you prioritize fixes by error frequency, user impact, and fixability. Use the taxonomy to build your error dashboard before trying to fix everything.</p>
+        </div>
+
+        <h2 id="postmortem-process">AI Postmortem Process</h2>
+
+        <h3 id="data-collection">Data Collection</h3>
+
+        <p>Before any analysis, collect all relevant data to understand what happened. The full prompt includes the exact prompt that produced the failure so you can reproduce and analyze the issue. Retrieval results include documents retrieved for context to assess whether the right information was available. Model output is the complete model response to see exactly what the system produced. Trace data provides timing and span information for performance analysis. User context captures what the user was trying to accomplish to understand the intent behind the request. System state includes model version and configuration at the time of failure to identify whether changes to the system contributed to the issue.</p>
+
+        <h3 id="failure-classification">Failure Classification</h3>
+
+        <p>Classify the failure using your error taxonomy, recognizing that more than one category may apply to a single incident. Begin by identifying generation errors in the output such as hallucinations, fact errors, or format errors. Identify retrieval errors in context including misses, false positives, and staleness issues. Identify task errors in execution flow including tool misuse and escalation failures. Determine which error type is the primary root cause that initiated the failure chain. Identify contributing factors even if they are not the root cause, as these often represent opportunities for defense-in-depth improvements.</p>
+
+        <h3 id="root-cause-analysis">Root Cause Analysis</h3>
+
+        <p>
+            For AI failures, root cause analysis must go beyond immediate symptoms:
+        </p>
+
+        <div class="callout note">
+            <h4 class="callout-title">The Five Whys for AI Failures</h4>
+            <p>Apply the Five Whys framework adapted for AI systems by tracing causality through the failure chain. The first why asks why the user received a wrong answer, to which the answer is that the model hallucinated. The second why asks why the model hallucinated, to which the answer is that the context did not contain the correct information. The third why asks why the correct information was not in context, to which the answer is that retrieval missed the relevant document. The fourth why asks why retrieval missed the document, to which the answer is that chunking split relevant content across chunks. The fifth why asks why chunking was not optimized for this content type, to which the answer is that chunking strategy was set globally without content-type customization. This final answer reveals the systemic issue that, if fixed, would have prevented the entire failure chain.</p>
+        </div>
+
+        <h2 id="postmortem-template">Postmortem Template for AI Failures</h2>
+
+        <h3 id="incident-summary">Incident Summary</h3>
+
+        <pre><code class="language-markdown">
+## AI Incident Postmortem
+
+**Incident ID**: INC-2024-0423  
+**Date**: April 23, 2024  
+**Severity**: High  
+**Duration**: 45 minutes  
+**Users Affected**: ~2,300 users received incorrect responses
+
+### Summary
+The AI customer support chatbot provided incorrect warranty expiration 
+dates for products purchased in 2023. The error lasted 45 minutes 
+before detection and affected approximately 2,300 users.
+
+### Error Classification
+- **Primary**: Fact Error - Stale information in retrieval context
+- **Secondary**: Retrieval Miss - Index coverage gap for 2023 purchases
+</code></pre>
+
+        <h3 id="timeline">Timeline</h3>
+
+        <pre><code class="language-markdown">
+### Timeline (All times UTC)
+
+10:32 - Product database updated with 2023 purchase records
+10:45 - Scheduled re-indexing job started (runs every 24 hours)
+11:20 - Re-indexing job failed silently due to timeout
+       (Subsequent analysis: timeout was 5 minutes, job needed 8)
+
+Next Day 10:45 - New re-indexing job started
+11:23 - Re-indexing completed successfully
+
+11:30 - User reports: "Chatbot said my warranty expired in 2023 
+        but I bought it in 2024"
+
+11:45 - Incident declared, investigation started
+12:15 - Root cause identified: yesterday's indexing job failed
+12:30 - Manual re-indexing triggered
+12:35 - Service restored
+</code></pre>
+
+        <h3 id="contributing-factors">Contributing Factors</h3>
+
+        <pre><code class="language-markdown">
+### Contributing Factors
+
+1. **Silent Indexing Failure**: The indexing job logged errors to a 
+   file that was not monitored. No alert was configured.
+
+2. **Confidence Without Verification**: The system returned high-
+   confidence answers even though context was stale. The model 
+   generated plausible-sounding but incorrect dates.
+
+3. **No Freshness Monitoring**: No metric tracked retrieval staleness 
+   or document freshness in the vector index.
+
+4. **Slow Detection**: User report was the first indication of failure.
+   No automated detection caught the mismatch before users saw it.
+</code></pre>
+
+        <h3 id="action-items">Action Items</h3>
+
+        <pre><code class="language-markdown">
+### Action Items
+
+| Action | Owner | Priority | Status |
+|--------|-------|----------|--------|
+| Add alerting for indexing job failures | Infrastructure | P0 | Done |
+| Implement document freshness monitoring | Observability | P0 | Done |
+| Add verification query to check context freshness | RAG Team | P1 | Done |
+| Create synthetic monitoring with known answers | QA | P1 | In Progress |
+| Implement automatic re-indexing trigger on source update | Infrastructure | P2 | Planned |
+</code></pre>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: QuickShip Incident Postmortem</h4>
+            <p>QuickShip conducted an incident review following a route optimization failure where the AI routing system sent twelve drivers through a closed road, causing three-hour delays for customers. The problem was that the road closure existed in the database but was not reflected in the AI's routing decisions, creating a dilemma about how to assign responsibility when multiple component failures contributed.</p>
+            <p>Analysis revealed four independent failures that aligned to cause the incident: the road closure database was updated correctly, but the indexing pipeline was delayed by six hours, so the route AI queried a stale index that did not reflect the closure. Additionally, the AI had no confidence threshold to flag uncertain routes for human review before taking action.</p>
+            <p>The fixes addressed each failure point: they added alerting for index freshness to catch delays, implemented automatic human review for routes with stale data, and added uncertainty thresholds for critical routing decisions to escalate when the system lacks confidence. The lesson is that this incident had no single root cause. It emerged from four independent failures that happened to align. Robust AI systems need defense-in-depth, not single-point fixes.</p>
+        </div>
+
+        <h2 id="error-prevention">Error Prevention Strategies</h2>
+
+        <h3 id="defense-in-depth">Defense in Depth</h3>
+
+        <p>No single guardrail prevents all failures, so build layered defenses that provide protection at multiple levels. Input validation catches malformed requests before they enter the system, preventing bad inputs from causing downstream failures. Retrieval verification confirms that context is present and fresh before relying on it for generation. Output validation checks responses against expected formats and ranges to catch errors before they reach users. Uncertainty thresholds trigger escalation when the system's confidence is low, ensuring that ambiguous situations receive human attention. Human review gates require human approval for high-stakes actions, adding a final layer of protection for decisions that could cause significant harm.</p>
+
+        <h3 id="error-budgets">Error Budgets for AI Quality</h3>
+
+        <p>
+            Define acceptable error rates for each error type. This lets you balance reliability investment against feature velocity. When error rates exceed budget, reliability work takes priority over new features.
+        </p>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>New research explores "failure mode evolution" tracking how AI failure patterns change as models are updated. By detecting shifts in error taxonomy distributions, teams can proactively identify where new failure modes are emerging before they impact users.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-22-3.html">22.3 Retrieval Debugging</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="../../chapter-23/sections/section-23-1.html">23.1 Structured Outputs</a>
+        </nav>
+
+        <footer>
+            <p>Section 22.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

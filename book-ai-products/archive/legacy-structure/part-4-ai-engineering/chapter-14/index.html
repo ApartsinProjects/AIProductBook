@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 14: Model Selection - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a></div>
+        <div class="chapter-label">Chapter 14</div>
+        <h1>Model Selection, Customization, and Evaluation</h1>
+        <p class="chapter-subtitle">Choosing and Improving Models Wisely</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Choose and improve models wisely with the right evaluation frameworks.
+        </p>
+
+        <figure class="illustration">
+            <img src="../../images/illustrations/chapter-14-opener.png"
+                 alt="Model Selection: Comparing and evaluating different AI models"
+                 style="max-width: 100%; border-radius: 12px; margin: 1.5rem auto; display: block;">
+            <figcaption>
+                The right model for the right task.
+            </figcaption>
+        </figure>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter covers model selection and customization strategies. You will learn 
+                model router strategies for using the right model for the right task, fine-tuning 
+                vs distillation trade-offs, evaluation frameworks including LLM-as-judge, and key 
+                benchmarks including reasoning, code, multimodal, and agentic benchmarks. 
+                These skills are essential for optimizing both quality and cost in production AI systems.
+            </p>
+            <p>
+                Model selection is one of the most impactful technical decisions in AI product development. 
+                The right model can halve your costs while improving quality; the wrong model can make 
+                your product unreliable. This chapter provides frameworks for making these decisions 
+                systematically.
+            </p>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Implement model routing strategies based on query complexity</li>
+                <li>Choose between fine-tuning, distillation, and model merging</li>
+                <li>Build LLM-as-judge evaluation systems</li>
+                <li>Apply regression testing to catch quality degradation</li>
+                <li>Select appropriate benchmarks for your use case</li>
+            </ul>
+        </div>
+
+        <div class="prerequisites">
+            <h3>Prerequisites</h3>
+            <p>
+                Readers should have completed Chapters 11-13 on core principles, orchestration, and RAG. 
+                Understanding of model architectures and API usage is expected. If you are new to model 
+                selection, Section 14.1 on router strategies provides a good starting point.
+            </p>
+        </div>
+
+        <blockquote class="epigraph">
+            "The best model is not the most powerful one, but the right one for the task." <cite>– Andrej Karpathy</cite>
+        </blockquote>
+
+        <div class="sections-list">
+            <h2>Chapter Sections</h2>
+            <ul>
+                <li><a href="section-14-1.html">14.1 Model Router Strategies</a></li>
+                <li><a href="section-14-2.html">14.2 Fine-tuning vs Distillation</a></li>
+                <li><a href="section-14-3.html">14.3 Evaluation Frameworks</a></li>
+                <li><a href="section-14-4.html">14.4 Benchmarking</a></li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-15/index.html">Chapter 15: Inference Serving and LLMOps</a> 
+                to learn how to make systems fast and cost-effective with proper serving infrastructure. 
+                This chapter covers vLLM, Triton, cost optimization, and CI/CD for AI systems.
+            </p>
+        </div>
+
+        <div class="bibliography">
+            <h3>Research Papers</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://karpathy.ai">State of AI</a></p>
+                <p class="bib-authors">Karpathy, A. (2025)</p>
+                <p class="bib-annotation">Why this is relevant: Andrej Karpathy's annual AI state analysis; essential perspective on the AI product landscape from a deep learning expert.</p>
+            </div>
+
+            <h3>Tools</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://platform.openai.com">Model Selection Guide</a></p>
+                <p class="bib-authors">OpenAI</p>
+                <p class="bib-annotation">Why this is relevant: Official guide for selecting appropriate OpenAI models based on capability and cost requirements.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://anthropic.com">Model Evaluations</a></p>
+                <p class="bib-authors">Anthropic</p>
+                <p class="bib-annotation">Why this is relevant: Anthropic's eval frameworks and benchmarks for model quality; important reference for building evaluation pipelines.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://huggingface.co/lmsys">LLM Leaderboard</a></p>
+                <p class="bib-authors">Berkeley (LMSYS)</p>
+                <p class="bib-annotation">Why this is relevant: Real-world LLM chatbot arena rankings; useful benchmark for comparing models for AI product selection.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://cloud.google.com">Vertex AI Model Garden</a></p>
+                <p class="bib-authors">Google</p>
+                <p class="bib-annotation">Why this is relevant: Google Cloud's model hub for accessing and comparing multiple LLM providers; useful for multi-model AI products.</p>
+            </div>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-13/index.html">Ch 13: Advanced RAG</a>
+            <a class="up" href="../../part-4-ai-engineering/index.html">Part IV: AI Engineering</a>
+            <a class="next" href="chapter-15/index.html">Ch 15: Inference Serving</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 14 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

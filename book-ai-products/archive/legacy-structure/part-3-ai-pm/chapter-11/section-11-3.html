@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10.3 Metrics Beyond Accuracy - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 10</div>
+        <h1>Go-to-Market and Success Metrics</h1>
+        <p class="chapter-subtitle">10.3 Metrics Beyond Accuracy</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Drive real adoption and business value with the right pricing and metrics.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 10.2 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Measuring AI Product Success</div>
+            <p>This section covers the four-level metrics hierarchy for AI products, from technical metrics to business outcomes. In the context of AI product management, metrics are your primary tool for eval-driven development: they define what success looks like, guide engineering priorities, and connect product performance to business value. Without the right metrics hierarchy, you cannot know if your AI product is actually improving.</p>
+        </div>
+
+        <h2 id="section-10-3">10.3 Metrics Beyond Accuracy</h2>
+
+        <p>
+            Accuracy is not enough to measure AI product success. While accuracy tells you whether the AI produces correct outputs, it does not tell you whether users achieve their goals, whether the product drives business value, or whether the AI creates sustainable engagement. A comprehensive metrics hierarchy is essential for understanding your AI product's true performance.
+        </p>
+
+        <h3>The Four-Level Metrics Hierarchy</h3>
+
+        <p>
+            AI product metrics should be organized into four levels, each building on the previous. Technical metrics measure AI output quality. Task metrics measure whether users complete their goals. Engagement metrics measure whether users actively use the product. Business metrics measure whether the product creates sustainable value.
+        </p>
+
+        <h4>Level 1: Technical Metrics</h4>
+
+        <p>
+            Technical metrics measure the quality of AI outputs themselves. These are the foundation of the metrics hierarchy: if your AI produces low-quality outputs, nothing else matters. However, technical metrics alone do not indicate product success.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Selecting Technical Metrics by Use Case</h4>
+            <p>
+                <strong>For classification tasks:</strong>
+            </p>
+            <ul>
+                <li>Accuracy: Percentage of correct classifications</li>
+                <li>Precision: Of predicted positives, what percentage are correct</li>
+                <li>Recall: Of actual positives, what percentage were found</li>
+                <li>F1: Harmonic mean of precision and recall</li>
+            </ul>
+            <p>
+                <strong>For generation tasks:</strong>
+            </p>
+            <ul>
+                <li>BLEU/ROUGE: Text similarity to reference (for structured tasks)</li>
+                <li>LLM-as-judge scores: Human-validated quality assessments</li>
+                <li>Hallucination rate: Percentage of factually incorrect claims</li>
+            </ul>
+            <p>
+                <strong>For retrieval tasks:</strong>
+            </p>
+            <ul>
+                <li>Precision@K: Relevant items in top K results</li>
+                <li>Recall@K: Of all relevant items, how many in top K</li>
+                <li>MRR: Mean reciprocal rank of first relevant result</li>
+            </ul>
+        </div>
+
+        <h4>Level 2: Task Metrics</h4>
+
+        <p>
+            Task metrics measure whether users accomplish what they set out to do when using your AI feature. This is the most important level for understanding whether your AI provides actual value. A product can have perfect technical accuracy but still fail if users cannot complete their tasks.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Accurate but Useless AI</h4>
+            <p>
+                A search AI had excellent retrieval accuracy (95%). However, user research revealed that most users could not find what they were looking for. Analysis showed the problem: the AI returned relevant documents but in an order that did not match user expectations. The most relevant document was often #5, not #1. Technically accurate, but practically useless.
+            </p>
+            <p>
+                <strong>The fix:</strong> They added ranking-based task metrics: "user found what they wanted in top 3 results." This revealed the true problem and focused the team on fixing ranking rather than just retrieval accuracy.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Defining Task Completion Metrics</h4>
+            <p>
+                Define task completion metrics specific to your use case:
+            </p>
+            <ul>
+                <li><strong>For search:</strong> Did user find result they clicked? Did they refine query?</li>
+                <li><strong>For content creation:</strong> Did user save/approve AI output? Did they edit and send?</li>
+                <li><strong>For support:</strong> Was issue resolved without escalation? Did user ask follow-up?</li>
+                <li><strong>For analysis:</strong> Did user take action based on AI insight? Did they share with others?</li>
+            </ul>
+            <p>
+                <strong>Key insight:</strong> Track "would have been impossible without AI" tasks. These demonstrate unique value, not just improvement.
+            </p>
+        </div>
+
+        <h4>Level 3: Engagement Metrics</h4>
+
+        <p>
+            Engagement metrics measure whether users actively use your product over time. These metrics indicate whether your AI provides ongoing value that keeps users coming back. High task completion rates but low engagement indicate a product that works but does not create habitual use.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The One-Hit Wonder</h4>
+            <p>
+                A code AI had impressive task completion: 85% of users successfully generated code with AI help. However, only 20% returned after their first session. The product worked, but users did not form habits. Analysis showed users had to manually trigger AI help each time, which felt like extra work. The AI was seen as a "nice to have" rather than essential.
+            </p>
+            <p>
+                <strong>The fix:</strong> They added proactive suggestions: the AI offered help without being asked when it detected patterns that suggested assistance would be useful. Engagement doubled, and 90-day retention improved from 20% to 55%.
+            </p>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Engagement Metric</th><th>What It Measures</th><th>What to Look For</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>DAU/MAU</td><td>Daily active users as percentage of monthly</td><td>>20% indicates strong habit</td></tr>
+                <tr><td>Session length</td><td>Time spent per session</td><td>Increasing = more value</td></tr>
+                <tr><td>Feature adoption</td><td>Percentage using AI features</td><td>Which features are popular</td></tr>
+                <tr><td>Return rate</td><td>Users who return after initial use</td><td>>40% within 7 days is good</td></tr>
+            </tbody>
+        </table>
+
+        <h4>Level 4: Business Metrics</h4>
+
+        <p>
+            Business metrics measure whether your AI product creates sustainable value for the business. These are the ultimate validation of product success: are you making money? Are you retaining customers? Are you acquiring new customers efficiently? All other metrics are leading indicators of these outcomes.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Profitable AI</h4>
+            <p>
+                A customer service AI tracked cost savings as their primary business metric. They calculated: (human resolution cost - AI resolution cost) × number of AI resolutions. This showed $2M/month in cost avoidance, which justified continued investment. However, they also tracked whether AI resolution led to lower customer retention. They found that AI-resolved tickets had 15% higher repeat contact rate than human-resolved tickets.
+            </p>
+            <p>
+                <strong>The insight:</strong> The simple cost savings metric missed the hidden cost of lower quality resolution. They added a net promoter score metric to AI-resolved tickets to measure long-term impact on customer relationships.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Connecting AI Metrics to Business Outcomes</h4>
+            <p>
+                Create a metrics chain that connects AI performance to business value:
+            </p>
+            <ul>
+                <li><strong>AI quality → Task completion → User satisfaction → Retention → Revenue</strong></li>
+                <li><strong>AI adoption → Engagement → Upgrades → Revenue</strong></li>
+                <li><strong>AI efficiency → Cost reduction → Margin improvement</strong></li>
+            </ul>
+            <p>
+                <strong>Key business metrics for AI products:</strong>
+            </p>
+            <ul>
+                <li>Retention: Are AI users more likely to stay?</li>
+                <li>Expansion: Do AI users upgrade to higher tiers?</li>
+                <li>Acquisition: Does AI drive new customer acquisition?</li>
+                <li>Churn: Do AI users churn at lower rates?</li>
+            </ul>
+        </div>
+
+        <h3>Metrics for Different Product Types</h3>
+
+        <table>
+            <thead>
+                <tr><th>Product Type</th><th>Primary Task Metric</th><th>Primary Business Metric</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Search/Research</td><td>Result found, query refined</td><td>Time to answer, query volume</td></tr>
+                <tr><td>Content Creation</td><td>Output accepted/sent</td><td>Content volume, creator efficiency</td></tr>
+                <tr><td>Customer Service</td><td>Resolution without escalation</td><td>Cost per contact, satisfaction</td></tr>
+                <tr><td>Code Assistant</td><td>Code accepted, time to complete</td><td>Developer velocity, bug rate</td></tr>
+                <tr><td>Analytics/Insights</td><td>Insight used in decision</td><td>Data-driven decisions made</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Metrics-Driven Development</div>
+            <p>
+                Choose your primary metrics at each level and track them consistently. The metrics you measure will drive team behavior, so choose wisely. Avoid optimizing for metrics that do not connect to user value or business outcomes.
+            </p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Adoption Strategies</strong> - strategies for different market segments.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-10-2.html">10.2 AI-Specific Onboarding</a>
+            <a class="up" href="index.html">Chapter 10 Index</a>
+            <a class="next" href="section-10-4.html">10.4 Adoption Strategies</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 10.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

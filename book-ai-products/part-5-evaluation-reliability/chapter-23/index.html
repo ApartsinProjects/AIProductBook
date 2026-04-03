@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 23: Reliability, Guardrails, and Recovery - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 23</div>
+        <h1>Reliability, Guardrails, and Recovery</h1>
+        <p class="subtitle">Building AI systems that fail gracefully and recover intelligently</p>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"When your AI product fails, how it fails matters. Well-designed guardrails turn catastrophic failures into graceful degradations. Poorly designed ones turn small failures into PR crises."</p>
+            <cite>An Engineering Leader Who Has Seen Both</cite>
+        </blockquote>
+
+        <div class="opening-hook">
+            AI systems fail differently than traditional software. They can be confidently wrong, they can refuse to answer when they should, and they can produce outputs that violate policy. This chapter gives you the tools to build AI systems that handle failures gracefully: structured output validation, retry strategies, uncertainty-aware degradation, policy guardrails, and human escalation workflows.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-23-opener.png"
+                 alt="Chapter 23 opener illustration">
+            <figcaption>
+                Reliability engineering builds guardrails that prevent AI failures from reaching users.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Failure Recovery Testing</div>
+            <p>Vibe-coding enables chaos engineering for AI systems. Deliberately trigger failures in your AI pipeline to see how guardrails, retries, and fallback mechanisms actually behave. Vibe-coding failure scenarios reveals whether your reliability patterns hold under realistic stress conditions, helping you identify gaps before users encounter them in production.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe Coding for Rapid Eval Creation</div>
+            <p>Build guardrails incrementally. First use vibe coding to probe potential failure modes and unintended behaviors. Generate test prompts that target the boundaries of acceptable output. Then formalize these into structured guardrail evals. Iterating on guardrails via quick eval tests is faster than trying to anticipate every edge case upfront.</p>
+        </div>
+
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Build AI systems with proper reliability patterns, including output validation, retry and fallback mechanisms, uncertainty-aware degradation, policy guardrails, and human escalation workflows that protect users and the organization.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter covers the reliability stack for AI products. You learn how to validate structured outputs before using them, implement retry and fallback strategies that handle transient failures, build uncertainty-aware systems that know what they do not know, design policy guardrails that enforce behavioral boundaries, and create human escalation workflows for situations that require human judgment.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> How to build AI systems that fail gracefully and maintain user trust even when things go wrong.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> Deliberately triggering failures in your AI system to see how it degrades and whether recovery is possible.</li>
+                <li><strong>What would count as success or failure?</strong> Systems where AI failures result in graceful degradation rather than catastrophic user-facing errors.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Reliability patterns (validation, retries, guardrails, escalation) are not optional add-ons; they are core product requirements.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Validate structured outputs from AI systems with confidence</li>
+                <li>Implement retry strategies with exponential backoff and idempotency</li>
+                <li>Build fallback mechanisms that maintain system utility during failures</li>
+                <li>Detect and respond to AI uncertainty appropriately</li>
+                <li>Design policy guardrails that enforce behavioral boundaries</li>
+                <li>Create human escalation workflows for high-stakes situations</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">23.1</span> <a href="sections/section-23-1.html">Structured Outputs and Validation</a></li>
+                <li><span class="sec-num">23.2</span> <a href="sections/section-23-2.html">Retry, Fallback, and Router Strategies</a></li>
+                <li><span class="sec-num">23.3</span> <a href="sections/section-23-3.html">Safe Degradation and Uncertainty Thresholds</a></li>
+                <li><span class="sec-num">23.4</span> <a href="sections/section-23-4.html">Policy Guardrails and Human Escalation</a></li>
+            </ul>
+        </div>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Defense in Depth</h4>
+            <p>No single reliability technique prevents all failures. The most reliable AI systems combine multiple layers: validation catches malformed outputs, retries handle transient failures, uncertainty thresholds flag low-confidence responses, guardrails enforce policy boundaries, and human escalation handles edge cases. Build layered defenses like you would for critical infrastructure.</p>
+        </div>
+
+        <div class="role-specific-lenses">
+            <h3>Role-Specific Lenses</h3>
+            
+            <div class="callout note">
+                <h4 class="callout-title">For Product Managers</h4>
+                <p>Reliability patterns define what happens when things go wrong. Understanding these patterns helps you set appropriate expectations for AI feature behavior, define acceptable failure modes, and make informed tradeoffs between capability and reliability.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Engineers</h4>
+                <p>You implement the reliability infrastructure that protects the system. This includes validation libraries, retry logic, fallback handlers, guardrail frameworks, and escalation workflows. Reliability code is production code that deserves the same rigor as feature code.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Designers</h4>
+                <p>Reliability patterns inform how you communicate AI limitations to users. Understanding uncertainty thresholds helps you design appropriate confidence indicators and fallback messaging that keeps users informed without losing trust.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Leaders</h4>
+                <p>Investment in reliability infrastructure has clear ROI. The cost of implementing guardrails is trivial compared to the cost of a PR crisis, regulatory action, or customer loss from AI failures. Reliability is not overhead. It is risk management.</p>
+            </div>
+        </div>
+
+        <section class="bibliography" id="bibliography">
+            <h2>Bibliography</h2>
+            
+            <h3>Reliability Patterns</h3>
+            <ol class="bib-list">
+                <li id="ref-1">
+                    <p class="bib-entry">
+                        <a href="https://arxiv.org/abs/2305.18090" target="_blank" rel="noopener">Rebedant, D., et al. (2023). "Reliability Engineering for AI-Enabled Systems." <em>arXiv:2305.18090</em>.</a>
+                    </p>
+                    <p class="bib-annotation">Extends classical reliability engineering principles to AI-specific failure modes and mitigation strategies.</p>
+                </li>
+            </ol>
+
+            <h3>Guardrails and Safety</h3>
+            <ol class="bib-list">
+                <li id="ref-2">
+                    <p class="bib-entry">
+                        <a href="https://arxiv.org/abs/2310.03684" target="_blank" rel="noopener">Weber, L., et al. (2023). "Building Safe and Reliable AI: Guardrails and Fallback Strategies." <em>arXiv:2310.03684</em>.</a>
+                    </p>
+                    <p class="bib-annotation">Practical approaches to implementing guardrails that prevent harmful outputs while maintaining system utility.</p>
+                </li>
+            </ol>
+        </section>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-22/index.html">Ch 22: Observability</a>
+            <a class="up" href="../../part-5-evaluation-reliability/index.html">Part V Overview</a>
+            <a class="next" href="sections/section-23-1.html">23.1 Structured Outputs</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 23 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

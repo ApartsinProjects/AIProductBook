@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.4 The New Economics in Practice - Chapter 1: The New Economics of Building with AI</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
+        <div class="chapter-label">Chapter 1, Section 1.4</div>
+        <h1>The New Economics in Practice</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            Theory without practice is philosophy; practice without theory is chaos. This section brings the economics of AI product development to life through real case studies and concrete ROI models.
+        </p>
+
+        <div class="epigraph">
+            <p>The numbers tell a story that PowerPoint cannot. Here are the numbers from teams that have made the shift.</p>
+            <cite>From the trenches of AI product development</cite>
+        </div>
+
+        <h2>Case Study: QuickShip Logistics</h2>
+
+        <p>
+            QuickShip is a mid-size logistics company that coordinates last-mile delivery for e-commerce brands. In 2024, they faced a familiar problem: their software development team of 12 could not keep up with the pace of business requirements. Feature backlogs stretched to 6 months; competitors shipped faster and captured market share.
+        </p>
+
+        <h3>The Challenge</h3>
+
+        <p>
+            Their product team wanted to add AI-powered features: dynamic route optimization based on real-time conditions, predictive delivery time estimation, automated customer communication for delays, and fraud detection for high-value shipments. Traditional estimates suggested 18 months and $2.4 million in development costs, requiring 4 additional engineers they could not hire.
+        </p>
+
+        <p>
+            Instead of the traditional approach, QuickShip adopted AI-native development practices. Their implementation combined GitHub Copilot for code acceleration (40% velocity gain), v0 and Cursor for rapid UI prototyping, a managed vector database for route context, Claude API for route optimization reasoning, and a custom eval pipeline with LLM-as-judge.
+        </p>
+
+        <h3>The Results</h3>
+
+        <div class="comparison-table">
+            <div class="comparison-table-title">QuickShip: Traditional vs AI-Native Development</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Traditional Estimate</th>
+                        <th>AI-Native Actual</th>
+                        <th>Improvement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Development time</td>
+                        <td>18 months</td>
+                        <td>4 months</td>
+                        <td>4.5x faster</td>
+                    </tr>
+                    <tr>
+                        <td>Development cost</td>
+                        <td>$2.4 million</td>
+                        <td>$680,000</td>
+                        <td>72% reduction</td>
+                    </tr>
+                    <tr>
+                        <td>Engineering headcount</td>
+                        <td>16 (incl. 4 new hires)</td>
+                        <td>12 (no new hires)</td>
+                        <td>33% smaller team</td>
+                    </tr>
+                    <tr>
+                        <td>Feature quality (bug rate)</td>
+                        <td>Baseline</td>
+                        <td>15% lower</td>
+                        <td>Better quality</td>
+                    </tr>
+                    <tr>
+                        <td>Time to user feedback</td>
+                        <td>6 months</td>
+                        <td>6 weeks</td>
+                        <td>4x faster</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>The ROI Calculation</h3>
+
+        <p>
+            QuickShip's investment in AI tooling and training included AI tools and APIs at $45,000 per year, engineering training at $30,000 one-time, and evaluation infrastructure at $80,000 one-time, bringing the total Year 1 investment to $155,000.
+        </p>
+
+        <p>
+            Benefits realized in Year 1 included avoided hiring of 4 engineers at $640,000 saved, faster time to market generating approximately $200,000 incremental revenue, and competitive positioning estimated at $500,000 in retained revenue, for a total Year 1 benefit of approximately $1.34 million.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">QuickShip's Net ROI</div>
+            <p>
+                Year 1 ROI: (1.34M - 0.155M) / 0.155M = <strong>765%</strong><br>
+                Payback period: 6 weeks
+            </p>
+        </div>
+
+        <p>These results demonstrate the transformative potential of AI-native development for the right use cases.</p>
+
+        <h2>Case Study: HealthMetrics</h2>
+
+        <p>
+            HealthMetrics provides practice management software for independent medical practices. Their challenge: adding AI features to compete with enterprise healthcare systems without the enterprise resources.
+        </p>
+
+        <h3>The Challenge</h3>
+
+        <p>
+            Healthcare software has high compliance requirements, making rapid iteration risky. A bug in scheduling software is inconvenient; a bug in clinical decision support can harm patients. HealthMetrics needed AI capabilities that were not just fast but safe and auditable.
+        </p>
+
+        <h3>The AI-Native Approach</h3>
+
+        <p>
+            HealthMetrics built what they called a "AI-assisted but human-led" development model. AI for documentation generates clinical note drafts that physicians review and edit. AI for scheduling predicts no-shows and overbooks strategically while staff overrides remain possible. AI for billing suggests codes that billing staff approve. AI for patient communication drafts responses that staff send.
+        </p>
+
+        <div class="callout note">
+            <div class="callout-title">The Human-in-the-Loop Design</div>
+            <p>
+                HealthMetrics' key insight: not all AI automation is equal. Some tasks benefit from full automation (scheduling predictions); others require human oversight (clinical documentation). The build/automate decision should be task-specific, not global.
+            </p>
+        </div>
+
+        <p>Their measured approach to automation produced strong adoption rates across all features.</p>
+
+        <h3>The Results</h3>
+
+        <div class="comparison-table">
+            <div class="comparison-table-title">HealthMetrics: AI Feature Adoption Rates</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Adoption Rate</th>
+                        <th>Time Savings/Provider/Day</th>
+                        <th>Error Reduction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Documentation assist</td>
+                        <td>78%</td>
+                        <td>47 minutes</td>
+                        <td>N/A (drafts reviewed)</td>
+                    </tr>
+                    <tr>
+                        <td>Scheduling intelligence</td>
+                        <td>92%</td>
+                        <td>23 minutes</td>
+                        <td>18% fewer no-shows</td>
+                    </tr>
+                    <tr>
+                        <td>Billing suggestions</td>
+                        <td>85%</td>
+                        <td>31 minutes</td>
+                        <td>12% code capture increase</td>
+                    </tr>
+                    <tr>
+                        <td>Patient messaging</td>
+                        <td>67%</td>
+                        <td>19 minutes</td>
+                        <td>N/A</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            For a typical 5-provider practice using HealthMetrics, time savings were approximately 2.1 hours per day across providers and staff, with annual value of approximately $45,000 per practice based on blended hourly rate. Patient satisfaction improved from NPS 42 to 58, and competitive win rate improved from 35% to 51% against enterprise incumbents.
+        </p>
+
+        <h3>The ROI for HealthMetrics</h3>
+
+        <p>
+            HealthMetrics' investment to build AI features included development at $480,000 for 2 engineers over 8 months, compliance and legal review at $120,000, and evaluation infrastructure at $90,000, for a total of $690,000.
+        </p>
+
+        <p>
+            Return over 18 months included 340 practices onboarded with AI features, premium pricing realized at $50 per provider per month equaling $306,000 per year, and competitive win rate improvement estimated at $400,000 in retained and switched revenue, for an 18-month revenue impact of approximately $1.1 million.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">HealthMetrics' Strategic Position</div>
+            <p>
+                HealthMetrics used AI to close the capability gap with enterprise healthcare systems at a fraction of the cost. The ROI was positive but secondary; the strategic positioning was the primary value.
+            </p>
+        </div>
+
+        <h2>Case Study: DataForge</h2>
+
+        <p>
+            DataForge is a B2B analytics platform that helps companies understand their operational data. Their challenge was existential: how to compete with embedded analytics from cloud providers (AWS QuickSight, Google Looker, Power BI) as standalone products.
+        </p>
+
+        <h3>The Challenge</h3>
+
+        <p>
+            Cloud providers can offer analytics at razor-thin margins because they bundle it with cloud compute. DataForge needed AI-powered capabilities that were difficult for cloud providers to replicate quickly.
+        </p>
+
+        <h3>The AI-Native Approach</h3>
+
+        <p>
+            DataForge focused on what they called "AI-powered data storytelling." Natural language querying enables users to ask questions in plain English while AI generates SQL and visualizations. Automated insight generation has AI identify anomalies and trends without user prompting. Smart data prep enables AI to suggest joins, transformations, and data quality fixes. Contextual explanations have AI explain why metrics changed based on operational context.
+        </p>
+
+        <h3>The Results</h3>
+
+        <div class="comparison-table">
+            <div class="comparison-table-title">DataForge: Key Metrics Post-AI</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Before AI</th>
+                        <th>After AI</th>
+                        <th>Change</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Queries per user per day</td>
+                        <td>3.2</td>
+                        <td>14.7</td>
+                        <td>+360%</td>
+                    </tr>
+                    <tr>
+                        <td>Time to insight</td>
+                        <td>4.2 hours</td>
+                        <td>23 minutes</td>
+                        <td>-91%</td>
+                    </tr>
+                    <tr>
+                        <td>User retention (12 month)</td>
+                        <td>61%</td>
+                        <td>79%</td>
+                        <td>+18 pts</td>
+                    </tr>
+                    <tr>
+                        <td>Net Revenue Retention</td>
+                        <td>104%</td>
+                        <td>127%</td>
+                        <td>+23 pts</td>
+                    </tr>
+                    <tr>
+                        <td>Churn rate</td>
+                        <td>12%/year</td>
+                        <td>6%/year</td>
+                        <td>-50%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>The ROI Calculation</h3>
+
+        <p>
+            DataForge's AI investment included LLM API costs at $180,000 per year, engineering at $550,000 for 3 engineers over 10 months, and evaluation infrastructure at $70,000, for a total initial investment of $620,000.
+        </p>
+
+        <p>
+            Annualized impact included increased retention value at $890,000 per year, expansion revenue from power users at $340,000 per year, and new logos from competitive wins at $520,000 per year, for an annual benefit of $1.75 million.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">DataForge's AI ROI</div>
+            <p>
+                Year 1 ROI: (1.75M - 0.62M) / 0.62M = <strong>182%</strong><br>
+                The expansion revenue and retention improvements are recurring; Year 2+ will show even higher returns.
+            </p>
+        </div>
+
+        <p>These case studies illustrate patterns that can guide your own AI investment decisions.</p>
+
+        <h2>ROI Modeling for AI Products</h2>
+
+        <p>
+            Based on these case studies and similar engagements across dozens of companies, we can extract a framework for modeling AI product ROI.
+        </p>
+
+        <h3>The AI Product ROI Framework</h3>
+
+        <p>
+            AI product investment returns fall into four categories. Cost avoidance refers to avoiding costs you would otherwise incur, such as avoided hiring. Efficiency gains involve doing the same work with fewer resources. Revenue growth means generating more revenue from existing customers or winning new ones. Risk reduction addresses reducing downside risk including compliance, errors, and churn.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">ROI Category Value Multipliers</div>
+            <p>
+                In our analysis of AI product investments:<br><br>
+                <strong>Cost avoidance</strong>: 1x multiple (save $1 = $1 value)<br>
+                <strong>Efficiency gains</strong>: 0.5-1x multiple (depends on whether headcount or scope)<br>
+                <strong>Revenue growth</strong>: 3-5x multiple (recurring, scalable)<br>
+                <strong>Risk reduction</strong>: 0.5-2x multiple (depends on probability and impact)<br><br>
+                Prioritize revenue growth and risk reduction over cost avoidance.
+            </p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before committing to an AI product investment, build a micro-eval that measures the decision quality your team makes without AI assistance. For the case studies in this chapter, an <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval-first</a> approach would have measured: the accuracy of initial estimates before seeing AI-generated artifacts, the correlation between exploration spending and successful outcomes, and the rate at which teams pivot from initial assumptions. QuickShip's <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval-first</a> insight: their 4-day development cycle worked because they measured acceptance rates of AI-generated code from day one, not after launch.
+            </p>
+        </div>
+
+        <h3>ROI Model Template</h3>
+
+        <p>
+            Use this template to model your AI product investment:
+        </p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">AI Product Investment ROI Model</div>
+            <pre><code>Inputs:
+  - Development investment (engineering, tools, infrastructure)
+  - Ongoing operational costs (API calls, maintenance, monitoring)
+  - Expected product lifetime (years)
+
+Value Calculation:
+  Cost Avoidance = (people * salary * % time saved * years)
+  Efficiency = (tasks_per_day * time_per_task * users * days * hourly_rate * % improved)
+  Revenue Growth = (price_increase * customers) + (new_customers * ACV)
+  Risk Reduction = (probability * impact * attribution_to_AI)
+
+Total Benefit = Cost Avoidance + Efficiency + Revenue Growth + Risk Reduction
+ROI = (Total Benefit - Total Investment) / Total Investment * 100</code></pre>
+        </div>
+
+        <h3>Key Assumptions to Validate</h3>
+
+        <p>
+            When building your ROI model, validate these assumptions carefully. User adoption rate is important because AI features often see 30-60% initial adoption and it takes months to reach 80% plus. Time savings realization matters because time saved does not always translate to cost savings unless you reduce headcount or scope. Revenue attribution is hard to separate from other product changes, so use control groups where possible. Competitive response should be modeled because your AI advantage may be temporary.
+        </p>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Build Your AI Product ROI Model</div>
+            <p>For your planned AI feature, calculate total investment including development, tools, and ongoing operations. Then estimate value in each of the four categories and apply appropriate multiples to each value category. Next, calculate your expected ROI and payback period. Finally, run sensitivity analysis considering what happens if adoption is 50% of expected.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>Continue Learning</h3>
+            <p>
+                <strong>Up next:</strong> <a href="section-1-5.html">Section 1.5: What Still Remains Expensive</a> &mdash; Understand the persistent costs in AI product development and how to manage them.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-1-3.html">1.3 Why This Changes Product Strategy</a>
+            <a class="up" href="../index.html">Chapter 1 Overview</a>
+            <a class="next" href="section-1-5.html">1.5 What Still Remains Expensive</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 1, Section 1.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

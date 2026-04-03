@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 27.1: Production Evals - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 27</div>
+        <h1>Production Evals</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"The moment your AI ships to production, the real eval begins. Every user interaction is data. The question is whether you are collecting it."</p>
+            <cite>A Principal Engineer Who Watches Their Metrics</cite>
+        </blockquote>
+
+        <h2 id="eval-after-launch">Why Production Evals Matter</h2>
+
+        <p>
+            Chapter 21 introduced evaluation as the core development discipline for AI products. That chapter focused on pre-launch evaluation: building evals before you write feature code, using them to guide development, and running them in CI to catch regressions before shipping. But the launch does not end the eval story. It begins a new chapter.
+        </p>
+
+        <p>
+            Production evals measure what your AI actually does with real users, real data, and real stakes. Pre-launch evals tell you if your system meets specifications. Production evals tell you if your specifications were right in the first place.
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The Eval Lifecycle</h4>
+            <p>Pre-launch evals optimize what you expect. Production evals discover what you did not expect. The most dangerous failures in AI products are not the ones you anticipated and chose to accept. They are the ones you never imagined.</p>
+        </div>
+
+        <h2 id="live-traffic-evals">Running Evals on Live Traffic</h2>
+
+        <p>
+            Live traffic evaluation means periodically sampling production requests and running them through your evaluation pipeline. You capture the inputs your AI received in production, process them through your eval framework, and measure how your system performs on real-world data.
+        </p>
+
+        <h3 id="sampling-strategies">Sampling Strategies</h3>
+
+        <p>
+            You cannot evaluate every production request. The computational cost would be prohibitive, and you do not need to. Effective sampling strategies give you statistically meaningful signal without evaluating everything.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Four Sampling Approaches</div>
+            <p><strong>Random sampling</strong> evaluates a random percentage of production requests. It is simple and unbiased but may miss rare edge cases.</p>
+            <p><strong>Stratified sampling</strong> ensures you capture examples from each important segment including new users, power users, specific geographic regions, and high-stakes interactions.</p>
+            <p><strong>Tail-based sampling</strong> prioritizes requests that exhibit concerning patterns such as high latency, unusual input lengths, failed requests, or flagged content.</p>
+            <p><strong>Configurable sampling</strong> builds your system to allow sampling rate adjustments without deployment, so when you ship a risky change you can increase sampling temporarily.</p>
+        </div>
+
+        <h3 id="eval-pipeline-in-production">Eval Pipeline in Production</h3>
+
+        <p>
+            Your eval pipeline from Chapter 21 does not change when you ship. It runs the same way it did in development, except now it consumes live data. The pipeline captures production requests including input, output, and metadata, then stores them in an eval buffer with appropriate privacy handling. Periodically, it runs an eval batch against your test suite, aggregates results and updates dashboards, and alerts on regressions or significant changes.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: QuickShip Route Quality Monitoring</h4>
+            <p><strong>Who:</strong> QuickShip engineering team monitoring delivery route suggestions</p>
+            <p><strong>Situation:</strong> After launch, the team noticed complaints about routes that seemed suboptimal</p>
+            <p><strong>Problem:</strong> Pre-launch evals used historical routes, but production revealed patterns they never anticipated</p>
+            <p><strong>Dilemma:</strong> How to measure route quality without manual review of every suggestion?</p>
+            <p><strong>Decision:</strong> Implemented live traffic sampling with automated route comparison against known-good baselines</p>
+            <p><strong>How:</strong> Captured 5% of production routes, ran them through their offline eval system, tracked deviation from expected routes. Alert threshold: &gt;15% deviation triggers review.</p>
+            <p><strong>Result:</strong> Caught a data pipeline issue causing 8% of routes to ignore real-time traffic. Fixed within 48 hours of detection.</p>
+            <p><strong>Lesson:</strong> <strong>Production evals caught what pre-launch evals missed: the interaction between your system and the live world.</strong></p>
+        </div>
+
+        <h2 id="ab-testing-ai">A/B Testing AI Outputs</h2>
+
+        <p>
+            A/B testing for AI products requires different thinking than A/B testing for traditional software. With deterministic systems, you test which version works. With probabilistic systems, you test distributions of outcomes.
+        </p>
+
+        <h3 id="ai-ab-challenges">Unique Challenges for AI A/B Tests</h3>
+
+        <div class="callout warning">
+            <div class="callout-title">AI A/B Testing Challenges</div>
+            <p><strong>Output variance:</strong> The same input produces different outputs, requiring larger sample sizes to distinguish real differences from random variation.</p>
+            <p><strong>Evaluation latency:</strong> The effect of an AI output may not be visible for minutes, hours, or days since route quality shows in delivery times and recommendation quality shows in repeat purchases.</p>
+            <p><strong>Cold-start problems:</strong> New users have no baseline behavior and early interactions with AI may determine long-term engagement.</p>
+            <p><strong>Contextual effects:</strong> The same AI output may work well for one user and poorly for another, so simple conversion metrics hide these differences.</p>
+        </div>
+
+        <h3 id="ai-experiment-design">Experiment Design for AI</h3>
+
+        <p>
+            Effective AI experiments require clear primary metrics defining what single outcome matters most, such as assisted sales conversion for RetailMind or on-time delivery rate for QuickShip. They also require guardrail metrics determining what must not degrade, since even if conversion improves you cannot accept higher return rates or worse customer satisfaction. Segmentation analysis breaks results by user segment because a winning experiment for new users may lose for power users. Experiments need long enough runtime to capture full user journeys since AI recommendations that seem engaging may lead to returns or churn.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">A/B Testing Prompts, Not Just Models</h4>
+            <p>Most AI A/B testing focuses on model selection. But prompt changes often have larger impact than model changes, and they deploy faster. Test prompt variations systematically. The difference between "Can you help me find products?" and "What are you looking for today?" may matter more than switching from one model to another.</p>
+        </div>
+
+        <h2 id="shadow-mode">Shadow Mode Deployments</h2>
+
+        <p>
+            Shadow mode runs your new AI in parallel with production, consuming real requests but not returning results to users. The new system observes; the old system responds.
+        </p>
+
+        <h3 id="shadow-use-cases">When to Use Shadow Mode</h3>
+
+        <p>
+            Shadow mode serves multiple purposes including testing a new model version before full rollout, validating a new prompt strategy with real inputs, calibrating confidence thresholds before enabling automated actions, and collecting training data for future model improvements.
+        </p>
+
+        <h3 id="shadow-implementation">Implementation Considerations</h3>
+
+        <p>
+            Shadow mode requires careful infrastructure. Request routing must copy requests to both systems, latency overhead must not impact response time, outputs from the shadow system must be logged but not exposed, and clock synchronization enables accurate comparison with production.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: RetailMind Shadow Mode for Shopping Assistant</h4>
+            <p><strong>Who:</strong> RetailMind team testing a new shopping assistant prompt</p>
+            <p><strong>Situation:</strong> The team had a prompt that performed well in offline evals but worried about edge cases in production</p>
+            <p><strong>Problem:</strong> How to test with real in-store traffic without risking bad customer experiences?</p>
+            <p><strong>Decision:</strong> Shadow mode deployment for 2 weeks before any user-facing rollout</p>
+            <p><strong>How:</strong> New prompt processed all requests alongside production prompt. Outputs logged but users saw only production responses. Comparison automated: did shadow responses differ meaningfully?</p>
+            <p><strong>Result:</strong> Shadow mode caught 3 edge cases where new prompt suggested out-of-stock items or misunderstood store layout questions. Fixed before any customer saw them.</p>
+            <p><strong>Lesson:</strong> <strong>Shadow mode lets you learn from production without production risk.</strong></p>
+        </div>
+
+        <h2 id="canary-releases">Canary Releases for AI</h2>
+
+        <p>
+            Canary releases gradually shift traffic from old to new, starting with a small percentage and increasing as confidence grows. For AI products, canaries require monitoring beyond traditional metrics.
+        </p>
+
+        <h3 id="ai-canary-stages">Staged Canary for AI</h3>
+
+        <p>
+            Staged canary releases for AI follow a progression:
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Four Stages of AI Canary</div>
+            <p><strong>1-5% rollout:</strong> Monitor basic health with no user-visible impact, checking error rates, latency, and system health.</p>
+            <p><strong>5-25% rollout:</strong> Begin statistical monitoring comparing AI output distributions between old and new.</p>
+            <p><strong>25-50% rollout:</strong> Segment monitoring watches for differential impact across user segments.</p>
+            <p><strong>50-100% rollout:</strong> Full deployment with continued monitoring, recognizing that canary never fully ends and you always watch for regressions.</p>
+        </div>
+
+        <h3 id="canary-metrics">AI-Specific Canary Metrics</h3>
+
+        <p>
+            AI-specific canary metrics monitor output distribution shift to detect if the distribution of AI outputs has changed significantly, confidence score changes to verify whether AI confidence scores track with actual accuracy, error category shifts to identify if you are trading one type of error for another, and user feedback rates to observe whether users are flagging or correcting AI outputs more or less.
+        </p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">Canary Is Insurance, Not Just Rollout</h4>
+            <p>Think of canary releases as insurance against unknown failure modes. The cost is the infrastructure to run two systems and the attention to monitor them. The benefit is catching problems before they affect everyone. For high-stakes AI applications, canary releases are not optional.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 27: Post-Launch Learning Loops</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-27-2.html">27.2 Drift Detection</a>
+        </nav>
+
+        <footer>
+            <p>Section 27.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

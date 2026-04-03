@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11.1 Concept to Runnable Prototype - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 11.1</div>
+        <h1>Concept to Runnable Prototype</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            The gap between concept and running prototype kills more ideas than bad concepts. A structured workflow transforms that gap from a chasm into a bridge.
+        </p>
+
+        <h2>The Concept-to-Prototype Pipeline</h2>
+
+        <p>Moving from concept to prototype requires translating abstract ideas into concrete artifacts that can be evaluated. This pipeline has distinct stages, each with different objectives and different <a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">vibe coding</a> approaches.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Four-Stage Pipeline</div>
+            <p>The concept-to-prototype pipeline consists of four distinct stages. Framing defines the problem, success criteria, and constraints to establish clear direction. Scaffolding generates the basic structure and infrastructure, including project layout and foundational files. The Core Loop builds the essential functionality iteratively, cycling through specification, generation, evaluation, and refinement. Polish refines and validates the prototype to ensure it creates the right impression and supports meaningful evaluation.</p>
+        </div>
+
+        <h2>Stage 1: Framing</h2>
+
+        <p>Framing establishes the foundation. Without clear framing, vibe coding produces impressive but unfocused artifacts. The time invested in framing pays returns throughout the rest of the pipeline.</p>
+
+        <h3>Problem Statement</h3>
+
+        <p>Express the problem in one or two sentences without mentioning implementation. "Operations team needs to handle delivery exceptions faster" is a problem statement. "Build a React app with AI-powered email classification" is not.</p>
+
+        <h3>Success Criteria</h3>
+
+        <p>Define what would make this prototype successful. "Operations team can resolve exceptions 40% faster" is measurable. "It looks good and works well" is not. Success criteria guide evaluation throughout the pipeline.</p>
+
+        <h3>Constraints</h3>
+
+        <p>Establish what cannot change regardless of the implementation. These might include integration requirements, compliance needs, or user environment constraints. Expressing constraints upfront prevents wasted exploration.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: QuickShip Logistics</div>
+            <p><strong>Problem:</strong> Operations team spends 40% of time on delivery exception handling, causing delays and customer frustration.</p>
+            <p><strong>Success Criteria:</strong> Operations team can resolve exceptions 40% faster while maintaining customer satisfaction scores.</p>
+            <p><strong>Constraints:</strong> Must work on existing browser-based workflow; must handle sensitive customer data appropriately; must process emails within 5 seconds for real-time assistance.</p>
+            <p><strong>Scope:</strong> Initial prototype focuses on email exception handling only; voice and chat exceptions out of scope for this phase.</p>
+        </div>
+
+        <p>With framing complete, you can now build the basic structure for your prototype.</p>
+
+        <h2>Stage 2: Scaffolding</h2>
+
+        <p>Scaffolding creates the basic structure: project layout, dependencies, configuration, and foundational files. <a href="../../../part-3-vibe-coding/chapter-10/sections/section-10-1.html" class="cross-ref">Vibe coding</a> excels at scaffolding because it handles boilerplate efficiently.</p>
+
+        <h3>What to Scaffold</h3>
+
+        <p>During scaffolding, focus on establishing the project structure including folders and key files, dependency configuration, environment configuration, basic routing or navigation structure, and mock data structures. These elements create the foundation for subsequent development without prematurely implementing business logic or detailed components.</p>
+
+        <h3>What Not to Scaffold</h3>
+
+        <p>Avoid scaffolding business logic, which should be deferred to the core loop where iterative development allows for exploration and refinement. Do not invest in detailed UI components during this stage since the core loop is better suited for UI exploration. Integration implementations should be stubbed rather than fully implemented, and error handling should cover only basic cases rather than comprehensive scenarios.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">Scaffolding Prompt Pattern</div>
+            <p>Use a scaffolding prompt that establishes structure without prescribing content:</p>
+            <p><em>"Set up a [project type] with the following structure: [folder layout]. Include [dependencies]. Configure for [environment]. Add basic routing/navigation for [key flows]. Do not implement any business logic yet, just the empty structure."</em></p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Misconception</div>
+            <p>
+                Vibe-coded prototypes often look production-ready but are not. A prototype that impresses in a demo may have hidden issues: no error handling for unexpected inputs, no security hardening, no performance optimization, and brittle code that fails when requirements change. The line between prototype and production requires explicit investment, not assumed continuity. Teams that treat prototypes as productions often ship technical debt they do not recognize until it causes incidents.
+            </p>
+        </div>
+
+        <h2>Stage 3: Core Loop</h2>
+
+        <p>The core loop is where the prototype comes to life. This is the iterative portion where you build, evaluate, and refine. The loop structure matters more than individual iterations.</p>
+
+        <h3>Core Loop Structure</h3>
+
+        <p>The core loop follows a four-step structure that repeats iteratively. First, you specify the next increment by describing what should be accomplished. Second, you generate implementation using vibe coding to produce working code. Third, you evaluate the result against success criteria established during framing. Fourth, you decide whether to continue extending the current approach, refine what exists, or pivot to a different direction based on what you learned.</p>
+
+        <h3>Increment Selection</h3>
+
+        <p>Choose increments that produce evaluable progress. Each increment should be small enough to generate quickly and large enough to represent meaningful functionality. Prioritize increments that reduce the most uncertainty.</p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">Core Loop Decision Matrix</div>
+            <pre>
+For each increment candidate, evaluate:
+
+1. Does it reduce uncertainty about feasibility?
+2. Does it reduce uncertainty about desirability?
+3. Does it reduce uncertainty about viability?
+4. Can we evaluate it within our time budget?
+
+Prioritize by: Highest uncertainty reduction per time invested.
+            </pre>
+        </div>
+
+        <h2>Stage 4: Polish</h2>
+
+        <p>Polish ensures the prototype is presentable and evaluable. This does not mean production-quality, but it means the prototype creates the right impression and does not distract with obvious problems.</p>
+
+        <h3>Polish Focus Areas</h3>
+
+        <p>Polish focuses on ensuring core flows work without obvious errors, meaning the primary use cases complete successfully. Key error states should be handled so the most common error cases do not crash the prototype. Basic visual coherence ensures the prototype does not look broken or random. Performance should be acceptable, meaning the prototype is not painfully slow for users.</p>
+
+        <h3>Polish Boundaries</h3>
+
+        <p>Polish stops short of production-quality. Do not invest in edge cases, comprehensive error handling, security hardening, or performance optimization. The goal is evaluable, not shippable.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>The concept-to-prototype pipeline consists of four stages: Framing, Scaffolding, Core Loop, and Polish. Framing establishes the problem, success criteria, and constraints before generation begins, providing the foundation for everything that follows. Scaffolding creates structure without implementing business logic, focusing on project layout and configuration. The Core Loop is iterative, following the Specify, Generate, Evaluate, Decide cycle to build functionality progressively. Polish focuses on core flows and visual coherence rather than production quality. Each stage has different vibe coding-appropriate approaches, so matching your technique to the stage produces better outcomes.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Mapping Your Next Project</div>
+            <p>Apply the four-stage pipeline to your next prototype idea by working through each stage. During framing, write your problem statement, success criteria, and constraints to establish clear direction. During scaffolding, identify the basic structure you would need including project layout, dependencies, and configuration. During the core loop, determine what the first three increments you would attempt are, prioritizing those that reduce the most uncertainty. Finally, during polish, identify what polish is necessary for evaluation without over-investing in production quality.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 11.2, we examine <strong>Context Shaping and Repo Scaffolding</strong>, exploring how to establish the right context for effective vibe coding across multiple sessions.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 11: AI-Native Prototyping</a>
+            <a class="up" href="../index.html">Chapter 11 Overview</a>
+            <a class="next" href="section-11-2.html">11.2 Context Shaping</a>
+        </nav>
+
+        <footer>
+            <p>Section 11.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

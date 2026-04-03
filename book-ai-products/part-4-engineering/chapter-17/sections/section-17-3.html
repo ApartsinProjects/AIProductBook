@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17.3 Reranking and Graph-Aware Retrieval - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+    <style>
+        .diagram-block {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+        }
+        .rerank-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 2rem 0;
+            gap: 1rem;
+        }
+        .rerank-step {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+        }
+        .rerank-arrow {
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 17.3</div>
+        <h1>Reranking and Graph-Aware Retrieval</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Retrieval is a rough sort. Reranking is refinement. The first pass gets you candidates; the second pass gets you the right answer. Skip reranking and you are leaving accuracy on the table."</p>
+            <cite>Head of Search, RetailMind</cite>
+        </blockquote>
+
+        <h2>Introduction</h2>
+        <p>
+            Basic RAG retrieves the top-k most similar chunks from the vector store. But similarity in embedding space is not the same as relevance to the specific query at hand. Reranking uses more sophisticated models to reorder retrieved candidates, dramatically improving retrieval precision. Graph-aware retrieval goes further, leveraging relationships between entities to retrieve context that would be missed by pure content similarity.
+        </p>
+        <p>
+            This section covers two advanced retrieval techniques: cross-encoder reranking and knowledge graph retrieval. Both require more compute at query time, but the quality gains often justify the cost.
+        </p>
+
+        <h2>The Two-Stage Retrieval Problem</h2>
+        <p>
+            Vector similarity search is efficient but imprecise. Embedding models optimize for general semantic similarity across training data, not for specific query-document relevance. A bi-encoder architecture that encodes queries and documents independently cannot capture query-document interactions.
+        </p>
+
+        <div class="callout big-picture">
+            <h4>Bi-Encoder vs Cross-Encoder</h4>
+            <p><strong>Bi-encoder:</strong> Encodes query and documents independently, then computes cosine similarity. Fast (can pre-compute document embeddings) but cannot capture query-document interactions.</p>
+            <p><strong>Cross-encoder:</strong> Encodes query and document together, capturing interactions. Much more accurate but requires computing on-the-fly for every candidate.</p>
+        </div>
+
+        <h2>Cross-Encoder Reranking</h2>
+        <p>
+            Reranking takes the top-N candidates from vector search (where N > k) and reorders them using a cross-encoder model that better captures query-document relevance.
+        </p>
+
+        <div class="rerank-flow">
+            <div class="rerank-step">[Query] Vector Search</div>
+            <div class="rerank-arrow">--></div>
+            <div class="rerank-step">[Top-100] from Vector DB</div>
+            <div class="rerank-arrow">--></div>
+            <div class="rerank-step">[Cross-Encoder] Rerank</div>
+            <div class="rerank-arrow">--></div>
+            <div class="rerank-step">[Top-10] to LLM</div>
+        </div>
+
+        <h3>How Cross-Encoders Work</h3>
+        <p>
+            A cross-encoder takes the query and document as a single input sequence, with special separators marking the boundary. The transformer architecture attends to all tokens in both sequences simultaneously, capturing interactions that bi-encoders miss.
+        </p>
+
+        <div class="code-block">
+# Cross-encoder scoring
+from sentence_transformers import CrossEncoder
+
+# Load a cross-encoder model fine-tuned for relevance
+model = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2', max_length=512)
+
+# Score query-document pairs
+query = "How do I reset my password?"
+documents = [
+    "To reset your password, click the 'Forgot Password' link on the login page.",
+    "Passwords must be at least 8 characters with one uppercase and one number.",
+    "The weather today is sunny with a high of 75 degrees."
+]
+
+# Get relevance scores
+scores = model.predict([(query, doc) for doc in documents])
+# Returns: [0.95, 0.12, 0.01]
+
+# Rank by score
+ranked_indices = np.argsort(scores)[::-1]
+# Returns: [0, 1, 2] - correct order!
+        </div>
+
+        <h3>Reranking in Production</h3>
+
+        <div class="code-block">
+# Production reranking pipeline
+class RerankingRetriever:
+    def __init__(
+        self,
+        vector_store: VectorStore,
+        reranker: CrossEncoder,
+        initial_k: int = 100,
+        final_k: int = 10
+    ):
+        self.vector_store = vector_store
+        self.reranker = reranker
+        self.initial_k = initial_k
+        self.final_k = final_k
+    
+    def retrieve(self, query: str, filters: dict = None) -> list[Document]:
+        # Stage 1: Fast vector search
+        candidates = self.vector_store.similarity_search(
+            query, k=self.initial_k, filters=filters
+        )
+        
+        # Stage 2: Cross-encoder reranking
+        doc_texts = [doc.content for doc in candidates]
+        scores = self.reranker.predict(
+            [(query, doc) for doc in doc_texts]
+        )
+        
+        # Combine vector similarity with reranker scores
+        # Use Reciprocal Rank Fusion variant
+        combined_scores = []
+        for i, doc in enumerate(candidates):
+            # Weight: 30% vector similarity, 70% reranker score
+            combined = 0.3 * doc.score + 0.7 * scores[i]
+            combined_scores.append((combined, i))
+        
+        # Sort and return top-k
+        combined_scores.sort(reverse=True)
+        return [candidates[i] for _, i in combined_scores[:self.final_k]]
+        </div>
+
+        <h3>Cross-Encoder Model Selection</h3>
+
+        <p>
+            <strong>ms-marco-MiniLM-L-6-v2</strong> is a very fast model suitable for general purpose use cases where latency is critical. It provides good accuracy with a maximum length of 512 tokens, making it ideal for high-traffic production systems where you need to rerank many candidates without introducing noticeable delay.
+        </p>
+        <p>
+            <strong>ms-marco-MiniLM-L-12-v2</strong> offers better accuracy than the smaller variant while maintaining fast speeds. It also caps at 512 tokens and provides a balanced speed/quality trade-off for production systems that need higher accuracy without sacrificing too much latency.
+        </p>
+        <p>
+            <strong>cross-encoder/ms-marco-T5-base</strong> is a medium-speed model that delivers excellent accuracy. This model suits applications with high accuracy requirements where you can afford slightly higher latency in exchange for significantly better relevance ranking.
+        </p>
+        <p>
+            <strong>cross-encoder/ms-marco-T5-large</strong> provides the best accuracy available but operates at slower speeds. Use this model when maximum accuracy is the primary requirement and latency is not a constraint, such as in offline evaluation pipelines or low-volume but high-stakes queries.
+        </p>
+
+        <div class="callout key-insight">
+            <h4>Reranking is Not Free</h4>
+            <p>Reranking adds latency. A cross-encoder must score every candidate from the initial retrieval pass. For 100 candidates at 1ms per scoring, you add 100ms. For 1000 candidates, you add 1 second. Choose initial_k and final_k based on your latency budget. Often the biggest gains come from going from top-50 to top-10, not from top-100 to top-50.</p>
+        </div>
+
+        <h2>Knowledge Graph Retrieval</h2>
+        <p>
+            Graph-aware retrieval leverages structured relationships between entities. Instead of retrieving chunks by content similarity alone, it also traverses graph connections to find related context. This is especially powerful for questions that require understanding relationships.
+        </p>
+
+        <h3>When Knowledge Graphs Excel</h3>
+        <p>
+            Knowledge graph retrieval outperforms pure chunk retrieval for queries that require multi-hop reasoning such as discovering the CEO of a company that acquired another company, relationship traversal like finding all products that share a supplier with a given product, hierarchical context such as explaining an error within the broader context of the service that generated it, and entity-centric queries like retrieving a complete history for a specific patient record.
+        </p>
+
+        <h3>Building a Knowledge Graph</h3>
+        <p>
+            Knowledge graphs represent entities as nodes and relationships as edges. For RAG purposes, you extract entities and relationships from your documents and construct a graph that captures your domain structure.
+        </p>
+
+        <div class="code-block">
+# Knowledge graph extraction and storage
+from neo4j import GraphDatabase
+import spacy
+
+class KnowledgeGraphExtractor:
+    def __init__(self, nlp_model, graph_db: GraphDatabase):
+        self.nlp = nlp_model
+        self.graph = graph_db
+    
+    def extract_from_document(self, doc_id: str, text: str):
+        # Parse with spaCy
+        parsed = self.nlp(text)
+        
+        # Extract entities and relationships
+        entities = set()
+        relations = []
+        
+        for ent in parsed.ents:
+            entities.add((ent.text, ent.label_))
+        
+        for rel in parsed.root.text, rel_type, rel_obj in parsed.triples:
+            relations.append((rel_type, rel.root.text, rel_obj.text))
+        
+        # Store in graph
+        with self.graph.session() as session:
+            # Create entity nodes
+            for entity_text, entity_type in entities:
+                session.run("""
+                    MERGE (e:Entity {name: $name, type: $type})
+                    SET e.document_ids = coalesce(e.document_ids, []) + $doc_id
+                """, name=entity_text, type=entity_type, doc_id=doc_id)
+            
+            # Create relationship edges
+            for rel_type, source, target in relations:
+                session.run("""
+                    MATCH (s:Entity {name: $source})
+                    MATCH (t:Entity {name: $target})
+                    MERGE (s)-[r:RELATES {type: $rel_type}]->(t)
+                """, source=source, target=target, rel_type=rel_type)
+        </div>
+
+        <h3>Hybrid Graph and Vector Retrieval</h3>
+        <p>
+            The most powerful approach combines graph traversal with vector similarity. Use graph traversal to find candidate entities and their neighbors, then use vector search to rank the associated text chunks.
+        </p>
+
+        <div class="diagram-block">
++------------------------------------------------------------------+
+|               GRAPH-AWARE RAG FLOW                                 |
++------------------------------------------------------------------+
+|                                                                   |
+|  Query: "What pipelines touch the orders database?"               |
+|                                                                   |
+|  [1] Entity Extraction                                            |
+|      "orders database" -> Entity(type: DATABASE, name: orders)   |
+|                                                                   |
+|  [2] Graph Traversal                                              |
+|      orders_db --[WRITTEN_BY]--> pipeline_a                       |
+|                   --[READS_FROM]--> pipeline_b                   |
+|                                                                   |
+|  [3] Context Collection                                          |
+|      Collect: pipeline_a configs, pipeline_b configs,             |
+|              related chunks from vector store                     |
+|                                                                   |
+|  [4] Ranking                                                      |
+|      Combine graph proximity + vector similarity                  |
+|                                                                   |
++------------------------------------------------------------------+
+        </div>
+
+        <div class="callout practical-example">
+            <h4>Practical Example: DataForge Knowledge Graph</h4>
+            <p><strong>Challenge:</strong> DataForge users ask complex questions about data lineage that require tracing through multiple pipeline stages. Vector search on pipeline configurations misses the relationship context.</p>
+            <p><strong>Solution:</strong> DataForge built a knowledge graph capturing entities including pipelines, tables, columns, databases, and services, relationships such as reads_from, writes_to, transforms, depends_on, and owned_by, and attributes like schema changes, data types, and update frequencies.</p>
+            <p><strong>Query flow:</strong> When a user asks about "customer data flow," the system extracts "customer" and "data flow," traverses the graph to find all connected pipelines and tables, then retrieves and ranks the relevant documentation chunks.</p>
+            <p><strong>Result:</strong> Complex lineage queries that previously required 45 minutes of manual investigation now complete in under 5 seconds with 94% accuracy.</p>
+        </div>
+
+        <h3>Graph RAG Implementations</h3>
+
+        <p>
+            <strong>Graph-Augmented Retrieval</strong> uses the graph to find candidate documents and then applies vector search within those candidates. This medium complexity approach works well for entity-centric domains where you need to identify relevant documents based on entity relationships before fine-tuning the selection through semantic similarity.
+        </p>
+        <p>
+            <strong>Graph-Augmented Generation</strong> retrieves a graph substructure and includes it as context directly in the prompt for the LLM. This medium-high complexity approach suits multi-hop reasoning where the answer depends on traversing multiple relationships in sequence.
+        </p>
+        <p>
+            <strong>Full Graph RAG</strong> generates answers from the graph structure alone without relying on retrieved text chunks. This high complexity approach works best in highly structured domains where the relationships themselves contain the answer and textual elaboration is unnecessary.
+        </p>
+
+        <h2>Ensemble Retrieval Strategies</h2>
+        <p>
+            Production RAG systems rarely rely on a single retrieval method. Ensemble approaches combine multiple strategies, weighting their results based on query characteristics and available compute.
+        </p>
+
+        <h3>Weighted Ensemble</h3>
+        <p>
+            Assign different weights to different retrieval methods based on their reliability for the given query type. Static weights are simple; learned weights that adapt to query characteristics are more powerful.
+        </p>
+
+        <div class="code-block">
+# Weighted ensemble retrieval
+class EnsembleRetriever:
+    def __init__(self, retrievers: dict[str, tuple[Retriever, float]]):
+        """
+        retrievers: Dict of name -> (retriever_instance, weight)
+        """
+        self.retrievers = retrievers
+    
+    def retrieve(self, query: str, k: int = 10) -> list[Document]:
+        all_scores = {}  # doc_id -> weighted score
+        all_docs = {}    # doc_id -> document
+        
+        for name, (retriever, weight) in self.retrievers.items():
+            results = retriever.retrieve(query, k=k * 2)  # Over-retrieve
+            
+            for rank, doc in enumerate(results):
+                # Score based on rank and method weight
+                all_scores[doc.id] = all_scores.get(doc.id, 0) + weight * (1 / (rank + 1))
+                all_docs[doc.id] = doc
+        
+        # Sort by combined score
+        ranked = sorted(all_scores.items(), key=lambda x: x[1], reverse=True)
+        return [all_docs[doc_id] for doc_id, _ in ranked[:k]]
+        </div>
+
+        <h3>Query-Dependent Routing</h3>
+        <p>
+            Different queries benefit from different retrieval strategies. Train a lightweight classifier to route queries to the most appropriate retrieval method.
+        </p>
+
+        <div class="code-block">
+# Query routing classifier
+QUERY_ROUTING_PROMPT = """Classify this query into one of these categories:
+- FACTUAL: Simple question with clear answer in documents
+- ANALYTICAL: Complex question requiring synthesis
+- ENTITY_FOCUSED: Question about specific entities and relationships
+- COMPARISON: Question comparing multiple things
+- PROCEEDURAL: Question about how to do something
+
+Query: {query}
+
+Category:"""
+
+def route_query(query: str) -> str:
+    response = llm.complete(QUERY_ROUTING_PROMPT.format(query=query))
+    return response.text.strip().lower()
+
+# Route to appropriate retriever
+def retrieve_with_routing(query: str, k: int = 10):
+    category = route_query(query)
+    
+    if category == "entity_focused":
+        return graph_retriever.retrieve(query, k)
+    elif category == "factual":
+        return keyword_retriever.retrieve(query, k)
+    elif category == "analytical":
+        return hybrid_retriever.retrieve(query, k)
+    else:
+        return ensemble_retriever.retrieve(query, k)
+        </div>
+
+        <div class="callout warning">
+            <h4>Warning: Reranking Without Enough Candidates</h4>
+            <p>Reranking cannot improve results if the relevant documents are not in the initial candidate set. If the vector search misses the relevant chunk entirely, no amount of reranking will recover it. Ensure your initial retrieval has high recall before optimizing reranking precision.</p>
+        </div>
+
+        <h2>Section Summary</h2>
+        <p>
+            Two-stage retrieval with cross-encoder reranking dramatically improves precision by reordering vector search candidates using query-document interaction models. Cross-encoders capture relevance signals that bi-encoders miss, at the cost of additional compute. Knowledge graph retrieval excels for multi-hop reasoning and relationship traversal queries. Graph-augmented RAG extracts entities and relationships from documents, enabling traversal-based context discovery. Ensemble retrieval combines multiple strategies with weighted scoring or query-dependent routing. The key insight is that retrieval and ranking serve different purposes: retrieval maximizes recall while reranking optimizes precision. Both stages matter for high-quality RAG.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-17-2.html">17.2 Chunking and Hybrid Retrieval</a>
+            <a class="up" href="index.html">Chapter 17 Overview</a>
+            <a class="next" href="section-17-4.html">17.4 Evaluation of Retrieval Quality</a>
+        </nav>
+
+        <footer>
+            <p>Section 17.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

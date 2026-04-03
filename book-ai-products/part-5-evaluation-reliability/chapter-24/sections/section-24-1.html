@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 24.1: Inference Economics and Cost Modeling - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 24</div>
+        <h1><a href="../../../part-4-engineering/chapter-15/sections/section-15-1.html" class="cross-ref">Inference Economics</a> and Cost Modeling</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"Every AI feature has a cost per use. The question is not whether to optimize cost, but whether the value delivered exceeds the cost incurred. Without cost modeling, you are flying blind."</p>
+            <cite>A Finance Partner Who Started Asking Questions</cite>
+        </blockquote>
+
+        <h2 id="ai-cost-drivers">AI Cost Drivers</h2>
+
+        <p>
+            AI inference costs are dominated by token usage. Both input tokens (prompt, context, conversation history) and output tokens (generated response) consume budget. Understanding the relationship between your application behavior and token consumption is essential for cost management.
+        </p>
+
+        <h3 id="token-cost-model">Token Cost Model</h3>
+
+        <p>
+            Most LLM APIs price by token, typically with different rates for input and output tokens:
+        </p>
+
+        <pre><code class="language-python">
+# Example pricing (approximate, check current provider rates)
+TOKEN_PRICING = {
+    "gpt-4o": {
+        "input": 0.005,   # $ per 1K input tokens
+        "output": 0.015,  # $ per 1K output tokens
+    },
+    "gpt-4o-mini": {
+        "input": 0.00015,
+        "output": 0.0006,
+    },
+    "claude-sonnet-4": {
+        "input": 0.003,
+        "output": 0.015,
+    }
+}
+
+def calculate_inference_cost(
+    model: str,
+    input_tokens: int,
+    output_tokens: int
+) -> float:
+    """
+    Calculate cost for a single inference call.
+    """
+    pricing = TOKEN_PRICING[model]
+    
+    input_cost = (input_tokens / 1000) * pricing["input"]
+    output_cost = (output_tokens / 1000) * pricing["output"]
+    
+    return input_cost + output_cost
+        </code></pre>
+
+        <h3 id="hidden-costs">Hidden Cost Factors</h3>
+
+        <p>Beyond token pricing, AI costs include several hidden factors that often surprise teams new to AI infrastructure. API overhead covers network latency, retries, and rate limit handling that add to the cost of each API call. Infrastructure includes vector databases, caching layers, and monitoring systems that support AI functionality. Engineering covers development time, evaluation infrastructure, and guardrails that require ongoing investment. Failures include retries, fallbacks, and human escalation that occur when things go wrong, which can significantly add to costs if not properly managed.</p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Total Cost of AI Inference</h4>
+            <p>Token cost is often only 60-80% of total AI inference cost when you include infrastructure, engineering, and failure handling. True cost modeling must account for all components.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Misconception</div>
+            <p>
+                Cost per call is not cost per outcome. A feature that costs $0.01 per call may seem expensive, but if it drives a $10 purchase, the economics are excellent. Conversely, a feature costing $0.001 per call that does not change user behavior is pure waste. Always model cost in the context of value delivered, not just raw token consumption.
+            </p>
+        </div>
+
+        <h2 id="cost-modeling">Building a Cost Model</h2>
+
+        <h3 id="per-feature-cost">Per-Feature Cost Model</h3>
+
+        <p>
+            Model costs at the feature level to understand unit economics:
+        </p>
+
+        <pre><code class="language-python">
+@dataclass
+class FeatureCostModel:
+    """Cost model for a single AI feature"""
+    feature_name: str
+    model: str
+    avg_input_tokens: float
+    avg_output_tokens: float
+    calls_per_session: float
+    sessions_per_day: int
+    
+    def daily_token_cost(self) -> float:
+        tokens_per_session = self.avg_input_tokens + self.avg_output_tokens
+        tokens_per_day = tokens_per_session * self.sessions_per_day
+        return (tokens_per_day / 1000) * TOKEN_PRICING[self.model]["input"] + \
+               (tokens_per_day / 1000) * TOKEN_PRICING[self.model]["output"]
+    
+    def monthly_cost(self) -> float:
+        return self.daily_token_cost() * 30
+
+# Example: QuickShip route optimization
+route_optimization_cost = FeatureCostModel(
+    feature_name="route_optimization",
+    model="gpt-4o-mini",
+    avg_input_tokens=800,
+    avg_output_tokens=200,
+    calls_per_session=5,
+    sessions_per_day=10000
+)
+
+print(f"Route optimization daily cost: ${route_optimization_cost.daily_token_cost():.2f}")
+        </code></pre>
+
+        <h3 id="cost-sensitivity">Cost Sensitivity Analysis</h3>
+
+        <p>Model how costs change with usage patterns to understand the relationship between scale and spending. The current baseline with ten thousand daily sessions results in a monthly cost of four hundred fifty dollars and a cost per session of $0.0015. With two times growth at twenty thousand daily sessions, monthly cost doubles to nine hundred dollars while cost per session remains constant at $0.0015. With ten times growth at one hundred thousand daily sessions, monthly cost reaches four thousand five hundred dollars while cost per session remains $0.0015. However, with caching at a seventy percent hit rate applied to the ten times growth scenario, monthly cost drops to one thousand three hundred fifty dollars and cost per session drops to $0.00045, demonstrating the dramatic impact that caching can have on costs at scale.</p>
+
+        <div class="callout key-insight">
+            <h4 class="callout-title">The Power of Caching</h4>
+            <p>Caching can reduce costs by 50-90% for repetitive workloads. Even a modest 50% cache hit rate cuts token costs in half. Cost models must include caching assumptions.</p>
+        </div>
+
+        <h2 id="cost-optimization-opportunities">Cost Optimization Opportunities</h2>
+
+        <h3 id="model-selection">Model Selection</h3>
+
+        <p>
+            Use the smallest model that achieves the required quality:
+        </p>
+
+        <pre><code class="language-python">
+# Quality vs Cost tradeoffs
+MODEL_COMPARISON = {
+    "gpt-4o": {
+        "cost_per_1k_tokens": 0.020,
+        "quality_score": 0.95,
+        "use_cases": ["complex reasoning", " nuanced output"]
+    },
+    "gpt-4o-mini": {
+        "cost_per_1k_tokens": 0.00075,
+        "quality_score": 0.88,
+        "use_cases": ["simple extraction", " classification", " short responses"]
+    }
+}
+
+def select_cost_effective_model(
+    task: str,
+    quality_requirement: float
+) -> str:
+    """Select cheapest model meeting quality requirement."""
+    for model, specs in MODEL_COMPARISON.items():
+        if specs["quality_score"] >= quality_requirement:
+            return model
+    return "gpt-4o"  # Fallback to best quality
+        </code></pre>
+
+        <h3 id="context-optimization">Context Optimization</h3>
+
+        <p>Reduce input token usage through better context management to lower costs without sacrificing quality. Summarization compresses conversation history so that older exchanges take fewer tokens while retaining essential information. Selective retrieval retrieves only relevant context rather than flooding the prompt with all available information, reducing tokens while maintaining the context needed for accurate responses. Chunk optimization right-sizes retrieved document chunks to include only the most relevant portions rather than entire documents. System prompt efficiency uses concise but clear instructions that communicate requirements without excessive verbosity.</p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: HealthMetrics Diagnostic Assistant</h4>
+            <p>The HealthMetrics team was optimizing their diagnostic assistant costs after the system reached forty thousand dollars per month and leadership questioned the return on investment. The problem was that the team did not know where costs were coming from, making it impossible to identify optimization opportunities. They faced a dilemma about whether to cut costs by reducing functionality or optimize efficiency instead.</p>
+            <p>The team decided to build a comprehensive cost model to identify optimization opportunities. They began by instrumenting all AI calls with token tracking to get accurate consumption data. They built a per-feature cost dashboard to see which features were most expensive. They identified that sixty percent of costs came from just three features, focusing optimization efforts where they would have the most impact. They found that forty percent of calls were using gpt-4o when gpt-4o-mini would have sufficed, indicating significant overspending on model tier. They discovered that twenty-five percent of retrieval calls returned irrelevant documents, wasting tokens on unhelpful context.</p>
+            <p>After optimization through model routing which saved thirty-five percent, retrieval improvement which saved twenty percent, and caching which saved fifteen percent, total costs dropped to twenty-two thousand dollars per month while maintaining quality. The lesson is that you cannot optimize what you cannot measure. Cost visibility is the first step to cost optimization.</p>
+        </div>
+
+        <h2 id="unit-economics">Unit Economics for AI Features</h2>
+
+        <h3 id="cost-per-outcome">Cost Per Outcome</h3>
+
+        <p>
+            Measure cost not just in tokens but in business outcomes:
+        </p>
+
+        <pre><code class="language-python">
+@dataclass
+class UnitEconomics:
+    """Unit economics for an AI feature"""
+    feature_name: str
+    cost_per_call: float
+    conversion_rate: float  # % of calls that lead to desired outcome
+    average_order_value: float
+    
+    def cost_per_acquisition(self) -> float:
+        """Cost to acquire one customer through this feature."""
+        if self.conversion_rate == 0:
+            return float('inf')
+        return self.cost_per_call / self.conversion_rate
+    
+    def roi_threshold(self, customer_ltv: float) -> float:
+        """Minimum conversion rate needed for positive ROI."""
+        return self.cost_per_call / customer_ltv
+        </code></pre>
+
+        <h3 id="marginal-cost">Marginal Cost Analysis</h3>
+
+        <p>Calculate the marginal cost of AI features by comparing cost per session against revenue per session to understand unit economics. For product recommendation, the cost is $0.002 per session while revenue is $0.15 per session, yielding a margin of 98.7 percent which indicates an excellent return on investment. For support deflection, the cost is $0.05 per session while revenue is $2.50 per session, yielding a margin of 98.0 percent which also demonstrates strong economics. For content generation, the cost is $0.15 per session while revenue is only $0.05 per session, yielding a negative margin of negative 200 percent which means the feature costs more to run than it generates in value, indicating it may need to be redesigned, retired, or charged to a different budget.</p>
+
+        <div class="callout research-frontier">
+            <h4 class="callout-title">Research Frontier</h4>
+            <p>Research on "semantic caching" explores caching not just exact matches but semantically similar requests. This could dramatically improve cache hit rates for natural language queries while maintaining response quality.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 24: Unit Economics</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-24-2.html">24.2 Caching and Optimization</a>
+        </nav>
+
+        <footer>
+            <p>Section 24.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

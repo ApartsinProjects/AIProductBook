@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 15: Reference Architectures for AI Products - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 15</div>
+        <h1>Reference Architectures for AI Products</h1>
+    </header>
+
+    <main class="content">
+        <div class="opening-hook">
+            Most AI product failures are architectural failures. Teams build elaborate multi-agent systems when a simple prompt would suffice, or they shoehorn complex workflows into a basic LLM wrapper that was never designed for production scale. The right architecture depends on your requirements for latency, accuracy, cost, and trust. Understanding common patterns helps you choose wisely and evolve your architecture as requirements change.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-15-opener.png"
+                 alt="Chapter 15 opener illustration">
+            <figcaption>
+                Reference architectures provide templates for building AI products at different scales.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Architecture Spikes</div>
+            <p>Use vibe coding for architecture spikes before committing to full implementation. Quickly assemble prototypes that test different architectural patterns: a simple prompt-based approach versus a RAG setup, a single-agent versus multi-agent design. Vibe coding architectural variants lets you feel the complexity and understand the real trade-offs before making expensive architectural decisions that are difficult to reverse.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">PM Decision Points in Reference Architectures</div>
+            <p>When evaluating architecture choices, PMs should ask: What is the cost of being wrong about scale or complexity? How does this architecture affect time-to-market? What reliability guarantees matter to users? These questions should be posed during architecture reviews, not after decisions are made. Key decisions include whether to start simple and evolve versus building for scale upfront, and how human oversight requirements shape the architecture.</p>
+        </div>
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn the spectrum of AI product architectures from simple to complex, and understand how to select and evolve your architecture as your product grows.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter presents reference architectures for AI products, organized from simplest to most complex. You will learn about the YAGNI principle applied to AI systems, copilot patterns with human-in-the-loop design, retrieval-augmented generation architectures, agentic workflow systems, multimodal architectures, and enterprise AI patterns including human oversight and compliance boundaries.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> Which architecture pattern is appropriate for our AI product requirements, and how do we avoid over-engineering with unnecessary complexity.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> Implementing the simplest viable architecture for your use case and stress-testing it before adding complexity.</li>
+                <li><strong>What would count as success or failure?</strong> An architecture that meets current requirements with room to evolve, versus one that is either inadequate or excessively complex.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Architecture decisions are expensive to reverse; starting simple and evolving based on evidence prevents the common failure of building elaborate systems for simple problems.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Understand the full spectrum of AI product architectures</li>
+                <li>Apply YAGNI principles to AI system design</li>
+                <li>Match architectures to product requirements</li>
+                <li>Design for human oversight and auditability</li>
+                <li>Plan for architectural evolution as products scale</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">15.1</span> <a href="sections/section-15-1.html">Architecture Spectrum and Pattern Selection</a></li>
+                <li><span class="sec-num">15.2</span> <a href="sections/section-15-2.html">Copilot Architecture and Human-in-the-Loop Design</a></li>
+                <li><span class="sec-num">15.3</span> <a href="sections/section-15-3.html">Retrieval-Augmented Generation (RAG) Architecture</a></li>
+                <li><span class="sec-num">15.4</span> <a href="sections/section-15-4.html">Agentic Workflow Systems</a></li>
+                <li><span class="sec-num">15.5</span> <a href="sections/section-15-5.html">Enterprise AI, Multimodal, and Human Oversight Systems</a></li>
+            </ul>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../../toc.html">Table of Contents</a>
+            <a class="up" href="../../part-4-engineering/index.html">Part IV Overview</a>
+            <a class="next" href="sections/section-15-1.html">15.1 Architecture Spectrum</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 15 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

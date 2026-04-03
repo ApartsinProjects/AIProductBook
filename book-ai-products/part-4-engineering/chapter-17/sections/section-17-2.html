@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17.2 Chunking, Indexing, and Hybrid Retrieval - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+    <style>
+        .diagram-block {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .chunking-comparison {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .chunk-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .chunk-card h4 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .chunk-card small { color: #666; }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        .parameter-table th, .parameter-table td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .parameter-table th {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+        <div class="chapter-label">Chapter 17.2</div>
+        <h1>Chunking, Indexing, and Hybrid Retrieval</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"The difference between a RAG system that works and one that fails is often not the model or the vector database. It is how you split your documents. Chunking is where the art lives."</p>
+            <cite>Senior AI Engineer, HealthMetrics</cite>
+        </blockquote>
+
+        <h2>Introduction</h2>
+        <p>
+            The previous section established RAG fundamentals. This section dives into the critical implementation details that determine whether your RAG system actually works in practice. Chunking strategy affects every downstream decision. Indexing parameters determine retrieval quality. Hybrid retrieval combines the best of semantic and keyword search. Master these three elements and your RAG systems will significantly outperform naive implementations.
+        </p>
+
+        <h2>Chunking Strategies</h2>
+        <p>
+            Chunking is the process of splitting documents into smaller, retrieval-friendly pieces. The right chunk size balances context completeness against retrieval precision. Too large and you retrieve irrelevant context. Too small and you lose the information needed to answer questions. (see <a href="../../../part-1-why-ai-changes/chapter-1/sections/section-1-3.html" class="cross-ref">context windows</a>)
+        </p>
+
+        <h3>The Chunking Spectrum</h3>
+
+        <div class="chunking-comparison">
+            <div class="chunk-card">
+                <h4>Small Chunks</h4>
+                <p>64-256 tokens</p>
+                <small>High precision, low recall. Good for factual Q&A with precise answers.</small>
+            </div>
+            <div class="chunk-card">
+                <h4>Medium Chunks</h4>
+                <p>256-512 tokens</p>
+                <small>Balanced precision/recall. Good for general purpose RAG.</small>
+            </div>
+            <div class="chunk-card">
+                <h4>Large Chunks</h4>
+                <p>512-2048 tokens</p>
+                <small>High recall, lower precision. Good for summarization and complex reasoning.</small>
+            </div>
+        </div>
+
+        <h3>Fixed-Size Chunking</h3>
+        <p>
+            The simplest approach splits text into chunks of a predetermined size (measured in tokens or characters) with optional overlap between chunks. Overlap ensures that context is not lost at chunk boundaries.
+        </p>
+
+        <div class="code-block">
+# Fixed-size chunking with overlap
+def chunk_text(text: str, chunk_size: int = 512, overlap: int = 50) -> list[str]:
+    chunks = []
+    start = 0
+    while start < len(text):
+        end = start + chunk_size
+        chunks.append(text[start:end])
+        start = end - overlap  # Slide window with overlap
+    return chunks
+        </div>
+
+        <p>
+            Fixed-size chunking is fast and predictable but ignores document structure. It can split sentences mid-way, separate headers from content, and break code across chunks.
+        </p>
+
+        <p>
+            For content where semantic coherence matters more than speed, semantic chunking offers a more sophisticated approach.
+        </p>
+
+        <h3>Semantic Chunking</h3>
+        <p>
+            Semantic chunking uses embeddings to identify natural topic boundaries in text. The algorithm embeds sentences and groups those with high similarity into chunks. This preserves semantic coherence at the cost of variable chunk sizes and slower processing.
+        </p>
+
+        <div class="code-block">
+# Semantic chunking pseudocode
+def semantic_chunk(sentences: list[str], similarity_threshold: float = 0.7) -> list[str]:
+    embeddings = [embed(sentence) for sentence in sentences]
+    chunks = []
+    current_chunk = [sentences[0]]
+    
+    for i in range(1, len(sentences)):
+        similarity = cosine_similarity(embeddings[i], embeddings[i-1])
+        if similarity > similarity_threshold:
+            current_chunk.append(sentences[i])
+        else:
+            chunks.append(" ".join(current_chunk))
+            current_chunk = [sentences[i]]
+    
+    if current_chunk:
+        chunks.append(" ".join(current_chunk))
+    return chunks
+        </div>
+
+        <h3>Document Structure-Aware Chunking</h3>
+        <p>
+            The most effective chunking strategies respect document structure. Headers, paragraphs, sections, and page boundaries provide natural chunk boundaries. This approach is more complex but produces chunks that retain semantic coherence.
+        </p>
+
+        <div class="code-block">
+# Document structure-aware chunking
+def chunk_by_structure(document: Document, max_chunk_size: int = 512) -> list[Chunk]:
+    chunks = []
+    
+    for section in document.sections:
+        # Don't chunk across section headers
+        if len(section.text) <= max_chunk_size:
+            chunks.append(Chunk(
+                content=section.text,
+                metadata={
+                    "section": section.header,
+                    "page": section.page_number,
+                    "heading_level": section.heading_level
+                }
+            ))
+        else:
+            # Recursively chunk long sections by paragraphs
+            for paragraph in section.paragraphs:
+                if len(paragraph.text) <= max_chunk_size:
+                    chunks.append(Chunk(content=paragraph.text, metadata=paragraph.meta))
+                else:
+                    # Chunk by sentences for very long paragraphs
+                    chunks.extend(chunk_sentences(paragraph, max_chunk_size))
+    
+    return chunks
+        </div>
+
+        <div class="callout big-picture">
+            <h4>Key Insight: Metadata is as Important as Content</h4>
+            <p>Every chunk should carry rich metadata: document ID, section headers, page numbers, last updated date, author, and any domain-specific tags. This metadata enables filtered retrieval, result attribution, and debugging. A chunk without metadata is an orphan in the retrieval system.</p>
+        </div>
+
+        <h3>Chunking for Different Content Types</h3>
+
+        <p>
+            <strong>Technical documentation</strong> benefits from structure-aware chunking that respects headers and code blocks, with typical sizes of 256-512 tokens. The key consideration is keeping code with its related explanation so that retrieved chunks contain both the code and the context needed to understand it.
+        </p>
+        <p>
+            <strong>Legal documents</strong> should use section-based chunking with clause numbering preserved, typically at 128-256 token sizes. The clause hierarchy must be maintained in metadata so that related clauses remain connected even when retrieved separately.
+        </p>
+        <p>
+            <strong>Knowledge base articles</strong> work well with paragraph-based chunking at 256-512 tokens. Special care should be taken to keep question-answer pairs together since these are natural retrieval units.
+        </p>
+        <p>
+            <strong>Code repositories</strong> should chunk at function or class boundaries using AST parsing for accurate identification of these natural divisions. The entire function should be kept as a single chunk rather than splitting it across chunks.
+        </p>
+        <p>
+            <strong>Conversations and transcripts</strong> should use turn-based or topic-segmented approaches, keeping full turns or groups of 5-10 turns together. Speaker identity must be preserved in metadata so that the context of statements remains clear.
+        </p>
+
+        <h2>Advanced Indexing Techniques</h2>
+        <p>
+            Beyond basic embedding and storage, advanced indexing techniques dramatically improve retrieval quality. These include parent-document retrieval, multi-representation indexing, and domain-specific preprocessing.
+        </p>
+
+        <h3>Parent Document Retrieval</h3>
+        <p>
+            Parent document retrieval maintains a hierarchy between small retrieval units and larger parent documents. At query time, you retrieve relevant child chunks but return the parent document context. This balances retrieval precision with context completeness.
+        </p>
+
+        <div class="diagram-block">
++------------------------------------------------------------------+
+|               PARENT DOCUMENT RETRIEVAL                            |
++------------------------------------------------------------------+
+|                                                                   |
+|  Index time:                                                      |
+|  [Parent Doc] --> [Child Chunks] --> [Store both levels]          |
+|       |                 |                                         |
+|       |                 +---> Small chunks for retrieval           |
+|       |                                                           |
+|       +---> Large chunks for context                              |
+|                                                                   |
+|  Query time:                                                      |
+|  [Query] --> [Retrieve child chunks] --> [Fetch parent docs]      |
+|                                                   |               |
+|                                                   v               |
+|                                              [Return parent       |
+|                                               context + chunks]   |
+|                                                                   |
++------------------------------------------------------------------+
+        </div>
+
+        <h3>Multi-Representation Indexing</h3>
+        <p>
+            Different chunk sizes serve different query types. Multi-representation indexing creates multiple embeddings per document at different chunk sizes. This enables the system to choose the optimal representation based on query characteristics.
+        </p>
+
+        <h3>Domain-Specific Preprocessing</h3>
+        <p>
+            Generic chunking ignores domain-specific structure. For healthcare, preprocessing should extract medical terms and normalize them. For code, extract function signatures and docstrings. For financial documents, extract tables and figures separately.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>Practical Example: HealthMetrics Chunking Strategy</h4>
+            <p><strong>Challenge:</strong> HealthMetrics indexes clinical guidelines, protocol documents, and research papers. Simple chunking broke apart clinical recommendations from their evidence citations.</p>
+            <p><strong>Solution:</strong> They implemented a domain-specific chunking pipeline that extracts structured sections including Background, Methods, Results, and Conclusions, identifies recommendation blocks which are GRADE evidence statements, links each recommendation to its supporting evidence citations, and stores them as composite chunks containing both the recommendation and citations.</p>
+            <p><strong>Result:</strong> Retrieval precision for clinical queries improved from 62% to 89%. Physicians reported answers felt "more clinically useful."</p>
+        </div>
+
+        <h2>Hybrid Retrieval Implementation (see <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">evaluation</a>)</h2>
+        <p>
+            Hybrid retrieval combines semantic vector search with keyword-based search. This combination captures both conceptual similarity and exact terminology, which is essential for production RAG systems.
+        </p>
+
+        <h3>The Case for Hybrid Search</h3>
+        <p>
+            Pure vector search excels at understanding meaning but can miss exact matches that matter. A query for "P50 revenue" should match documents containing "P50" even if the embedding model does not perfectly capture the statistical term. Hybrid search ensures these precise matches are not lost.
+        </p>
+
+        <h3>Reciprocal Rank Fusion</h3>
+        <p>
+            Reciprocal Rank Fusion (RRF) is the gold standard for combining retrieval results. It ranks results by the reciprocal of their rank in each retrieval method, avoiding score normalization issues.
+        </p>
+
+        <div class="code-block">
+# Reciprocal Rank Fusion
+def reciprocal_rank_fusion(results_list: list[list[Document]], k: int = 60) -> list[Document]:
+    """
+    Combine multiple ranked retrieval result lists using RRF.
+    
+    Args:
+        results_list: List of ranked document lists from different retrieval methods
+        k: RRF smoothing parameter (default 60 works well in practice)
+    """
+    scores = defaultdict(float)
+    
+    for results in results_list:
+        for rank, doc in enumerate(results):
+            # RRF score: 1 / (k + rank)
+            scores[doc.id] += 1 / (k + rank)
+    
+    # Sort by combined RRF score
+    sorted_docs = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    return [get_document_by_id(doc_id) for doc_id, _ in sorted_docs]
+        </div>
+
+        <h3>Query Expansion and Reformulation</h3>
+        <p>
+            Users often ask questions using different vocabulary than your documents. Query expansion uses the LLM to generate alternative phrasings of the query, then retrieves using all variations.
+        </p>
+
+        <div class="code-block">
+# Query expansion with LLM
+EXPAND_PROMPT = """Given the user query, generate 3 alternative phrasings 
+that might appear in technical documentation. Include synonyms and 
+different grammatical forms.
+
+User query: {query}
+
+Return a JSON array of alternative phrasings."""
+
+def expand_query(query: str) -> list[str]:
+    response = llm.complete(EXPAND_PROMPT.format(query=query))
+    alternatives = json.loads(response.text)
+    return [query] + alternatives  # Include original + expansions
+        </div>
+
+        <h3>Query Decomposition for Complex Questions</h3>
+        <p>
+            Complex questions often require information from multiple sources. Query decomposition breaks such questions into simpler sub-queries that can be answered independently, then synthesizes the answers.
+        </p>
+
+        <div class="callout key-insight">
+            <h4>Query Complexity Routing</h4>
+            <p>Not all queries need the same retrieval strategy. Simple factual questions benefit from precise, small-chunk retrieval. Complex analytical questions need larger context and potentially decomposition. Implement a query complexity classifier to route different queries to appropriate retrieval strategies.</p>
+        </div>
+
+        <h2>Indexing Pipeline Architecture</h2>
+        <p>
+            Production RAG systems require robust indexing pipelines that handle extraction, transformation, chunking, embedding, and storage. The pipeline must be reliable, monitorable, and incrementally updatable.
+        </p>
+
+        <div class="diagram-block">
++------------------------------------------------------------------+
+|               PRODUCTION INDEXING PIPELINE                         |
++------------------------------------------------------------------+
+|                                                                   |
+|  [Source]      [Extract]    [Transform]   [Chunk]   [Embed] [Store] |
+|    |             |             |            |        |       |    |
+|    v             v             v            v        v       v    |
+|  PDF,       Text         Clean,       Split     Vector  Vector  |
+|  URLs,      extraction   normalize,   into      into    DB +  |
+|  DBs,       from         structure    chunks    floats  Meta   |
+|  APIs       documents    documents    with                Store |
+|                                      metadata                  |
+|                                                                   |
+|  Monitoring: Pipeline latency, chunk quality, embedding costs    |
+|  Error Handling: Failed extractions go to dead letter queue      |
+|  Incremental: Only re-index changed documents                     |
+|                                                                   |
++------------------------------------------------------------------+
+        </div>
+
+        <h3>Incremental Indexing</h3>
+        <p>
+            Full re-indexing is expensive and often unnecessary. Incremental indexing tracks document versions and only re-indexes changed documents. This requires storing document hashes or timestamps and comparing them at indexing time.
+        </p>
+
+        <h3>Embedding Cache</h3>
+        <p>
+            Embedding generation is often the most expensive part of indexing. Caching embeddings by content hash avoids recomputing for unchanged documents and enables fast re-indexing.
+        </p>
+
+        <div class="code-block">
+# Embedding cache implementation
+class EmbeddingCache:
+    def __init__(self, db: Database):
+        self.db = db
+        self.cache = {}
+    
+    def get_embedding(self, text: str, model: str) -> list[float]:
+        content_hash = hash_text(text)
+        cache_key = f"{model}:{content_hash}"
+        
+        if cache_key in self.cache:
+            return self.cache[cache_key]
+        
+        # Check database cache
+        cached = self.db.query(
+            "SELECT embedding FROM embedding_cache WHERE cache_key = ?",
+            cache_key
+        )
+        if cached:
+            embedding = cached["embedding"]
+            self.cache[cache_key] = embedding
+            return embedding
+        
+        # Generate new embedding
+        embedding = embed_with_model(text, model)
+        
+        # Store in cache
+        self.db.execute(
+            "INSERT INTO embedding_cache (cache_key, embedding) VALUES (?, ?)",
+            cache_key, embedding
+        )
+        self.cache[cache_key] = embedding
+        return embedding
+        </div>
+
+        <h2>Section Summary</h2>
+        <p>
+            Chunking strategy fundamentally determines RAG system quality. Fixed-size chunking is simple but ignores document structure. Semantic chunking preserves coherence but is computationally expensive. Structure-aware chunking produces the best results by respecting headers, paragraphs, and domain-specific boundaries. Advanced indexing techniques like parent document retrieval and multi-representation indexing enable both precision and context completeness. Hybrid retrieval combining vector and keyword search outperforms either alone. Query expansion and decomposition address vocabulary mismatch and complex question handling. Production indexing pipelines require incremental updates, embedding caches, and robust monitoring.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-17-1.html">17.1 RAG Foundations</a>
+            <a class="up" href="index.html">Chapter 17 Overview</a>
+            <a class="next" href="section-17-3.html">17.3 Reranking and Graph-Aware Retrieval</a>
+        </nav>
+
+        <footer>
+            <p>Section 17.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

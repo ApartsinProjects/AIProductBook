@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 29.1: Capability Maps and Skill Taxonomies - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 29</div>
+        <h1>Capability Maps and Skill Taxonomies</h1>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"You cannot build what you cannot name. Capability maps transform abstract AI potential into organizable, improvable, and hirable competencies."</p>
+            <cite>Head of AI Talent who Built the First Taxonomy</cite>
+        </blockquote>
+
+        <h2 id="capability-map-purpose">Why Capability Maps Matter</h2>
+
+        <p>
+            Organizations building AI products need a shared language for AI capabilities. Without this language, discussions about skills, hiring, and development become confused. Is "prompt engineering" one skill or three? Where does "eval literacy" fit? How do you assess whether a team can build a <a href="../../../part-4-engineering/chapter-17/sections/section-17-1.html" class="cross-ref">RAG system</a>?
+        </p>
+
+        <p>
+            Capability maps provide this shared language. They decompose AI product work into discrete capabilities that can be assessed, developed, hired for, and catalogued. This section presents a capability map framework adapted for AI product organizations.
+        </p>
+
+        <h2 id="capability-taxonomy">AI Product Capability Taxonomy</h2>
+
+        <p>
+            The following taxonomy organizes AI product capabilities into four domains, each with specific competencies:
+        </p>
+
+        <h3 id="capability-domain-modeling">Domain 1: Model and System Design</h3>
+
+        <p>
+            This domain covers capabilities related to defining what AI system to build and how it should behave:
+        </p>
+
+        <p>
+            This domain covers capabilities related to defining what AI system to build and how it should behave. The competencies include ML architecture selection choosing appropriate model architectures for given problems such as transformers, gradient boosting, and hybrid systems, training strategy design designing data requirements, training procedures, and evaluation approaches, prompt engineering developing effective prompts for desired behaviors, system integration design architecting how AI components integrate with broader systems, and output format design structuring AI outputs for downstream consumption.
+        </p>
+
+        <h3 id="capability-domain-evaluation">Domain 2: Evaluation and Quality</h3>
+
+        <p>
+            This domain covers capabilities related to assessing and ensuring AI quality:
+        </p>
+
+        <p>
+            This domain covers capabilities related to assessing and ensuring AI quality. The competencies include eval framework design building comprehensive evaluation systems as covered in Chapter 21, test case development creating representative test inputs and expected outputs, quality metric selection choosing metrics that track real user value, production monitoring observing AI behavior in production environments, and regression identification detecting when AI quality degrades.
+        </p>
+
+        <h3 id="capability-domain-product">Domain 3: AI Product Management</h3>
+
+        <p>
+            This domain covers capabilities at the intersection of AI and product thinking:
+        </p>
+
+        <p>
+            This domain covers capabilities at the intersection of AI and product thinking. The competencies include AI opportunity identification finding product areas where AI adds value, requirement decomposition translating product needs into AI specifications, risk assessment identifying where AI failures would be most impactful, user expectation calibration setting appropriate user expectations for AI capabilities, and launch strategy planning staged rollouts and canary deployments.
+        </p>
+
+        <h3 id="capability-domain-data">Domain 4: Data and Infrastructure</h3>
+
+        <p>
+            This domain covers capabilities related to data and operational infrastructure:
+        </p>
+
+        <p>
+            This domain covers capabilities related to data and operational infrastructure. The competencies include data pipeline architecture building systems to collect, process, and store training data, feature engineering transforming raw data into model inputs, model deployment getting models from training to production, inference optimization balancing latency, cost, and quality, and observability implementation building systems to monitor AI health.
+        </p>
+
+        <h2 id="skill-levels">Skill Level Definitions</h2>
+
+        <p>
+            Within each capability, define skill levels that enable assessment and development planning:
+        </p>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Skill Level Framework</h4>
+            <p><strong>Level 1 (Foundation):</strong> Understands the concept. Can explain what the capability is and why it matters. Can follow established practices with guidance.</p>
+            <p><strong>Level 2 (Practitioner):</strong> Applies the capability independently. Can execute standard approaches, recognize when something is not working, and know when to escalate.</p>
+            <p><strong>Level 3 (Expert):</strong> Adapts the capability to new situations. Can design solutions for novel problems, coach others, and improve organizational practices.</p>
+            <p><strong>Level 4 (Authority):</strong> Defines the capability for others. Can build frameworks, set organizational standards, and advance the state of practice.</p>
+        </div>
+
+        <h2 id="capability-gap-analysis">Capability Gap Analysis</h2>
+
+        <p>
+            Once you have a capability taxonomy, use it to analyze current state and identify gaps:
+        </p>
+
+        <h3 id="team-capability-mapping">Team Capability Mapping</h3>
+
+        <p>
+            Once you have a capability taxonomy, use it to analyze current state and identify gaps. Map current team capabilities to the taxonomy to understand coverage by asking which capabilities the team has at each level, which capabilities are concentrated in single individuals creating bus factor risk, which capabilities have no one at Level 2 or above, and which critical capabilities rely on external parties.
+        </p>
+
+        <h3 id="project-capability-requirements">Project Capability Requirements</h3>
+
+        <p>
+            For planned projects, identify required capabilities and compare to available capabilities. The process begins by decomposing the project into required capabilities, then identifying the minimum skill level needed for each capability, comparing to available capabilities in the team, and finally identifying gaps that require hiring, upskilling, or contractor support.
+        </p>
+
+        <div class="callout practical-example">
+            <h4 class="callout-title">Practical Example: HealthMetrics AI Team Capability Assessment</h4>
+            <p><strong>Who:</strong> HealthMetrics engineering leadership assessing their AI team</p>
+            <p><strong>Situation:</strong> Team had grown from 3 to 12 people in 18 months. No systematic understanding of capability coverage.</p>
+            <p><strong>Process:</strong> Mapped all team members to capability taxonomy using self-assessment and manager validation. Aggregated results to see team-level coverage.</p>
+            <p><strong>Findings:</strong> Strong coverage in model deployment (Level 2+ across team). Gaps in eval framework design (only 1 person at Level 3). No coverage in ML architecture selection (all Level 1).</p>
+            <p><strong>Actions:</strong> Hired senior ML engineer for architecture expertise. Created internal training program for eval framework design with the Level 3 expert as lead. Documented architecture decision patterns for organizational learning.</p>
+            <p><strong>Lesson:</strong> <strong>Without capability mapping, gaps remain invisible until they cause problems. Systematic mapping reveals where to invest in hiring and development.</strong></p>
+        </div>
+
+        <h2 id="capability-roadmap">Capability Roadmap Development</h2>
+
+        <p>
+            Build a roadmap that develops capabilities in alignment with product roadmap:
+        </p>
+
+        <h3 id="forward-looking-gaps">Forward-Looking Gap Analysis</h3>
+
+        <p>
+            Review the product roadmap for upcoming capabilities needed:
+        </p>
+
+        <p>
+            Build a roadmap that develops capabilities in alignment with product roadmap. Review the product roadmap for upcoming capabilities needed by asking what capabilities next year's products require, what the lead time to develop those capabilities is, which gaps require external hiring versus internal development, and what training or learning resources are needed.
+        </p>
+
+        <h3 id="succession-planning">Succession and Redundancy Planning</h3>
+
+        <p>
+            For each critical capability, ensure no single point of failure by identifying capabilities where loss of one person would create crisis, prioritizing developing second owners for those capabilities, and considering contractor or vendor relationships for critical but uncommon capabilities.
+        </p>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 29: Building the AI Organization</a>
+            <a class="up" href="../index.html">Chapter Overview</a>
+            <a class="next" href="section-29-2.html">29.2 Hiring Profiles for AI Products</a>
+        </nav>
+
+        <footer>
+            <p>Section 29.1 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

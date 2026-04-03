@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 27: Post-Launch Learning Loops - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+        <div class="chapter-label">Chapter 27</div>
+        <h1>Post-Launch Learning Loops</h1>
+    </header>
+
+    <main class="content">
+        <div class="opening-hook">
+            Six months after launch, your AI feature is performing worse than it did at launch. Error rates have crept up. User satisfaction has declined. You run the same evals you used at launch and they pass, but users are still complaining. The problem is that your launch evals measured the AI's behavior on launch-day data, not on the evolving distribution of real-world queries that has shifted as your user base has grown and their usage patterns have changed. The launch is not the end. It is the beginning of a learning loop. The most successful AI products continuously improve based on real-world usage patterns because they treat production as the true evaluation environment, not a staging environment that approximates reality.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-27-opener.png"
+                 alt="Chapter 27 opener illustration">
+            <figcaption>
+                Post-launch learning loops continuously improve AI products based on real usage.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Feedback Collection</div>
+            <p>Use vibe coding to rapidly prototype and test feedback collection mechanisms before building full production systems. Experiment with different feedback UI patterns, test what signals actually indicate quality versus what users say they want, and explore how feedback data flows into improvement cycles. Vibe coding feedback collection helps you design learning loops that users actually engage with, not just ones that sound good in theory.</p>
+        </div>
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Build learning loops that continuously improve AI products.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                NEW content. This chapter covers incorporating user feedback, continuous improvement, learning flywheels, and data-driven AI product iteration.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> How to build AI products that improve over time based on real-world usage rather than degrading or stagnating.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> Implementing production evals and drift detection for one AI feature and observing what they reveal about real-world behavior.</li>
+                <li><strong>What would count as success or failure?</strong> Learning loops that detect when AI behavior drifts, capture user feedback effectively, and drive measurable improvements.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Launch is not the end; it is the beginning of a learning cycle that distinguishes great AI products from static ones.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Build feedback loops</li>
+                <li>Incorporate user signals</li>
+                <li>Create learning flywheels</li>
+                <li>Drive continuous improvement</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">27.1</span> <a href="sections/section-27-1.html">Production Evals</a></li>
+                <li><span class="sec-num">27.2</span> <a href="sections/section-27-2.html">Drift Detection</a></li>
+                <li><span class="sec-num">27.3</span> <a href="sections/section-27-3.html">User Feedback Harvesting</a></li>
+                <li><span class="sec-num">27.4</span> <a href="sections/section-27-4.html">Data Flywheels</a></li>
+                <li><span class="sec-num">27.5</span> <a href="sections/section-27-5.html">Prompt Evolution and Roadmap Updates</a></li>
+            </ul>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-26/index.html">Ch 26: Launching</a>
+            <a class="up" href="../../part-6-shipping-scaling/index.html">Part VI Overview</a>
+            <a class="next" href="sections/section-27-1.html">27.1 Production Evals</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 27 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

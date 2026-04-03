@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.2 Multimodal Abilities and Their Boundaries - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
+        <div class="chapter-label">Chapter 2</div>
+        <h1>What AI Can and Cannot Reliably Do</h1>
+        <p class="chapter-subtitle">2.2 Multimodal Abilities and Their Boundaries</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Understand the capabilities and limitations of multimodal AI models and how to design products that leverage visual, audio, and other modality inputs.
+        </p>
+
+        <blockquote class="epigraph">
+            <p>"A picture is worth a thousand words, but an AI that cannot see pictures is blind to the world most users inhabit."</p>
+            <cite>The Multimodal Product Guide</cite>
+        </blockquote>
+
+        <h2 id="section-2-2">2.2 Multimodal Abilities and Their Boundaries</h2>
+
+        <p>
+            Multimodal AI systems can process and generate content across multiple modalities: text, images, audio, video, and even sensor data. Understanding what these systems can and cannot do reliably is essential for designing products that leverage multimodal capabilities.
+        </p>
+
+        <h3>The Multimodal Landscape in 2026</h3>
+
+        <p>
+            Modern foundation models have expanded beyond text to handle multiple modalities. Each modality has distinct reliability characteristics that product teams must understand.
+        </p>
+
+        <p>
+            Text processing is the most mature capability. Models have been trained on massive text corpora and can handle a wide range of text tasks with high reliability. Translation, summarization, classification, and generation all work well for text.
+        </p>
+
+        <p>
+            Vision models can analyze images, extract information, describe content, and even generate images from text descriptions, though reliability varies significantly based on the specific task and the types of images involved. Complex scenes, unusual viewpoints, and domain-specific images may have lower reliability.
+        </p>
+
+        <p>
+            Speech recognition and synthesis are now highly reliable for common languages and speaking styles, with transcription services achieving near-human accuracy for clear audio in standard conditions, though reliability drops for accented speech, noisy environments, or specialized terminology.
+        </p>
+
+        <p>
+            Video understanding combines visual and temporal reasoning, making it more challenging. Models can analyze video content, but reliability is lower than for individual frames and long videos present <a href="../../../part-1-why-ai-changes/chapter-1/sections/section-1-3.html" class="cross-ref">context window</a> challenges similar to long text documents.
+        </p>
+
+        <h3>Visual Understanding Capabilities</h3>
+
+        <p>
+            Vision-language models can analyze images, extract visual information, and even generate images from text descriptions. Understanding the capabilities and limitations of visual AI helps you design better product experiences.
+        </p>
+
+        <p>
+            Vision-language models can analyze images, extract visual information, and even generate images from text descriptions. They reliably recognize common objects and animals, describe scenes in natural language, read text within images through OCR, identify faces and basic facial expressions, detect common UI elements in screenshots, and compare two images for similarity or differences. These capabilities are powerful but come with clear limitations.
+        </p>
+
+        <p>
+            Vision models frequently miss subtle findings in medical imaging that experienced radiologists would catch, so domain-specific fine-tuning and extensive validation against human experts is required for medical imaging products along with regulatory compliance. Modern models can generate high-quality images from text descriptions, which is useful for creating illustrations and diagrams for content, generating product mockups from descriptions, creating variations of existing images, and editing and enhancing photos based on instructions. Image generation reliability varies significantly based on the complexity of the request and the specificity of the subject. Simple, well-documented concepts generate reliably while complex or novel compositions may require multiple attempts.
+        </p>
+
+        <h3>Audio and Speech Capabilities</h3>
+
+        <p>
+            Audio processing includes both speech recognition (transcription) and speech synthesis (text-to-speech). Both have reached high reliability for standard use cases but have limitations in edge cases.
+        </p>
+
+        <p>
+            Audio processing includes both speech recognition (transcription) and speech synthesis (text-to-speech). Both have reached high reliability for standard use cases but have limitations in edge cases. For speech recognition, reliability is high for clear audio, standard accents, quiet environments, and formal vocabulary. Reliability is moderate for background noise, accents, informal language, and domain-specific terminology. Reliability is low for multiple speakers overlapping, very noisy environments, and rare languages or dialects.
+        </p>
+
+        <p>
+            For text-to-speech, modern systems produce natural-sounding speech, but emotional expressiveness is limited compared to human speech, complex or unusual names may be mispronounced, long-form synthesis may have inconsistencies in voice quality, and some languages have less developed voice options than English.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">True Multimodal Understanding</div>
+            <p>The most powerful multimodal capabilities come from reasoning across modalities. A model that can look at a diagram and explain it, or listen to instructions and generate the corresponding image, demonstrates true multimodal understanding. This enables:</p>
+            <p>Visual question answering, generating text descriptions from charts or data visualizations, creating images from audio descriptions, transcribing and summarizing video content, and converting infographics to natural language explanations.</p>
+        </div>
+
+        <h3>Designing with Multimodal AI</h3>
+
+        <p>
+            Product teams should design multimodal features with realistic expectations about reliability. The following guidelines help create products that leverage multimodal capabilities effectively.
+        </p>
+
+        <div class="callout tip">
+            <div class="callout-title">Multimodal Product Design Guidelines</div>
+            <p><strong>1. Match Modality to Task</strong></p>
+            <p>Use the modality that best fits the task. Asking users to describe something in text is often more reliable than asking them to upload an image, because text provides more controlled input. Conversely, complex visual information may be better conveyed through images than text descriptions.</p>
+            <p><strong>2. Handle Modality Failures Gracefully</strong></p>
+            <p>Always have fallback options when modality processing fails. If image upload fails, allow text description. If speech recognition fails, offer keyboard input.</p>
+            <p><strong>3. Show Uncertainty</strong></p>
+            <p>Multimodal processing can fail silently. Show confidence indicators when the system is uncertain, and make it easy for users to correct errors.</p>
+            <p><strong>4. Test with Real Data</strong></p>
+            <p>Multimodal reliability varies significantly across domains. Test extensively with your actual user data, not just synthetic examples.</p>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before selecting a modality for your AI feature, define how you will measure cross-modal reliability. A <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">micro-eval</a> for multimodal products tests: image-to-text accuracy across your specific domain, text-to-image fidelity for your use case, and audio transcription error rates for your user base's speech patterns. RetailMind's eval-first insight: they measured cross-modal recommendation accuracy before launch and discovered their fashion domain had 40% lower reliability than their electronics domain, requiring domain-specific fine-tuning.
+            </p>
+        </div>
+
+        <h3>Contextual Integrity and Privacy</h3>
+
+        <p>
+            Multimodal AI introduces additional privacy considerations. Processing images and audio requires careful handling of potentially sensitive data.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">Privacy Considerations for Multimodal AI</div>
+            <p>Image data presents unique privacy challenges because face detection and recognition capabilities raise significant concerns, requiring products to clearly disclose when and how facial data is processed. Audio data similarly requires careful handling since transcription services process speech that may contain personal information, and users should understand how their audio is stored and used. Cross-modal linking compounds these concerns because combining visual and audio data can reveal information users did not explicitly provide, such as when a photo combined with audio context might identify individuals or locations.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Running Product: HealthMetrics Analytics</div>
+            <p>HealthMetrics built a clinical decision support system that processes multiple modalities: patient notes (text), medical images (X-rays, CT scans), and vital signs (time-series data).</p>
+            <p>During eval, they discovered significant reliability differences across modalities. Text processing had 94% accuracy, medical images had 87% accuracy for common conditions but only 62% for rare conditions, and vital sign time-series had 91% accuracy. Simply combining modalities without accounting for their different reliability levels led to overconfident错误的 conclusions.</p>
+            <p>They fixed this by weighting each modality's contribution by its measured reliability, using confidence-weighted fusion. When the image model was uncertain about a rare condition, its contribution was downweighted even if the text model was confident. Patient outcomes improved 23% after implementing reliability-weighted fusion.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Reasoning and Tool Use Limits</strong>, understanding how AI systems can use external tools and APIs, and where those capabilities break down.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-2-1.html">2.1 Foundation Model Capabilities</a>
+            <a class="up" href="../index.html">Chapter 2 Index</a>
+            <a class="next" href="section-2-3.html">2.3 Reasoning and Tool Use Limits</a>
+        </nav>
+
+        <footer>
+            <p>Section 2.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

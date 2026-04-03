@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.3 Reasoning and Tool Use Limits - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
+        <div class="chapter-label">Chapter 2</div>
+        <h1>What AI Can and Cannot Reliably Do</h1>
+        <p class="chapter-subtitle">2.3 Reasoning and Tool Use Limits</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Understand the boundaries of AI reasoning capabilities and how to design systems that leverage tools effectively without over-relying on AI cognition.
+        </p>
+
+        <blockquote class="epigraph">
+            <p>"An AI that can use tools is more capable than one that cannot, but it is only as reliable as the tools it uses and the reasoning that directs it."</p>
+            <cite>The Tool-Augmented AI Handbook</cite>
+        </blockquote>
+
+        <h2 id="section-2-3">2.3 Reasoning and Tool Use Limits</h2>
+
+        <p>
+            Modern AI systems can use external tools and APIs to extend their capabilities beyond what is possible with their training data alone. Understanding how tool use works, where it fails, and how to design products that leverage tools effectively is essential for building production AI systems.
+        </p>
+
+        <h3>The Tool Use Architecture</h3>
+
+        <p>
+            Tool use in AI systems typically involves a model that decides when to call external tools and a set of tools that perform specific actions. The model acts as a router, deciding which tool to use based on the user's request.
+        </p>
+
+        <p>
+            Tool use in AI systems typically involves a model that decides when to call external tools and a set of tools that perform specific actions. The model acts as a router, deciding which tool to use based on the user's request.
+        </p>
+
+        <p>
+            The tool use process follows five steps. First, the model receives a request that might require external information or actions. Second, the model recognizes that fulfilling the request requires information or capabilities beyond its training data. Third, the model generates a structured call to an external tool such as a search API, database, or code execution environment. Fourth, the external tool processes the request and returns results to the model. Fifth, the model incorporates the tool results into its final response to the user.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">How Tool Use Extends AI Capabilities</div>
+            <p><strong>Information retrieval</strong> enables AI systems to retrieve current information from the web, APIs, or databases, addressing the knowledge cutoff limitation by allowing the model to access up-to-date information when formulating responses.</p>
+            <p><strong>Action execution</strong> allows AI systems to perform actions on behalf of users: sending emails, creating records, making purchases, or updating systems, transforming AI from a passive responder to an active participant.</p>
+            <p><strong>Computation</strong> lets AI call code execution environments to perform calculations, run code, or execute complex operations that would be unreliable if done purely through model inference.</p>
+        </div>
+
+        <p>
+            Even with tool use, AI reasoning has fundamental limitations that product teams must understand and design around. AI can perform impressive feats of single-step reasoning, but performance degrades significantly as the number of steps increases. Each step introduces a potential for error, and errors compound. Consider a 10-step reasoning chain where each step has 95% reliability. The final result has approximately 60% reliability (0.95^10). This means 40% of complex reasoning tasks will have at least one error. Product teams must design systems that detect and handle errors at each step, rather than assuming the final output is correct just because individual steps seem reliable. This error propagation becomes especially problematic in planning tasks that require sustained reasoning across many steps. AI systems struggle with long-horizon planning that requires maintaining a coherent plan across many steps, manifesting as forgetting constraints mentioned earlier in the conversation, making plans that are internally consistent but do not align with user goals, not anticipating side effects of planned actions, and difficulty revising plans when circumstances change.
+        </p>
+
+        <h3>Designing Reliable Tool Use Systems</h3>
+
+        <p>
+            Reliable tool use requires designing systems that handle failures gracefully and provide appropriate oversight.
+        </p>
+
+        <div class="callout tip">
+            <div class="callout-title">Tool Use Reliability Best Practices</div>
+            <p><strong>1. Limit Tool Complexity</strong></p>
+            <p>Tools should do one thing well. Complex tools with many parameters are harder for models to use correctly. Prefer simple, composable tools over complex monolithic ones.</p>
+            <p><strong>2. Provide Clear Tool Descriptions</strong></p>
+            <p>The model needs clear descriptions of what each tool does, when to use it, and what parameters it accepts. Invest time in writing comprehensive tool documentation.</p>
+            <p><strong>3. Validate Tool Outputs</strong></p>
+            <p>Never assume a tool returned correct results. Validate outputs before using them in subsequent reasoning steps. This is especially important for tools that query external databases or APIs.</p>
+            <p><strong>4. Implement Fallback Logic</strong></p>
+            <p>When a tool call fails, have a plan B. This might involve trying a different tool, asking the user for clarification, or responding that the request cannot be fulfilled.</p>
+        </div>
+
+        <h4>Tool Reliability Patterns</h4>
+
+        <div class="callout practical-example">
+            <div class="callout-title">HealthMetrics: Robust Tool Use for Medical Queries</div>
+            <p>HealthMetrics implements a multi-layer validation system for their medical literature queries. First, the model selects from a limited set of query types, reducing the chance of selecting the wrong tool. Second, before executing a query, parameters are validated against the medical literature schema. Third, query results are checked for relevance and recency before being used in responses. Fourth, for medical claims, the system links to specific studies rather than general summaries. Multi-layer validation is essential for high-stakes tool use applications.</p>
+        </div>
+
+        <p>Multi-layer validation is essential for high-stakes tool use applications.</p>
+
+        <h3>The Agent Architecture</h3>
+
+        <p>
+            Agents extend tool use by enabling AI systems to take multiple actions in sequence, using results from earlier actions to inform later ones. This enables more complex tasks but also introduces additional failure modes.
+        </p>
+
+        <h4>What Makes Agents Work</h4>
+        <p>Agent reliability depends on several factors. Each step in an agent's plan should be well-defined and achievable, providing clear intermediate goals. Verification at each step ensures that check each action produced expected results before proceeding. Memory mechanisms provide systems for tracking what the agent has done and what it still needs to do. Error recovery gives the agent abilities to backtrack or try alternative approaches when something fails.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Agent Reliability Factors</div>
+            <p>Agent reliability depends on task decomposition quality, where well-defined subtasks are easier for agents to handle reliably, and tool reliability, since each tool must work consistently for the agent to trust its outputs. Context management is critical because agents must maintain coherent context across many steps, and failure detection is necessary since the agent needs mechanisms to detect when something went wrong.</p>
+        </div>
+
+        <h4>Agent Failure Modes</h4>
+        <p>Several failure modes are particularly problematic for agents. Infinite loops occur when agents repeat the same actions without making progress. Context overflow happens when long conversations exceed <a href="../../../part-1-why-ai-changes/chapter-1/sections/section-1-3.html" class="cross-ref">context windows</a>, causing the agent to forget earlier steps. Tool misuse arises when agents call tools with inappropriate parameters or for wrong purposes. Error accumulation means that small errors at each step compound into large failures.</p>
+
+        <div class="callout exercise">
+            <div class="callout-title">Exercise: Design a Tool Use System</div>
+            <p>Design a tool use system for an AI assistant that helps users manage their email. The system should be able to read emails from the user's inbox, send emails on behalf of the user, create calendar events, and search the web for information referenced in emails. For each tool, identify what information the tool needs, what outputs the tool produces, how to validate those outputs, and what to do if the tool fails.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Failure Modes and Product Implications</strong>, examining how AI failures manifest in products and what teams can do to build systems that fail gracefully.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-2-2.html">2.2 Multimodal Abilities</a>
+            <a class="up" href="../index.html">Chapter 2 Index</a>
+            <a class="next" href="section-2-4.html">2.4 Failure Modes and Product Implications</a>
+        </nav>
+
+        <footer>
+            <p>Section 2.3 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6.6 LLM Evaluation Frameworks and Tools - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 6</div>
+        <h1>AI Product Strategy and Value Proposition Design</h1>
+        <p class="chapter-subtitle">6.6 LLM Evaluation Frameworks and Tools</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Help define winning AI-native products with the right strategy and value proposition.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 6.5 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: The Evaluation Ecosystem</div>
+            <p>The AI evaluation ecosystem offers diverse tools for different needs: DeepEval for custom metrics, RAGAS for retrieval systems, Promptfoo for prompt iteration, and Braintrust for integrated quality management. Most teams use multiple tools because evaluation needs vary across development stages. The key is having evaluation at every stage, not just production.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Michelin Star Test</div>
+            <p>Michelin created the restaurant rating system in 1926 to encourage car travel. The test was simple: which restaurants were worth driving to? This utilitarian metric became the gold standard for culinary quality. Sometimes the best evaluation framework starts as a practical answer to a simple question.</p>
+        </div>
+
+        <h2 id="section-6-6">6.6 LLM Evaluation Frameworks and Tools</h2>
+
+        <p>
+            In Section 6.5, we discussed eval-driven development methodology: why it matters, how to build golden datasets, and how to create continuous evaluation pipelines. Now we explore the practical tools available to implement these practices. The AI ecosystem has developed numerous frameworks for evaluating language model outputs. Understanding these tools is essential for building production-ready AI products. Each framework takes a different approach to evaluation, and most teams use multiple tools for different purposes.
+        </p>
+
+        <h3>DeepEval</h3>
+
+        <p>
+            DeepEval is a popular open-source evaluation framework that provides modular metrics for assessing LLM outputs. It includes built-in metrics for relevance, coherence, factual accuracy, and custom metrics that can be tailored to your specific use case. DeepEval integrates with popular LLM evaluation frameworks and supports both offline evaluation on golden datasets and online evaluation with production traffic. The framework emphasizes explainability, providing not just scores but reasoning for why outputs received the scores they did.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: DeepEval for Production Monitoring</h4>
+            <p>
+                A company using DeepEval implemented continuous quality monitoring in production. Every 100th response was evaluated using DeepEval metrics. When helpfulness scores dropped below threshold, alerts fired. This automated monitoring caught a regression that would have otherwise gone unnoticed: after a model update, the AI started using more technical jargon that users found harder to understand. The issue was detected within hours and fixed before it affected many users.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Using DeepEval</h4>
+            <p>
+                <strong>Key features:</strong>
+            </p>
+            <ul>
+                <li>Modular metrics: Use built-in or create custom</li>
+                <li>Golden dataset evaluation: Test against known test cases</li>
+                <li>Production monitoring: Continuously evaluate live traffic</li>
+                <li>Explainability: Understand why outputs received scores</li>
+            </ul>
+            <p>
+                <strong>Best for:</strong> General LLM evaluation, custom metric creation, continuous monitoring
+            </p>
+        </div>
+
+        <h3>RAGAS</h3>
+
+        <p>
+            RAGAS focuses specifically on retrieval-augmented generation systems, making it essential for products that use <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> architectures. It provides metrics for answer correctness, context relevance, and retrieval precision. RAGAS measures not just whether the final output is good but whether the retrieval component is functioning correctly, identifying when failures are due to retrieval issues versus generation issues. This diagnostic capability is crucial for debugging <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> systems in production.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Debugging <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> with RAGAS</h4>
+            <p>
+                A company with a <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>-based knowledge base noticed poor answer quality in production. Without RAGAS, they would not know if the problem was retrieval (wrong documents retrieved) or generation (correct documents but wrong answers). RAGAS revealed the issue: retrieval was working well (82% precision) but generation was the problem (answers only referenced 40% of retrieved context). This diagnostic insight focused the team's efforts on improving prompt engineering rather than the retrieval system.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Using RAGAS</h4>
+            <p>
+                <strong>Key metrics:</strong>
+            </p>
+            <ul>
+                <li>Answer correctness: Does answer match expected response?</li>
+                <li>Context relevance: How relevant is retrieved context?</li>
+                <li>Retrieval precision: What % of retrieved docs are relevant?</li>
+                <li>Context recall: What % of relevant docs were retrieved?</li>
+            </ul>
+            <p>
+                <strong>Best for:</strong> <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> applications, debugging retrieval vs generation, measuring knowledge access
+            </p>
+        </div>
+
+        <h3>LangChain Evaluation</h3>
+
+        <p>
+            LangChain evaluation provides built-in evaluation capabilities within the LangChain ecosystem. It includes string matching, regex, and LLM-as-judge evaluators, along with custom evaluation chains that can implement arbitrary evaluation logic. For teams already using LangChain for their application framework, the built-in evaluation tools provide a convenient way to add evaluation without additional infrastructure.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: LangChain Evaluators for Chain Testing</h4>
+            <p>
+                A company building a complex multi-step AI workflow used LangChain evaluation to test each step. They created evaluators that checked: step 1 output format, step 2 input validity, step 3 reasoning quality. This modular testing caught bugs at individual steps before they propagated through the entire chain. The evaluation code lived alongside the application code, making it easy to maintain.
+            </p>
+        </div>
+
+        <h3>Promptfoo</h3>
+
+        <p>
+            Promptfoo is a tool designed specifically for prompt engineering and evaluation. It allows you to test prompts against multiple models and test cases, compare results side by side, and iterate on prompt improvements systematically. Promptfoo treats prompts as testable artifacts, enabling prompt version control and regression testing. This is particularly valuable for teams that need to maintain multiple prompts for different use cases or user segments.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Prompt Iteration with Promptfoo</h4>
+            <p>
+                A company iterating on their customer service prompt used Promptfoo to systematically compare versions. They created 50 test cases and ran each prompt version against all cases. Promptfoo showed side-by-side comparisons, making it easy to see which version performed better overall and on specific cases. The tool identified that a prompt change improved technical question answering but degraded empathetic responses. They used this insight to create separate prompts for different query types.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Using Promptfoo</h4>
+            <p>
+                <strong>Workflow:</strong>
+            </p>
+            <ol>
+                <li>Define test cases (inputs and expected outputs)</li>
+                <li>Create prompt variations to test</li>
+                <li>Run evaluation across multiple models</li>
+                <li>Compare results side-by-side</li>
+                <li>Track results over time (version control)</li>
+            </ol>
+            <p>
+                <strong>Best for:</strong> Prompt engineering, comparing prompt versions, regression testing prompts
+            </p>
+        </div>
+
+        <h3>Braintrust</h3>
+
+        <p>
+            Braintrust offers an integrated platform for evaluation, testing, and monitoring of AI products. It provides automated evaluation pipelines, human feedback collection, and production monitoring in a single platform. Braintrust emphasizes the feedback loop between evaluation and development, enabling teams to continuously improve their AI products based on real-world performance data. The platform also supports A/B testing and experimentation frameworks for controlled deployments.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: End-to-End Evaluation with Braintrust</h4>
+            <p>
+                A company used Braintrust as their central AI quality platform. They integrated evaluation into CI/CD (code was not deployed if quality dropped), collected human feedback in production (annotators rated AI outputs), and monitored real-time quality dashboards. When quality degraded, alerts fired. When they made improvements, they could see the impact in production metrics. This end-to-end approach gave them confidence that their AI quality remained high as they iterated.
+            </p>
+        </div>
+
+        <h3>Framework Comparison</h3>
+
+        <table>
+            <thead>
+                <tr><th>Framework</th><th>Focus</th><th>Best For</th><th>Integration</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>DeepEval</td><td>General LLM metrics</td><td>Custom metrics, monitoring</td><td>Standalone, Python</td></tr>
+                <tr><td>RAGAS</td><td>RAG systems</td><td>Retrieval/generation debugging</td><td>Standalone, Python</td></tr>
+                <tr><td>LangChain</td><td>Chain evaluation</td><td>Multi-step workflows</td><td>LangChain ecosystem</td></tr>
+                <tr><td>Promptfoo</td><td>Prompt testing</td><td>Prompt iteration</td><td>Standalone, CLI</td></tr>
+                <tr><td>Braintrust</td><td>Full platform</td><td>End-to-end quality</td><td>Hosted, API</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">Key Insight</div>
+            <p>
+                You do not need to choose one framework. Most teams use multiple: Promptfoo for prompt iteration, RAGAS for <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> debugging, DeepEval for general evaluation, and Braintrust for production monitoring. The key is to have evaluation at every stage of development, not just in production.
+            </p>
+        </div>
+
+        <h3>Evaluation Tool Selection Guide</h3>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Choosing Your Evaluation Stack</h4>
+            <p>
+                <strong>Start here based on your needs:</strong>
+            </p>
+            <ul>
+                <li><strong>Building <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>?</strong> Start with RAGAS to debug retrieval vs. generation</li>
+                <li><strong>Heavy prompt engineering?</strong> Start with Promptfoo for systematic iteration</li>
+                <li><strong>Complex workflows?</strong> Start with LangChain evaluation for chain testing</li>
+                <li><strong>Need custom metrics?</strong> Start with DeepEval for flexibility</li>
+                <li><strong>Need everything integrated?</strong> Start with Braintrust for platform approach</li>
+            </ul>
+            <p>
+                <strong>Most teams end up with:</strong>
+            </p>
+            <ul>
+                <li>Promptfoo during development</li>
+                <li>RAGAS (if <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>) or DeepEval for testing</li>
+                <li>Braintrust for production monitoring</li>
+            </ul>
+        </div>
+
+        <div class="bibliography">
+            <h3>Research Papers</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://www.nist.gov/airmf">AI Risk Management Framework</a></p>
+                <p class="bib-authors">NIST (2023)</p>
+                <p class="bib-annotation">Why this is relevant: Provides comprehensive guidance on managing AI risks, essential for any AI product going to market.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://www.iso.org/standard/81292.html">ISO/IEC 42001:2023 AI Management System</a></p>
+                <p class="bib-authors">ISO (2023)</p>
+                <p class="bib-annotation">Why this is relevant: The first international standard for AI management systems, providing a framework for responsible AI development.</p>
+            </div>
+
+            <h3>Tools</h3>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://www.intercom.com/fin">Fin: AI Customer Service Agent</a></p>
+                <p class="bib-authors">Intercom (2024)</p>
+                <p class="bib-annotation">Why this is relevant: Leading example of a production AI agent in customer service, demonstrating practical deployment patterns.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://perplexity.ai">Perplexity AI Search Engine</a></p>
+                <p class="bib-authors">Perplexity (2024)</p>
+                <p class="bib-annotation">Why this is relevant: Innovative AI-native search product that showcases the vibe coding approach to building consumer AI products.</p>
+            </div>
+            <div class="bib-entry-card">
+                <p class="bib-title"><a href="https://github.com/features/copilot">GitHub Copilot Documentation</a></p>
+                <p class="bib-authors">GitHub</p>
+                <p class="bib-annotation">Why this is relevant: The original AI coding assistant that established the IDE integration pattern for AI-powered developer tools.</p>
+            </div>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Now that you understand AI product strategy, Chapter 7 introduces the AI PM Toolkit. 
+                You will learn eval-driven development methodologies, LLM-as-judge evaluation techniques, 
+                cost modeling for AI features, and A/B testing strategies for probabilistic products.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-6-5.html">6.5 Eval-Driven Development Methodology</a>
+            <a class="up" href="index.html">Chapter 6 Index</a>
+            <a class="next" href="chapter-7/index.html">Ch 7: AI PM Toolkit</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 6.6 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

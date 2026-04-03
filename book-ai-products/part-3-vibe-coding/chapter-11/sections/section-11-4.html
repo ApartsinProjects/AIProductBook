@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11.4 Working with AI-Generated UI, Backend, and Data Mocks - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 11.4</div>
+        <h1>Working with AI-Generated UI, Backend, and Data Mocks</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            AI can generate UI, backend logic, and mock data. The skill is in composing these generated pieces into coherent prototypes and knowing when each is appropriate.
+        </p>
+
+        <h2>UI Generation Patterns</h2>
+
+        <p>AI-generated UI is one of vibe coding's strongest capabilities. The iteration speed for UI exploration dramatically exceeds traditional design-develop cycles. However, generated UI requires evaluation for usability and alignment with design systems.</p>
+
+        <h3>Starting Points for UI Generation</h3>
+
+        <p>Provide the AI with a starting point to align the generated UI with your goals by describing the target user and their context, the key actions the user should be able to take, information density requirements, and any brand or design constraints that must be respected.</p>
+
+        <h3><a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">Evaluation</a> Criteria for Generated UI</h3>
+
+        <p>Not all generated UI is equally useful, so evaluate it against four criteria. Task alignment asks whether the UI supports the user's task effectively, enabling them to accomplish their goals efficiently. Clarity asks whether users can understand what to do without explanation, meaning the interface is self-explanatory. Coherence asks whether visual elements work together harmoniously, creating a unified experience. Appropriateness asks whether the design fits the user's context and expectations for their environment.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: UI Generation Sessions</div>
+            <p>QuickShip's team generated three different queue view UIs for their exception handler:</p>
+            <p><strong>Attempt 1:</strong> Dense table with many columns. Looked data-rich but required horizontal scrolling. Rejected.</p>
+            <p><strong>Attempt 2:</strong> Card-based layout with expandable details. Clear hierarchy but took too much screen space. Modified and kept.</p>
+            <p><strong>Attempt 3:</strong> Master-detail pattern with filtering sidebar. Operations team loved it. This became the basis for the final UI.</p>
+            <p>The team generated all three in a single session, evaluated each against their use case, and synthesized the best elements into the final design.</p>
+        </div>
+
+        <h2>Backend Generation Patterns</h2>
+
+        <p>Backend generation works well for prototyping but requires careful handling for production. Generated backend code may not handle edge cases, security concerns, or performance requirements adequately.</p>
+
+        <h3>Appropriate Backend Generation Targets</h3>
+
+        <p>Appropriate backend generation targets include API route structure and basic CRUD operations where patterns are well-established, data transformation and validation logic which is tedious but straightforward, database schema definitions which benefit from AI generation speed, and integration interface definitions which establish contracts without requiring implementation detail.</p>
+
+        <h3>Inappropriate Backend Generation Targets</h3>
+
+        <p>Avoid generating authentication and authorization logic with AI due to security sensitivities, payment or financial transaction handling where correctness is critical, complex business rules that require domain expertise not well-represented in training data, and performance-critical optimization which requires deep understanding of system behavior under load.</p>
+
+        <div class="callout warning">
+            <div class="callout-title">Backend Generation Caution</div>
+            <p>Generated backend code often looks correct but has security vulnerabilities, error handling gaps, or race conditions that are not apparent during prototyping. Treat all generated backend code as requiring expert review before production use.</p>
+        </div>
+
+        <h2>Mock Data Patterns</h2>
+
+        <p>Mock data enables realistic prototype evaluation without requiring real data or external systems. AI excels at generating realistic mock data when given appropriate specifications.</p>
+
+        <h3>Mock Data Specifications</h3>
+
+        <p>Provide the AI with clear mock data specifications including the data schema defining what fields exist, statistical distributions specifying ranges and frequencies, relationships describing how entities connect, and edge cases showing what unusual but valid data looks like.</p>
+
+        <h3>Mock Data Quality</h3>
+
+        <p>High-quality mock data enables more realistic evaluation. Include realistic names, addresses, and contact information rather than obviously fake data, appropriate variation in values so not everything looks the same, relationships that match the real domain, and edge cases and error states to test robustness.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">Mock Data Generation Prompt</div>
+            <p><em>"Generate 50 mock records for [entity type] with these fields: [schema]. Requirements: [distribution requirements], [relationship requirements], [edge case requirements]. Use realistic values, not Lorem Ipsum or obviously fake data."</em></p>
+        </div>
+
+        <h2>Integration Patterns</h2>
+
+        <p>Prototypes often need to integrate with external systems. During prototyping, these integrations may be stubbed, mocked, or real depending on what you are evaluating.</p>
+
+        <h3>Stubbed Integrations</h3>
+
+        <p>When you are not evaluating the integration, stub it with hardcoded responses. This isolates the prototype to the specific functionality you are testing.</p>
+
+        <h3>Mocked Integrations</h3>
+
+        <p>When you need realistic responses but cannot use real systems, mock the integration. AI can generate realistic mock responses that simulate real API behavior.</p>
+
+        <h3>Real Integrations</h3>
+
+        <p>When you are specifically evaluating the integration, use real systems. This provides the most realistic evaluation but introduces dependencies and complexity.</p>
+
+        <h2>Composing Generated Pieces</h2>
+
+        <p>The challenge is not generating individual pieces but composing them into a coherent prototype. This requires consistent data models across generated components so pieces share understanding, matching interface definitions between frontend and backend so they communicate correctly, unified styling and interaction patterns so the experience feels whole, and consistent error handling and loading states so users receive appropriate feedback throughout.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Composition Checklist</div>
+            <p>Before evaluating a composed prototype, verify that frontend data models match backend schema so data flows correctly, API response structure matches frontend expectations so components receive what they anticipate, error states are handled consistently throughout the application, loading states provide appropriate feedback so users know what is happening, and styling is coherent across components so the prototype feels polished rather than patchwork.</p>
+        </div>
+
+        <h2>The QuickShip Composition Pattern</h2>
+
+        <p>QuickShip developed a pattern for composing generated pieces that ensured consistency throughout. First, define the schema by establishing data models before generating UI or backend, creating the foundation for all subsequent work. Second, generate mock data by creating realistic test data from the schema to enable evaluation without real systems. Third, generate backend by implementing API routes with mock data as fallback for when real integrations are unavailable. Fourth, generate UI by building components that consume the API defined in the schema. Fifth, compose and verify by testing the full flow and fixing any mismatches between pieces.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>AI generates UI, backend, and mock data, each with appropriate use cases that determine where AI adds the most value. Generated UI requires evaluation for task alignment, clarity, coherence, and appropriateness to ensure it serves users effectively. Generated backend requires expert review before production because it often has hidden security vulnerabilities, error handling gaps, or race conditions not apparent during prototyping. Mock data quality directly affects prototype evaluation realism, so provide detailed specifications including schema, distributions, relationships, and edge cases. Integrations can be stubbed, mocked, or real depending on what you are evaluating, with real integrations providing the most realistic but most complex evaluation. Composition requires schema consistency, matching interfaces, and unified patterns to create a coherent prototype from generated pieces.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Composing a Generated Prototype</div>
+            <p>Design the composition approach for a prototype you are considering by answering several key questions. First, determine what pieces you will generate versus implement manually, deciding where AI can add the most value. Second, identify the schema that unifies the pieces, establishing the data models that all components will share. Third, establish how you will evaluate if the composition works, defining criteria for successful integration. Fourth, identify the highest-risk integration points where mismatches are most likely to occur and where careful verification is essential.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Chapter 12, we examine <strong>Prompting, Context, Memory, and Reusable Skills</strong>, building on the context concepts from this chapter to explore durable abstractions and skill architecture.</p>
+            <p>For deeper coverage of memory patterns in production systems, see <a href="../../part-4-engineering/chapter-18/sections/section-18-2.html">Chapter 18: Session State and User Memory</a>.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-11-3.html">11.3 Spec-Prototype-Critique</a>
+            <a class="up" href="../index.html">Chapter 11 Overview</a>
+            <a class="next" href="../../chapter-12/sections/section-12-1.html">Ch 12: Prompting & Skills</a>
+        </nav>
+
+        <footer>
+            <p>Section 11.4 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

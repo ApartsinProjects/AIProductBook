@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 25: Governance, Compliance, and Trustworthy AI - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 25</div>
+        <h1>Governance, Compliance, and Trustworthy AI</h1>
+        <p class="subtitle">Building AI products that are defensible, accountable, and trustworthy</p>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"The EU AI Act is in effect. ISO 42001 is being adopted. NIST AI RMF is becoming the standard. If you are not thinking about governance, you are building legal liability."</p>
+            <cite>A General Counsel</cite>
+        </blockquote>
+
+        <div class="opening-hook">
+            AI governance is no longer optional. Regulators are demanding accountability, customers are requiring compliance, and organizations are realizing that unchecked AI creates liability. This chapter gives you the frameworks, processes, and documentation patterns to build AI products that are defensible: governance operating models, NIST AI RMF and ISO 42001 implementation, release review checklists, and accountability and transparency patterns.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-25-opener.png"
+                 alt="Chapter 25 opener illustration">
+            <figcaption>
+                Governance ensures AI products operate ethically and comply with regulations.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Policy Enforcement Testing</div>
+            <p>Vibe-coding enables rapid testing of governance and policy enforcement mechanisms. Quickly prototype different policy rules, test boundary conditions, and explore edge cases where policy enforcement succeeds or fails. Vibe-coding policy testing helps you discover gaps in your governance approach before regulators do, ensuring your compliance frameworks actually work in practice rather than just on paper.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe Coding for Rapid Eval Creation</div>
+            <p>Governance policies need evidence, not just intentions. Use vibe coding to rapidly test policy enforcement against your eval suite. Generate edge cases that probe policy boundaries. Measuring actual policy compliance through evals is more defensible to regulators than relying on theoretical compliance claims.</p>
+        </div>
+
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Build AI products that are compliant with emerging regulations, trustworthy by design, and defensible when questions arise. Learn governance frameworks, implementation patterns, and documentation practices that demonstrate accountability.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter covers governance and compliance for AI products. You learn governance operating models that fit your organizational context, how to implement NIST AI RMF and ISO 42001, release review checklists that ensure consistent evaluation, and accountability patterns including transparency documentation, explainability, and incident accountability. These practices protect your organization and build user trust.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> How to build AI products that are defensible to regulators, accountable to users, and aligned with emerging compliance requirements.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> Running your current AI product through a compliance checklist to identify gaps and prioritize remediation.</li>
+                <li><strong>What would count as success or failure?</strong> Governance practices that enable shipping AI features with confidence rather than uncertainty about regulatory risk.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Governance is not bureaucracy; it is risk management that enables rather than prevents innovation.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Design governance operating models appropriate to your organization</li>
+                <li>Implement NIST AI RMF and ISO 42001 requirements</li>
+                <li>Build release review checklists that ensure consistent evaluation</li>
+                <li>Create transparency documentation including model cards and data cards</li>
+                <li>Implement accountability patterns that enable auditing</li>
+                <li>Design explainability features appropriate to use case risk</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">25.1</span> <a href="sections/section-25-1.html">Governance Operating Models</a></li>
+                <li><span class="sec-num">25.2</span> <a href="sections/section-25-2.html">NIST AI RMF and ISO/IEC 42001</a></li>
+                <li><span class="sec-num">25.3</span> <a href="sections/section-25-3.html">Release Review Checklists</a></li>
+                <li><span class="sec-num">25.4</span> <a href="sections/section-25-4.html">Accountability and Transparency Patterns</a></li>
+            </ul>
+        </div>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">Governance as Competitive Advantage</h4>
+            <p>Strong AI governance is not just about avoiding regulatory penalties. It is a competitive advantage. Customers prefer AI products they can trust. Enterprise customers require compliance as a procurement condition. Organizations with strong governance can move faster because they have confidence their AI meets standards.</p>
+        </div>
+
+        <div class="role-specific-lenses">
+            <h3>Role-Specific Lenses</h3>
+            
+            <div class="callout note">
+                <h4 class="callout-title">For Product Managers</h4>
+                <p>Governance requirements shape what AI features you can build and how. Understanding compliance needs helps you design features that are both useful and permissible, and helps you make the case for governance investment.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Engineers</h4>
+                <p>You implement governance requirements in code. Documentation standards, bias evaluation, audit logging, and transparency features are all engineering problems with specific technical solutions.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Designers</h4>
+                <p>Transparency and explainability have UX implications. How you communicate AI uncertainty, display confidence indicators, and explain AI decisions shapes user trust and appropriate reliance.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Leaders</h4>
+                <p>Governance is a strategic imperative. It enables regulatory compliance, builds customer trust, reduces liability, and creates the foundation for sustainable AI investment. The cost of governance is trivial compared to the cost of governance failure.</p>
+            </div>
+        </div>
+
+        <section class="bibliography" id="bibliography">
+            <h2>Bibliography</h2>
+            
+            <h3>Frameworks and Standards</h3>
+            <ol class="bib-list">
+                <li id="ref-1">
+                    <p class="bib-entry">
+                        <a href="https://airc.nist.gov/AI_Risk_Management_Framework" target="_blank" rel="noopener">NIST. (2023). "AI Risk Management Framework."</a>
+                    </p>
+                    <p class="bib-annotation">The official NIST AI RMF documentation covering GOVERN and MAP functions for AI risk management.</p>
+                </li>
+                <li id="ref-2">
+                    <p class="bib-entry">
+                        <a href="https://www.iso.org/standard/81230.html" target="_blank" rel="noopener">ISO/IEC. (2023). "ISO/IEC 42001: AI Management System."</a>
+                    </p>
+                    <p class="bib-annotation">The international standard for AI management systems, providing certifiable requirements for AI governance.</p>
+                </li>
+            </ol>
+
+            <h3>EU AI Act</h3>
+            <ol class="bib-list">
+                <li id="ref-3">
+                    <p class="bib-entry">
+                        <a href="https://artificialintelligenceact.eu/" target="_blank" rel="noopener">EU AI Act. (2024). "Artificial Intelligence Act."</a>
+                    </p>
+                    <p class="bib-annotation">The official EU AI Act text and guidance from the European Union.</p>
+                </li>
+            </ol>
+
+            <h3>Transparency and Accountability</h3>
+            <ol class="bib-list">
+                <li id="ref-4">
+                    <p class="bib-entry">
+                        <a href="https://arxiv.org/abs/2112.03727" target="_blank" rel="noopener">Mitchell, M., et al. (2021). "Model Cards for Model Reporting." <em>FAT* 2019</em>.</a>
+                    </p>
+                    <p class="bib-annotation">The foundational paper introducing model cards as a standard for transparency documentation.</p>
+                </li>
+            </ol>
+        </section>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="chapter-24/index.html">Ch 24: Unit Economics</a>
+            <a class="up" href="../../part-5-evaluation-reliability/index.html">Part V Overview</a>
+            <a class="next" href="sections/section-25-1.html">25.1 Governance Models</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 25 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

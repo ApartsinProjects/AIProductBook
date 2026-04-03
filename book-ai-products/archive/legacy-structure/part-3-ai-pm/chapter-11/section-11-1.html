@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10.1 Pricing Models - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 10</div>
+        <h1>Go-to-Market and Success Metrics</h1>
+        <p class="chapter-subtitle">10.1 Pricing Models</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Drive real adoption and business value with the right pricing and metrics.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Chapters 7-9 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: Pricing AI Products</div>
+            <p>This section covers pricing models for AI products, from tiered subscriptions to freemium. In the context of AI product management, pricing connects directly to unit economics: AI products have fundamentally different cost structures than traditional software, with marginal costs that scale with usage. Understanding pricing frameworks will help you build sustainable business models that align customer value with your cost structure.</p>
+        </div>
+
+        <h2 id="section-10-1">10.1 Pricing Models</h2>
+
+        <p>
+            In Chapter 9, we covered ethics, trust, and governance: building trustworthy products, handling bias and transparency, and governance requirements for agentic systems. These are essential considerations before taking your product to market. But even the most responsible, trustworthy AI product needs a sustainable business model. Once you have built a quality AI product with proper governance, how do you price it to ensure the business can thrive? Pricing AI products requires understanding that the economics are fundamentally different from traditional software. The marginal cost of serving AI outputs is often much higher than traditional software, and your best users are typically your most expensive users. Choosing the right pricing model requires balancing customer value, cost structure, and business sustainability.
+        </p>
+
+        <h3>The Six AI Pricing Models</h3>
+
+        <h4>1. Tiered Subscriptions</h4>
+
+        <p>
+            Tiered subscriptions provide predictable revenue while allowing users to upgrade as they need more capability. This model works well when you can clearly differentiate value between tiers. The key is ensuring each tier provides clear value step-up that users can evaluate.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: ChatGPT Plus</h4>
+            <p>
+                OpenAI's ChatGPT Plus at $20/month provides higher message limits, access to advanced models, and faster response times. The differentiation is clear: basic users get limited access to the best models, while Plus subscribers get unlimited access to advanced capabilities. This model works because the value difference between tiers is significant and visible.
+            </p>
+            <p>
+                <strong>Why it works:</strong> The free tier provides enough value to attract users, while Plus provides clear additional value that justifies the price. Conversion from free to paid is the key metric.
+            </p>
+        </div>
+
+        <h4>2. Usage-Based Pricing</h4>
+
+        <p>
+            Usage-based pricing charges per token or API call, aligning cost with value delivered. This model works for developer-focused products where usage varies significantly across users. The advantage is that large users pay more, small users pay less, which aligns with value delivered.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: OpenAI API</h4>
+            <p>
+                OpenAI charges based on token usage (input and output tokens at different rates). A user making 1,000 simple queries pays less than one making 100,000 complex queries. The model aligns cost with value: heavy users get more value and pay more. This also protects against abuse, since each request has a direct cost.
+            </p>
+            <p>
+                <strong>Key consideration:</strong> Usage-based pricing requires users to understand their expected usage to budget effectively. Provide usage calculators and cost estimates to help users plan.
+            </p>
+        </div>
+
+        <h4>3. Credit Pools</h4>
+
+        <p>
+            Credit pools provide a fixed number of credits with a subscription that refill monthly. This model provides some predictability while allowing burst usage. Users know exactly what they get each month, which aids planning.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Midjourney</h4>
+            <p>
+                Midjourney offers subscription tiers with monthly GPU credit allocations. Users can generate up to a certain number of images per month. This works well because AI image generation is bursty: users may create many images in a session then not use the tool for days. The credit system accommodates this usage pattern.
+            </p>
+            <p>
+                <strong>Design tip:</strong> Make credit rollover policies clear. Some users want credits to accumulate; others prefer they expire to avoid wasted spend.
+            </p>
+        </div>
+
+        <h4>4. Outcome-Based Pricing</h4>
+
+        <p>
+            Outcome-based pricing charges based on results rather than usage. This aligns incentives strongly: if the AI delivers value, you get paid; if it does not, the customer does not pay. This model works for high-stakes use cases where value can be clearly measured.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: Intercom Fin AI</h4>
+            <p>
+                Intercom's Fin AI agent is priced per resolved conversation. If Fin resolves a customer inquiry without human intervention, Intercom charges for that resolution. If the conversation needs human handoff, no charge (or reduced charge). This directly ties cost to value delivered: customer service automation that reduces support costs.
+            </p>
+            <p>
+                <strong>Challenge:</strong> Outcome-based pricing requires clear definition of what counts as an "outcome." Ensure both parties agree on what constitutes success.
+            </p>
+        </div>
+
+        <h4>5. Seat + AI Add-On</h4>
+
+        <p>
+            This model adds AI capability as an add-on to existing seat-based pricing. It works for products adding AI to existing software. The base product provides core value, while the AI add-on enhances or accelerates that value.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: GitHub Copilot</h4>
+            <p>
+                GitHub Copilot is priced as an add-on to GitHub subscriptions. Existing GitHub users pay extra for AI code completion. This works because the AI directly enhances the existing value proposition: developers already using GitHub can code faster with Copilot.
+            </p>
+            <p>
+                <strong>Why this model works:</strong> It leverages existing customer relationships and reduces acquisition cost. Users already paying for the base product have demonstrated willingness to pay.
+            </p>
+        </div>
+
+        <h4>6. Freemium</h4>
+
+        <p>
+            Freemium provides a free tier with the expectation that some users will convert to paid. This works for products where the free tier provides real value but the paid tier provides significantly more. The key is ensuring free users can experience core value while paid users get meaningful additional capability.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: ChatGPT Free</h4>
+            <p>
+                ChatGPT's free tier provides access to GPT-4o (limited) with usage restrictions. Users experience the core value: getting answers to questions, help with writing, assistance with tasks. The paid tier provides unlimited access, faster response times, and advanced features. This allows users to experience the product before committing to pay.
+            </p>
+            <p>
+                <strong>Critical metric:</strong> Free-to-paid conversion rate. A low conversion means the free tier is too generous or the paid tier is not compelling enough.
+            </p>
+        </div>
+
+        <h3>Comparing Pricing Models</h3>
+
+        <table>
+            <thead>
+                <tr><th>Model</th><th>Predictability</th><th>Aligns with Value</th><th>Best For</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Tiered Subscriptions</td><td>High</td><td>Moderate</td><td>Consumer products</td></tr>
+                <tr><td>Usage-Based</td><td>Low</td><td>High</td><td>Developer tools</td></tr>
+                <tr><td>Credit Pools</td><td>Moderate</td><td>Moderate</td><td>Creative tools</td></tr>
+                <tr><td>Outcome-Based</td><td>Moderate</td><td>High</td><td>B2B automation</td></tr>
+                <tr><td>Seat + Add-On</td><td>High</td><td>Moderate</td><td>Enterprise software</td></tr>
+                <tr><td>Freemium</td><td>Low</td><td>Low</td><td>Consumer products</td></tr>
+            </tbody>
+        </table>
+
+        <h3>The Unit Economics Reality</h3>
+
+        <p>
+            AI-first SaaS has different unit economics than traditional SaaS. Traditional SaaS enjoys 70-80% gross margins. AI-first SaaS often has 20-60% gross margins because the marginal cost of AI serving is high. This means you must be more careful about who you acquire and how much you spend to acquire them.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">Unit Economics Warning</div>
+            <p>
+                Traditional SaaS: 70-80% gross margins. AI-first SaaS: 20-60% margins. Your best users are your most expensive users. Ensure customer lifetime value exceeds customer acquisition cost by at least 3x, accounting for higher serving costs.
+            </p>
+        </div>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Calculating AI Product Unit Economics</h4>
+            <p>
+                <strong>Key metrics to track:</strong>
+            </p>
+            <ul>
+                <li><strong>Cost to serve per user:</strong> API costs + infrastructure / monthly active users</li>
+                <li><strong>Customer lifetime value (LTV):</strong> Monthly revenue per user × gross margin × expected lifetime</li>
+                <li><strong>Customer acquisition cost (CAC):</strong> Sales + marketing spend / new customers</li>
+                <li><strong>LTV:CAC ratio:</strong> Should be at least 3:1 for sustainable growth</li>
+            </ul>
+            <p>
+                <strong>Example calculation:</strong>
+            </p>
+            <ul>
+                <li>Average user pays $50/month</li>
+                <li>Gross margin on AI serving is 40%</li>
+                <li>Expected lifetime is 24 months</li>
+                <li>LTV = $50 × 0.40 × 24 = $480</li>
+                <li>Maximum CAC for 3:1 ratio = $160</li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>AI-Specific Onboarding</strong> - new onboarding approaches for AI products.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Ch 10: Overview</a>
+            <a class="up" href="index.html">Chapter 10 Index</a>
+            <a class="next" href="section-10-2.html">10.2 AI-Specific Onboarding</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 10.1 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

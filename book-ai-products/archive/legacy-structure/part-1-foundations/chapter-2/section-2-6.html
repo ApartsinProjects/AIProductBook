@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.6 Synergy in Action - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-1-foundations/index.html">Part I: Foundations</a></div>
+        <div class="chapter-label">Chapter 2</div>
+        <h1>The Synergy Triangle</h1>
+        <p class="chapter-subtitle">2.6 Synergy in Action: Mini Example</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Introduce the book's core framework and show the interdependence between the three pillars.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Basic familiarity with software development concepts. Completion of Sections 2.1-2.5 recommended.
+        </div>
+
+        <h2 id="section-2-6">2.6 Synergy in Action: Mini Example</h2>
+
+        <p>
+            Let's walk through building a simple <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> (Retrieval-Augmented Generation) assistant using the Synergy Triangle. This concrete example shows how all three pillars work together to transform an idea into a shippable product. We'll use a realistic scenario: building an internal chatbot that answers questions about company documentation.
+        </p>
+
+        <h3>The Scenario</h3>
+
+        <p>
+            Imagine you're at a mid-sized company with thousands of pages of internal documentation: HR policies, engineering guides, product specs, onboarding materials. Employees constantly ask the same questions, and the support team is overwhelmed. The idea is to build an AI chatbot that answers these questions by reading the documentation.
+        </p>
+
+        <p>
+            This is a classic <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> use case: the AI retrieves relevant documents, then generates a response based on that content. But the path from concept to shipped product is where the Synergy Triangle matters.
+        </p>
+
+        <h3>Step 1: Vibe Coding - Rapid Exploration</h3>
+
+        <p>
+            <strong>Who:</strong> PM + Developer working together
+        </p>
+
+        <p>
+            The PM describes what they want: "A chatbot that answers questions about our company docs. Users type a question, the bot finds the relevant information, and gives a clear answer with sources."
+        </p>
+
+        <p>
+            The developer uses <a href="../../part-2-vibe-coding/chapter-3/sections/section-3-1.html">vibe coding</a> to build a prototype in hours. They use <a href="../../part-2-vibe-coding/chapter-3/sections/section-3-2.html">Cursor</a> to generate the basic structure: a frontend for typing questions, a retrieval system that searches the documents, a prompt that instructs the AI to answer based on retrieved content, and a display that shows the answer with citations.
+        </p>
+
+        <p>
+            The prototype isn't polished - it has basic UI, the retrieval might be crude, and the formatting is simple. But it works. The PM can type a question and get an answer. They can test whether the concept is viable before investing more.
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">The Vibe Coding Session</div>
+            <p>Developer to AI: "Create a React component for a Q&A interface. Left side has an input where users type questions. Right side shows the answer. Below the answer, show the sources that were used. Use a clean, professional style." This takes 30 seconds. Then: "Add a simple retrieval function that takes a query, embeds it, searches a vector store, and returns the top 5 chunks." This takes another 30 seconds. In minutes, the skeleton is there.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The 30-Second Build</div>
+            <p>The first compiled programming language, FORTRAN, took months to write and could perform about 100 calculations per second. Today, AI generates working React components in seconds that run millions of calculations per second on modern hardware. The tools change but human creativity remains the constant multiplier.</p>
+        </div>
+
+        <h3>Step 2: Define Evals - Establishing Success Criteria</h3>
+
+        <p>
+            <strong>Who:</strong> PM owns, with engineering input
+        </p>
+
+        <p>
+            Before going further, the PM needs to define what success looks like. They create a golden dataset: 50 Q&A pairs covering the most common questions. These aren't synthetic examples - they're real questions employees ask, with answers that subject matter experts have verified as correct.
+        </p>
+
+        <p>
+            The PM also defines eval criteria. For this product, success means:
+        </p>
+
+        <ul>
+            <li><strong>Factual accuracy:</strong> The answer must be correct according to the source documents</li>
+            <li><strong>Source citation:</strong> The answer must cite the documents it used</li>
+            <li><strong>Coverage:</strong> If the question can't be answered from the docs, the system should say so</li>
+            <li><strong>Clarity:</strong> The answer should be understandable and well-organized</li>
+        </ul>
+
+        <p>
+            These criteria become the eval suite. Every change to the system is tested against these 50 examples. If a change improves eval scores, it's good. If it hurts eval scores, it's bad. No more subjective debates about whether the product is getting better.
+        </p>
+
+        <h3>Step 3: Engineering Optimization - Systematic Improvement</h3>
+
+        <p>
+            <strong>Who:</strong> Engineering leads, guided by evals
+        </p>
+
+            With the evals in place, the engineering team systematically improves the system. They experiment with:
+        </p>
+
+        <p>
+            <strong>Chunk sizes:</strong> Should documents be split into 500-word chunks or 1000-word chunks? They test both against evals.
+        </p>
+
+        <p>
+            <strong>Embedding models:</strong> Which embedding model retrieves the most relevant documents? They test several.
+        </p>
+
+        <p>
+            <strong>Retrieval parameters:</strong> How many chunks should they retrieve? 3? 5? 10? They test each against evals.
+        </p>
+
+        <p>
+            <strong>Prompt variations:</strong> How should the AI be instructed to use the retrieved content? They test different prompt approaches.
+        </p>
+
+        <p>
+            Each experiment is measured against the eval suite. The results are clear: chunk size of 800 words with 5 retrieved chunks and a specific prompt template achieves 87% accuracy on the eval set. Other combinations achieve lower scores.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The Evidence-Based Approach</div>
+            <p>Without evals, this optimization would be guesswork. "I think the longer chunks are better." "I feel like more context helps." With evals, it's evidence. "The eval score improved from 72% to 87% when we switched to 800-word chunks." This transforms engineering productivity - every change is validated, and only improvements that actually improve the product are shipped.</p>
+        </div>
+
+        <h3>Step 4: Production Hardening - Making It Shippable</h3>
+
+        <p>
+            <strong>Who:</strong> Engineering
+        </p>
+
+        <p>
+            The optimized prototype isn't ready for production. The engineering team adds what's needed for real-world use:
+        </p>
+
+        <p>
+            <strong>Observability:</strong> They add detailed logging so they can see what's happening in production: what queries are being asked, what documents are being retrieved, what answers are being generated. If something goes wrong, they can debug it.
+        </p>
+
+        <p>
+            <strong>Error handling:</strong> What happens if the vector database is down? What happens if the API rate limit is hit? They add fallbacks and retry logic so the system degrades gracefully.
+        </p>
+
+        <p>
+            <strong>Cost monitoring:</strong> They add tracking so they know how much each query costs. They set up alerts if costs spike unexpectedly.
+        </p>
+
+        <p>
+            <strong>Rate limiting:</strong> They add limits so one user can't overload the system with thousands of queries.
+        </p>
+
+        <p>
+            <strong>Security:</strong> They ensure the system only accesses documents the user is allowed to see. They add input sanitization to prevent prompt injection.
+        </p>
+
+        <p>
+            After this hardening, the prototype is now a shippable product. It can be released to real users in real conditions.
+        </p>
+
+        <h3>The Complete Cycle</h3>
+
+        <p>
+            This example illustrates how the Synergy Triangle creates value:
+        </p>
+
+        <ol>
+            <li><strong>Vibe coding</strong> enabled rapid exploration - they built a working prototype in hours rather than weeks</li>
+            <li><strong>Evals</strong> enabled evidence-based optimization - they knew which changes actually improved the product</li>
+            <li><strong>Production engineering</strong> enabled reliable delivery - the product works in real conditions with real users</li>
+        </ol>
+
+        <p>
+            Each pillar enabled the others. Vibe coding would have been aimless without <a href="../../part-3-ai-pm/chapter-7/sections/section-7-2.html">evals</a> to optimize toward. <a href="../../part-3-ai-pm/chapter-7/sections/section-7-2.html">Evals</a> would have been academic without engineering to make them practical. Engineering would have been inefficient without the rapid iteration that vibe coding enables.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">The Synergy Principle</div>
+            <p>Each pillar enables the others. Vibe coding makes PM hypothesis testing fast - you can try many directions quickly. Evals make engineering optimization meaningful - you can tell which changes improve the product. Engineering makes prototypes shippable - what was a proof-of-concept becomes a real product. The triangle isn't just a framework for understanding - it's a practical guide for how to work.</p>
+        </div>
+
+        <h3>Chapter 2 Summary: The Synergy Triangle</h3>
+
+        <p>
+            This chapter introduced the core framework that guides the rest of the book. The Synergy Triangle has three pillars:
+        </p>
+
+        <ul>
+            <li><strong>Vibe Coding:</strong> High-velocity development using AI-native tools. Enables rapid hypothesis testing and fast iteration.</li>
+            <li><strong>AI Product Management:</strong> <a href="../../part-3-ai-pm/chapter-7/sections/section-7-2.html">Eval-driven development</a> and clear success criteria. Prevents engineering waste and enables evidence-based decisions.</li>
+            <li><strong>AI Engineering:</strong> Production infrastructure that makes prototypes shippable. Adds reliability, scalability, and observability.</li>
+        </ul>
+
+        <p>
+            These pillars connect through feedback loops: vibe coding informs PM, PM informs engineering, engineering enables more ambitious vibe coding. Together, they create a virtuous cycle that accelerates AI product development.
+        </p>
+
+        <p>
+            The anti-patterns we covered show what happens when one pillar is missing: impressive demos that fail in production, endless debates without resolution, slow processes that lose the speed advantage, and economics that become unsustainable at scale. The solution in each case is to strengthen the weak pillar and ensure all three are connected.
+        </p>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Now that you understand the triangle framework, the next three chapters dive deep 
+                into the first pillar: <strong>Vibe Coding</strong>. Chapter 3 introduces the paradigm, 
+                Chapter 4 covers workflows and best practices, and Chapter 5 applies it to the full product lifecycle. 
+                Chapter 6 explores how Claude Code skills enhance the vibe coding workflow.
+                If you are more interested in AI PM or AI Engineering, you can jump to those parts 
+                and return to Vibe Coding later - the framework we've established applies throughout.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-2-5.html">2.5 Common Anti-Patterns</a>
+            <a class="up" href="index.html">Ch 2: Overview</a>
+            <a class="next" href="../../part-2-vibe-coding/chapter-3/sections/section-3-1.html">Ch 3: Understanding Vibe Coding</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 2.6 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

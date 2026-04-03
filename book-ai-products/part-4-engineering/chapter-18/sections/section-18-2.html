@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18.2 Session State and User Memory - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="section-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-4-engineering/index.html">Part IV: Engineering</a></div>
+        <div class="chapter-label">Chapter 18</div>
+    </header>
+
+    <main class="content">
+        <h1>18.2 Session State and User Memory</h1>
+
+        <p class="section-opening">
+            Applications that treat every interaction as independent fail users who expect continuity. Session state transforms disconnected AI calls into coherent experiences.
+        </p>
+
+        <section class="content-section">
+            <h2>Maintaining Context Across Turns</h2>
+
+            <p>Conversation context is the foundation of meaningful AI interactions. Without it, users must repeat themselves constantly. With it, AI applications can provide personalized, efficient assistance.</p>
+
+            <h3><a href="../../../part-1-why-ai-changes/chapter-1/sections/section-1-3.html" class="cross-ref">Context Window</a> Strategies</h3>
+
+            <p>The simplest approach is to include all prior conversation history in each prompt. This works for short conversations but degrades as history grows and may exceed <a href="../../../part-1-why-ai-changes/chapter-1/sections/section-1-3.html" class="cross-ref">context limits</a>.</p>
+
+            <pre><code class="language-python">
+class ConversationContextManager:
+    def __init__(self, max_tokens: int = 128000):
+        self.messages = []
+        self.max_tokens = max_tokens
+    
+    def add_message(self, role: str, content: str):
+        self.messages.append({'role': role, 'content': content})
+        self.trim_to_fit()
+    
+    def trim_to_fit(self):
+        while self.total_tokens() > self.max_tokens:
+            self.messages.pop(1)  # Remove oldest non-system message
+    
+    def get_context_for_prompt(self) -> list[dict]:
+        return self.messages
+    
+    def total_tokens(self) -> int:
+        return sum(len(m['content'].split()) * 1.3 for m in self.messages)
+            </code></pre>
+
+            <h3>Structured Summary Approaches</h3>
+
+            <p>For longer conversations, periodically summarize and replace message history with a compact representation:</p>
+
+            <pre><code class="language-python">
+class SummarizingContextManager(ConversationContextManager):
+    def __init__(self, *args, summary_threshold: int = 20):
+        super().__init__(*args)
+        self.summary_threshold = summary_threshold
+        self.conversation_summary = ""
+    
+    def add_message(self, role: str, content: str):
+        super().add_message(role, content)
+        if len(self.messages) > self.summary_threshold:
+            self._create_summary()
+    
+    def _create_summary(self):
+        history = "\n".join(
+            f"{m['role']}: {m['content']}" 
+            for m in self.messages[1:]  # Skip system
+        )
+        summary_prompt = f"Summarize this conversation concisely, preserving key facts, preferences, and ongoing tasks:\n\n{history}"
+        # Call LLM to summarize
+        summary = call_llm(summary_prompt)
+        self.conversation_summary = summary
+        # Keep system + summary + recent messages
+        self.messages = [self.messages[0]] + [{'role': 'system', 'content': summary}]
+            </code></pre>
+        </section>
+
+        <section class="content-section">
+            <h2>User Preference Memory</h2>
+
+            <p>Beyond conversation context, AI applications should remember user preferences that persist across sessions. This includes communication style, preferred formats, domain expertise level, and recurring tasks.</p>
+
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <h4>Explicit Preferences</h4>
+                    <p>User-stated preferences like "always use bullet points" or "explain technical terms". Store reliably and retrieve when relevant.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>Inferred Preferences</h4>
+                    <p>Observed patterns like consistently selecting summary format over detailed analysis. Flag for confirmation before assuming.</p>
+                </div>
+                <div class="concept-card">
+                    <h4>Contextual Preferences</h4>
+                    <p>Preferences that apply in specific contexts, like "shorter responses on mobile" or "detailed analysis for quarterly reports".</p>
+                </div>
+            </div>
+
+            <pre><code class="language-python">
+class UserPreferenceStore:
+    def __init__(self, user_id: str):
+        self.user_id = user_id
+        self.preferences = self._load_preferences()
+    
+    def get(self, key: str, default=None):
+        return self.preferences.get(key, default)
+    
+    def set(self, key: str, value, confidence: float = 1.0):
+        self.preferences[key] = {
+            'value': value,
+            'confidence': confidence,
+            'updated_at': datetime.now()
+        }
+        self._save_preferences()
+    
+    def infer_preference(self, key: str, observed_value, threshold: float = 0.8):
+        current = self.preferences.get(key)
+        if current and current['confidence'] >= threshold:
+            return  # Already confident, don't override
+        
+        # Track observation count for confidence
+        obs = self._get_observations(key)
+        obs.append(observed_value)
+        if len(obs) >= 3 and len(set(obs)) == 1:
+            self.set(key, observed_value, confidence=0.7)
+    
+    def get_system_prompt_insert(self) -> str:
+        parts = []
+        for key, data in self.preferences.items():
+            if data['confidence'] >= 0.7:
+                parts.append(f"User preference: {key} = {data['value']}")
+        return "\n".join(parts) if parts else ""
+            </code></pre>
+        </section>
+
+        <section class="content-section">
+            <h2>Long-Term vs Short-Term State</h2>
+
+            <p>Scope differs fundamentally between these two types of state. Short-term state covers only the current session, while long-term memory spans across sessions and persists over time. Lifetime reflects this distinction, with short-term state lasting minutes to hours and long-term memory enduring for days to months.</p>
+            <p>Examples clarify the practical differences. Short-term state includes conversation history and current task state, whereas long-term memory encompasses user preferences, learned facts, and records of past interactions. Storage mechanisms follow from these use cases, with short-term state typically stored in-memory or in session storage, while long-term memory requires more durable solutions like databases or vector stores.</p>
+            <p>Retrieval patterns differ based on how the data is stored. Short-term state supports direct access since all data resides in immediate memory. Long-term memory requires search or embedding-based retrieval since the data exists in persistent storage. Volatility represents the most critical operational difference: short-term state is lost when a session ends, while long-term memory persists until explicitly cleared by the user or system.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Privacy Considerations</h2>
+
+            <p>Storing user state raises significant privacy concerns that must be addressed proactively.</p>
+
+            <div class="callout callout-warning">
+                <h4>Privacy by Design</h4>
+                <p>Users should understand what is stored, why, and how long. Obtain informed consent before storing any personal information. Provide easy mechanisms for users to view, export, and delete their stored state.</p>
+            </div>
+
+            <h3>Data Minimization</h3>
+            <p>Store only what you need. If you can accomplish the task with session-only state, do not persist to long-term storage. Ask: "Would this feature work without storing this data?"</p>
+
+            <h3>Encryption and Access Control</h3>
+            <p>Encrypt stored state at rest and in transit. Implement access controls that ensure only authorized systems can retrieve user data.</p>
+
+            <h3>Retention Policies</h3>
+            <p>Define clear retention periods. Delete data that is no longer needed. Consider time-bounded access tokens and periodic re-authentication for accessing stored preferences.</p>
+
+            <h3>Compliance</h3>
+            <p>Depending on your jurisdiction and use case, you may need to comply with GDPR, CCPA, HIPAA, or other regulations. Consult legal counsel for appropriate compliance measures.</p>
+
+            <div class="example-box">
+                <h4>HealthMetrics: Privacy-Preserving Health Context</h4>
+                <p>HealthMetrics stores minimal health context necessary for personalized health insights. Medical history is encrypted with user-controlled keys. The system never stores raw health data; only derived insights relevant to the current interaction are retained. Users can delete all stored context at any time, and the system provides a complete audit log of what was stored and when.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>State Reconstruction</h2>
+
+            <p>When users resume a session after interruption or on a different device, you may need to reconstruct relevant state from long-term storage.</p>
+
+            <pre><code class="language-python">
+class StateReconstructor:
+    def __init__(self, user_prefs: UserPreferenceStore, 
+                 memory_store: VectorMemoryStore):
+        self.user_prefs = user_prefs
+        self.memory_store = memory_store
+    
+    def reconstruct_session_state(self, user_id: str, 
+                                   session_type: str) -> dict:
+        state = {
+            'preferences': self.user_prefs.get_all(),
+            'recent_context': self._get_recent_interactions(user_id),
+            'relevant_memories': self._get_relevant_memories(user_id, session_type)
+        }
+        return state
+    
+    def _get_recent_interactions(self, user_id: str) -> list:
+        # Get last 5 interactions for context
+        return self.memory_store.get_recent(user_id, limit=5)
+    
+    def _get_relevant_memories(self, user_id: str, 
+                                session_type: str) -> list:
+        # Retrieve memories relevant to current session type
+        query = f"user {user_id} {session_type} preferences history"
+        return self.memory_store.search(query, limit=3)
+            </code></pre>
+
+            <div class="key-takeaway">
+                <h4>Key Takeaway</h4>
+                <p>Design session state to be explicit and reconstructable. Separate concerns: conversation context, user preferences, and domain memories should be stored and retrieved independently for flexibility.</p>
+            </div>
+        </section>
+
+        <nav class="section-nav">
+            <a class="prev" href="section-18-1.html">18.1 Prompts vs Workflow Graphs</a>
+            <a class="next" href="section-18-3.html">18.3 Task Memory and Agent Handoffs</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 18 &middot; Section 18.2 &middot; First Edition, April 2026</p>
+        </footer>
+    </main>
+</body>
+</html>

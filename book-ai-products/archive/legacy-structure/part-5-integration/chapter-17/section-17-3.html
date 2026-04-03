@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17.3 Cross-Role Collaboration - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-integration/index.html">Part V: Integration</a></div>
+        <div class="chapter-label">Chapter 17</div>
+        <h1>Integrated Vibe-to-Production Playbook</h1>
+        <p class="chapter-subtitle">17.3 Cross-Role Collaboration</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Tie everything together in a repeatable end-to-end process.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 17.2 recommended.
+        </div>
+
+        <h2 id="section-17-3">17.3 Cross-Role Collaboration</h2>
+
+        <p>
+            AI product development requires unprecedented collaboration between roles that 
+            traditionally worked in silos. A Product Manager must understand AI capabilities, 
+            an AI Engineer must care about user experience, and a Vibe Developer must think 
+            about production constraints. This section shows you how to make this collaboration work.
+        </p>
+
+        <h3>Why This Matters</h3>
+        <p>
+            The #1 cause of AI product failure is not technical. It's misalignment between 
+            teams: PMs who don't understand what's possible, Engineers who don't understand 
+            what users need, and Designers who create experiences that can't be implemented. 
+            Clear role definitions and collaboration patterns prevent this miscommunication.
+        </p>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Emoji That Solved the Problem</div>
+            <p>A PM and Engineer argued for 2 weeks about how to handle "ambiguous user intent." During a heated debate, the Engineer sent an emoji of a shrug. Everyone laughed. Then they realized the answer was literally to show users an "I'm not sure what you mean" message. The $50,000 architectural debate was solved by a Unicode character.</p>
+        </div>
+
+        <hr>
+
+        <h3>The Trust Architecture: What PMs Define</h3>
+
+        <p>
+            The PM owns defining "trust architecture" - what makes users trust the AI's output. 
+            This isn't just about accuracy; it's about the entire experience of reliability.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Analogy: Trust Architecture Is Like a Restaurant's Reputation</div>
+            <p>
+                Think of trust architecture like a restaurant. You don't just trust a restaurant 
+                because the food is accurate (correct temperature, correct ingredients). You 
+                trust it because the menu is clear, the staff explains what they recommend, they 
+                admit when they're out of something, and they fix mistakes promptly. AI trust 
+                works the same way - accuracy matters, but transparency, acknowledgment of 
+                uncertainty, and clear escalation paths matter just as much.
+            </p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Skill Demonstration: Defining Trust Architecture</div>
+            <p>
+                For a medical AI assistant, the PM defined these trust elements:
+            </p>
+            <ul>
+                <li><strong>Source transparency:</strong> Every claim cites a source document</li>
+                <li><strong>Uncertainty acknowledgment:</strong> AI says "I'm not certain" when appropriate</li>
+                <li><strong>Escalation path:</strong> Clear button to connect with human doctor</li>
+                <li><strong>Scope clear:</strong> Explicit statement of what's out of scope</li>
+                <li><strong>Traceability:</strong> Users can see the reasoning path</li>
+            </ul>
+        </div>
+
+        <h4>What the PM Actually Owns</h4>
+        <ul>
+            <li><strong>Problem definition:</strong> What user pain point are we solving?</li>
+            <li><strong>Success metrics:</strong> How do we know it's working?</li>
+            <li><strong>Quality criteria:</strong> What does "good enough" look like?</li>
+            <li><strong>Risk assessment:</strong> What could go wrong and what's the impact?</li>
+            <li><strong>User feedback loops:</strong> How do we hear from users?</li>
+        </ul>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: PM/Engineer Misalignment</div>
+            <p>
+                A PM requested "the AI should understand context across the entire conversation." 
+                The AI Engineer implemented it, but it cost 10x more than simpler alternatives 
+                and added 2 seconds of latency. The real user need was understanding the 
+                last 3 messages, not the entire conversation. The fix required the PM to 
+                be more specific about "context" and the Engineer to ask "how much context 
+                is actually needed?"
+            </p>
+        </div>
+
+        <hr>
+
+        <h3>Retrieval: What AI Engineers Own</h3>
+
+        <p>
+            The AI Engineer owns retrieval - the hardest problem in AI products. Even the 
+            best language model is only as good as what it's retrieving.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Why Retrieval Is Hard</div>
+            <p>
+                Consider a legal document search: "find the clause about liability for data 
+                breaches" should match "indemnification for security incidents" even though 
+                the words don't match. Users ask in their language; documents are written 
+                in legal language. Bridging this gap is genuinely difficult.
+            </p>
+        </div>
+
+        <h4>What the AI Engineer Actually Owns</h4>
+        <ul>
+            <li><strong>Model selection:</strong> Which model and why?</li>
+            <li><strong>Retrieval pipeline:</strong> How do we find the right content?</li>
+            <li><strong>Prompt engineering:</strong> How do we get the best outputs?</li>
+            <li><strong>Cost optimization:</strong> How do we keep costs reasonable?</li>
+            <li><strong>Quality metrics:</strong> How do we measure retrieval accuracy?</li>
+        </ul>
+
+        <div class="callout">
+            <div class="callout-title">Code Example: Retrieval Quality Ladder</div>
+            <pre><code>// The AI Engineer's toolkit for improving retrieval:
+
+// Level 1: Simple keyword matching
+const results = await search(query); // BM25/elasticsearch
+
+// Level 2: Add semantic search
+const embeddings = await embed(query);
+const semanticResults = await vectorSearch(embeddings);
+
+// Level 3: Hybrid (keyword + semantic)
+const combinedResults = await hybridSearch(query, embeddings);
+
+// Level 4: Re-ranking
+const reranked = await rerank(query, combinedResults);
+
+// Level 5: Query understanding/transformation
+const transformed = await rewriteQuery(query);
+const finalResults = await hybridSearch(transformed);
+
+// Each level adds cost and latency - choose based on user need</code></pre>
+        </div>
+
+        <hr>
+
+        <h3>Rapid Iteration: What Vibe Developers Own</h3>
+
+        <p>
+            Vibe Developers accelerate iteration by shipping features in hours or days, 
+            not weeks. They prototype quickly and know when to refactor for production.
+        </p>
+
+        <h4>What the Vibe Developer Actually Owns</h4>
+        <ul>
+            <li><strong>Rapid prototyping:</strong> Get something working fast</li>
+            <li><strong>User experience:</strong> Make it feel good to use</li>
+            <li><strong>Frontend/UI:</strong> The interface users interact with</li>
+            <li><strong>Integration:</strong> Connect AI to existing systems</li>
+            <li><strong>Production hardening:</strong> Refactor prototype to production-ready</li>
+        </ul>
+
+        <div class="callout">
+            <div class="callout-title">Skill Demonstration: Vibe to Production Pipeline</div>
+            <p>
+                A Vibe Developer used Cursor to build a prototype in 2 days. Then, over 
+                the next 2 weeks, they systematically refactored it:
+            </p>
+            <ul>
+                <li><strong>Day 1-2:</strong> Working prototype with hardcoded mock data</li>
+                <li><strong>Day 3:</strong> Replace mocks with real API calls</li>
+                <li><strong>Day 4:</strong> Add error handling and loading states</li>
+                <li><strong>Day 5:</strong> Add caching for repeated queries</li>
+                <li><strong>Week 2:</strong> Add observability, rate limiting, and testing</li>
+            </ul>
+            <p>
+                The key: they didn't try to make the prototype production-ready. They 
+                accepted it would be thrown away and focused on learning quickly.
+            </p>
+        </div>
+
+        <hr>
+
+        <h3>Collaboration Patterns That Work</h3>
+
+        <p>
+            These collaboration patterns have proven effective across many AI product teams:
+        </p>
+
+        <h4>1. Weekly Sync: PM + AI Engineer + Vibe Developer</h4>
+        <p>
+            Every week, these three meet to align on:
+        </p>
+        <ul>
+            <li>What's working (show metrics)</li>
+            <li>What's blocked (raise blockers)</li>
+            <li>What's next (prioritize backlog)</li>
+        </ul>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: Weekly Sync That Caught a Problem</div>
+            <p>
+                During weekly sync, the Vibe Developer mentioned that the new feature "felt 
+                slower" but they didn't have metrics yet. The PM pushed to add latency tracking 
+                that week. Two weeks later, they caught a regression that was adding 500ms - 
+                before it would have become a user complaint.
+            </p>
+        </div>
+
+        <h4>2. Eval Review: Everyone Reviews Quality Together</h4>
+        <p>
+            Once a week, the entire product team reviews sample outputs together. This keeps 
+            everyone aligned on quality standards.
+        </p>
+
+        <pre><code>Eval Review Meeting Agenda:
+1. Review 10 random outputs from production (15 min)
+2. Discuss: Is this good enough? Why or why not? (15 min)
+3. Identify patterns: What's working? What's not? (10 min)
+4. Action items: What needs to change? (10 min)</code></pre>
+
+        <h4>3. Design Review: PM Reviews UX Before Implementation</h4>
+        <p>
+            Before building, the PM reviews the Vibe Developer's UI/UX designs to ensure 
+            they align with trust architecture requirements (citations, uncertainty, etc.).
+        </p>
+
+        <h4>4. Technical Review: AI Engineer Reviews Vibe Developer's Production Code</h4>
+        <p>
+            Before shipping, the AI Engineer reviews the Vibe Developer's code for cost 
+            optimization, security, and scalability concerns.
+        </p>
+
+        <hr>
+
+        <h3>Escalation Paths</h3>
+
+        <p>
+            Know when to escalate and to whom:
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Issue Type</th><th>Escalate To</th><th>Example</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>User need unclear</td><td>PM</td><td>"What should the AI actually do here?"</td></tr>
+                <tr><td>Technical not possible</td><td>AI Engineer</td><td>"Can we actually do this with current models?"</td></tr>
+                <tr><td>Can't ship fast enough</td><td>Vibe Developer</td><td>"How do we prototype this faster?"</td></tr>
+                <tr><td>Quality not good enough</td><td>Whole Team</td><td>"Eval score dropped - what do we do?"</td></tr>
+            </tbody>
+        </table>
+
+        <hr>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Key Takeaways</div>
+            <ul>
+                <li>PM owns trust architecture - what makes users trust the AI</li>
+                <li>AI Engineer owns retrieval - the hardest technical problem</li>
+                <li>Vibe Developer owns rapid iteration and UX</li>
+                <li>Weekly syncs prevent misalignment</li>
+                <li>Regular eval reviews keep everyone focused on quality</li>
+            </ul>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Continue to <a href="chapter-18/index.html">Chapter 18: Real-World Case Studies</a> to learn 
+                from real AI product journeys.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-17-2.html">17.2 Templates and Checklists</a>
+            <a class="up" href="index.html">Chapter 17 Index</a>
+            <a class="next" href="chapter-18/index.html">Ch 18: Case Studies</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 17.3 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 21: Evals as the Core Development Discipline - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+        <div class="chapter-label">Chapter 21</div>
+        <h1>Evals as the Core Development Discipline</h1>
+        <p class="subtitle">Making evaluation the operational core of AI product development</p>
+    </header>
+
+    <main class="content">
+        <blockquote class="epigraph">
+            <p>"You cannot improve what you cannot measure. In AI products, evaluation is not the last step. It is the first step that makes every other step meaningful."</p>
+            <cite>A Rigorous Test Engineer, Speaking From Experience</cite>
+        </blockquote>
+
+        <div class="opening-hook">
+            Traditional software testing assumes that code behaves the same way every time. Give the same input, get the same output. AI systems break this assumption fundamentally. The same prompt can produce different outputs, and the difference between a useful AI product and a frustrating one often comes down to how well you understand and measure that variation. This chapter makes evaluation the central discipline of AI product development, not an afterthought.
+        </div>
+
+        <figure class="illustration">
+            <img src="../../../images/illustrations/chapter-21-opener.png"
+                 alt="Chapter 21 opener illustration">
+            <figcaption>
+                Evals are the primary epistemic instrument for understanding what your AI product actually does.
+            </figcaption>
+        </figure>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe-Coding in Test Case Generation</div>
+            <p>Vibe coding accelerates eval creation by rapidly generating test cases across diverse scenarios. Instead of manually enumerating edge cases, use vibe coding to explore the input space and surface behaviors you had not considered. Vibe coding test case generation helps you build comprehensive eval datasets faster while discovering failure modes that manual testing would likely miss.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Vibe Coding for Rapid Eval Creation</div>
+            <p>Evals are not written once and forgotten. Start with a rough eval that captures the core question, test it against known examples, then harden it based on what it misses. The first eval is rarely the best one. Use vibe coding to rapidly iterate on eval design before committing to a fixed evaluation approach.</p>
+        </div>
+
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Establish eval-driven development as the primary methodology for building AI products, and provide the frameworks, tools, and workflows to implement it.
+        </p>
+
+        <div class="overview">
+            <h2>Chapter Overview</h2>
+            <p>
+                This chapter establishes evaluation as the thread connecting all parts of AI product development. You learn why traditional QA fails for probabilistic systems, how to build comprehensive eval pipelines, when to use human evaluation versus LLM-as-Judge, and how to implement eval-driven development workflows that make quality visible and actionable at every stage.
+            </p>
+        </div>
+
+        <div class="four-questions">
+            <h2>Four Questions This Chapter Answers</h2>
+            <ol>
+                <li><strong>What are we trying to learn?</strong> How to measure AI product quality in a way that captures probabilistic behavior and informs improvement decisions.</li>
+                <li><strong>What is the fastest prototype that could teach it?</strong> Building one eval for your most uncertain AI behavior and running it before and after a change to see if it detects the difference.</li>
+                <li><strong>What would count as success or failure?</strong> An eval pipeline that catches regressions before they reach users and guides optimization toward genuine quality improvements.</li>
+                <li><strong>What engineering consequence follows from the result?</strong> Eval infrastructure is not optional; shipping AI products without eval infrastructure is flying blind.</li>
+            </ol>
+        </div>
+
+        <div class="objectives">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Understand why evaluation is the central discipline for AI products</li>
+                <li>Distinguish between task, system, agent, integration, and regression evals</li>
+                <li>Build effective evaluation frameworks with measurable criteria and test datasets</li>
+                <li>Determine when human evaluation is necessary and how to implement it cost-effectively</li>
+                <li>Apply LLM-as-Judge techniques while avoiding common failure modes</li>
+                <li>Implement eval-driven development workflows in your team</li>
+                <li>Design eval metrics and scoring systems that align with product goals</li>
+                <li>Build eval infrastructure that scales with your product</li>
+            </ul>
+        </div>
+
+        <div class="section-nav">
+            <h3>Sections in This Chapter</h3>
+            <ul>
+                <li><span class="sec-num">21.1</span> <a href="sections/section-21-1.html">Why Evals Are Central to AI Products</a></li>
+                <li><span class="sec-num">21.2</span> <a href="sections/section-21-2.html">Types of Evaluations</a></li>
+                <li><span class="sec-num">21.3</span> <a href="sections/section-21-3.html">Building Effective Evals</a></li>
+                <li><span class="sec-num">21.4</span> <a href="sections/section-21-4.html">Human Evaluation</a></li>
+                <li><span class="sec-num">21.5</span> <a href="sections/section-21-5.html">LLM-as-Judge</a></li>
+                <li><span class="sec-num">21.6</span> <a href="sections/section-21-6.html">Eval-Driven Development Workflow</a></li>
+            </ul>
+        </div>
+
+        <div class="callout big-picture">
+            <h4 class="callout-title">The Eval-First Principle</h4>
+            <p>In AI product development, you write evals before you write feature code. This is not a testing phase at the end. It is the discipline that makes feature development possible. Every prompt engineering decision, every system design choice, every product requirement becomes concrete only when you can measure whether it is working.</p>
+        </div>
+
+        <div class="role-specific-lenses">
+            <h3>Role-Specific Lenses</h3>
+            
+            <div class="callout note">
+                <h4 class="callout-title">For Product Managers</h4>
+                <p>Evals define what success looks like. A product requirement without an eval is a hope, not a spec. You use evals to set success criteria, track progress, and make go/no-go decisions. The eval framework becomes the shared language between you and engineering about what the product must accomplish.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Designers</h4>
+                <p>AI-augmented UX creates new evaluation challenges. The same interface can produce wildly different experiences depending on model behavior. You need eval frameworks to measure whether AI assistance improves or degrades the user experience, and to identify the edge cases that break the interaction design.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Engineers</h4>
+                <p>Eval infrastructure is production infrastructure. You build eval pipelines, automate regression suites, and instrument systems to capture the data that makes evaluation possible. This is not separate from building the product. It is how you know the product is built correctly.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Students</h4>
+                <p>Eval-driven development teaches you to think in terms of evidence rather than opinions. You learn to ask: how would I know if this is working? What would I expect to see if this failed? This discipline transfers to any complex system where outcomes are uncertain and stakes are high.</p>
+            </div>
+
+            <div class="callout note">
+                <h4 class="callout-title">For Leaders</h4>
+                <p>Investment in eval infrastructure pays compound returns. Teams with strong evals ship faster because they have confidence in their changes. They debug faster because failures are localized and reproducible. They make better prioritization decisions because they can measure impact. The cost of eval infrastructure is trivial compared to the cost of shipping bad AI experiences.</p>
+            </div>
+        </div>
+
+        <section class="bibliography" id="bibliography">
+            <h2>Bibliography</h2>
+            
+            <h3>Foundational Papers</h3>
+            <ol class="bib-list">
+                <li id="ref-1">
+                    <p class="bib-entry">
+                        <a href="https://arxiv.org/abs/2005.03754" target="_blank" rel="noopener">Rogers, A., et al. (2020). "A Prerequisite for AI Safety Research: Understanding Failures." <em>arXiv:2005.03754</em>.</a>
+                    </p>
+                    <p class="bib-annotation">Argues that understanding failure modes is prerequisite to building safe AI systems. Provides taxonomy of evaluation failures in NLP.</p>
+                </li>
+                <li id="ref-2">
+                    <p class="bib-entry">
+                        <a href="https://arxiv.org/abs/2312.09210" target="_blank" rel="noopener">Wang, J., et al. (2023). "Self-Eval: Automatic Evaluation of LLMs as Judges." <em>arXiv:2312.09210</em>.</a>
+                    </p>
+                    <p class="bib-annotation">Proposes self-evaluation frameworks for LLM-as-Judge approaches, showing how models can evaluate their own outputs with appropriate prompting.</p>
+                </li>
+            </ol>
+
+            <h3>Tools and Frameworks</h3>
+            <ol class="bib-list">
+                <li id="ref-3">
+                    <p class="bib-entry">
+                        <a href="https://github.com/openai/evals" target="_blank" rel="noopener">OpenAI Evals. (2023). OpenSource Evaluation Framework.</a>
+                    </p>
+                    <p class="bib-annotation">OpenAI's open-source eval framework providing structured approach to building and running evaluations for LLM applications.</p>
+                </li>
+                <li id="ref-4">
+                    <p class="bib-entry">
+                        <a href="https://github.com/BerriAI/litellm" target="_blank" rel="noopener">LiteLLM. (2024). Unified Interface for LLM Calls.</a>
+                    </p>
+                    <p class="bib-annotation">Provides consistent logging and evaluation hooks across multiple LLM providers, enabling comparative evaluations.</p>
+                </li>
+            </ol>
+
+            <h3>Industry Practices</h3>
+            <ol class="bib-list">
+                <li id="ref-5">
+                    <p class="bib-entry">
+                        <a href="https://docs.anthropic.com/en/docs/build-with-claude/evals" target="_blank" rel="noopener">Anthropic. (2024). "Building Effective Evals." Claude Documentation.</a>
+                    </p>
+                    <p class="bib-annotation">Practical guide to designing evaluations that capture meaningful behavior differences in LLM systems.</p>
+                </li>
+            </ol>
+        </section>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../../toc.html">Table of Contents</a>
+            <a class="up" href="../../part-5-evaluation-reliability/index.html">Part V Overview</a>
+            <a class="next" href="sections/section-21-1.html">21.1 Why Evals Are Central</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 21 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

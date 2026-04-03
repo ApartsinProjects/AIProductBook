@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10.5 Unit Economics - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-3-ai-pm/index.html">Part III: AI PM</a></div>
+        <div class="chapter-label">Chapter 10</div>
+        <h1>Go-to-Market and Success Metrics</h1>
+        <p class="chapter-subtitle">10.5 Unit Economics</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Drive real adoption and business value with the right pricing and metrics.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Section 10.4 recommended.
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: The Economics of AI-First SaaS</div>
+            <p>This section covers unit economics for AI products, including cost structures, LTV:CAC ratios, and margin optimization. In the context of AI product management, understanding economics is non-negotiable: AI products have fundamentally different unit economics than traditional software, with higher marginal costs that require deliberate pricing and efficiency strategies. Without economic discipline, success can become a liability as costs scale with revenue.</p>
+        </div>
+
+        <h2 id="section-10-5">10.5 Unit Economics</h2>
+
+        <p>
+            In Section 10.4, we covered adoption strategies for different market segments: developer-first, enterprise, and consumer. Understanding these markets helps you acquire customers, but you also need to understand the financial sustainability of your business model. Understanding unit economics is essential for building sustainable AI businesses. The cost structure of AI products differs fundamentally from traditional software, and many companies that appeared successful by revenue metrics have failed because they could not achieve profitability at scale. This section covers the financial realities of AI-first SaaS and how to build a sustainable business.
+        </p>
+
+        <h3>The Cost Structure Challenge</h3>
+
+        <p>
+            AI products have higher marginal costs than traditional software. When a user makes a request, you typically pay an API provider (or run your own infrastructure) to process that request. This cost recurs for every user interaction, unlike traditional software where marginal cost approaches zero after development.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Profitable Illusion</h4>
+            <p>
+                An AI customer service startup grew to $10M ARR quickly. They had strong customer retention and healthy revenue growth. However, when they analyzed unit economics, they discovered they were losing $0.15 for every dollar of revenue. The problem: each customer generated 10,000+ AI interactions monthly, and their pricing ($29/user/month) did not cover the $45 cost to serve each user.
+            </p>
+            <p>
+                <strong>The fix:</strong> They implemented usage-based pricing that charged for high-volume customers, added caching to reduce redundant API calls, and negotiated better API rates. The cost to serve dropped to $22/user/month, making the business profitable.
+            </p>
+        </div>
+
+        <h3>Understanding Your Cost Structure</h3>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Calculating AI Product Costs</h4>
+            <p>
+                <strong>Cost components to track:</strong>
+            </p>
+            <ul>
+                <li><strong>Model API costs:</strong> Token-based fees for LLM calls</li>
+                <li><strong>Embedding costs:</strong> For <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> systems</li>
+                <li><strong>Vector database:</strong> Storage and retrieval costs</li>
+                <li><strong>Infrastructure:</strong> Servers, networking, monitoring</li>
+                <li><strong>Engineering:</strong> Development and maintenance</li>
+                <li><strong>Support:</strong> Customer success and troubleshooting</li>
+            </ul>
+            <p>
+                <strong>Per-interaction cost formula:</strong>
+            </p>
+            <pre><code>Cost per interaction = 
+  (Input tokens × Input price) + 
+  (Output tokens × Output price) + 
+  (Retrieval costs) + 
+  (Infrastructure allocation)</code></pre>
+            <p>
+                <strong>Example calculation:</strong>
+            </p>
+            <ul>
+                <li>Input: 500 tokens at $0.001/1K = $0.0005</li>
+                <li>Output: 300 tokens at $0.003/1K = $0.0009</li>
+                <li>Embedding: $0.0002</li>
+                <li>Vector DB: $0.0001</li>
+                <li>Infrastructure: $0.0003</li>
+                <li><strong>Total: $0.002 per interaction</strong></li>
+            </ul>
+        </div>
+
+        <h3>Gross Margin Analysis</h3>
+
+        <p>
+            Gross margin is the percentage of revenue left after direct costs. Traditional SaaS has 70-80% gross margins. AI-first SaaS typically has 40-60% gross margins, with significant variation based on pricing model and serving efficiency.
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Cost Type</th><th>Traditional SaaS</th><th>AI-First SaaS</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Infrastructure (servers, storage)</td><td>5-10%</td><td>10-15%</td></tr>
+                <tr><td>Third-party services</td><td>0-5%</td><td>20-40%</td></tr>
+                <tr><td>Support allocation</td><td>10-15%</td><td>10-15%</td></tr>
+                <tr><td><strong>Gross margin</strong></td><td><strong>70-80%</strong></td><td><strong>40-60%</strong></td></tr>
+            </tbody>
+        </table>
+
+        <div class="case-study">
+            <h4>Case Study: Margin Optimization</h4>
+            <p>
+                A productivity AI company had 45% gross margin, which was low for SaaS but typical for AI. They wanted to improve to 55%. They analyzed their cost structure and found that 25% of API calls were redundant: users would start requests, get distracted, and not use the results. They implemented a "pending" status that cancelled requests after 60 seconds of inactivity, reducing API costs by 15%. They also implemented prompt optimization that reduced average token usage by 20%. Combined, these improved gross margin to 58%.
+            </p>
+            <p>
+                <strong>Key insight:</strong> Small efficiency gains compound. A 20% reduction in serving cost can mean the difference between profitability and loss.
+            </p>
+        </div>
+
+        <h3>LTV:CAC Ratio for AI Products</h3>
+
+        <p>
+            The LTV:CAC ratio measures whether you spend efficiently to acquire customers. For sustainable growth, LTV should be at least 3x CAC. For AI products, CAC is often higher because of the education required to sell AI products, but the lifetime value can also be higher if the product creates strong retention.
+        </p>
+
+        <div class="skill-demonstration">
+            <h4>Skill: Calculating LTV:CAC for AI</h4>
+            <p>
+                <strong>LTV calculation:</strong>
+            </p>
+            <ul>
+                <li>LTV = Monthly revenue per user × Gross margin × Expected lifetime</li>
+                <li>Example: $50 × 0.50 × 24 months = $600</li>
+            </ul>
+            <p>
+                <strong>CAC calculation:</strong>
+            </p>
+            <ul>
+                <li>CAC = Total acquisition spend / New customers acquired</li>
+                <li>Example: $50,000 / 100 = $500 per customer</li>
+            </ul>
+            <p>
+                <strong>LTV:CAC ratio:</strong>
+            </p>
+            <ul>
+                <li>Example: $600 / $500 = 1.2x (needs improvement)</li>
+                <li>Target: At least 3x for healthy business</li>
+            </ul>
+            <p>
+                <strong>Ways to improve LTV:CAC:</strong>
+            </p>
+            <ul>
+                <li>Increase retention (longer lifetime)</li>
+                <li>Increase average revenue per user</li>
+                <li>Reduce serving costs (higher margin)</li>
+                <li>Reduce CAC through better targeting or product-led growth</li>
+            </ul>
+        </div>
+
+        <h3>Pricing for Profitability</h3>
+
+        <p>
+            Your pricing must account for the full cost of serving users. Many AI companies underprice because they benchmark against traditional SaaS without understanding the cost difference. The key is to understand your cost structure well enough to price appropriately while remaining competitive.
+        </p>
+
+        <div class="case-study">
+            <h4>Case Study: The Price Increase</h4>
+            <p>
+                A code AI company was losing money on every customer but did not realize it because they had not calculated true cost-to-serve. When they analyzed, they found they were losing $8 per customer monthly. They increased prices by 40%, from $19 to $29/month. They expected to lose customers, but surprisingly, retention stayed the same. The reason: users had no idea what other options cost, and the AI delivered enough value that a 40% price increase was barely noticed.
+            </p>
+            <p>
+                <strong>Key lesson:</strong> Many AI products are underpriced because companies benchmark against non-AI products. If your product delivers real value, users will pay for it.
+            </p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Common Unit Economics Mistakes</div>
+            <p>
+                <strong>Mistake 1:</strong> Not tracking cost-to-serve at all. You cannot optimize what you do not measure.
+                <strong>Mistake 2:</strong> Using average instead of distribution. Heavy users may be 10x more expensive than average.
+                <strong>Mistake 3:</strong> Ignoring cost of quality issues. Support tickets, refunds, and churn cost more than serving.
+                <strong>Mistake 4:</strong> Pricing based on costs, not value. Price for value delivered, not just cost-plus.
+            </p>
+        </div>
+
+        <h3>Metrics That Matter for Unit Economics</h3>
+
+        <table>
+            <thead>
+                <tr><th>Metric</th><th>What It Tells You</th><th>Healthy Range</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Gross margin</td><td>Core profitability of serving</td><td>40-60% for AI</td></tr>
+                <tr><td>Cost to serve per user</td><td>Monthly cost per active user</td><td>Varies by product</td></tr>
+                <tr><td>LTV:CAC</td><td>Acquisition efficiency</td><td>>3x</td></tr>
+                <tr><td>Payback period</td><td>Months to recover CAC</td><td><12 months</td></tr>
+                <tr><td>Net revenue retention</td><td>Expansion - churn</td><td>>100%</td></tr>
+            </tbody>
+        </table>
+
+        <div class="case-study">
+            <h4>Case Study: The Unit Economics Turnaround</h4>
+            <p>
+                A consumer AI app was growing fast but burning cash. They analyzed unit economics and found they were spending $5 CAC to acquire users who generated $3/month in revenue. At 50% gross margin, that was $1.50 margin per month, meaning 3.3 month payback. But the app had only 30% 30-day retention, meaning most users left before they ever became profitable.
+            </p>
+            <p>
+                <strong>The fix:</strong> They stopped paid acquisition entirely, focusing on organic channels. They improved onboarding to increase retention from 30% to 50%. Once unit economics were positive, they resumed paid acquisition at sustainable levels. The company became profitable within a year.
+            </p>
+        </div>
+
+        <h3>Building a Sustainable AI Business</h3>
+
+        <p>
+            The path to sustainable AI business requires focusing on both growth and unit economics. Prioritize profitability over growth when unit economics are negative. Once unit economics are positive, you can accelerate growth with confidence.
+        </p>
+
+        <ol>
+            <li><strong>Know your numbers:</strong> Calculate cost-to-serve, LTV, CAC, and margins precisely</li>
+            <li><strong>Start with positive unit economics:</strong> Even if it means slower growth, start with pricing that covers costs</li>
+            <li><strong>Optimize serving costs:</strong> Continuously work to reduce cost-to-serve without sacrificing quality</li>
+            <li><strong>Focus on retention:</strong> Longer customer lifetimes improve all unit economics</li>
+            <li><strong>Price for value:</strong> If you deliver value, price accordingly. Do not leave money on the table</li>
+        </ol>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Congratulations on completing Part III on AI Product Management! You now have the 
+                frameworks and tools to strategically plan, evaluate, and manage AI products. The next 
+                part of the book covers AI Engineering. Continue to 
+                <a href="../../part-4-ai-engineering/chapter-11/index.html">Part IV: AI Engineering</a> 
+                to learn core engineering principles for building production AI systems.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-10-4.html">10.4 Adoption Strategies</a>
+            <a class="up" href="index.html">Chapter 10 Index</a>
+            <a class="next" href="../../part-4-ai-engineering/chapter-11/index.html">Part IV: AI Engineering</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 10.5 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5.5 When Not to Use AI - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-2-discovery-design/index.html">Part II: Discovery and Design</a></div>
+        <div class="chapter-label">Chapter 5.5</div>
+        <h1>When Not to Use AI</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            The most important skill in AI product development is knowing when AI is not the answer. Every technology has limits. Resecting those limits wastes resources, creates user frustration, and damages trust. Discipline restraint is harder than adding AI.
+        </p>
+
+        <h2>The Case Against AI</h2>
+
+        <p>AI has costs that are easy to overlook when caught in the excitement of capability. These costs are not just financial. They include complexity, fragility, maintenance burden, and trust implications. Before adding AI, you must be confident that the benefits justify these costs.</p>
+
+        <h3>AI Cost Categories</h3>
+
+        <p>AI incurs costs across five distinct categories that must be weighed against potential benefits. Complexity cost arises because AI adds system complexity and debugging difficulty, resulting in a higher maintenance burden and making it harder to understand behavior when things go wrong. Operational cost includes model serving, API calls, and infrastructure expenses that create ongoing financial cost and scaling challenges as usage grows. Reliability cost stems from the fact that AI can fail in ways that deterministic software cannot, creating user experience variability and requiring additional monitoring. Trust cost reflects that users may distrust or misunderstand AI, creating adoption barriers and an expectation management burden. Governance cost encompasses the oversight, compliance, and bias mitigation that AI requires, creating legal risk and ongoing audit requirements.</p>
+
+        <h2>Cost-Quality Trade-offs</h2>
+
+        <p>AI often trades cost and quality in ways that are not obvious. More AI does not always mean better outcomes. Sometimes less AI with better design achieves superior results.</p>
+
+        <h3>The Cost-Accuracy Curve</h3>
+
+        <p>AI accuracy improvements follow diminishing returns. The last few percentage points of accuracy often cost more than all the previous improvement combined.</p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">Cost-Accuracy Trade-off Analysis</div>
+            <pre>
+EXAMPLE: Customer Service Intent Classification
+
+Approach A: Simple keyword matching
+├─ Accuracy: 72%
+├─ Cost: $0.001 per classification
+└─ Good enough for most intents
+
+Approach B: Fine-tuned small model (7B params)
+├─ Accuracy: 85%
+├─ Cost: $0.015 per classification
+└─ 13% improvement at 15x cost
+
+Approach C: Frontier model (large parameters)
+├─ Accuracy: 91%
+├─ Cost: $0.12 per classification
+└─ 6% more improvement at 8x additional cost
+
+DECISION: Depends on consequence of misclassification
+- Low-stakes intents: Use Approach A
+- Medium-stakes intents: Use Approach B
+- High-stakes intents: Use Approach C or human review
+            </pre>
+        </div>
+
+        <h3>When Simpler Solutions Win</h3>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Rules of Thumb for Simpler Solutions</div>
+            <p>When evaluating whether AI is necessary, consider several rules of thumb that favor simpler approaches. If a lookup table can achieve 90 percent or more of the value that AI would provide, use a lookup table instead, as it will be faster to build and easier to maintain. If regular expressions can classify reliably based on pattern matching, use regex rather than machine learning, as it requires no training data and behaves predictably. If business rules can handle 95 percent of cases, use business rules and handle exceptions differently, perhaps with human judgment or more targeted AI. If human judgment is faster and better for rare cases, use human judgment rather than building AI to handle edge cases that rarely occur. If a database query can answer the question directly, do not use AI, as databases are optimized for exactly this kind of retrieval task.</p>
+        </div>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Rejecting Unnecessary AI</div>
+            <p>QuickShip evaluated several problems that seemed like AI opportunities but were not:</p>
+            <p><strong>Problem: Predicting delivery time windows</strong></p>
+            <p>Initial thought: Build a complex ML model to predict precise delivery times.</p>
+            <p>Analysis: Actual data showed that a simple heuristic (historical average by zip code + time of day) achieved 94% of the accuracy of a complex model at 1% of the cost. The AI was rejected in favor of the heuristic.</p>
+            <p><strong>Problem: Flagging potentially fraudulent customers</strong></p>
+            <p>Initial thought: Build an AI model to detect fraud patterns.</p>
+            <p>Analysis: Fraud was too rare (0.3% of customers) and too varied to train a reliable model. Simple rules supplemented by human review for flagged cases worked better than any AI they could build.</p>
+            <p><strong>Problem: Routing packages to optimal distribution centers</strong></p>
+            <p>Initial thought: Simple geographic routing is fine.</p>
+            <p>Analysis: This was actually a good AI opportunity due to complex variables (capacity, distance, weather, cost) that humans could not optimize at scale. They built the AI.</p>
+        </div>
+
+        <h2>Regulatory Constraints</h2>
+
+        <p>Regulatory environments often prohibit or restrict AI use in ways that make AI impractical or impossible for certain applications. Understanding regulatory constraints before investing in AI development prevents wasted effort.</p>
+
+        <h3>Regulatory Concerns for AI</h3>
+
+        <p>Regulatory environments create several distinct concerns for AI deployment. Explanability requirements mean that regulations may require understanding how decisions are made, which many AI systems cannot satisfy. Audit trails require that decisions be attributable and reviewable, which can be challenging when AI systems lack clear decision logic. Bias prohibitions may prevent AI deployment if it cannot prove non-discrimination across protected classes. Human review mandates mean that certain decisions may legally require human judgment regardless of AI capability. Data restrictions may limit training or using AI due to data privacy laws like GDPR or HIPAA that impose strict requirements on how personal data can be processed.</p>
+
+        <div class="callout warning">
+            <div class="callout-title">HealthMetrics: Regulatory Constraints</div>
+            <p>Healthcare is one of the most heavily regulated industries for AI, and HealthMetrics identified several regulatory constraints that shaped their approach. HIPAA requires that patient data used for AI training receives specific protections and consent, limiting what data can be leveraged. FDA guidance means that clinical decision support software may require FDA clearance before deployment, adding time and complexity to the development process. State medical board rules mean that some states require physicians to make final medical decisions regardless of what AI recommends. Liability for AI errors means that hospital legal teams required human review for any AI that could affect patient safety. These constraints shaped their AI strategy, focusing AI on administrative optimization rather than clinical decisions where possible.</p>
+        </div>
+
+        <h2>Trust Requirements</h2>
+
+        <p>Some contexts require trust that AI cannot currently earn. This does not mean AI will never be appropriate, but that current AI limitations make adoption impractical.</p>
+
+        <h3>Trust Dimension Analysis</h3>
+
+        <p>Trust in AI systems operates across four distinct dimensions, each with specific requirements. Reliability trust means users need consistent, predictable behavior, but AI cannot fully provide this because AI behavior can vary even with the same inputs due to probabilistic nature or model updates. Competence trust means users need confidence that AI can handle their specific case, but AI fails in edge cases and novel situations that fall outside training data. Integrity trust means users need to believe AI acts in their best interest, but AI optimization may not align with user values when the objective function does not capture what users actually care about. Transparency trust means users need to understand how AI reached its output, but many AI systems are not explainable, making it impossible to satisfy this requirement with current approaches.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">When Not to Automate: Financial Advisory</div>
+            <p>Consider a robo-advisor versus a human financial advisor for retirement planning and the trust dynamics at play.</p>
+            <p><strong>Why users might distrust AI advisory:</strong></p>
+            <p>Money is deeply personal and high-stakes, making users reluctant to trust automated systems with significant financial decisions. Trust in human judgment is deeply established through centuries of financial advice practice, creating a strong preference for human advisors. AI recommendations may not account for unique life circumstances that a human advisor would naturally explore. Users want to question and discuss recommendations, probing the reasoning and adjusting based on conversation, which AI systems handle poorly. Regulatory requirements often mandate human review for significant financial decisions, making pure AI advisory illegal in many contexts.</p>
+            <p><strong>Where AI advisory can work:</strong></p>
+            <p>AI advisory can work effectively for low-stakes, routine decisions such as routine rebalancing where the stakes are low and the decisions are standardized. It can work after trust is established through a human advisor relationship, where AI assists rather than replaces the human advisor. It can work for transparency features that show the impact of different choices, helping users understand trade-offs without making final decisions.</p>
+        </div>
+
+        <h2>Decision Framework: AI or Not AI</h2>
+
+        <p>Use this framework to decide whether AI is appropriate for your use case:</p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">AI Decision Framework</div>
+            <pre>
+STEP 1: Is there a genuine problem?
+├─ Yes: Continue
+└─ No: Do not use AI (problem-first principle)
+
+STEP 2: Could a simpler solution work?
+├─ Yes: Try simpler solution first
+└─ No: Continue to Step 3
+
+STEP 3: Does AI have unique advantages here?
+├─ Yes: Continue
+└─ No: Do not use AI (AI-fit principle)
+
+STEP 4: Are regulatory constraints satisfied?
+├─ Yes: Continue
+└─ No: Do not use AI or redesign for compliance
+
+STEP 5: Can we earn necessary trust?
+├─ Yes: Continue
+└─ No: Do not use AI (trust principle)
+
+STEP 6: Does ROI justify costs?
+├─ Yes: Proceed with AI
+└─ No: Do not use AI or reduce scope
+
+STEP 7: Can we handle failure gracefully?
+├─ Yes: Proceed with AI
+└─ No: Redesign or do not use AI
+            </pre>
+        </div>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Eval-First in Practice</div>
+            <p>
+                Before committing to or rejecting AI, build a micro-eval that tests your assumptions. A micro-eval for "when not to use AI" compares AI performance against simpler alternatives on your actual data, measures failure modes and their costs, and estimates user trust metrics before full deployment. QuickShip's <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">eval-first</a> insight: they used a 2-week micro-eval comparing their AI delivery prediction against a simple heuristic and discovered the heuristic achieved 94% of the accuracy at 1% of the cost. This "when not to use AI" eval saved them 6 months of development effort.
+            </p>
+        </div>
+
+        <h2>Thekill Criteria for AI Features</h2>
+
+        <p>Establishing kill criteria before building AI features prevents sunk cost fallacies. If you define failure conditions upfront, you can make objective go/no-go decisions.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Kill Criteria for Exception Handling AI</div>
+            <pre>
+KILL CRITERIA ESTABLISHED BEFORE BUILD:
+
+Criterion 1: Automated resolution rate must exceed 60%
+├─ Metric: % of exceptions resolved without human intervention
+├─ Kill if: Below 60% after 4 weeks in production
+└─ Actual result: 78% resolution rate (PASSED)
+
+Criterion 2: Customer satisfaction must not decrease
+├─ Metric: CSAT scores for AI-handled vs human-handled
+├─ Kill if: AI CSAT more than 5 points below human baseline
+└─ Actual result: AI CSAT 3 points higher (PASSED)
+
+Criterion 3: Escalation rate must stay below 15%
+├─ Metric: % of AI-handled cases escalated to human
+├─ Kill if: Above 15% (indicates AI cannot handle enough cases)
+└─ Actual result: 11% escalation rate (PASSED)
+
+Criterion 4: Cost per resolution must decrease
+├─ Metric: Total cost / number of exceptions handled
+├─ Kill if: Cost higher than human-only baseline
+└─ Actual result: 40% cost reduction (PASSED)
+
+ESTABLISHING KILL CRITERIA PREVENTED:
+- Over-investing in accuracy beyond necessary thresholds
+- Continuing when ROI was unclear
+- Building AI for cases better handled by humans
+            </pre>
+        </div>
+
+        <h2>The Discipline of Restraint</h2>
+
+        <p>Knowing when not to use AI is a competitive advantage. Teams that add AI everywhere create complex, unreliable products. Teams that add AI selectively create focused, valuable products.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Questions for AI Restraint</div>
+            <p>Before adding AI, ask yourself these critical questions. What problem does this AI solve in one sentence, and can you articulate the user need clearly without mentioning technology? What is the simplest alternative and why is it insufficient, proving that you have genuinely considered non-AI approaches? What is the cost of AI errors, and is that acceptable given the stakes involved in the use case? What percentage of cases will AI fail on, and how will we handle them, establishing a plan for the failures that will inevitably occur? What regulatory or trust constraints apply, ensuring that you understand the legal and social context before investing? What is the ROI, and does it justify the complexity, comparing the benefits against all the costs documented earlier in this chapter? If you cannot answer these questions confidently, do not add AI yet.</p>
+        </div>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>AI has real costs including complexity, operational expense, reliability variance, trust requirements, and governance burden that must be weighed against benefits before proceeding. Cost-quality trade-offs often favor simpler solutions, especially at the margin where the last percentage points of accuracy cost disproportionately more than the improvements already achieved. Regulatory constraints may make AI impractical or impossible for certain applications, requiring careful legal analysis before investing in development. Trust requirements can preclude AI use even when technically feasible, as users may not trust AI sufficiently to adopt it. Establishing kill criteria before building enables objective go/no-go decisions that prevent sunk cost fallacies and ensure disciplined investment. Restraint is a competitive advantage because selective AI use outperforms indiscriminate AI addition, creating focused valuable products rather than complex unreliable ones.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Applying the Kill Criteria Framework</div>
+            <p>For an AI feature you are considering, work through these steps to establish disciplined decision-making. First, write the kill criteria before building, establishing at minimum three distinct criteria that would indicate the project should be abandoned. Second, define metrics and thresholds for each criterion, specifying exactly how you will measure success or failure. Third, identify what you will do if kill criteria are not met, determining the alternative approach or pivot plan in advance. Fourth, commit to stopping if criteria are not met, ensuring that the criteria are binding rather than aspirational. Fifth, track actual results against criteria honestly, measuring performance without self-deception or rationalization.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>Chapter Summary</h3>
+            <p>This chapter covered systematic approaches to finding problems worth solving with AI: problem-first vs tech-first thinking, task decomposition methods, workflow analysis with Jobs-to-be-Done, leverage point identification, and knowing when not to use AI.</p>
+            <p>Continue to <a href="../../chapter-6/index.html">Chapter 6: AI Product Strategy and Portfolio Thinking</a> to learn how to take these opportunities and build coherent product strategies around them.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="../index.html">Ch 5: Finding Problems</a>
+            <a class="up" href="../index.html">Chapter 5 Overview</a>
+            <a class="next" href="../../chapter-6/index.html">Ch 6: AI Product Strategy</a>
+        </nav>
+
+        <footer>
+            <p>Section 5.5 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14.2 Test Generation - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+        <div class="chapter-label">Chapter 14.2</div>
+        <h1>Test Generation</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            AI-generated code needs tests just like human-written code. The difference is that AI can also help write the tests.
+        </p>
+
+        <h2>Testing AI-Generated Code (see <a href="../../../part-5-evaluation-reliability/chapter-21/sections/section-21-1.html" class="cross-ref">evals</a>)</h2>
+
+        <p>AI-generated code requires testing for two reasons: to verify correctness and to understand what the code does. Writing tests forces you to understand the generated code well enough to specify expected behavior.</p>
+
+        <p>The testing approach should differ from traditional development because AI-generated code may have unexpected behaviors that unit tests would not catch. Integration tests and property-based tests are particularly valuable.</p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">Testing Priorities for AI Code</div>
+            <p>When testing AI-generated code, prioritize in this order. Integration tests come first to verify the code works with real dependencies and external systems. Edge case tests come second to cover boundary conditions and unusual inputs that AI-generated code often handles poorly. Property tests come third to verify invariants that should hold regardless of input. Unit tests come fourth to cover individual functions with clear responsibilities.</p>
+        </div>
+
+        <h2>Using AI for Test Generation</h2>
+
+        <p>AI can help write tests for AI-generated code. This is not circular; the AI that generated the code may not be the best choice for testing it. Use a different AI perspective or a human to test.</p>
+
+        <h3>AI Test Generation Approaches</h3>
+
+        <p>AI can help write tests using several approaches. Coverage-guided generation creates tests to cover existing code paths based on what code exists. Specification-based generation creates tests from specifications or documentation, deriving test cases from stated requirements. Property-based generation creates tests that verify invariants, checking that certain properties always hold regardless of input. Fuzzing generates random inputs to find crashes and unexpected behaviors.</p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">QuickShip: Test Generation for Classification</div>
+            <p>QuickShip used AI to generate tests for their email classification code:</p>
+            <p><strong>Unit tests:</strong> AI generated tests for the classification function with various email inputs</p>
+            <p><strong>Property tests:</strong> AI generated tests verifying that classification always returns a valid category and confidence between 0 and 1</p>
+            <p><strong>Edge case tests:</strong> AI identified edge cases: empty email, very long email, emails with no delivery terms, emails with multiple exception types</p>
+            <p><strong>Integration tests:</strong> AI generated tests for the full classification pipeline with mock email data</p>
+        </div>
+
+        <h2>What to Test</h2>
+
+        <h3>Happy Path Tests</h3>
+
+        <p>Verify the code works for typical, expected inputs. These establish baseline functionality.</p>
+
+        <h3>Edge Case Tests</h3>
+
+        <p>Verify the code handles unusual inputs gracefully. AI-generated code is often weak on edge cases because training data skews toward common cases.</p>
+
+        <h3>Error Handling Tests</h3>
+
+        <p>Verify the code fails gracefully when things go wrong: invalid inputs, service unavailability, resource constraints.</p>
+
+        <h3>Property Tests</h3>
+
+        <p>Property tests verify invariants that should always hold regardless of input. These include output being always valid JSON, classification always being one of the valid categories, confidence always being between 0 and 1, and the function being idempotent such that calling it twice produces the same result.</p>
+
+        <div class="callout tip">
+            <div class="callout-title">Test Generation Prompt</div>
+            <p><em>"Generate tests for [function/module] that cover: [coverage targets]. Include edge cases and error conditions. Use [test framework]."</em></p>
+        </div>
+
+        <h2>Coverage Targets</h2>
+
+        <p>For production readiness, aim for meaningful coverage, not necessarily 100% coverage. Coverage metrics can be gamed; what matters is that tests verify behavior.</p>
+
+        <div class="callout algorithm">
+            <div class="callout-title">Coverage Guidelines</div>
+            <p>Coverage targets vary by code importance. Critical path code should achieve 90%+ coverage because these features must work reliably. Business logic should have 80%+ coverage because complex decisions must be tested thoroughly. Integration coverage should focus on key flows covered with complete coverage not always practical. Utilities should focus on complex utilities while simple helpers can have lower coverage.</p>
+        </div>
+
+        <h2>Test Maintenance</h2>
+
+        <p>Tests require maintenance as code evolves, and AI-generated tests are not exempt from this reality. Build test maintenance into your workflow by updating affected tests when code changes, determining whether the change or the test is wrong when tests fail after code modifications, periodically reviewing test quality to remove brittle or low-value tests, and using test coverage as a guide rather than a rigid target.</p>
+
+        <div class="takeaways">
+            <h3>Key Takeaways</h3>
+            <p>AI-generated code needs tests to verify correctness and to understand the behavior of code you did not write yourself. Testing priorities are integration tests, edge cases, property tests, and unit tests in that order. AI can help write tests for AI-generated code, though using a different AI perspective than the one that generated the code often produces better results. Test coverage targets vary by code importance, focusing on critical path code while accepting lower coverage for utilities and less critical features. Tests require maintenance as code evolves, so build test maintenance into your workflow rather than treating it as optional.</p>
+        </div>
+
+        <div class="exercise">
+            <div class="callout-title">Exercise: Testing a Vibe-Coded Function</div>
+            <p>Apply testing to a vibe-coded function by following a systematic process. First, identify the function's expected behavior by understanding what inputs produce what outputs. Second, generate edge case tests covering boundary conditions, unusual inputs, and extreme values. Third, generate property tests verifying invariants that should always hold. Fourth, run tests and fix any failures, determining whether the code or the test needs adjustment. Fifth, evaluate coverage and add tests for any gaps identified.</p>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next</h3>
+            <p>In Section 14.3, we examine <strong>Architectural Hardening</strong>, exploring how to improve the structure of AI-generated code.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-14-1.html">14.1 Code Quality Uplift</a>
+            <a class="up" href="../index.html">Chapter 14 Overview</a>
+            <a class="next" href="section-14-3.html">14.3 Architectural Hardening</a>
+        </nav>
+
+        <footer>
+            <p>Section 14.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

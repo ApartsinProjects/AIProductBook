@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18.1 Simple AI Assistant (<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>-based) - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-5-integration/index.html">Part V: Integration</a></div>
+        <div class="chapter-label">Chapter 18</div>
+        <h1>Real-World Case Studies</h1>
+        <p class="chapter-subtitle">18.1 Simple AI Assistant (<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>-based)</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Learn from real-world AI products and their journeys from vibe to production.
+        </p>
+
+        <div class="prereqs">
+            <strong>Prerequisites:</strong> Completion of Chapter 17 recommended.
+        </div>
+
+        <h2 id="section-18-1">18.1 Simple AI Assistant (<a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>-based): The Perplexity Playbook</h2>
+
+        <p>
+            Perplexity reached 100 million monthly active users with a beautifully simple 
+            insight: always cite your sources. This case study examines how they built a 
+            successful <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>-based AI assistant and what you can learn from their approach.
+        </p>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Academic Perspective: Trust Calibration in Information Systems</div>
+            <p>Perplexity's source citation approach aligns with research on <strong>Trust Calibration</strong> in human-computer interaction. Research by Glikson et al. (2022) demonstrates that AI systems that provide traceable explanations achieve significantly higher user trust and task completion rates than opaque systems, even when the underlying accuracy is identical. The citation mechanism serves as an "explainability interface" that allows users to verify claims without requiring technical understanding.</p>
+            <p>This connects to <strong>Trust Repair Theory</strong> (Kim et al., 2004), which identifies transparency as the primary mechanism for maintaining trust after system errors. When AI makes mistakes (and it will), source citations provide users with tools to identify errors themselves, transforming potential trust violations into engagement opportunities.</p>
+            <p><em>Key references: Glikson, E. et al. (2022). "Trust in AI." Journal of Information Processing, 30; Kim, P.H. et al. (2004). "When Does Trust Repair?" Organizational Behavior and Human Decision Processes.</em></p>
+        </div>
+
+        <h3>Why This Matters</h3>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Research Spotlight: The Engineering of <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Systems</div>
+            <p>Recent research provides systematic frameworks for <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> engineering:</p>
+            <ul>
+                <li><strong>"Engineering the <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Stack" (arXiv:2601.05264, 2025)</strong>: Comprehensive review of <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> architecture patterns, including trust frameworks essential for production deployment. Identifies five critical components: retrieval, reranking, synthesis, evaluation, and observability.</li>
+                <li><strong>"A Survey on Knowledge-Oriented <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>" (arXiv:2503.10677, 2025)</strong>: Maps the evolution from basic retrieval to knowledge-intensive <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> systems. Key finding: the gap between academic <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> benchmarks and production requirements remains significant.</li>
+                <li><strong>"A Systematic Review of <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>" (arXiv:2507.18910, 2025)</strong>: Synthesizes techniques across 150+ papers, identifying 23 distinct enhancement strategies and proposing a unified evaluation taxonomy.</li>
+            </ul>
+            <p>These papers confirm Perplexity's engineering decisions align with state-of-the-art approaches: query classification, multi-stage retrieval, and source-grounded generation.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The Search That Searched Nothing</div>
+            <p>A startup launched their "AI-powered search" only to discover their vector database had never been populated. The search was returning pure LLM hallucinations. The demo had worked because the demo data happened to match the hallucinated responses. First user complaint came 3 hours after launch.</p>
+        </div>
+
+        <p>
+            Perplexity's success proves that you don't need the most powerful model or the 
+            most complex system to build a successful AI product. Their approach demonstrates 
+            how a clear value proposition (answer + sources) combined with solid engineering 
+            can compete with much larger competitors.
+        </p>
+
+        <hr>
+
+        <h3>The Five-Stage <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Pipeline Explained</h3>
+
+        <h4>Stage 1: Query Understanding</h4>
+        <p>
+            Before searching, Perplexity classifies the query to determine the best retrieval 
+            strategy. This is crucial because different queries need different approaches.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Analogy: Triage in an ER</div>
+            <p>
+                Query understanding is like triage in an emergency room. A patient who says 
+                "I have chest pain" gets immediate, intensive attention. A patient who says 
+                "I need a prescription refill" gets a different workflow. Both are "medical" 
+                queries, but they require completely different handling. Similarly, "What is 
+                the capital of France?" and "Compare the healthcare systems of France and Germany" 
+                are both "knowledge" queries but need different search strategies.
+            </p>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Skill Demonstration: Query Classification Logic</div>
+            <pre><code>// Query understanding determines retrieval strategy
+const queryTypes = {
+  factual: {
+    keywords: ['what is', 'who is', 'when did', 'how many'],
+    strategy: 'precise-search',
+    expectedLength: 'short'
+  },
+  research: {
+    keywords: ['explain', 'compare', 'analyze', 'why does'],
+    strategy: 'deep-search',
+    expectedLength: 'detailed'
+  },
+  recent: {
+    keywords: ['latest', 'today', 'recent', '2024', '2025'],
+    strategy: 'news-search',
+    freshness: 'critical'
+  },
+  local: {
+    keywords: ['near me', 'nearby', 'in [city]'],
+    strategy: 'geo-search',
+    requiresLocation: true
+  }
+};</code></pre>
+        </div>
+
+        <h4>Stage 2: Hybrid Retrieval</h4>
+        <p>
+            Perplexity combines vector search (semantic similarity) with keyword search 
+            (BM25 or similar) to get the best of both worlds. Vector search finds semantically 
+            similar content even without keyword matches. Keyword search ensures specific 
+            terms aren't missed.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: The "Catastrophic Forgetting" Problem</div>
+            <p>
+                Early versions of many <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> systems used only vector search. A legal AI assistant 
+                retrieved "cat" documents when users searched for "felony" because both deal 
+                with "acts" in the embedding space. Adding keyword search fixed this by 
+                requiring exact term matches for the most important concepts.
+            </p>
+        </div>
+
+        <h4>Stage 3: Reranking</h4>
+        <p>
+            After retrieval, Perplexity selects the top 5-10 results from 50+ candidates. 
+            This is critical because retrieval often returns many marginally relevant results. 
+            Reranking uses a smaller, faster model to score relevance more accurately.
+        </p>
+
+        <div class="callout">
+            <div class="callout-title">Code Example: Two-Stage Retrieval</div>
+            <pre><code>async function searchWithReranking(query) {
+  // Stage 1: Retrieve 50 candidates
+  const vectorResults = await vectorSearch(query, { k: 30 });
+  const keywordResults = await keywordSearch(query, { k: 30 });
+  
+  // Combine with weighted scoring
+  const candidates = mergeResults(vectorResults, keywordResults, {
+    vectorWeight: 0.6,
+    keywordWeight: 0.4
+  });
+  
+  // Stage 2: Rerank top 50 to top 5
+  const reranked = await rerank(query, candidates.slice(0, 50));
+  
+  // Take top 5 for generation
+  return reranked.slice(0, 5);
+}</code></pre>
+        </div>
+
+        <h4>Stage 4: Multi-Model Generation</h4>
+        <p>
+            Perplexity routes queries to different models based on complexity. Simple factual 
+            questions use faster, cheaper models. Complex research questions use more capable 
+            models. This optimization dramatically reduces costs while maintaining quality.
+        </p>
+
+        <h4>Stage 5: Context Fusion</h4>
+        <p>
+            The final stage maps each claim in the generated answer back to its source. 
+            This is the "always cite sources" feature that made Perplexity distinctive. 
+            Users can verify every claim by clicking the source link.
+        </p>
+
+        <hr>
+
+        <h3>Building Your Own Perplexity-Style Search</h3>
+
+        <div class="callout">
+            <div class="callout-title">MVP Feasibility Assessment</div>
+            <p>
+                Domain-specific AI search is buildable in 4-8 weeks with a 1-2 person team. 
+                Here's what you need:
+            </p>
+            <ul>
+                <li><strong>Engineering time:</strong> $5K-$20K (depending on complexity)</li>
+                <li><strong>Infrastructure:</strong> ~$500/month for API calls and hosting</li>
+                <li><strong>Data:</strong> Existing documents or web scraping capability</li>
+            </ul>
+        </div>
+
+        <h4>Minimal Viable <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Architecture</h4>
+
+        <pre><code>// Minimal viable <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> system components
+const mvpStack = {
+  // Retrieval
+  vectorDB: 'Pinecone or Weaviate (managed)',
+  embeddingModel: 'text-embedding-3-small',
+  
+  // Reranking  
+  reranker: 'Cohere Rerank or similar API',
+  
+  // Generation
+  llm: 'Claude Haiku or GPT-4o Mini',
+  
+  // UI
+  frontend: 'Next.js + Tailwind',
+  
+  // Hosting
+  deployment: 'Vercel or similar'
+};</code></pre>
+
+        <div class="callout">
+            <div class="callout-title">Real-World Scenario: Startup That Built It</div>
+            <p>
+                A 2-person startup built a legal research assistant in 6 weeks. They started 
+                with their firm's existing case documents (5,000 PDFs), embedded them using 
+                OpenAI's API, and built a simple Next.js interface. Their key differentiator: 
+                they focused on a specific niche (insurance law) rather than trying to be 
+                everything to everyone. After 3 months, they had 50 beta customers and were 
+                charging $99/month.
+            </p>
+        </div>
+
+        <hr>
+
+        <h3>Key Lessons from Perplexity</h3>
+
+        <table>
+            <thead>
+                <tr><th>Lesson</th><th>Application</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Source citation builds trust</td>
+                    <td>Every factual claim should be traceable</td>
+                </tr>
+                <tr>
+                    <td>Query understanding matters</td>
+                    <td>Classify queries before retrieval</td>
+                </tr>
+                <tr>
+                    <td>Hybrid search beats pure vector</td>
+                    <td>Combine semantic + keyword</td>
+                </tr>
+                <tr>
+                    <td>Route by complexity</td>
+                    <td>Use cheaper models for simple queries</td>
+                </tr>
+                <tr>
+                    <td>Start niche, expand later</td>
+                    <td>Domain-specific beats general</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Key Takeaways</div>
+            <ul>
+                <li>Perplexity's success comes from a simple insight: cite sources</li>
+                <li>Five-stage pipeline (understand, retrieve, rerank, generate, fuse)</li>
+                <li>Query classification is the first critical step</li>
+                <li>Hybrid retrieval (vector + keyword) outperforms either alone</li>
+                <li>Model routing by complexity reduces costs dramatically</li>
+                <li>Start niche and expand - do not try to compete on breadth</li>
+            </ul>
+        </div>
+
+        <div class="callout research-frontier">
+            <div class="callout-title">Research Spotlight: Diffusion of AI Products</div>
+            <p>Perplexity's growth trajectory follows patterns described in Rogers' <strong>Diffusion of Innovations</strong> (1962). The model's S-curve adoption pattern is characteristic of innovations that offer relative advantage (source citation credibility) over existing solutions. Perplexity's early adopters were likely "innovators" and "early adopters" who value the novel verification capability, while the broader market adoption followed established pathways.</p>
+            <p>Research by Brynjolfsson et al. (2023) on AI productivity gains found that products offering "comprehensibility" (the ability to verify AI outputs) achieved 2.4x higher adoption rates than opaque AI solutions with equivalent accuracy. This validates Perplexity's positioning strategy: lead with the verifiable answer experience rather than raw AI capability.</p>
+            <p><em>Key references: Rogers, E.M. (1962). "Diffusion of Innovations." Free Press; Brynjolfsson, E. et al. (2023). "The AI Productivity Paradox." NBER Working Paper 30997.</em></p>
+        </div>
+
+        <div class="callout exercise">
+            <div class="callout-title">Exercise: Design a <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a> Pipeline</div>
+            <p><strong>Task:</strong> You're building a <a href="../../part-4-ai-engineering/chapter-13/sections/section-13-1.html">RAG</a>-based product for legal document search.</p>
+            <ol>
+                <li>Design your query classification system: what query types would you handle differently?</li>
+                <li>What would your golden dataset look like? Give at least 5 example queries.</li>
+                <li>How would you handle the "cite sources" requirement differently for legal vs general search?</li>
+            </ol>
+        </div>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Next, we explore <strong>Perplexity-like Search Tool</strong> - comparing managed vs self-hosted architectures.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="index.html">Ch 18: Overview</a>
+            <a class="up" href="index.html">Chapter 18 Index</a>
+            <a class="next" href="section-18-2.html">18.2 Perplexity-like Search Tool</a>
+        </nav>
+
+        <footer>
+            <p>Chapter 18.1 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

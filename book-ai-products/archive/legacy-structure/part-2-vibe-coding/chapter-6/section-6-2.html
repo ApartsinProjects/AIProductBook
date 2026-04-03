@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 6.2: Top Community Skills to Install - From AI-Assisted to AI-Powered Products</title>
+    <link rel="stylesheet" href="../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../part-2-vibe-coding/index.html">Part II: Vibe Coding</a></div>
+        <h1>Chapter 6: Claude Code Skills</h1>
+        <p class="chapter-subtitle">6.2 Top Community Skills to Install</p>
+    </header>
+
+    <main class="content">
+        <p class="chapter-objective">
+            <strong>Objective:</strong> Discover and install the most useful community skills for your development workflow.
+        </p>
+
+        <div class="prerequisites">
+            <h3>Prerequisites</h3>
+            <p>
+                This section builds on Section 6.1 (Skill System Architecture). You should understand how skills are loaded and activated before installing new ones.
+            </p>
+        </div>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Big Picture: The Skills Ecosystem</div>
+            <p>The community skills ecosystem represents collective intelligence, with thousands of developers packaging their workflows into reusable skills. Installing the right skills transforms Claude Code from a basic coding assistant into a comprehensive AI engineering environment. The key is selecting skills that align with your workflow and evaluating them for quality and security.</p>
+        </div>
+
+        <div class="callout fun-note">
+            <div class="callout-title">Fun Note: The 17,808 Star Skeleton</div>
+            <p>GitHub stars are the new résumé. A skill with 17,808 stars tells you something important: 17,808 developers found it useful enough to click a button. That is more validation than most venture-funded products ever receive.</p>
+        </div>
+
+        <h2 id="section-6-2">6.2 Top Community Skills to Install</h2>
+
+        <p>
+            The Claude Code skills ecosystem has exploded in 2026, with thousands of community-built skills available. This section highlights the most useful ones across different categories, based on star count, utility, and maintenance quality. Each skill includes installation instructions and a brief description of what it does.
+        </p>
+
+        <p>
+            Installing the right skills can transform your development experience. Rather than building everything from scratch, you can leverage the collective work of thousands of developers who have packaged their workflows into reusable skills. Let's explore the categories and specific skills that will have the biggest impact on your productivity.
+        </p>
+
+        <h3>Development Workflow Skills</h3>
+
+        <p>
+            These skills improve your daily development workflow, helping with planning, communication, and code understanding. They are the foundation of a productive Claude Code setup.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>planning-with-files (17,808 stars)</h4>
+            <p>
+                <strong>What it does:</strong> Implements Manus-style persistent markdown planning. Creates a structured planning workflow where you can track tasks, decisions, and progress in Markdown files that persist across sessions. This is the workflow pattern behind the $2B AI coding agent acquisition.
+            </p>
+            <p>
+                <strong>Installation:</strong>
+            </p>
+            <pre><code>cd ~/.claude/skills
+git clone https://github.com/anomalyco/planning-with-files.git</code></pre>
+            <p>
+                <strong>Use case:</strong> Any complex project that needs persistent planning. Create a plan.md file and the skill helps you break down tasks, track progress, and maintain context across long development sessions.
+            </p>
+            <p>
+                <strong>Why this matters:</strong> Without persistent planning, you lose context between Claude Code sessions. This skill solves that problem by maintaining a living document that grows with your project. It's particularly valuable for multi-day feature development where you need to remember what you did yesterday.
+            </p>
+        </div>
+
+        <h4>Case Study: Using planning-with-files for a New Feature</h4>
+
+        <p>
+            Imagine you're building a user authentication system. You start by creating a plan.md file and the skill automatically structures your planning:
+        </p>
+
+        <pre><code># Feature: User Authentication System
+
+## Goals
+- Implement JWT-based authentication
+- Add OAuth support for Google and GitHub
+- Create secure password reset flow
+
+## Tasks
+- [ ] Design database schema for users
+- [ ] Implement JWT token generation
+- [ ] Create login/logout endpoints
+- [ ] Add OAuth provider integration
+- [ ] Build password reset email flow
+- [ ] Write comprehensive tests
+
+## Decisions
+- Use bcrypt for password hashing
+- Token expiry: 7 days
+- Use Redis for session storage
+
+## Progress
+[Skill updates this as you progress]</code></pre>
+
+        <p>
+            The skill tracks your progress, suggests next steps, and helps you maintain focus. When you return to the project tomorrow, Claude Code reads the plan and knows exactly where you left off.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>humanizer (11,932 stars)</h4>
+            <p>
+                <strong>What it does:</strong> Removes signs of AI-generated writing from text. Useful for making AI assistance less obvious in documentation, commit messages, and code comments. Makes your AI-assisted work feel more human.
+            </p>
+            <p>
+                <strong>Installation:</strong>
+            </p>
+            <pre><code>cd ~/.claude/skills
+git clone https://github.com/anomalyco/humanizer.git</code></pre>
+            <p>
+                <strong>Use case:</strong> When you want documentation or writing to feel more naturally human-written. Simply ask the skill to "humanize" any AI-generated text.
+            </p>
+            <p>
+                <strong>Why this matters:</strong> While there's nothing wrong with AI-assisted work, some teams prefer documentation that doesn't have the characteristic "AI sound." This skill adds natural variation, removes formulaic patterns, and makes the text feel more like it was written by a person.
+            </p>
+        </div>
+
+        <h4>Practical Example: Humanizing Documentation</h4>
+
+        <pre><code># Before (AI-generated):
+The function performs the following operations:
+1. Validates input parameters
+2. Processes the data
+3. Returns the result
+
+The implementation follows best practices and ensures
+optimal performance through caching.
+
+# After (humanized):
+This function does three things: validates what you give it,
+processes it according to the rules, and hands back the result.
+We also cache the results to avoid re-computing things.</code></pre>
+
+        <div class="callout practical-example">
+            <h4>Understand-Anything (7,472 stars)</h4>
+            <p>
+                <strong>What it does:</strong> Turns any codebase into an interactive knowledge graph you can explore, search, and ask questions about. Builds a semantic understanding of your code structure and relationships between components.
+            </p>
+            <p>
+                <strong>Installation:</strong>
+            </p>
+            <pre><code>cd ~/.claude/skills
+git clone https://github.com/anomalyco/Understand-Anything.git</code></pre>
+            <p>
+                <strong>Use case:</strong> Large codebases where you need to understand architecture. Ask questions like "How does authentication work in this codebase?" and get visualized answers.
+            </p>
+            <p>
+                <strong>Why this matters:</strong> Onboarding to a new codebase traditionally takes weeks. With this skill, you can ask "Where is the payment processing logic?" and immediately get an answer with references to the relevant files and how they connect.
+            </p>
+        </div>
+
+        <h4>Real-World Scenario: Onboarding a New Developer</h4>
+
+        <p>
+            A startup hires a new senior developer. Instead of two weeks of reading documentation and asking questions, they use Understand-Anything:
+        </p>
+
+        <pre><code>New Developer: "Explain the architecture of this backend"
+Skill Response:
+"This is a typical microservices setup with these components:
+
+- api-gateway/: Routes requests to services
+- auth-service/: Handles authentication (JWT)
+- billing-service/: Payment processing
+- notification-service/: Email/SMS sending
+
+The services communicate via:
+- REST for synchronous calls
+- RabbitMQ for async events
+- Redis for caching
+
+Key files:
+- config.yaml (main config)
+- docker-compose.yml (local dev)
+- Makefile (common commands)
+
+What would you like to explore in more detail?"</code></pre>
+
+        <h3>Security and Code Quality Skills</h3>
+
+        <p>
+            These skills help you write secure, high-quality code. Security skills are particularly important for any project that handles sensitive data or will be deployed to production.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>Trail of Bits Skills (4,186 stars)</h4>
+            <p>
+                <strong>What it does:</strong> A collection of security research skills from the renowned security firm. Includes vulnerability detection, audit workflows, and security-focused code review capabilities.
+            </p>
+            <p>
+                <strong>Installation:</strong>
+            </p>
+            <pre><code>cd ~/.claude/skills
+git clone https://github.com/trailofbits/claude-code-skills.git
+cd claude-code-skills
+# Each subdirectory is a separate skill</code></pre>
+            <p>
+                <strong>Use case:</strong> Security-critical projects. Use before deploying to production to catch common vulnerabilities.
+            </p>
+            <p>
+                <strong>Why this matters:</strong> The Trail of Bits team is one of the most respected security firms in the world. Their skills bring professional-grade security analysis to your development workflow without needing to hire a security consultant.
+            </p>
+        </div>
+
+        <h4>Practical Example: Using Trail of Bits Skills</h4>
+
+        <pre><code># Before deploying a new feature:
+User: "Run security audit on this PR"
+Skill: "I'll perform a security review of this code...
+
+## Findings:
+
+### Critical: SQL Injection Risk (line 42)
+```python
+query = f"SELECT * FROM users WHERE id = {user_id}"
+```
+This directly interpolates user input into SQL. Use parameterized queries instead.
+
+### High: Hardcoded API Key (line 15)
+```python
+API_KEY = "sk-1234567890abcdef"
+```
+Move to environment variables or secrets manager.
+
+### Medium: Missing Rate Limiting
+The /login endpoint doesn't have rate limiting, vulnerable to brute force.
+
+## Recommendations:
+1. Use parameterized queries (use sqlalchemy ORM)
+2. Move secrets to .env files
+3. Add rate limiting with flask-limiter
+
+Shall I implement these fixes?"</code></pre>
+
+        <div class="callout practical-example">
+            <h4>context-engineering-kit (741 stars)</h4>
+            <p>
+                <strong>What it does:</strong> Hand-crafted skills focused on improving agent results quality. Includes prompt optimization, context management, and output formatting skills.
+            </p>
+            <p>
+                <strong>Installation:</strong>
+            </p>
+            <pre><code>cd ~/.claude/skills
+git clone https://github.com/anomalyco/context-engineering-kit.git</code></pre>
+            <p>
+                <strong>Use case:</strong> Optimizing your own prompts. Use these skills to refine how you communicate with Claude Code.
+            </p>
+            <p>
+                <strong>Why this matters:</strong> The difference between a good prompt and a great prompt can be dramatic. These skills help you craft prompts that get better results, essentially teaching you how to be a more effective communicator with AI.
+            </p>
+        </div>
+
+        <h3>Deployment and Infrastructure Skills</h3>
+
+        <p>
+            These skills streamline the deployment process, making it as simple as sending a message. They handle the complexity of infrastructure so you can focus on writing code.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>pinme (3,121 stars)</h4>
+            <p>
+                <strong>What it does:</strong> Deploy your frontend in a single command. Supports Vercel, Netlify, and other platforms. Automates the entire deployment process from build to live URL.
+            </p>
+            <p>
+                <strong>Installation:</strong>
+            </p>
+            <pre><code>cd ~/.claude/skills
+git clone https://github.com/anomalyco/pinme.git</code></pre>
+            <p>
+                <strong>Use case:</strong> Frontend developers who want one-command deployment. Run "pinme deploy" and your app is live.
+            </p>
+            <p>
+                <strong>Why this matters:</strong> Traditional deployment often requires multiple steps, configuration files, and platform-specific knowledge. Pinme abstracts all that away. You just say "deploy" and it handles the rest.
+            </p>
+        </div>
+
+        <h4>Case Study: From 15 Minutes to 15 Seconds</h4>
+
+        <p>
+            A frontend developer used to deploy manually:
+        </p>
+
+        <pre><code># Old workflow (15 minutes):
+1. npm run build
+2. npm i -g vercel
+3. vercel login
+4. vercel --prod
+5. Copy output URL
+6. Share URL with team</code></pre>
+
+        <p>
+            After installing pinme:
+        </p>
+
+        <pre><code># New workflow (15 seconds):
+User: "Deploy to production"
+Skill: "Deploying to Vercel...
+
+✓ Building...
+✓ Deploying...
+✓ Done!
+
+Your app is live at: https://myapp.vercel.app
+I've also updated your deployment tracking spreadsheet."</code></pre>
+
+        <h3>Testing Skills</h3>
+
+        <p>
+            Testing skills help you write better tests faster. Look for skills that generate unit tests, integration tests, and end-to-end tests. The best testing skills understand your codebase structure and generate meaningful test cases rather than just skeleton code.
+        </p>
+
+        <h4>Recommended Testing Skills</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Skill</th>
+                    <th>Stars</th>
+                    <th>What It Does</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>test-master</td>
+                    <td>2,400+</td>
+                    <td>Generates comprehensive test suites with high coverage</td>
+                </tr>
+                <tr>
+                    <td>cypress-helper</td>
+                    <td>1,800+</td>
+                    <td>Creates E2E tests for web applications</td>
+                </tr>
+                <tr>
+                    <td>pytest-wizard</td>
+                    <td>1,500+</td>
+                    <td>Python test generation with fixtures</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Real-World Scenario: Adding Tests to Legacy Code</h4>
+
+        <p>
+            A team inherits a legacy PHP codebase with zero tests. They use a testing skill to systematically add coverage:
+        </p>
+
+        <pre><code>User: "Add unit tests for the User class"
+Skill: "I'll analyze the User class and create comprehensive tests...
+
+Analyzed: User.php (342 lines, 18 methods)
+
+Created test file: tests/unit/UserTest.php
+
+Coverage:
+- testGetId(): Tests ID getter
+- testSetEmail(): Tests email validation
+- testSetPassword(): Tests password hashing
+- testAuthenticate(): Tests login logic
+- testToArray(): Tests serialization
+- testValidate(): Tests all validation rules
+- testIsActive(): Tests account status checks
+- testRoles(): Tests permission roles
+
+Added: 23 test cases
+Coverage increased: 0% → 67%
+
+Shall I continue with the next class?"</code></pre>
+
+        <h3>Documentation Skills</h3>
+
+        <p>
+            Good documentation is crucial for team productivity, yet it's often neglected. Documentation skills help you generate and maintain documentation automatically.
+        </p>
+
+        <div class="callout practical-example">
+            <h4>codebase-to-course (2,799 stars)</h4>
+            <p>
+                <strong>What it does:</strong> Turns any codebase into a beautiful, interactive single-page HTML course. Perfect for onboarding new team members or documenting internal tools.
+            </p>
+            <p>
+                <strong>Installation:</strong>
+            </p>
+            <pre><code>cd ~/.claude/skills
+git clone https://github.com/anomalyco/codebase-to-course.git</code></pre>
+            <p>
+                <strong>Use case:</strong> Create onboarding materials for new developers. The skill analyzes your codebase and generates educational content.
+            </p>
+            <p>
+                <strong>Why this matters:</strong> Onboarding new developers is expensive. The time they spend getting up to speed could be spent building features. This skill automatically creates learning materials that help new developers understand your codebase faster.
+            </p>
+        </div>
+
+        <h4>Case Study: Startup Onboarding</h4>
+
+        <p>
+            A 5-person startup needed to hire 3 more developers. Instead of spending two weeks each on onboarding, they used codebase-to-course:
+        </p>
+
+        <pre><code>User: "Generate onboarding course for new developers"
+Skill: "Analyzing codebase structure...
+
+✓ Identified 12 main components
+✓ Found 34 API endpoints
+✓ Mapped database schema
+✓ Extracted business logic patterns
+
+Generating course...
+
+Course Structure:
+1. Architecture Overview (5 min)
+2. Getting Started (10 min)
+3. Core Concepts (20 min)
+4. API Reference (15 min)
+5. Database Guide (15 min)
+6. Development Workflow (10 min)
+7. Testing Guide (15 min)
+
+Output: docs/onboarding-course/index.html
+
+Preview: Opens in browser with interactive navigation"</code></pre>
+
+        <p>
+            New developers now have a self-paced course that explains their codebase. Onboarding time dropped from 2 weeks to 3 days.
+        </p>
+
+        <h3>How to Evaluate New Skills</h3>
+
+        <p>
+            Before installing any skill, evaluate it on these criteria. First, check the repository stars and recent activity. Skills with more stars and recent commits are more likely to be maintained. Second, read the SKILL.md file to understand what the skill actually does. Look for clear, well-documented instructions. Third, check for tool usage. Skills that execute commands or access files should have clear security considerations. Fourth, test in a safe environment. Try the skill on a small task before relying on it for important work.
+        </p>
+
+        <h4>Evaluation Checklist</h4>
+
+        <pre><code>Before installing a skill, ask:
+
+□ Does it have recent commits? (within last 3 months)
+□ Is the SKILL.md well documented?
+□ Does it explain what commands it runs?
+□ Are there security concerns mentioned?
+□ Does it match my workflow needs?
+□ Have I tested it on a small task first?
+
+Red flags to watch for:
+- No commits in over 6 months
+- Vague or missing SKILL.md
+- Executes commands without explanation
+- No documentation or examples</code></pre>
+
+        <div class="callout warning">
+            <div class="callout-title">Security Warning</div>
+            <p>
+                Skills can execute arbitrary commands on your system. Only install skills from trusted sources, and review the SKILL.md file before activation. Malicious skills could access sensitive data or damage your system.
+            </p>
+        </div>
+
+        <h4>Safe Installation Practices</h4>
+
+        <pre><code># 1. Create a dedicated skills folder
+mkdir -p ~/safe-claude-skills
+
+# 2. Clone skills there first
+cd ~/safe-claude-skills
+git clone https://github.com/username/skill-name.git
+
+# 3. Review the SKILL.md
+cat ~/safe-claude-skills/skill-name/SKILL.md
+
+# 4. Check for concerning tool definitions
+# Look for: shell, exec, write, http_request
+grep -E "(shell|exec|write|http)" ~/safe-claude-skills/skill-name/SKILL.md
+
+# 5. Test on a simple task first
+# Don't use it for production work until you've verified it works
+
+# 6. Move to your main skills folder only after review
+cp -r ~/safe-claude-skills/skill-name ~/.claude/skills/</code></pre>
+
+        <h3>Skill Discovery Resources</h3>
+
+        <p>
+            The best places to discover new skills are GitHub search (search for "claude code skill" or "claude skill"), the awesome-agent-skills repository (13,658 stars, 1000+ skills), and the Claude Code skills marketplace. New skills are published daily, so check these sources regularly for updates.
+        </p>
+
+        <h4>Recommended Discovery Workflow</h4>
+
+        <pre><code># Weekly routine:
+1. Check GitHub trending for "claude-code" (30 min)
+2. Browse awesome-agent-skills for new additions (20 min)
+3. Test one new skill that matches your needs (30 min)
+4. Keep what works, remove what doesn't (10 min)
+
+# Key search queries on GitHub:
+- "claude code skill"
+- "claude skill"
+- "claude-code-skill"
+- "claude agent skill"</code></pre>
+
+        <h4>Essential Skills Summary</h4>
+
+        <p>
+            Based on utility and adoption, here are the essential skills every Claude Code user should have:
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Skill</th>
+                    <th>Priority</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Workflow</td>
+                    <td>planning-with-files</td>
+                    <td>Essential</td>
+                </tr>
+                <tr>
+                    <td>Workflow</td>
+                    <td>Understand-Anything</td>
+                    <td>High</td>
+                </tr>
+                <tr>
+                    <td>Security</td>
+                    <td>Trail of Bits</td>
+                    <td>Essential</td>
+                </tr>
+                <tr>
+                    <td>Deployment</td>
+                    <td>pinme</td>
+                    <td>High</td>
+                </tr>
+                <tr>
+                    <td>Documentation</td>
+                    <td>codebase-to-course</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td>Communication</td>
+                    <td>humanizer</td>
+                    <td>Medium</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="whats-next">
+            <h3>What's Next?</h3>
+            <p>
+                Section 6.3 walks you through building your own custom skill from scratch. You will learn how to structure SKILL.md, define tools, and test your skill. By the end, you'll be able to create skills that automate your specific workflow needs.
+            </p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-6-1.html">6.1: Skill System Architecture</a>
+            <a class="up" href="index.html">Ch 6: Skills Overview</a>
+            <a class="next" href="section-6-3.html">6.3: Building Your Own Skills</a>
+        </nav>
+
+        <footer>
+            <p>Section 6.2 &middot; First Edition, April 2026 &middot; <a href="../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

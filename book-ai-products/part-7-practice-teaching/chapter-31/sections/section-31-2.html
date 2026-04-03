@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>31.2 Discovery to Design - AI-Powered Products</title>
+    <link rel="stylesheet" href="../../../styles/book.css">
+</head>
+<body>
+    <header class="chapter-header">
+        <nav class="header-nav">
+            <a href="../../../index.html" class="book-title-link">AI-Powered Products</a>
+            <a href="../../../toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
+        </nav>
+        <div class="part-label"><a href="../../../part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></div>
+        <div class="chapter-label">Chapter 31, Section 31.2</div>
+        <h1>Discovery to Design: Phases 1-3</h1>
+    </header>
+
+    <main class="content">
+        <p class="opening-hook">
+            The most expensive mistake in AI product development is building the wrong thing well. Phases 1-3 focus on ensuring you are solving a real problem, that AI is the right tool for it, and that you design for how users will actually interact with probabilistic systems.
+        </p>
+
+        <h2>Phase 1: Use Case Identification (Weeks 1-2)</h2>
+
+        <h3>31.2.1 Problem Discovery</h3>
+
+        <p>
+            Begin by identifying a problem space. Do not start with a technology and look for problems to solve. Start with user pain and evaluate whether AI offers a qualitatively different solution.
+        </p>
+
+        <div class="callout key-insight">
+            <div class="callout-title">The AI Appropriateness Test</div>
+            <p>Before committing to a problem, teams should evaluate whether the problem requires understanding unstructured input such as text, images, or audio; generating flexible, context-aware outputs; learning from examples to improve over time; or handling ambiguity that rules-based systems cannot address. If two or more of these criteria apply, AI may be an appropriate solution. If all four apply, AI is likely essential to solving the problem effectively.</p>
+        </div>
+
+        <p>
+            <strong>Running Example - QueryWise:</strong> The team noticed that employees spent hours searching through Slack, Confluence, and Google Drive for answers. Existing search was keyword-based and returned too much noise. The problem: finding the right information from unstructured enterprise knowledge.
+        </p>
+
+        <h3>31.2.2 Opportunity Framing</h3>
+
+        <p>
+            Once you have identified a problem, frame it as an opportunity by documenting the current state that describes how the problem is solved today, the desired state that defines what the ideal solution would look like, gap analysis that explains what makes the gap solvable now versus two years ago, and value at stake that quantifies the cost of not solving this problem.
+        </p>
+
+        <div class="callout big-picture">
+            <div class="callout-title">Opportunity Statement Template</div>
+            <p><em>"[User segment] needs to [action] because [constraint]. We will know we have succeeded when [observable outcome]. The key risk is [risk]."</em></p>
+        </div>
+
+        <h3>31.2.3 AI Applicability Assessment</h3>
+
+        <p>
+            Not every problem needs AI. Conduct a structured assessment across five criteria. Data Availability asks whether there is enough quality data to train or fine-tune a model. Pattern Complexity examines whether rules-based systems can achieve eighty percent or more of the value, since AI should only be used when simpler approaches fall short. Error Tolerance considers whether users can easily recover from AI errors, as AI products must account for imperfect outputs. Explainability Need determines whether users require understanding of why the AI made a particular decision, which influences how much transparency to build in. Competitive Edge assesses whether AI provides defensible differentiation from existing solutions. Score each criterion from one to five to determine whether AI is appropriate for your use case.
+        </p>
+
+        <h3>31.2.4 Stakeholder Alignment</h3>
+
+        <p>
+            Identify all stakeholders who have a voice in the product decision and document their roles. Primary users are those who will use the product daily. Economic buyers control the budget and hold purchasing authority. Technical stakeholders will integrate or maintain the system. Risk owners are accountable for failures and their consequences.
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">Stakeholder Misalignment Warning</div>
+            <p>If your primary users and economic buyers are not the same group, you have a potential veto problem. Ensure both groups are aligned before proceeding.</p>
+        </div>
+
+        <h2>Phase 2: Discovery and Research (Week 3)</h2>
+
+        <h3>31.2.5 User Research Methods</h3>
+
+        <p>
+            Conduct at least two forms of user research:
+        </p>
+
+        <div class="callout practical-example">
+            <div class="callout-title">Minimum Research Requirements</div>
+            <p>Teams should conduct at least two forms of user research to validate product decisions. Interviews with five to ten representative users should cover workflows, pain points, current solutions, and what "good" looks like from the user's perspective. Contextual inquiry involves observing two to three users performing the task you want to improve, watching them do their actual work rather than asking them to demonstrate. Surveys are optional but useful for quantitative validation when a sample of twenty or more responses is achievable.</p>
+        </div>
+
+        <p>
+            <strong>Running Example - QueryWise:</strong> The team interviewed 8 knowledge workers and observed 3 during their regular document searches. Key finding: users did not know what they did not know. They only searched when they had a specific question, missing related information that would have been valuable.
+        </p>
+
+        <h3>31.2.6 Workflow Analysis</h3>
+
+        <p>
+            Map the current workflow from trigger to resolution, identifying for each step the time spent, cognitive load required, where errors occur, and where AI could enter to assist or automate.
+        </p>
+
+        <div class="callout note">
+            <div class="callout-title">Workflow Analysis Template</div>
+            <p>Trigger > Step 1 > Step 2 > Step 3 > Resolution<br/>
+            [Time: __] > [Time: __] > [Time: __] > [Time: __] > [Time: __]<br/>
+            [AI Opportunity at: __]</p>
+        </div>
+
+        <h3>31.2.7 Competitive Landscape</h3>
+
+        <p>
+            Document existing solutions across four categories: direct competitors offering products that solve the same problem with AI; indirect competitors solving the problem differently; substitutes representing ways users currently cope without any dedicated tool; and adjacent players who could easily enter your space. For each competitor, assess their AI approach, identify their weaknesses, and determine what it would take to match or beat them.
+        </p>
+
+        <p>
+            For each, assess: What is their AI approach? What are their weaknesses? What would it take to match or beat them?
+        </p>
+
+        <h3>31.2.8 Technical Feasibility</h3>
+
+        <p>
+            Conduct a quick technical spike to validate feasibility by first collecting ten to twenty representative examples of inputs and expected outputs. Then test with a frontier model using basic prompting and evaluate whether it works well enough to be useful, noting what the failure modes are. If basic prompting fails, consider advancing to few-shot examples, retrieval augmentation, or fine-tuning as next steps.
+        </p>
+
+        <div class="callout tip">
+            <div class="callout-title">Feasibility Checkpoint</div>
+            <p>If the frontier model with basic prompting cannot achieve at least 60% success on your test set, reconsider the approach or the problem scope before investing further.</p>
+        </div>
+
+        <h2>Phase 3: AI-Native Design (Week 4)</h2>
+
+        <h3>31.2.9 UX Design for AI Products</h3>
+
+        <p>
+            AI products require special UX considerations that go beyond traditional software design. Expectation setting ensures users understand what AI can and cannot do. Graceful degradation defines what happens when the AI is wrong or unavailable. Feedback loops enable users to correct AI mistakes. Transparency determines when the AI should explain its reasoning to users.
+        </p>
+
+        <div class="callout aha-moment">
+            <div class="callout-title">The AI UX Mantra</div>
+            <p><strong>"Set expectations, show your work, make correction easy, and know when to say 'I don't know.'"</strong></p>
+        </div>
+
+        <h3>31.2.10 <a href="../../../part-1-why-ai-changes/chapter-4/sections/section-4-6.html" class="cross-ref">Trust</a> and Explanation Design</h3>
+
+        <p>
+            Trust is earned through consistency, transparency, and recoverability. Calibration involves showing confidence scores when available, helping users understand how certain the AI is about its response, such as stating "I'm 87% confident this answer is correct." Provenance means showing which sources informed the answer, so users can verify the information, like citing "Based on pages 3 and 7 of the Q3 report." An Appeal process allows users to flag errors and provide feedback, such as offering buttons labeled "Is this answer helpful? Yes / No / Report issue." Confidence communication encourages using appropriate uncertainty language, for example saying "I think... but I could be wrong" when the AI is less certain. Together, these elements build user trust by making the AI's reasoning transparent and giving users agency to correct mistakes.
+        </p>
+
+        <h3>31.2.11 Fallback Design</h3>
+
+        <p>
+            Every AI feature needs a fallback when AI fails:
+        </p>
+
+        <div class="callout warning">
+            <div class="callout-title">Fallback Hierarchy</div>
+            <p>Every AI feature needs a fallback strategy organized in a hierarchy of five levels. When AI succeeds, the system delivers a full AI-powered experience. When AI provides only partial capability, the system offers suggestions and the human decides. When AI fails entirely, a human takes over seamlessly. If even human assistance is unavailable, the system provides graceful degradation through a simplified experience without AI. As a last resort, a fail-safe delivers a clear error message with next steps for the user.</p>
+        </div>
+
+        <h3>31.2.12 Success Metrics Definition</h3>
+
+        <p>
+            Define success metrics before building using the HEART framework, which provides a structured approach to measuring user experience. Happiness metrics capture satisfaction, Net Promoter Score, and perceived usefulness. Engagement metrics track usage frequency and feature adoption. Adoption metrics measure sign-ups, activation rates, and user retention. Retention metrics monitor churn and return usage patterns. Task Success metrics evaluate completion rate, time on task, and error frequency.
+        </p>
+
+        <div class="callout key-takeaway">
+            <div class="callout-title">Phase 1-3 Checklist</div>
+            <p>Upon completing phases one through three, ensure the problem statement has been documented and validated, AI appropriateness has been assessed with at least two criteria met, stakeholders have been identified and aligned, user research has been completed including both interviews and contextual inquiry, the current workflow has been mapped with AI opportunities identified, the competitive landscape has been documented, technical feasibility has been validated via spike, UX has been designed with trust, explanation, and fallback patterns, and success metrics have been defined using the HEART framework.</p>
+        </div>
+
+        <nav class="chapter-nav">
+            <a class="prev" href="section-31-1.html">31.1 Capstone Overview</a>
+            <a class="up" href="../index.html">Chapter 31</a>
+            <a class="next" href="section-31-3.html">31.3 Prototype to Eval</a>
+        </nav>
+
+        <footer>
+            <p>31.2 &middot; First Edition, April 2026 &middot; <a href="../../../toc.html">Contents</a></p>
+        </footer>
+    </main>
+</body>
+</html>

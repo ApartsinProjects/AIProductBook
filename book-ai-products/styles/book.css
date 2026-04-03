@@ -1,0 +1,1896 @@
+/* ============================================================
+   book.css - AI-Powered Products Book Stylesheet
+   Aligned with LLMBook reference design
+   ============================================================ */
+
+/* ----- :root variables ----- */
+:root {
+    --primary: #1a1a2e;
+    --accent: #0f3460;
+    --highlight: #e94560;
+    --bg: #fafafa;
+    --text: #2d3436;
+    --text-light: #555;
+    --code-bg: #1e1e2e;
+    --code-text: #cdd6f4;
+}
+
+/* ----- Reset ----- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ----- Base typography ----- */
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.85;
+    font-size: 17px;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+p {
+    margin-bottom: 1.2rem;
+    text-align: justify;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--highlight); }
+
+/* Visible link cues inside content areas */
+.content a:not(.section-card):not(.toc-link):not(.book-title-link):not(.toc-part-header):not(.toc-ch) {
+    color: #1a6fb5;
+    text-decoration: underline;
+    text-decoration-color: rgba(26, 111, 181, 0.4);
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1.5px;
+    transition: text-decoration-color 0.2s, color 0.2s;
+}
+.content a:not(.section-card):not(.toc-link):not(.book-title-link):not(.toc-part-header):not(.toc-ch):hover {
+    color: var(--highlight);
+    text-decoration-color: var(--highlight);
+    text-decoration-thickness: 2px;
+}
+.chapter-nav a { text-decoration: none !important; }
+
+ul, ol { margin: 0.5rem 0 1.2rem 1.5rem; }
+li { margin-bottom: 0.4rem; }
+
+/* ----- Headings ----- */
+h2 {
+    font-size: 1.8rem;
+    color: var(--primary);
+    margin: 3rem 0 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid var(--highlight);
+    line-height: 1.3;
+}
+h3 {
+    font-size: 1.35rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    line-height: 1.3;
+}
+h4 {
+    font-size: 1.1rem;
+    color: var(--primary);
+    margin: 1.5rem 0 0.75rem;
+}
+
+/* ----- Layout: .content ----- */
+.content {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+/* ----- Chapter header ----- */
+.chapter-header {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    padding: 0 2rem 2rem;
+    text-align: center;
+}
+.chapter-header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+/* Header navigation bar */
+.header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.5rem;
+    margin: 0 -0.5rem 0.8rem;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+}
+.header-nav .book-title-link {
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    transition: color 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%;
+}
+.header-nav .book-title-link:hover { color: rgba(255,255,255,0.95); }
+.header-nav .toc-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 0.8rem;
+    padding: 0.25rem 0.6rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+.header-nav .toc-link:hover {
+    color: rgba(255,255,255,0.95);
+    border-color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.08);
+}
+.header-nav .toc-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* Header hierarchy */
+.part-label {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.88rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.15rem;
+}
+.part-label a {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+}
+.part-label a:hover { opacity: 0.9; }
+
+.chapter-label {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 0.3rem;
+}
+.chapter-label a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+}
+.chapter-label a:hover { opacity: 0.9; }
+
+.chapter-header .subtitle,
+.chapter-header .chapter-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.85;
+    max-width: 650px;
+    margin: 0.5rem auto 0;
+    font-style: italic;
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* ----- Epigraph ----- */
+.epigraph {
+    max-width: 100%;
+    margin: 2rem 0 2.5rem;
+    padding: 1.2rem 1.5rem;
+    border-left: 4px solid var(--highlight);
+    background: linear-gradient(135deg, rgba(233,69,96,0.04), rgba(15,52,96,0.04));
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text);
+}
+.epigraph p { margin: 0 0 0.5rem 0; }
+.epigraph cite {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    font-style: normal;
+    font-size: 0.9rem;
+    color: var(--highlight);
+    font-weight: 600;
+    text-align: right;
+}
+.epigraph cite::before { content: "\2014\00a0"; }
+
+/* ----- Learning Objectives ----- */
+.objectives {
+    margin: 1.5rem 0 2rem;
+    padding: 1.4rem 1.8rem;
+    background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+    border: 1px solid rgba(67,160,71,0.18);
+    border-left: 5px solid #43a047;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+.objectives h3 {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2e7d32;
+    margin: 0 0 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.objectives ul { margin: 0.3rem 0 0 1.4rem; }
+.objectives li { margin-bottom: 0.35rem; }
+
+/* ----- Chapter Navigation ----- */
+.chapter-nav, nav.chapter-nav {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.75rem;
+    max-width: 820px;
+    margin: 3rem auto 0;
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.88rem;
+    border-top: none;
+}
+.chapter-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: 10px;
+    text-decoration: none !important;
+    font-weight: 600;
+    color: var(--accent);
+    background: linear-gradient(135deg, #f0f2f5 0%, #e8ecf1 100%);
+    border: 1px solid #d8dde4;
+    transition: all 0.25s ease;
+    line-height: 1.35;
+}
+.chapter-nav a:hover {
+    color: var(--highlight);
+    background: linear-gradient(135deg, #fff 0%, #f5f0f2 100%);
+    border-color: var(--highlight);
+    box-shadow: 0 3px 12px rgba(233, 69, 96, 0.1);
+    transform: translateY(-1px);
+}
+.chapter-nav a.prev::before { content: "\2190"; font-size: 1.15rem; flex-shrink: 0; }
+.chapter-nav a.next::after { content: "\2192"; font-size: 1.15rem; flex-shrink: 0; margin-left: auto; }
+.chapter-nav a.up, .chapter-nav a:nth-child(2) {
+    justify-content: center;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 500;
+    background: transparent;
+    border-color: transparent;
+    color: var(--text-light);
+    padding: 0.6rem 0.8rem;
+}
+.chapter-nav a.up:hover {
+    color: var(--accent);
+    background: rgba(15, 52, 96, 0.04);
+    box-shadow: none;
+    transform: none;
+}
+.chapter-nav a.up::before { content: "\2191"; font-size: 1rem; opacity: 0.5; }
+.chapter-nav a.next, .chapter-nav a:last-child:not(.up):not(.prev) { justify-content: flex-end; text-align: right; }
+
+/* ----- Callout boxes (11 canonical types) ----- */
+.callout {
+    border: 1px solid;
+    border-left: 5px solid;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 8px 8px 0;
+}
+.callout-title {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.5rem;
+    cursor: help;
+    position: relative;
+}
+
+/* Tooltip descriptions (single source of truth, pure CSS) */
+.callout .callout-title::after {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: #333;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: normal;
+    font-style: normal;
+    text-transform: none;
+    letter-spacing: 0;
+    white-space: normal;
+    max-width: 320px;
+    line-height: 1.4;
+    z-index: 100;
+    margin-top: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+.callout .callout-title:hover::after { opacity: 1; }
+
+/* Tooltip text per callout type */
+.callout.big-picture .callout-title::after {
+    content: "Sets the context: why this topic matters and how it connects to the broader picture.";
+}
+.callout.key-insight .callout-title::after {
+    content: "A core concept or mental model worth remembering. This is one of the section's main takeaways.";
+}
+.callout.note .callout-title::after {
+    content: "Additional detail or clarification that supplements the main text.";
+}
+.callout.warning .callout-title::after {
+    content: "A common mistake, pitfall, or misconception to watch out for.";
+}
+.callout.practical-example .callout-title::after {
+    content: "A real-world scenario showing how practitioners apply this concept in production.";
+}
+.callout.fun-note .callout-title::after {
+    content: "A lighthearted or surprising fact related to the topic. Not essential, but memorable.";
+}
+.callout.research-frontier .callout-title::after {
+    content: "Current research directions and open questions at the cutting edge of this field.";
+}
+.callout.algorithm .callout-title::after {
+    content: "Step-by-step pseudocode or formal procedure for an algorithm discussed in this section.";
+}
+.callout.tip .callout-title::after {
+    content: "A practical shortcut, best practice, or time-saving technique from experienced practitioners.";
+}
+.callout.exercise .callout-title::after {
+    content: "A hands-on exercise to test your understanding. Try it before reading the solution.";
+}
+.callout.key-takeaway .callout-title::after {
+    content: "The essential takeaway from this section that you should remember.";
+}
+.callout p:last-child { margin-bottom: 0; }
+
+/* Callout icons via CSS (single source of truth) */
+/* Uses emoji icons - universal, no external dependencies */
+.callout .callout-title::before {
+    display: inline-block;
+    width: 1.2em;
+    height: 1.2em;
+    margin-right: 0.4em;
+    vertical-align: middle;
+    font-size: 1.1em;
+    line-height: 1;
+}
+.callout.big-picture .callout-title::before { content: '\1F441\200D\1F5E8'; } /* eye */
+.callout.key-insight .callout-title::before { content: '\1F4A1'; } /* bulb */
+.callout.note .callout-title::before { content: '\1F4DD'; } /* memo */
+.callout.warning .callout-title::before { content: '\26A0'; } /* warning */
+.callout.practical-example .callout-title::before { content: '\1F527'; } /* wrench */
+.callout.fun-note .callout-title::before { content: '\2728'; } /* sparkles */
+.callout.research-frontier .callout-title::before { content: '\1F52C'; } /* telescope */
+.callout.algorithm .callout-title::before { content: '\1F4CA'; } /* chart */
+.callout.tip .callout-title::before { content: '\2705'; } /* checkmark */
+.callout.exercise .callout-title::before { content: '\270F'; } /* pencil */
+.callout.key-takeaway .callout-title::before { content: '\1F3AF'; } /* target */
+.callout.real-world-scenario .callout-title::before { content: '\1F3E2'; } /* office */
+
+/* 1. Big Picture (purple) */
+.callout.big-picture {
+    background: linear-gradient(135deg, #f3e5f5, #ede7f6);
+    border-color: #ce93d8;
+    border-left-color: #8e24aa;
+}
+.callout.big-picture .callout-title { color: #6a1b9a; }
+
+/* 2. Key Insight (green) */
+.callout.key-insight {
+    background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+    border-color: #a5d6a7;
+    border-left-color: #43a047;
+}
+.callout.key-insight .callout-title { color: #2e7d32; }
+
+/* 3. Note (blue) */
+.callout.note {
+    background: linear-gradient(135deg, #e3f2fd, #e8eaf6);
+    border-color: #90caf9;
+    border-left-color: #1976d2;
+}
+.callout.note .callout-title { color: #1565c0; }
+
+/* 4. Warning (amber) */
+.callout.warning {
+    background: linear-gradient(135deg, #fff8e1, #fff3e0);
+    border-color: #ffcc80;
+    border-left-color: #f57c00;
+}
+.callout.warning .callout-title { color: #e65100; }
+
+/* 5. Practical Example (teal) */
+.callout.practical-example {
+    background: linear-gradient(135deg, #e0f2f1, #e8f5e9);
+    border-color: #80cbc4;
+    border-left-color: #00897b;
+}
+.callout.practical-example .callout-title { color: #00695c; }
+.callout.practical-example pre {
+    background: #e0f2f1;
+    color: #1a3c3a;
+    border: 1px solid #80cbc4;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+/* 6. Fun Note (pink) */
+.callout.fun-note {
+    background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+    border-color: #f48fb1;
+    border-left-color: #e91e63;
+}
+.callout.fun-note .callout-title { color: #c2185b; }
+
+/* 7. Research Frontier (teal/cyan) */
+.callout.research-frontier {
+    background: linear-gradient(135deg, #e0f2f1, #e0f7fa);
+    border-color: #80cbc4;
+    border-left-color: #00897b;
+}
+.callout.research-frontier .callout-title { color: #00796b; }
+
+/* 8. Algorithm (indigo) */
+.callout.algorithm {
+    background: linear-gradient(135deg, #f3effc, #eceaf8);
+    border-color: #9581c4;
+    border-left-color: #4a55a2;
+}
+.callout.algorithm .callout-title { color: #2e3990; }
+.callout.algorithm pre {
+    background: #faf8ff;
+    color: #1a1a2e;
+    border: 1px solid #c5b8e0;
+    font-size: 0.88rem;
+    line-height: 1.7;
+}
+
+/* 9. Tip (cyan) */
+.callout.tip {
+    background: linear-gradient(135deg, #e0f7fa, #e1f5fe);
+    border-color: #80deea;
+    border-left-color: #00acc1;
+}
+.callout.tip .callout-title { color: #00838f; }
+
+/* 10. Exercise (deep orange) */
+.callout.exercise {
+    background: linear-gradient(135deg, #fbe9e7, #fff3e0);
+    border-color: #ffab91;
+    border-left-color: #e64a19;
+}
+.callout.exercise .callout-title { color: #bf360c; }
+.callout.exercise details { margin-top: 1rem; }
+.callout.exercise details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #bf360c;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.9rem;
+}
+
+/* 11. Key Takeaway (teal, reuses key-insight icon) */
+.callout.key-takeaway {
+    background: linear-gradient(135deg, #e0f2f1, #e0f7fa);
+    border-color: #80cbc4;
+    border-left-color: #00897b;
+}
+.callout.key-takeaway .callout-title { color: #00695c; }
+
+/* Legacy aliases - map to canonical types */
+.callout.info { background: linear-gradient(135deg, #e3f2fd, #e8eaf6); border-color: #90caf9; border-left-color: #1976d2; }
+.callout.info .callout-title { color: #1565c0; }
+.callout.info .callout-title::before { content: '\1F4DD'; } /* memo emoji */
+.callout.info .callout-title::after { content: "Additional detail or clarification that supplements the main text."; }
+
+.callout.best-practice { background: linear-gradient(135deg, #e8f5e9, #f1f8e9); border-color: #81c784; border-left-color: #388e3c; }
+.callout.best-practice .callout-title { color: #1b5e20; }
+.callout.best-practice .callout-title::before { content: '\1F3AF'; } /* target emoji */
+.callout.best-practice .callout-title::after { content: "A best practice recommended by experienced practitioners."; }
+
+.callout.aha-moment { background: linear-gradient(135deg, #fff8e1, #fffde7); border-color: #ffd54f; border-left-color: #ff8f00; }
+.callout.aha-moment .callout-title { color: #e65100; font-weight: 700; }
+.callout.aha-moment .callout-title::before { content: '\1F911'; } /* brain emoji */
+.callout.aha-moment .callout-title::after { content: "A memorable insight that changes how you think about the topic."; }
+
+.callout.signature-phrase { background: linear-gradient(135deg, #f3e5f5, #ede7f6); border-color: #ce93d8; border-left-color: #8e24aa; }
+.callout.signature-phrase .callout-title { color: #6a1b9a; font-weight: 700; font-size: 1.05rem; }
+.callout.signature-phrase .callout-title::before { content: '\1F4DD'; } /* memo emoji */
+.callout.signature-phrase .callout-title::after { content: "A memorable phrase or rule that captures the key idea."; }
+.callout.signature-phrase p { margin-bottom: 0.5rem; }
+
+/* 12. Real World Scenario (navy blue / professional) */
+.callout.real-world-scenario {
+    background: linear-gradient(135deg, #e8eaf6, #e3f2fd);
+    border-color: #9fa8da;
+    border-left-color: #3949ab;
+}
+.callout.real-world-scenario .callout-title { 
+    color: #283593; 
+}
+.callout.real-world-scenario .callout-title::before { 
+    content: '\1F3E2'; /* office emoji */
+}
+.callout.real-world-scenario .callout-title::after { 
+    content: "A real-world case study showing how practitioners applied this concept in production systems."; 
+}
+
+/* Legacy non-canonical callout classes used in book content */
+.case-study {
+    background: linear-gradient(135deg, #e0f2f1, #e8f5e9);
+    border: 1px solid #80cbc4;
+    border-left: 5px solid #00897b;
+    border-radius: 0 8px 8px 0;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+}
+.case-study h4 {
+    color: #00695c;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+}
+.case-study p {
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+
+.skill-demonstration {
+    background: linear-gradient(135deg, #e0f7fa, #e1f5fe);
+    border: 1px solid #80deea;
+    border-left: 5px solid #00acc1;
+    border-radius: 0 8px 8px 0;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+}
+.skill-demonstration h4 {
+    color: #00838f;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+}
+.skill-demonstration p,
+.skill-demonstration ul,
+.skill-demonstration ol {
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+.skill-demonstration ul,
+.skill-demonstration ol {
+    padding-left: 1.5rem;
+}
+.skill-demonstration li {
+    margin-bottom: 0.25rem;
+}
+
+/* Emoji fallback for icons (when PNGs not available) */
+.callout .callout-title:empty::before,
+.callout .callout-title:not(:has(+ img))::before {
+    content: '';
+}
+
+.callout-title {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.5rem;
+}
+.callout p:last-child { margin-bottom: 0; }
+
+/* Big Picture (purple) */
+.callout.big-picture {
+    background: linear-gradient(135deg, #f3e5f5, #ede7f6);
+    border-color: #ce93d8;
+    border-left-color: #8e24aa;
+}
+.callout.big-picture .callout-title { color: #6a1b9a; }
+
+/* Key Insight (green) */
+.callout.key-insight {
+    background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+    border-color: #a5d6a7;
+    border-left-color: #43a047;
+}
+.callout.key-insight .callout-title { color: #2e7d32; }
+
+/* Note (blue) */
+.callout.note {
+    background: linear-gradient(135deg, #e3f2fd, #e8eaf6);
+    border-color: #90caf9;
+    border-left-color: #1976d2;
+}
+.callout.note .callout-title { color: #1565c0; }
+
+/* Warning (amber) */
+.callout.warning {
+    background: linear-gradient(135deg, #fff8e1, #fff3e0);
+    border-color: #ffcc80;
+    border-left-color: #f57c00;
+}
+.callout.warning .callout-title { color: #e65100; }
+
+/* Info (same as note) */
+.callout.info {
+    background: linear-gradient(135deg, #e3f2fd, #e8eaf6);
+    border-color: #90caf9;
+    border-left-color: #1976d2;
+}
+.callout.info .callout-title { color: #1565c0; }
+
+/* Fun Note (pink) */
+.callout.fun-note {
+    background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+    border-color: #f48fb1;
+    border-left-color: #e91e63;
+}
+.callout.fun-note .callout-title { color: #c2185b; }
+
+/* Research Frontier (teal/cyan) */
+.callout.research-frontier {
+    background: linear-gradient(135deg, #e0f2f1, #e0f7fa);
+    border-color: #80cbc4;
+    border-left-color: #00897b;
+}
+.callout.research-frontier .callout-title { color: #00796b; }
+
+/* Tip (cyan) */
+.callout.tip {
+    background: linear-gradient(135deg, #e0f7fa, #e1f5fe);
+    border-color: #80deea;
+    border-left-color: #00acc1;
+}
+.callout.tip .callout-title { color: #00838f; }
+
+/* Exercise (deep orange) */
+.callout.exercise {
+    background: linear-gradient(135deg, #fbe9e7, #fff3e0);
+    border-color: #ffab91;
+    border-left-color: #e64a19;
+}
+.callout.exercise .callout-title { color: #bf360c; }
+
+/* Algorithm (indigo) */
+.callout.algorithm {
+    background: linear-gradient(135deg, #f3effc, #eceaf8);
+    border-color: #9581c4;
+    border-left-color: #4a55a2;
+}
+.callout.algorithm .callout-title { color: #2e3990; }
+
+/* Best Practice (green/leaf) */
+.callout.best-practice {
+    background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+    border-color: #81c784;
+    border-left-color: #388e3c;
+}
+.callout.best-practice .callout-title { color: #1b5e20; }
+.callout.best-practice::before {
+    content: "\1F4C8";
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+/* Aha Moment (gold/star) */
+.callout.aha-moment {
+    background: linear-gradient(135deg, #fff8e1, #fffde7);
+    border-color: #ffd54f;
+    border-left-color: #ff8f00;
+}
+.callout.aha-moment .callout-title { color: #e65100; font-weight: 700; }
+.callout.aha-moment::before {
+    content: "\1F4A1";
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+/* Signature Phrase / Mnemonic (purple/lightbulb) */
+.callout.signature-phrase {
+    background: linear-gradient(135deg, #f3e5f5, #ede7f6);
+    border: 1px solid #ce93d8;
+    border-left: 4px solid #8e24aa;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.2rem;
+    margin: 1.5rem 0;
+}
+.callout.signature-phrase .callout-title {
+    color: #6a1b9a;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+}
+.callout.signature-phrase p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ----- Prerequisites ----- */
+.prereqs,
+.prerequisites {
+    margin: 1.5rem 0 2rem;
+    padding: 1.2rem 1.5rem;
+    background: linear-gradient(135deg, rgba(15,52,96,0.04), rgba(233,69,96,0.02));
+    border: 1px solid rgba(15,52,96,0.12);
+    border-left: 5px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+.prereqs h3,
+.prerequisites h3 {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 0 0.5rem;
+}
+.prereqs a,
+.prerequisites a {
+    color: var(--highlight);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--highlight);
+}
+.prereqs a:hover,
+.prerequisites a:hover { border-bottom-style: solid; }
+
+/* ----- Chapter Overview ----- */
+.overview {
+    max-width: 750px;
+    margin: 2rem auto 2.5rem;
+    padding: 1.6rem 2rem;
+    background: linear-gradient(135deg, rgba(15,52,96,0.05), rgba(15,52,96,0.02));
+    border: 1px solid rgba(15,52,96,0.12);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    font-size: 0.97rem;
+    line-height: 1.75;
+}
+.overview h2 {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 1.25rem;
+    color: var(--accent);
+    margin: 0 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid rgba(15,52,96,0.15);
+}
+.overview p { text-align: left; }
+.overview p:last-child { margin-bottom: 0; }
+
+/* ----- Chapter Objective ----- */
+.chapter-objective {
+    background: linear-gradient(135deg, #e3f2fd, #e8eaf6);
+    border-left: 4px solid #1976d2;
+    padding: 1rem 1.2rem;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+.chapter-objective strong {
+    color: #1565c0;
+}
+
+/* ----- Opening Hook ----- */
+.opening-hook {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #1a1a1a;
+    margin-bottom: 1.2rem;
+    padding: 1.2rem 1.5rem;
+    background: linear-gradient(135deg, #fff9c4, #fffde7);
+    border-left: 4px solid #f9a825;
+    border-radius: 0 8px 8px 0;
+    position: relative;
+}
+.opening-hook::before {
+    content: "\1F4A1"; /* Light bulb emoji */
+    position: absolute;
+    left: -8px;
+    top: -8px;
+    font-size: 1.2rem;
+    background: #fff9c4;
+    padding: 2px 4px;
+    border-radius: 50%;
+}
+.opening-hook strong {
+    color: #e65100;
+    font-weight: 700;
+}
+
+/* ----- Four Questions This Chapter Answers ----- */
+.four-questions {
+    background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+    border: 1px solid #a5d6a7;
+    border-left: 5px solid #43a047;
+    border-radius: 0 8px 8px 0;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    position: relative;
+}
+.four-questions::before {
+    content: "\1F4DD"; /* Memo emoji */
+    position: absolute;
+    right: 12px;
+    top: -8px;
+    font-size: 1.2rem;
+    background: #e8f5e9;
+    padding: 2px 4px;
+    border-radius: 50%;
+}
+.four-questions h2 {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    color: #2e7d32;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #a5d6a7;
+    text-transform: uppercase;
+}
+.four-questions ol {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+.four-questions li {
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+.four-questions li strong {
+    color: #1b5e20;
+}
+
+/* ----- Quiz / Check Your Understanding ----- */
+.quiz,
+.quiz-box {
+    background: linear-gradient(135deg, #e8eaf6, #e3f2fd);
+    border: 1px solid #7986cb;
+    border-left: 5px solid #3949ab;
+    border-radius: 0 8px 8px 0;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+}
+.quiz h3, .quiz-box h3 {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    color: #283593;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+.quiz-question { margin: 1.2rem 0 0.5rem; font-weight: 600; }
+details { margin: 0.5rem 0 1.2rem; }
+summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.3rem 0;
+}
+summary:hover { text-decoration: underline; }
+details .answer {
+    padding: 0.8rem 1rem;
+    background: #eef;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+}
+
+/* ----- Key Takeaways ----- */
+.takeaways {
+    background: linear-gradient(135deg, #e0f2f1, #e0f7fa);
+    border: 1px solid #80cbc4;
+    border-left: 5px solid #00897b;
+    border-radius: 0 8px 8px 0;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+}
+.takeaways h2,
+.takeaways h3 {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    border-bottom: none;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #00695c;
+}
+.takeaways ul { margin-top: 0.5rem; }
+.takeaways li:last-child { margin-bottom: 0; }
+
+/* ----- Chapter Opener Illustration ----- */
+.chapter-opener {
+    margin: 2rem auto;
+    text-align: center;
+}
+.chapter-opener img {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.chapter-opener figcaption {
+    text-align: center;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.88rem;
+    color: #555;
+    margin-top: 0.75rem;
+    line-height: 1.5;
+    font-style: italic;
+}
+.chapter-opener figcaption strong {
+    font-style: normal;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+/* ----- Figure and Figcaption (LLMBook-style) ----- */
+figure {
+    margin: 2rem 0;
+}
+figure img {
+    max-width: 100%;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+}
+figcaption {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #444;
+    text-align: center;
+    margin-top: 0.75rem;
+    line-height: 1.5;
+}
+figcaption strong {
+    color: var(--accent);
+    font-weight: 700;
+}
+/* Figure number format: "Figure X.Y.Z: description" */
+figcaption::before {
+    content: '';
+}
+/* LLMBook-style: Figure number bold, description follows */
+
+/* ----- Table Caption ----- */
+table {
+    caption-side: bottom;
+}
+table + p.caption,
+.caption {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #444;
+    text-align: center;
+    margin-top: 0.5rem;
+    line-height: 1.4;
+}
+table + p.caption::before,
+.caption::before {
+    content: 'Table: ';
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* ----- Example Box (non-canonical but widely used) ----- */
+.example-box {
+    background: linear-gradient(135deg, #f5f5f5, #fafafa);
+    border: 1px solid #e0e0e0;
+    border-left: 5px solid #5dade2;
+    border-radius: 0 8px 8px 0;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+}
+.example-box .example-title {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #2980b9;
+    margin-bottom: 0.75rem;
+}
+.example-box p { margin-bottom: 0.75rem; }
+.example-box p:last-child { margin-bottom: 0; }
+.example-box pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+}
+
+/* ----- Code Caption ----- */
+.code-caption {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #555;
+    text-align: center;
+    margin-top: 0.3rem;
+    margin-bottom: 1.8rem;
+    padding: 0 1rem;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+/* ----- Code blocks ----- */
+pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1.2rem 0;
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+code {
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 0.92em;
+}
+p code, li code {
+    background: #eef;
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    color: var(--accent);
+}
+pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    color: inherit;
+    font-size: inherit;
+}
+
+/* ----- Tables ----- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+}
+th, td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+th {
+    background: var(--primary);
+    color: white;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+tr:nth-child(even) { background: #f8f8f8; }
+
+/* ----- What's Next ----- */
+.whats-next {
+    background: linear-gradient(135deg, #e3f2fd, #e8eaf6);
+    border: 1px solid #90caf9;
+    border-left: 4px solid #1565c0;
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+}
+.whats-next h2,
+.whats-next h3 {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    color: #1565c0;
+    margin: 0 0 0.5rem;
+}
+.whats-next p:last-child { margin-bottom: 0; }
+.whats-next h2::before { content: "\27A1\00a0"; font-size: 1.1em; }
+
+/* ----- Bibliography ----- */
+.bibliography {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(15,52,96,0.04), rgba(233,69,96,0.02));
+    border-radius: 8px;
+    border: 1px solid rgba(15,52,96,0.1);
+}
+.bibliography-title {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--highlight);
+}
+.bib-entry-card {
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.8rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.06);
+}
+.bib-ref {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+}
+.bib-ref a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+.bib-ref a:hover { color: var(--highlight); }
+.bib-annotation {
+    font-size: 0.88rem;
+    color: var(--text-light);
+    margin: 0.4rem 0 0;
+    line-height: 1.5;
+}
+
+/* ----- Chapter cards ----- */
+.chapter-card {
+    background: white;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: box-shadow 0.25s, transform 0.25s;
+}
+.chapter-card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.09);
+    transform: translateY(-3px);
+}
+.chapter-card-header {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    padding: 1.1rem 1.5rem;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+.chapter-card-header a { color: white; text-decoration: none; }
+.chapter-card-header a:hover { opacity: 0.9; }
+.chapter-card-header .mod-num {
+    background: rgba(255,255,255,0.2);
+    padding: 2px 10px;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+.chapter-card-body {
+    padding: 1.3rem 1.5rem;
+    font-size: 0.93rem;
+    line-height: 1.6;
+}
+.chapter-card-body p { margin-bottom: 0.8rem; }
+.chapter-card-body .section-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.6rem 0 0;
+    border-top: 1px solid #f0f0f0;
+}
+.chapter-card-body .section-list li {
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.9rem;
+}
+.chapter-card-body .section-list li:last-child { border-bottom: none; }
+.chapter-card-body .section-list a {
+    color: var(--accent);
+    text-decoration: none;
+    display: block;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    transition: background 0.15s;
+}
+.chapter-card-body .section-list a:hover {
+    color: var(--highlight);
+    background: rgba(15,52,96,0.04);
+}
+.chapter-card-body .section-list .sec-num {
+    color: var(--highlight);
+    font-weight: 700;
+    margin-right: 0.4rem;
+    min-width: 2.2rem;
+    display: inline-block;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ----- Section cards ----- */
+.sections-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.sections-list li { margin: 0; }
+.section-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 1.2rem 1.4rem;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+    text-decoration: none;
+    color: inherit;
+}
+.section-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+    border-left-color: var(--highlight);
+}
+.section-num {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: white;
+    background: var(--accent);
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    min-width: 2.5rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+.section-card:hover .section-num { background: var(--highlight); }
+.section-title {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 1rem;
+    flex: 1 1 60%;
+}
+.section-desc {
+    font-size: 0.88rem;
+    color: var(--text-light);
+    line-height: 1.55;
+    flex: 1 1 100%;
+    margin-top: -0.2rem;
+}
+
+/* ----- TOC ----- */
+.toc {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+.toc h1 {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--primary);
+}
+.toc h2 {
+    font-size: 1.4rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+    border-bottom: 2px solid var(--highlight);
+    padding-bottom: 0.5rem;
+}
+.toc h3 {
+    font-size: 1.1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--primary);
+}
+.toc .part-intro {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    line-height: 1.6;
+}
+.toc ul {
+    list-style: none;
+    padding: 0;
+}
+.toc li {
+    margin-bottom: 0.5rem;
+}
+.toc a {
+    color: var(--text);
+    text-decoration: none;
+    display: block;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+.toc a:hover {
+    background: var(--bg-secondary);
+    text-decoration: none;
+}
+.toc .chapter-num {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+}
+
+/* ----- Hero/Home ----- */
+.hero {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+}
+.hero h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+.hero .subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+}
+.hero .meta {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.book-description {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+.book-description h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.feature-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.08);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.feature-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+.feature-card h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: var(--accent);
+}
+.feature-card p {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    margin-bottom: 0;
+}
+.cta {
+    text-align: center;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+.cta a {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: var(--accent);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.cta a:hover {
+    background: var(--highlight);
+    text-decoration: none;
+}
+
+/* ----- Loop Diagram ----- */
+.loop-diagram {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 600;
+    margin: 1rem 0;
+}
+
+/* ----- Code output ----- */
+.code-output {
+    background: #f5f5f0;
+    border-left: 4px solid #888;
+    color: #333;
+    padding: 1rem 1.5rem;
+    border-radius: 0 8px 8px 0;
+    margin: -0.5rem 0 1.5rem;
+    font-family: 'Consolas', monospace;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+.code-output::before {
+    content: "Output";
+    display: block;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    margin-bottom: 0.5rem;
+}
+
+/* ----- Comparison Tables ----- */
+.comparison-table {
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #d8dce6;
+    background: #fff;
+}
+.comparison-table-title {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #fff;
+    padding: 0.7rem 1.2rem;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.comparison-table-title::before {
+    content: '\2696';
+    font-size: 1.1rem;
+}
+.comparison-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+.comparison-table th {
+    background: #f0f2f8;
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    font-weight: 600;
+    color: #1a1a2e;
+    border-bottom: 2px solid #d8dce6;
+    font-size: 0.85rem;
+}
+.comparison-table td {
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+    line-height: 1.5;
+}
+.comparison-table tr:last-child td {
+    border-bottom: none;
+}
+.comparison-table tr:nth-child(even) td {
+    background: #f8f9fc;
+}
+.comparison-table .winner {
+    color: #27ae60;
+    font-weight: 600;
+}
+.comparison-table .caution {
+    color: #e67e22;
+    font-weight: 600;
+}
+
+/* ----- Glossary ----- */
+.glossary-list { list-style: none; padding: 0; }
+.glossary-entry { padding: 0.8rem 0; border-bottom: 1px solid #f0f0f0; }
+.glossary-term { font-weight: 700; color: var(--primary); font-size: 1.05rem; }
+.glossary-def { margin-top: 0.3rem; font-size: 0.95rem; line-height: 1.6; }
+.glossary-xref { font-size: 0.85rem; color: var(--text-light); margin-top: 0.2rem; }
+.glossary-xref a { color: var(--accent); }
+
+/* ----- Labs ----- */
+.lab {
+    background: linear-gradient(135deg, #e8eaf6, #e3f2fd);
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    padding: 2rem;
+    margin: 2.5rem 0;
+}
+.lab-meta {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+.lab-step {
+    background: white;
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin: 1rem 0;
+    border: 1px solid rgba(0,0,0,0.06);
+}
+.lab-expected {
+    background: #f1f8e9;
+    border-left: 4px solid #43a047;
+    padding: 1rem 1.5rem;
+    border-radius: 0 8px 8px 0;
+    margin: 1rem 0;
+}
+.lab-stretch {
+    background: #fff8e1;
+    border-left: 4px solid #f57c00;
+    padding: 1rem 1.5rem;
+    border-radius: 0 8px 8px 0;
+    margin: 1rem 0;
+}
+.lab-objective {
+    background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+    border-left: 4px solid #1e88e5;
+    padding: 1rem 1.2rem;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 1.2rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+.lab-skills { margin-bottom: 1.2rem; }
+.lab-skills h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; color: #555; margin-bottom: 0.5rem; }
+.lab-skills ul { padding-left: 1.5rem; }
+.lab-skills li { margin-bottom: 0.3rem; font-size: 0.92rem; }
+.lab-prereqs {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+}
+.lab-prereqs h4 { font-size: 0.9rem; margin-bottom: 0.5rem; }
+.lab-prereqs code { background: #e8e8e8; padding: 0.15em 0.4em; border-radius: 3px; font-size: 0.85rem; }
+.lab-solution summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--accent);
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+}
+.lab-solution summary:hover { color: var(--highlight); }
+
+/* ----- Math ----- */
+.math {
+    white-space: nowrap;
+    background: #f4f6fa;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    border: 1px solid #e4e7ef;
+    font-size: 0.95em;
+    vertical-align: baseline;
+    line-height: inherit;
+}
+.math-block {
+    position: relative;
+    background: linear-gradient(135deg, #f8f9fc 0%, #f0f2f8 100%);
+    border: 1px solid #d8dce6;
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    overflow-x: auto;
+}
+.math-block-label {
+    display: block;
+    text-align: left;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-style: normal;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid #e0e3ea;
+}
+.math-block .math-where {
+    display: block;
+    text-align: left;
+    font-style: normal;
+    font-size: 0.92rem;
+    color: #555;
+    margin-top: 0.6rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed #d8dce6;
+    line-height: 1.6;
+}
+
+/* ----- Part Overview ----- */
+.part-overview {
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    line-height: 1.8;
+    background: linear-gradient(135deg, #f8f9fc, #f0f2f8);
+    border: 1px solid #d8dce6;
+    border-radius: 10px;
+    padding: 1.5rem 1.8rem;
+}
+.part-overview h2 {
+    color: var(--accent);
+    font-size: 1.15rem;
+    margin: 0 0 0.8rem;
+}
+
+/* ----- Section Break ----- */
+.section-break { margin: 2rem 0; border-top: 1px solid #e0e0e0; }
+
+/* ----- Cross-reference links ----- */
+.cross-ref {
+    color: #1a6fb5;
+    text-decoration: none;
+    border-bottom: 1.5px dotted rgba(26, 111, 181, 0.5);
+}
+.cross-ref:hover {
+    color: var(--highlight);
+    border-bottom: 2px solid var(--highlight);
+}
+
+/* ----- SVG responsive ----- */
+.svg-responsive {
+    max-width: 100%;
+    margin: 1.5rem auto;
+    display: block;
+}
+
+/* ----- Diagram container ----- */
+.diagram-container {
+    margin: 2rem 0;
+    text-align: center;
+}
+.diagram-container svg {
+    max-width: 100%;
+    height: auto;
+}
+.diagram-caption {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.88rem;
+    color: #555;
+    text-align: center;
+    margin-top: 0.5rem;
+    line-height: 1.5;
+    font-style: italic;
+}
+.diagram-caption strong {
+    font-style: normal;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+/* ----- Footer ----- */
+footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    border-top: 1px solid #e0e0e0;
+    margin-top: auto;
+}
+footer a {
+    color: var(--text-light);
+    text-decoration: none;
+}
+footer a:hover { color: var(--accent); }
+
+/* ----- Responsive ----- */
+@media (max-width: 768px) {
+    .content { padding: 1.5rem 1rem; }
+    .chapter-header { padding: 0 1rem 2rem; }
+    .chapter-header h1 { font-size: 1.6rem; }
+    .header-nav .book-title-link { font-size: 0.72rem; max-width: 55%; }
+    body { font-size: 16px; line-height: 1.75; }
+    h2 { font-size: 1.5rem; margin-top: 2rem; }
+    h3 { font-size: 1.2rem; }
+    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    pre { overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: 0.82rem; }
+    .callout { margin-left: 0; margin-right: 0; padding: 1rem 1.2rem; }
+    .chapter-nav, nav.chapter-nav { grid-template-columns: 1fr; gap: 0.5rem; }
+    .chapter-nav a.next, .chapter-nav a:last-child:not(.up):not(.prev) { justify-content: center; text-align: center; }
+    .chapter-nav a.prev, .chapter-nav a:first-child:not(.up):not(.next) { justify-content: center; text-align: center; }
+    .chapter-nav a.up, .chapter-nav a:nth-child(2) { order: -1; }
+    .features-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+    .content { padding: 1rem 0.75rem; }
+    .chapter-header { padding: 0 0.75rem 1.5rem; }
+    .chapter-header h1 { font-size: 1.4rem; }
+    .hero h1 { font-size: 2rem; }
+    .hero .subtitle { font-size: 1.1rem; }
+    h2 { font-size: 1.3rem; }
+    h3 { font-size: 1.1rem; }
+    pre { font-size: 0.78rem; padding: 0.8rem; }
+}
+
+/* ----- Print ----- */
+@media print {
+    .chapter-header { background: none; color: var(--primary); border-bottom: 2px solid var(--primary); padding-top: 1rem; }
+    .header-nav { display: none; }
+    .chapter-nav, nav.chapter-nav { display: none; }
+    .callout { break-inside: avoid; }
+    pre { white-space: pre-wrap; word-wrap: break-word; }
+    .whats-next { display: none; }
+}
+
+/* ============================================================
+   LLMBook-style ToC Classes
+   ============================================================ */
+
+/* ToC Toggle Switch */
+.toc-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1.5rem 0 1rem 0;
+}
+.toc-toggle label {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    cursor: pointer;
+}
+.toc-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.toc-toggle .toc-switch-bg {
+    position: absolute;
+    inset: 0;
+    background: #ccc;
+    border-radius: 24px;
+    transition: background 0.3s ease;
+}
+.toc-toggle .toc-switch-dot {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toc-toggle input:checked + .toc-switch-bg {
+    background: var(--accent);
+}
+.toc-toggle input:checked + .toc-switch-bg .toc-switch-dot {
+    transform: translateX(20px);
+}
+.toc-toggle span {
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.toc-toggle #toc-label-short { color: var(--accent); }
+.toc-toggle #toc-label-detailed { color: #999; }
+
+/* ToC Parts */
+.stoc-part {
+    margin-bottom: 1.5rem;
+}
+
+.stoc-group {
+    padding-left: 0.5rem;
+}
+
+/* Part Headers */
+.dense-part-header {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 1.5rem 0 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid var(--highlight);
+    letter-spacing: 0.02em;
+}
+.dense-part-header a {
+    color: inherit;
+    text-decoration: none;
+}
+.dense-part-header a:hover {
+    color: var(--accent);
+}
+
+.dense-appendices-header {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 2rem 0 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid #ccc;
+    letter-spacing: 0.02em;
+}
+
+/* Chapter Entries */
+.dense-chapter {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.45rem 0.5rem;
+    margin-bottom: 0.15rem;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+.dense-chapter:hover {
+    background: rgba(15, 52, 96, 0.04);
+}
+.dense-chapter a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+.dense-chapter a:hover {
+    color: var(--highlight);
+}
+
+.dense-ch-num {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 2.5rem;
+    flex-shrink: 0;
+}
+
+/* Sections (Detailed ToC) */
+.dense-sections {
+    padding: 0.4rem 0.5rem 0.6rem 3.1rem;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.6;
+}
+.dense-sections a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.dense-sections a:hover {
+    color: var(--highlight);
+    text-decoration: underline;
+}
