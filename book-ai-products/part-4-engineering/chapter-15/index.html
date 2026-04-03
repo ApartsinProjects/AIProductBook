@@ -22,6 +22,16 @@
             Most AI product failures are architectural failures. Teams build elaborate multi-agent systems when a simple prompt would suffice, or they shoehorn complex workflows into a basic LLM wrapper that was never designed for production scale. The right architecture depends on your requirements for latency, accuracy, cost, and trust. Understanding common patterns helps you choose wisely and evolve your architecture as requirements change.
         </div>
 
+        <div class="callout note">
+            <div class="callout-title">The Death of Permanent Architecture</div>
+            <p>AI is transforming the economics of architectural decisions. Code can now be regenerated, refactored, and retranslated at lower cost than ever before. This means architecture is becoming <strong>less like poured concrete and more like a lease</strong>. The old fear was getting stuck. The new challenge is deciding how much reversibility is enough. Companies may legally own their code but functionally depend on an external layer of artificial understanding, creating <strong>cognitive lock-in</strong>: a new form of dependency where the ability to understand, refactor, and extend the system depends on specific AI models and tools.</p>
+        </div>
+
+        <div class="callout note">
+            <div class="callout-title">Disposable Evidence-Driven Architecture (DEDA)</div>
+            <p>With vibe-coding, AI becomes the primary reader and editor of code, not humans. This enables a new approach: <strong>Disposable Evidence-Driven Architecture</strong>. Architecture decisions become temporary, justified only by current evidence like tests, traces, and metrics. If data shows a new setup works better, the AI replaces the old one. The blueprint is not sacred; it is a temporary plan shaped by what works best right now. This shifts architecture from "design for permanence" to "design for evidence and easy replacement."</p>
+        </div>
+
         <div class="callout key-insight">
             <div class="callout-title">The Tripartite Loop in Architecture Selection</div>
             <p>Choosing the right architecture requires all three disciplines collaborating on the decision: <strong>AI PM</strong> defines the requirements for latency, accuracy, cost, and trust that determine which architecture fits; <strong>Vibe-Coding</strong> spikes different architectural patterns to test which actually meet requirements before committing; <strong>AI Engineering</strong> evaluates technical constraints, infrastructure needs, and maintenance burden that determine whether an architecture is sustainable.</p>

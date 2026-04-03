@@ -22,6 +22,11 @@
             A product manager writes a requirement that says "the AI should recommend relevant products." The engineer implements it. Three months later, users are upset because the AI confidently recommends items that are out of stock, inappropriate for the season, or completely irrelevant to what they were browsing. Nobody specified what "relevant" meant, what confidence threshold was acceptable, or how to handle edge cases. Traditional PRDs assume deterministic behavior. AI products require a new kind of requirements document that embraces probability, defines acceptable error rates, and specifies evaluation criteria alongside functional requirements. This is the challenge the USID.O framework solves.
         </div>
 
+        <div class="callout note">
+            <div class="callout-title">AI Changes the Basic Assumption</div>
+            <p>For most of the software era, companies operated with a simple belief: if a feature mattered enough, engineers could build it. AI changes that—now the question is not just how much effort but whether the feature is even possible at the required quality level. A model that fails as a decision-maker may succeed as a drafter, filter, ranker, or warning signal. The key insight: <strong>not every desired feature is a build problem; some are a fit problem</strong>. The same AI capability can be a brilliant product in one role and a dangerous liability in another.</p>
+        </div>
+
         <div class="callout key-insight">
             <div class="callout-title">The Tripartite Loop in Requirements</div>
             <p>Writing requirements for probabilistic products requires all three disciplines working together: <strong>AI PM</strong> defines the USID.O dimensions (Uncertainty, Scope, Intent, Degree, Outcome) that make requirements evaluable rather than ambiguous; <strong>Vibe-Coding</strong> simulates different requirement formulations to see which ones produce testable, measurable outcomes against real AI behavior; <strong>AI Engineering</strong> translates requirements into measurable thresholds, eval pipelines, and monitoring systems that track whether the product meets specifications in production.</p>

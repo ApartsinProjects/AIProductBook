@@ -22,6 +22,11 @@
             You ship an AI feature on Monday. By Tuesday morning, users report that your model is confidently making up product names that never existed. By Wednesday, you are firefighting. By Friday, you are questioning whether AI is ready for production at all. This scenario plays out in companies every week. Not because AI is broken, but because teams do not share a common understanding of what AI can reliably do.
         </div>
 
+        <div class="callout note">
+            <div class="callout-title">Design for Survivable Failure</div>
+            <p>Perhaps the greatest failure point for AI leaders is treating model errors as edge cases to be squashed. In a probabilistic environment, <strong>errors are not bugs—they are part of the operating environment</strong>. If your product's value proposition collapses when the model hallucinates, you have not built a business—you have built a fragile experiment. The winning move is <strong>making errors survivable</strong>: design UIs that proactively support uncertainty through confidence scores, source citations, and transparent assumptions. The key shift: from <strong>error prevention</strong> (traditional UX) to <strong>error recovery</strong> (AI-native UX).</p>
+        </div>
+
         <div class="callout key-insight">
             <div class="callout-title">The Tripartite Loop in Capability Testing</div>
             <p>Every capability boundary you discover triggers all three disciplines: <strong>AI PM</strong> decides which boundaries matter for your product and prioritizes the most critical ones to probe; <strong>Vibe-Coding</strong> rapidly generates test cases and edge scenarios to map the boundary in hours, not weeks; <strong>AI Engineering</strong> builds guardrails and fallback logic that protect users when the AI ventures into unreliable territory.</p>
