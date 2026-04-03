@@ -48,6 +48,14 @@
             In the reliable zone, AI can summarize documents within its context window, classify text with clear categories, translate between major languages, complete code within a single file, and extract structured data from unstructured text.
         </p>
 
+        <figure class="illustration">
+            <img src="../../../../images/illustrations/driving-modes-autonomy.png"
+                 alt="A spectrum from Level 0 (no automation) to Level 5 (full automation), showing how AI assistance scales from human-driven to fully AI-driven">
+            <figcaption>
+                AI capabilities follow an autonomy spectrum, similar to self-driving levels. Understanding where your product sits helps manage user expectations.
+            </figcaption>
+        </figure>
+
         <p>
             In the moderate reliability zone, AI performance drops with complexity: multi-step reasoning becomes less reliable, code requiring external API calls can fail, questions about recent events may have outdated answers, creative writing with specific constraints varies, and mathematical calculations depend heavily on the model.
         </p>
@@ -114,6 +122,14 @@
         <p>
             Foundation models often express high confidence even when they are wrong, and moderate confidence even when they are correct. This miscalibration between confidence and accuracy is a significant challenge for product design.
         </p>
+
+        <figure class="illustration">
+            <img src="../../../../images/illustrations/ai-confidence-trap.png"
+                 alt="A user trusting an AI that says 'I'm 99% confident!' while the AI is actually completely wrong, with a trapdoor about to open beneath the user">
+            <figcaption>
+                The AI confidence trap: high confidence does not equal high accuracy. Designing for this mismatch is critical.
+            </figcaption>
+        </figure>
 
         <p>
             In traditional software, you can trust that a function returns correct output or you can detect when it fails. With AI, you often cannot tell from the output alone whether it is correct. A confident wrong answer looks identical to a confident correct answer.

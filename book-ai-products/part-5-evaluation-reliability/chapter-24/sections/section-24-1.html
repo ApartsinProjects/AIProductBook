@@ -68,6 +68,14 @@ def calculate_inference_cost(
     return input_cost + output_cost
         </code></pre>
 
+        <figure class="illustration">
+            <img src="../../../../images/illustrations/thinking-budget-tokens.png"
+                 alt="A visual showing token budgets as a pie chart, with thinking tokens (reasoning) vs output tokens (final answer) shown as different portions">
+            <figcaption>
+                Token economics: every token has a cost. Understanding input vs output token breakdown is the first step to optimization.
+            </figcaption>
+        </figure>
+
         <h3 id="hidden-costs">Hidden Cost Factors</h3>
 
         <p>Beyond token pricing, AI costs include several hidden factors that often surprise teams new to AI infrastructure. API overhead covers network latency, retries, and rate limit handling that add to the cost of each API call. Infrastructure includes vector databases, caching layers, and monitoring systems that support AI functionality. Engineering covers development time, evaluation infrastructure, and guardrails that require ongoing investment. Failures include retries, fallbacks, and human escalation that occur when things go wrong, which can significantly add to costs if not properly managed.</p>
@@ -133,6 +141,14 @@ print(f"Route optimization daily cost: ${route_optimization_cost.daily_token_cos
             <h4 class="callout-title">The Power of Caching</h4>
             <p>Caching can reduce costs by 50-90% for repetitive workloads. Even a modest 50% cache hit rate cuts token costs in half. Cost models must include caching assumptions.</p>
         </div>
+
+        <figure class="illustration">
+            <img src="../../../../images/illustrations/10x-cost-difference.png"
+                 alt="A comparison showing 10x cost difference between using expensive flagship model vs small model for simple tasks">
+            <figcaption>
+                The 10x cost gap: using a flagship model for simple tasks costs 10x more than necessary. Route intelligently.
+            </figcaption>
+        </figure>
 
         <h2 id="cost-optimization-opportunities">Cost Optimization Opportunities</h2>
 

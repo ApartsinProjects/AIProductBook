@@ -103,6 +103,14 @@ function authorizeAIQuery(user, query, requestedSources):
             <p>Data isolation ensures no shared training data or context between tenants. Model isolation provides separate model instances or logical isolation for sensitive tenants. Log isolation means Tenant A's queries never appear in Tenant B's audit logs. Resource isolation ensures one tenant's usage does not degrade another tenant's experience.</p>
         </div>
 
+        <figure class="illustration">
+            <img src="../../../../images/illustrations/hotel-multi-tenancy.png"
+                 alt="A hotel with different floors for different companies, each with separate keys, separate staff, and no way for one company's guests to access another company's floor">
+            <figcaption>
+                Multi-tenant AI: like a hotel where each company has its own floor with separate access. No cross-contamination of data or context.
+            </figcaption>
+        </figure>
+
         <h2>Enterprise Boundaries</h2>
 
         <h3>Data Residency Requirements</h3>
