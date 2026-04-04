@@ -1809,23 +1809,41 @@ footer a:hover { color: var(--accent); }
 
 /* ToC Parts */
 .stoc-part {
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.4rem;
 }
 
 .stoc-group {
-    padding-left: 0.3rem;
+    padding-left: 0.2rem;
 }
 
-/* Part Headers */
-.dense-part-header {
+/* Part Headers - with links */
+.dense-part-header > a {
     font-family: 'Cinzel', Georgia, serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--primary);
-    margin: 1rem 0 0.4rem;
-    padding: 0.3rem 0;
-    border-bottom: 2px solid var(--highlight);
-    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #444;
+    margin: 0.8rem 0 0.3rem;
+    padding: 0.2rem 0;
+    border-bottom: 1px solid #ddd;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: block;
+}
+.dense-part-header > a:hover {
+    color: #222;
+}
+
+/* Part Headers - Front Matter (no link) */
+.dense-part-header:not(:has(a)) {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #444;
+    margin: 0.8rem 0 0.3rem;
+    padding: 0.2rem 0;
+    border-bottom: 1px solid #ddd;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
 }
 .dense-part-header a {
@@ -1833,18 +1851,18 @@ footer a:hover { color: var(--accent); }
     text-decoration: none;
 }
 .dense-part-header a:hover {
-    color: var(--accent);
+    color: #222;
 }
 
 .dense-appendices-header {
     font-family: 'Cinzel', Georgia, serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--accent);
-    margin: 1.5rem 0 0.4rem;
-    padding: 0.3rem 0;
-    border-bottom: 2px solid #ccc;
-    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #444;
+    margin: 1.2rem 0 0.3rem;
+    padding: 0.2rem 0;
+    border-bottom: 1px solid #ccc;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
 }
 
@@ -1862,37 +1880,37 @@ footer a:hover { color: var(--accent); }
     background: rgba(15, 52, 96, 0.04);
 }
 .dense-chapter a {
-    color: var(--text);
+    color: #333;
     text-decoration: none;
-    font-size: 0.82rem;
-    line-height: 1.35;
+    font-size: 0.75rem;
+    line-height: 1.3;
 }
 .dense-chapter a:hover {
-    color: var(--highlight);
+    color: #000;
 }
 
 .dense-ch-num {
     font-family: 'Segoe UI', system-ui, sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    color: var(--accent);
-    min-width: 2rem;
+    color: #666;
+    min-width: 1.8rem;
     flex-shrink: 0;
 }
 
 /* Sections (Detailed ToC) */
 .dense-sections {
-    padding: 0.2rem 0.4rem 0.4rem 2.4rem;
-    font-size: 0.8rem;
-    color: var(--text-light);
-    line-height: 1.5;
+    padding: 0.15rem 0.3rem 0.3rem 2.2rem;
+    font-size: 0.75rem;
+    color: #777;
+    line-height: 1.45;
 }
 .dense-sections a {
-    color: var(--accent);
+    color: #555;
     text-decoration: none;
     transition: color 0.2s;
 }
 .dense-sections a:hover {
-    color: var(--highlight);
+    color: #333;
     text-decoration: underline;
 }
