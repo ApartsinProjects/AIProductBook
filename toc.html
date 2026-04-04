@@ -6,62 +6,68 @@
     <title>Table of Contents - From AI-Assisted Software Development to AI-Powered Software Products</title>
     <link rel="stylesheet" href="styles/book.css">
     <style>
-        .toc-view-toggle {
+        /* ToC Toggle Switch - LLMBook style */
+        .toc-toggle {
             display: flex;
+            align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            margin-bottom: 2rem;
-            padding: 0.5rem;
-            background: rgba(15, 52, 96, 0.08);
-            border-radius: 10px;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 1.5rem 0 1rem 0;
         }
-        
-        .toc-view-btn {
-            padding: 0.5rem 1.2rem;
-            border: none;
-            background: transparent;
-            color: var(--text-light);
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            font-size: 0.9rem;
-            font-weight: 500;
+        .toc-toggle .toc-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
             cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.2s ease;
         }
-        
-        .toc-view-btn:hover {
-            color: var(--accent);
-            background: rgba(15, 52, 96, 0.06);
+        .toc-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
-        
-        .toc-view-btn.active {
+        .toc-toggle .toc-switch-bg {
+            position: absolute;
+            inset: 0;
+            background: #ccc;
+            border-radius: 24px;
+            transition: background 0.3s ease;
+        }
+        .toc-toggle .toc-switch-dot {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .toc-toggle input:checked + .toc-switch-bg {
             background: var(--accent);
-            color: white;
-            box-shadow: 0 2px 8px rgba(15, 52, 96, 0.25);
         }
-        
-        .toc-detailed { display: none; }
-        .toc-view-detailed .toc-detailed { display: block; }
-        .toc-view-detailed .toc-overview { display: none; }
-        
-        .toc-chapters { list-style: none; padding: 0; margin: 0; }
-        .toc-ch {
-            display: flex; align-items: flex-start; gap: 1rem;
-            padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.5rem;
-            transition: background 0.2s ease; text-decoration: none; color: inherit;
+        .toc-toggle input:checked + .toc-switch-bg .toc-switch-dot {
+            transform: translateX(20px);
         }
-        .toc-ch:hover { background: rgba(15, 52, 96, 0.05); }
-        .toc-ch-num { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--accent); min-width: 2.2rem; padding-top: 0.1rem; }
-        .toc-ch-info { flex: 1; }
-        .toc-ch-title { font-weight: 600; color: var(--primary); font-size: 1rem; display: block; margin-bottom: 0.2rem; }
-        .toc-ch-desc { font-size: 0.85rem; color: var(--text-light); line-height: 1.4; }
-        .toc-section-links { margin-left: 3.2rem; margin-top: 0.3rem; margin-bottom: 0.8rem; font-size: 0.82rem; color: var(--text-light); line-height: 1.6; }
-        .toc-section-links a { color: var(--accent); text-decoration: none; margin-right: 0.5rem; }
-        .toc-section-links a:hover { color: var(--highlight); text-decoration: underline; }
-        .toc-section-links .sec-sep { color: var(--text-light); opacity: 0.5; margin-right: 0.5rem; }
+        .toc-toggle span {
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        #toc-label-short { color: var(--primary); }
+        #toc-label-detailed { color: #999; }
+        .toc-toggle input:checked ~ #toc-label-short { color: #999; }
+        .toc-toggle input:checked ~ #toc-label-detailed { color: var(--primary); }
+        
+        /* ToC Views */
+        .toc-view-short { display: block; }
+        .toc-view-detailed .toc-view-short { display: none; }
+        .toc-view-detailed .toc-view-detailed { display: block; }
+        .toc-view-detailed .toc-view-short { display: none; }
+        .toc-view-detailed { display: block; }
+        .toc-view-short { display: block; }
     </style>
 </head>
 <body>
@@ -70,406 +76,252 @@
             <a href="index.html" class="book-title-link">AI-Powered Products</a>
             <a href="toc.html" class="toc-link" title="Table of Contents"><span class="toc-icon">&#9776;</span> Contents</a>
         </nav>
-        <div class="part-label">Contents</div>
         <h1>Table of Contents</h1>
     </header>
 
-    <main class="toc">
-        <div class="toc-view-toggle">
-            <button class="toc-view-btn active" onclick="setTocView('overview')">Overview</button>
-            <button class="toc-view-btn" onclick="setTocView('detailed')">Detailed</button>
+    <main class="content">
+
+        <!-- ToC View Toggle -->
+        <div class="toc-toggle">
+            <span id="toc-label-short" onclick="showToc('short')">Overview</span>
+            <label class="toc-switch">
+                <input type="checkbox" id="toc-switch-input" onchange="showToc(this.checked ? 'detailed' : 'short')">
+                <span class="toc-switch-bg">
+                    <span class="toc-switch-dot"></span>
+                </span>
+            </label>
+            <span id="toc-label-detailed" onclick="showToc('detailed')">Detailed</span>
         </div>
 
-        <!-- Front Matter -->
-        <div class="toc-part">
-            <h2>Front Matter</h2>
-            <ul class="toc-chapters toc-overview">
-                <li><a href="front-matter/introduction.html" class="toc-ch">
-                    <span class="toc-ch-num">FM</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Introduction</span>
-                        <span class="toc-ch-desc">Defining the Journey from AI Assistant to AI Engine</span>
-                    </div>
-                </a></li>
-            </ul>
+        <!-- SHORT TOC (default, visible) -->
+        <div id="toc-short" class="toc-view-short">
+
+            <!-- Front Matter -->
+            <div class="stoc-part">
+                <div class="dense-part-header"><a href="front-matter/introduction.html">Front Matter</a></div>
+                <div class="stoc-group">
+                    <div class="dense-chapter"><span class="dense-ch-num">FM</span> <a href="front-matter/introduction.html">Introduction: Defining the Journey from AI Assistant to AI Engine</a></div>
+                </div>
+            </div>
+
+            <!-- Part I: Why AI Changes Product Creation -->
+            <div class="stoc-part">
+                <div class="dense-part-header"><a href="part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
+                <div class="stoc-group">
+                    <div class="dense-chapter"><span class="dense-ch-num">01</span> <a href="part-1-why-ai-changes/chapter-1/index.html">The New Economics of Building with AI</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">02</span> <a href="part-1-why-ai-changes/chapter-2/index.html">What AI Can and Cannot Reliably Do</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">03</span> <a href="part-1-why-ai-changes/chapter-3/index.html">The Human-AI Product Stack</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">04</span> <a href="part-1-why-ai-changes/chapter-4/index.html">Scientific and Philosophical Principles</a></div>
+                </div>
+            </div>
+
+            <!-- Part II: AI-Native Product Discovery and Design -->
+            <div class="stoc-part">
+                <div class="dense-part-header"><a href="part-2-discovery-design/index.html">Part II: AI-Native Product Discovery and Design</a></div>
+                <div class="stoc-group">
+                    <div class="dense-chapter"><span class="dense-ch-num">05</span> <a href="part-2-discovery-design/chapter-5/index.html">Finding Problems Worth Solving with AI</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">06</span> <a href="part-2-discovery-design/chapter-6/index.html">AI Product Strategy and Portfolio Thinking</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">07</span> <a href="part-2-discovery-design/chapter-7/index.html">AI-Native Product Discovery</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">08</span> <a href="part-2-discovery-design/chapter-8/index.html">Designing AI User Experiences</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">09</span> <a href="part-2-discovery-design/chapter-9/index.html">Requirements for Probabilistic Products</a></div>
+                </div>
+            </div>
+
+            <!-- Part III: Vibe-Coding and AI-Native Prototyping -->
+            <div class="stoc-part">
+                <div class="dense-part-header"><a href="part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+                <div class="stoc-group">
+                    <div class="dense-chapter"><span class="dense-ch-num">10</span> <a href="part-3-vibe-coding/chapter-10/index.html">What Vibe-Coding Is Really For</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">11</span> <a href="part-3-vibe-coding/chapter-11/index.html">AI-Native Prototyping Workflow</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">12</span> <a href="part-3-vibe-coding/chapter-12/index.html">Prompting, Context, Memory, and Reusable Skills</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">13</span> <a href="part-3-vibe-coding/chapter-13/index.html">Multi-Agent and Tool-Based Build Flows</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">14</span> <a href="part-3-vibe-coding/chapter-14/index.html">From Prototype to Reviewable System</a></div>
+                </div>
+            </div>
+
+            <!-- Part IV: Engineering AI Products -->
+            <div class="stoc-part">
+                <div class="dense-part-header"><a href="part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+                <div class="stoc-group">
+                    <div class="dense-chapter"><span class="dense-ch-num">15</span> <a href="part-4-engineering/chapter-15/index.html">Reference Architectures for AI Products</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">16</span> <a href="part-4-engineering/chapter-16/index.html">Models, Routing, and Capability Allocation</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">17</span> <a href="part-4-engineering/chapter-17/index.html">Retrieval and Knowledge Systems</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">18</span> <a href="part-4-engineering/chapter-18/index.html">State, Memory, and Workflow Orchestration</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">19</span> <a href="part-4-engineering/chapter-19/index.html">Building with Protocols and Interoperability</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">20</span> <a href="part-4-engineering/chapter-20/index.html">Security, Privacy, and Abuse Resistance</a></div>
+                </div>
+            </div>
+
+            <!-- Part V: Evaluation, Reliability, and Governance -->
+            <div class="stoc-part">
+                <div class="dense-part-header"><a href="part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+                <div class="stoc-group">
+                    <div class="dense-chapter"><span class="dense-ch-num">21</span> <a href="part-5-evaluation-reliability/chapter-21/index.html">Evals as the Core Development Discipline</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">22</span> <a href="part-5-evaluation-reliability/chapter-22/index.html">Observability, Debugging, and Failure Analysis</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">23</span> <a href="part-5-evaluation-reliability/chapter-23/index.html">Reliability, Guardrails, and Recovery</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">24</span> <a href="part-5-evaluation-reliability/chapter-24/index.html">Cost, Latency, and Unit Economics</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">25</span> <a href="part-5-evaluation-reliability/chapter-25/index.html">Governance, Compliance, and Trustworthy AI</a></div>
+                </div>
+            </div>
+
+            <!-- Part VI: Shipping, Scaling, and Operating -->
+            <div class="stoc-part">
+                <div class="dense-part-header"><a href="part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+                <div class="stoc-group">
+                    <div class="dense-chapter"><span class="dense-ch-num">26</span> <a href="part-6-shipping-scaling/chapter-26/index.html">Launching AI Features and Products</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">27</span> <a href="part-6-shipping-scaling/chapter-27/index.html">Post-Launch Learning Loops</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">28</span> <a href="part-6-shipping-scaling/chapter-28/index.html">Team Topologies and AI-Native Operating Models</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">29</span> <a href="part-6-shipping-scaling/chapter-29/index.html">Building the AI Product Organization</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">30</span> <a href="part-6-shipping-scaling/chapter-30/index.html">Strategic Positioning and Future-Proofing</a></div>
+                </div>
+            </div>
+
+            <!-- Part VII: End-to-End Practice and Teaching Kit -->
+            <div class="stoc-part">
+                <div class="dense-part-header"><a href="part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></div>
+                <div class="stoc-group">
+                    <div class="dense-chapter"><span class="dense-ch-num">31</span> <a href="part-7-practice-teaching/chapter-31/index.html">End-to-End Capstone Playbook</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">32</span> <a href="part-7-practice-teaching/chapter-32/index.html">Case Studies in Full</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">33</span> <a href="part-7-practice-teaching/chapter-33/index.html">Teaching the Material as a Course</a></div>
+                </div>
+            </div>
+
+            <!-- Appendices -->
+            <div class="stoc-part">
+                <div class="dense-part-header dense-appendices-header">Appendices</div>
+                <div class="stoc-group">
+                    <div class="dense-chapter"><span class="dense-ch-num">A</span> <a href="part-7-practice-teaching/appendices/appendix-a-glossary.html">Glossary</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">B</span> <a href="part-7-practice-teaching/appendices/appendix-b-tool-comparison.html">Tool Comparison Matrices</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">C</span> <a href="part-7-practice-teaching/appendices/appendix-c-templates.html">Templates</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">D</span> <a href="part-7-practice-teaching/appendices/appendix-d-evaluation-rubrics.html">Evaluation Rubrics</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">E</span> <a href="part-7-practice-teaching/appendices/appendix-e-architecture-checklists.html">Architecture Checklists</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">F</span> <a href="part-7-practice-teaching/appendices/appendix-f-prompts-skills-examples.html">Prompts and Skills Examples</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">G</span> <a href="part-7-practice-teaching/appendices/appendix-g-artifact-translation.html">Executable Product Artifacts</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">H</span> <a href="part-7-practice-teaching/appendices/appendix-h-anti-patterns.html">AI Product Anti-Patterns</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">I</span> <a href="part-7-practice-teaching/appendices/appendix-i-economics-of-loop.html">Economics of the AI Product Loop</a></div>
+                </div>
+            </div>
+
+            <!-- Back Matter -->
+            <div class="stoc-part">
+                <div class="dense-part-header">Back Matter</div>
+                <div class="stoc-group">
+                    <div class="dense-chapter"><span class="dense-ch-num">BM</span> <a href="back-matter/conclusion.html">Conclusion: Your AI Product Mastery Roadmap</a></div>
+                </div>
+            </div>
+
         </div>
 
-        <!-- Part I: Why AI Changes Product Creation -->
-        <div class="toc-part">
-            <h2><a href="part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></h2>
-            <p class="part-intro">Understanding the fundamental shifts in how we build products with AI.</p>
-            
-            <ul class="toc-chapters toc-overview">
-                <li><a href="part-1-why-ai-changes/chapter-1/index.html" class="toc-ch">
-                    <span class="toc-ch-num">01</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">The New Economics of Building with AI</span>
-                        <span class="toc-ch-desc">50x cost reduction, reasoning models, build/buy/bake decisions</span>
-                    </div>
-                </a></li>
-                <li><a href="part-1-why-ai-changes/chapter-2/index.html" class="toc-ch">
-                    <span class="toc-ch-num">02</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">What AI Can and Cannot Reliably Do</span>
-                        <span class="toc-ch-desc">Capabilities assessment, hallucination mitigation, limitations</span>
-                    </div>
-                </a></li>
-                <li><a href="part-1-why-ai-changes/chapter-3/index.html" class="toc-ch">
-                    <span class="toc-ch-num">03</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">The Human-AI Product Stack</span>
-                        <span class="toc-ch-desc">Human-AI interplay, feedback loops, anti-patterns</span>
-                    </div>
-                </a></li>
-                <li><a href="part-1-why-ai-changes/chapter-4/index.html" class="toc-ch">
-                    <span class="toc-ch-num">04</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Scientific and Philosophical Principles</span>
-                        <span class="toc-ch-desc">Cognitive load theory, complementary change, ethics</span>
-                    </div>
-                </a></li>
-            </ul>
-        </div>
+        <!-- DETAILED TOC (hidden by default) -->
+        <div id="toc-detailed" class="toc-view-detailed" style="display: none;">
 
-        <!-- Part II: AI-Native Product Discovery and Design -->
-        <div class="toc-part">
-            <h2><a href="part-2-discovery-design/index.html">Part II: AI-Native Product Discovery and Design</a></h2>
-            <p class="part-intro">Finding problems worth solving and designing for probabilistic experiences.</p>
-            
-            <ul class="toc-chapters toc-overview">
-                <li><a href="part-2-discovery-design/chapter-5/index.html" class="toc-ch">
-                    <span class="toc-ch-num">05</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Finding Problems Worth Solving with AI</span>
-                        <span class="toc-ch-desc">User research methods, AI-appropriate problems</span>
-                    </div>
-                </a></li>
-                <li><a href="part-2-discovery-design/chapter-6/index.html" class="toc-ch">
-                    <span class="toc-ch-num">06</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">AI Product Strategy and Portfolio Thinking</span>
-                        <span class="toc-ch-desc">AI taxonomy, build/buy/bake, value proposition</span>
-                    </div>
-                </a></li>
-                <li><a href="part-2-discovery-design/chapter-7/index.html" class="toc-ch">
-                    <span class="toc-ch-num">07</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">AI-Native Product Discovery</span>
-                        <span class="toc-ch-desc">Systematic approaches to discovering opportunities</span>
-                    </div>
-                </a></li>
-                <li><a href="part-2-discovery-design/chapter-8/index.html" class="toc-ch">
-                    <span class="toc-ch-num">08</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Designing AI User Experiences</span>
-                        <span class="toc-ch-desc">UX patterns, trust design, expectation management</span>
-                    </div>
-                </a></li>
-                <li><a href="part-2-discovery-design/chapter-9/index.html" class="toc-ch">
-                    <span class="toc-ch-num">09</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Requirements for Probabilistic Products</span>
-                        <span class="toc-ch-desc">USID.O framework, eval-first PRDs, LLM-as-Judge</span>
-                    </div>
-                </a></li>
-            </ul>
-        </div>
+            <!-- Front Matter -->
+            <div class="dense-part-header"><a href="front-matter/introduction.html">Front Matter</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">FM</span> <a href="front-matter/introduction.html">Introduction: Defining the Journey from AI Assistant to AI Engine</a></div>
 
-        <!-- Part III: Vibe-Coding and AI-Native Prototyping -->
-        <div class="toc-part">
-            <h2><a href="part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></h2>
-            <p class="part-intro">High-velocity prototyping with AI-native development workflows.</p>
-            
-            <ul class="toc-chapters toc-overview">
-                <li><a href="part-3-vibe-coding/chapter-10/index.html" class="toc-ch">
-                    <span class="toc-ch-num">10</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">What Vibe-Coding Is Really For</span>
-                        <span class="toc-ch-desc">Discovery tool, not just implementation</span>
-                    </div>
-                </a></li>
-                <li><a href="part-3-vibe-coding/chapter-11/index.html" class="toc-ch">
-                    <span class="toc-ch-num">11</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">AI-Native Prototyping Workflow</span>
-                        <span class="toc-ch-desc">From idea to prototype, iteration patterns</span>
-                    </div>
-                </a></li>
-                <li><a href="part-3-vibe-coding/chapter-12/index.html" class="toc-ch">
-                    <span class="toc-ch-num">12</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Prompting, Context, Memory, and Reusable Skills</span>
-                        <span class="toc-ch-desc">Advanced prompting, context management, skills</span>
-                    </div>
-                </a></li>
-                <li><a href="part-3-vibe-coding/chapter-13/index.html" class="toc-ch">
-                    <span class="toc-ch-num">13</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Multi-Agent and Tool-Based Build Flows</span>
-                        <span class="toc-ch-desc">Multi-agent orchestration, MCP connectors</span>
-                    </div>
-                </a></li>
-                <li><a href="part-3-vibe-coding/chapter-14/index.html" class="toc-ch">
-                    <span class="toc-ch-num">14</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">From Prototype to Reviewable System</span>
-                        <span class="toc-ch-desc">Transitioning to production-ready code</span>
-                    </div>
-                </a></li>
-            </ul>
-        </div>
+            <!-- Part I: Why AI Changes Product Creation -->
+            <div class="dense-part-header"><a href="part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">01</span> <a href="part-1-why-ai-changes/chapter-1/index.html">The New Economics of Building with AI</a></div>
+            <div class="dense-sections"><a href="part-1-why-ai-changes/chapter-1/sections/section-1-1.html">1.1 The 50x Cost Reduction</a> &middot; <a href="part-1-why-ai-changes/chapter-1/sections/section-1-2.html">1.2 AI as Compression of Artifact Creation</a> &middot; <a href="part-1-why-ai-changes/chapter-1/sections/section-1-3.html">1.3 Build/Buy/Bake Decisions</a> &middot; <a href="part-1-why-ai-changes/chapter-1/sections/section-1-4.html">1.4 The New Economics Summary</a> &middot; <a href="part-1-why-ai-changes/chapter-1/sections/section-1-5.html">1.5 Lab: Calculate Your AI Economics</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">02</span> <a href="part-1-why-ai-changes/chapter-2/index.html">What AI Can and Cannot Reliably Do</a></div>
+            <div class="dense-sections"><a href="part-1-why-ai-changes/chapter-2/sections/section-2-1.html">2.1 Capabilities vs. Limitations</a> &middot; <a href="part-1-why-ai-changes/chapter-2/sections/section-2-2.html">2.2 Hallucination Mitigation Strategies</a> &middot; <a href="part-1-why-ai-changes/chapter-2/sections/section-2-3.html">2.3 Knowing When AI Is Unreliable</a> &middot; <a href="part-1-why-ai-changes/chapter-2/sections/section-2-4.html">2.4 Designing for AI Failure</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">03</span> <a href="part-1-why-ai-changes/chapter-3/index.html">The Human-AI Product Stack</a></div>
+            <div class="dense-sections"><a href="part-1-why-ai-changes/chapter-3/sections/section-3-1.html">3.1 Human-AI Interaction Patterns</a> &middot; <a href="part-1-why-ai-changes/chapter-3/sections/section-3-2.html">3.2 Feedback Loops and Continuous Learning</a> &middot; <a href="part-1-why-ai-changes/chapter-3/sections/section-3-3.html">3.3 Anti-Patterns in Human-AI Collaboration</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">04</span> <a href="part-1-why-ai-changes/chapter-4/index.html">Scientific and Philosophical Principles</a></div>
+            <div class="dense-sections"><a href="part-1-why-ai-changes/chapter-4/sections/section-4-1.html">4.1 Cognitive Load Theory for AI Products</a> &middot; <a href="part-1-why-ai-changes/chapter-4/sections/section-4-2.html">4.2 Complementary Change Theory</a> &middot; <a href="part-1-why-ai-changes/chapter-4/sections/section-4-3.html">4.3 Ethics and Responsible AI Product Development</a> &middot; <a href="part-1-why-ai-changes/chapter-4/sections/section-4-4.html">4.4 The Four Questions Framework</a> &middot; <a href="part-1-why-ai-changes/chapter-4/sections/section-4-5.html">4.5 Lab: Apply the Four Questions</a> &middot; <a href="part-1-why-ai-changes/chapter-4/sections/section-4-6.html">4.6 Part I Summary</a></div>
 
-        <!-- Part IV: Engineering AI Products -->
-        <div class="toc-part">
-            <h2><a href="part-4-engineering/index.html">Part IV: Engineering AI Products</a></h2>
-            <p class="part-intro">Building production-ready AI systems with modern architecture patterns.</p>
-            
-            <ul class="toc-chapters toc-overview">
-                <li><a href="part-4-engineering/chapter-15/index.html" class="toc-ch">
-                    <span class="toc-ch-num">15</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Reference Architectures for AI Products</span>
-                        <span class="toc-ch-desc">Common patterns from simple to complex</span>
-                    </div>
-                </a></li>
-                <li><a href="part-4-engineering/chapter-16/index.html" class="toc-ch">
-                    <span class="toc-ch-num">16</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Models, Routing, and Capability Allocation</span>
-                        <span class="toc-ch-desc">Router strategies, model selection</span>
-                    </div>
-                </a></li>
-                <li><a href="part-4-engineering/chapter-17/index.html" class="toc-ch">
-                    <span class="toc-ch-num">17</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Retrieval and Knowledge Systems</span>
-                        <span class="toc-ch-desc">Vector DBs, Graph RAG, Self-Correcting RAG</span>
-                    </div>
-                </a></li>
-                <li><a href="part-4-engineering/chapter-18/index.html" class="toc-ch">
-                    <span class="toc-ch-num">18</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">State, Memory, and Workflow Orchestration</span>
-                        <span class="toc-ch-desc">Memory patterns, orchestration frameworks</span>
-                    </div>
-                </a></li>
-                <li><a href="part-4-engineering/chapter-19/index.html" class="toc-ch">
-                    <span class="toc-ch-num">19</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Building with Protocols and Interoperability</span>
-                        <span class="toc-ch-desc">MCP, A2A, agent communication</span>
-                    </div>
-                </a></li>
-                <li><a href="part-4-engineering/chapter-20/index.html" class="toc-ch">
-                    <span class="toc-ch-num">20</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Security, Privacy, and Abuse Resistance</span>
-                        <span class="toc-ch-desc">Prompt injection, data privacy, adversarial</span>
-                    </div>
-                </a></li>
-            </ul>
-        </div>
+            <!-- Part II -->
+            <div class="dense-part-header"><a href="part-2-discovery-design/index.html">Part II: AI-Native Product Discovery and Design</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">05</span> <a href="part-2-discovery-design/chapter-5/index.html">Finding Problems Worth Solving with AI</a></div>
+            <div class="dense-sections"><a href="part-2-discovery-design/chapter-5/sections/section-5-1.html">5.1 User Research for AI Products</a> &middot; <a href="part-2-discovery-design/chapter-5/sections/section-5-2.html">5.2 Identifying AI-Appropriate Problems</a> &middot; <a href="part-2-discovery-design/chapter-5/sections/section-5-3.html">5.3 Problem Prioritization Frameworks</a> &middot; <a href="part-2-discovery-design/chapter-5/sections/section-5-4.html">5.4 Case Study: From Problem to AI Solution</a> &middot; <a href="part-2-discovery-design/chapter-5/sections/section-5-5.html">5.5 Lab: Find Your AI Problem Space</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">06</span> <a href="part-2-discovery-design/chapter-6/index.html">AI Product Strategy and Portfolio Thinking</a></div>
+            <div class="dense-sections"><a href="part-2-discovery-design/chapter-6/sections/section-6-1.html">6.1 AI Product Taxonomy</a> &middot; <a href="part-2-discovery-design/chapter-6/sections/section-6-2.html">6.2 Build/Buy/Bake Framework</a> &middot; <a href="part-2-discovery-design/chapter-6/sections/section-6-3.html">6.3 Value Proposition Design for AI</a> &middot; <a href="part-2-discovery-design/chapter-6/sections/section-6-4.html">6.4 Portfolio Thinking and Roadmapping</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">07</span> <a href="part-2-discovery-design/chapter-7/index.html">AI-Native Product Discovery</a></div>
+            <div class="dense-sections"><a href="part-2-discovery-design/chapter-7/sections/section-7-1.html">7.1 Discovery Methods for AI</a> &middot; <a href="part-2-discovery-design/chapter-7/sections/section-7-2.html">7.2 Rapid Prototyping with AI</a> &middot; <a href="part-2-discovery-design/chapter-7/sections/section-7-3.html">7.3 Testing AI Product Hypotheses</a> &middot; <a href="part-2-discovery-design/chapter-7/sections/section-7-4.html">7.4 From Hypothesis to Validation</a> &middot; <a href="part-2-discovery-design/chapter-7/sections/section-7-5.html">7.5 Lab: Run an AI Discovery Sprint</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">08</span> <a href="part-2-discovery-design/chapter-8/index.html">Designing AI User Experiences</a></div>
+            <div class="dense-sections"><a href="part-2-discovery-design/chapter-8/sections/section-8-1.html">8.1 UX Patterns for AI Products</a> &middot; <a href="part-2-discovery-design/chapter-8/sections/section-8-2.html">8.2 Trust Design and Calibration</a> &middot; <a href="part-2-discovery-design/chapter-8/sections/section-8-3.html">8.3 Expectation Management</a> &middot; <a href="part-2-discovery-design/chapter-8/sections/section-8-4.html">8.4 Handling Uncertainty in UI</a> &middot; <a href="part-2-discovery-design/chapter-8/sections/section-8-5.html">8.5 Lab: Design an AI Trust Experience</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">09</span> <a href="part-2-discovery-design/chapter-9/index.html">Requirements for Probabilistic Products</a></div>
+            <div class="dense-sections"><a href="part-2-discovery-design/chapter-9/sections/section-9-1.html">9.1 USID.O Framework</a> &middot; <a href="part-2-discovery-design/chapter-9/sections/section-9-2.html">9.2 Eval-First PRDs</a> &middot; <a href="part-2-discovery-design/chapter-9/sections/section-9-3.html">9.3 LLM-as-Judge for Requirements</a> &middot; <a href="part-2-discovery-design/chapter-9/sections/section-9-4.html">9.4 Lab: Write an Eval-First PRD</a></div>
 
-        <!-- Part V: Evaluation, Reliability, and Governance -->
-        <div class="toc-part">
-            <h2><a href="part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></h2>
-            <p class="part-intro">Making AI products work reliably in production.</p>
-            
-            <ul class="toc-chapters toc-overview">
-                <li><a href="part-5-evaluation-reliability/chapter-21/index.html" class="toc-ch">
-                    <span class="toc-ch-num">21</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Evals as the Core Development Discipline</span>
-                        <span class="toc-ch-desc">LLM-as-Judge, eval pipelines, eval-driven dev</span>
-                    </div>
-                </a></li>
-                <li><a href="part-5-evaluation-reliability/chapter-22/index.html" class="toc-ch">
-                    <span class="toc-ch-num">22</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Observability, Debugging, and Failure Analysis</span>
-                        <span class="toc-ch-desc">Tracing, debugging AI failures</span>
-                    </div>
-                </a></li>
-                <li><a href="part-5-evaluation-reliability/chapter-23/index.html" class="toc-ch">
-                    <span class="toc-ch-num">23</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Reliability, Guardrails, and Recovery</span>
-                        <span class="toc-ch-desc">Circuit breakers, graceful degradation</span>
-                    </div>
-                </a></li>
-                <li><a href="part-5-evaluation-reliability/chapter-24/index.html" class="toc-ch">
-                    <span class="toc-ch-num">24</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Cost, Latency, and Unit Economics</span>
-                        <span class="toc-ch-desc">Cost optimization, latency management</span>
-                    </div>
-                </a></li>
-                <li><a href="part-5-evaluation-reliability/chapter-25/index.html" class="toc-ch">
-                    <span class="toc-ch-num">25</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Governance, Compliance, and Trustworthy AI</span>
-                        <span class="toc-ch-desc">NIST AI RMF, ISO 42001, EU AI Act</span>
-                    </div>
-                </a></li>
-            </ul>
-        </div>
+            <!-- Part III -->
+            <div class="dense-part-header"><a href="part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">10</span> <a href="part-3-vibe-coding/chapter-10/index.html">What Vibe-Coding Is Really For</a></div>
+            <div class="dense-sections"><a href="part-3-vibe-coding/chapter-10/sections/section-10-1.html">10.1 Discovery Tool, Not Just Implementation</a> &middot; <a href="part-3-vibe-coding/chapter-10/sections/section-10-2.html">10.2 When to Use Vibe Coding</a> &middot; <a href="part-3-vibe-coding/chapter-10/sections/section-10-3.html">10.3 Limits of Vibe Coding</a> &middot; <a href="part-3-vibe-coding/chapter-10/sections/section-10-4.html">10.4 Lab: Run a Vibe Coding Discovery Session</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">11</span> <a href="part-3-vibe-coding/chapter-11/index.html">AI-Native Prototyping Workflow</a></div>
+            <div class="dense-sections"><a href="part-3-vibe-coding/chapter-11/sections/section-11-1.html">11.1 From Idea to Prototype</a> &middot; <a href="part-3-vibe-coding/chapter-11/sections/section-11-2.html">11.2 Iteration Patterns</a> &middot; <a href="part-3-vibe-coding/chapter-11/sections/section-11-3.html">11.3 Evaluating Prototypes</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">12</span> <a href="part-3-vibe-coding/chapter-12/index.html">Prompting, Context, Memory, and Reusable Skills</a></div>
+            <div class="dense-sections"><a href="part-3-vibe-coding/chapter-12/sections/section-12-1.html">12.1 Advanced Prompting Techniques</a> &middot; <a href="part-3-vibe-coding/chapter-12/sections/section-12-2.html">12.2 Context Management</a> &middot; <a href="part-3-vibe-coding/chapter-12/sections/section-12-3.html">12.3 Building Reusable Skills</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">13</span> <a href="part-3-vibe-coding/chapter-13/index.html">Multi-Agent and Tool-Based Build Flows</a></div>
+            <div class="dense-sections"><a href="part-3-vibe-coding/chapter-13/sections/section-13-1.html">13.1 Multi-Agent Orchestration</a> &middot; <a href="part-3-vibe-coding/chapter-13/sections/section-13-2.html">13.2 MCP Connectors</a> &middot; <a href="part-3-vibe-coding/chapter-13/sections/section-13-3.html">13.3 Lab: Build a Multi-Agent Prototype</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">14</span> <a href="part-3-vibe-coding/chapter-14/index.html">From Prototype to Reviewable System</a></div>
+            <div class="dense-sections"><a href="part-3-vibe-coding/chapter-14/sections/section-14-1.html">14.1 Transitioning to Production-Ready Code</a> &middot; <a href="part-3-vibe-coding/chapter-14/sections/section-14-2.html">14.2 Code Review for AI-Generated Code</a> &middot; <a href="part-3-vibe-coding/chapter-14/sections/section-14-3.html">14.3 Testing AI Features</a> &middot; <a href="part-3-vibe-coding/chapter-14/sections/section-14-4.html">14.4 Lab: Refactor Prototype to Production</a></div>
 
-        <!-- Part VI: Shipping, Scaling, and Operating -->
-        <div class="toc-part">
-            <h2><a href="part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></h2>
-            <p class="part-intro">Taking AI products from launch to scale.</p>
-            
-            <ul class="toc-chapters toc-overview">
-                <li><a href="part-6-shipping-scaling/chapter-26/index.html" class="toc-ch">
-                    <span class="toc-ch-num">26</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Launching AI Features and Products</span>
-                        <span class="toc-ch-desc">GTM strategies, pricing models, onboarding</span>
-                    </div>
-                </a></li>
-                <li><a href="part-6-shipping-scaling/chapter-27/index.html" class="toc-ch">
-                    <span class="toc-ch-num">27</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Post-Launch Learning Loops</span>
-                        <span class="toc-ch-desc">User feedback, continuous improvement</span>
-                    </div>
-                </a></li>
-                <li><a href="part-6-shipping-scaling/chapter-28/index.html" class="toc-ch">
-                    <span class="toc-ch-num">28</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Team Topologies and AI-Native Operating Models</span>
-                        <span class="toc-ch-desc">Cross-functional teams, AI-first culture</span>
-                    </div>
-                </a></li>
-                <li><a href="part-6-shipping-scaling/chapter-29/index.html" class="toc-ch">
-                    <span class="toc-ch-num">29</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Building the AI Product Organization</span>
-                        <span class="toc-ch-desc">Organizational structures, career paths, hiring</span>
-                    </div>
-                </a></li>
-                <li><a href="part-6-shipping-scaling/chapter-30/index.html" class="toc-ch">
-                    <span class="toc-ch-num">30</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Strategic Positioning and Future-Proofing</span>
-                        <span class="toc-ch-desc">Competitive positioning, 2026+ trends</span>
-                    </div>
-                </a></li>
-            </ul>
-        </div>
+            <!-- Part IV -->
+            <div class="dense-part-header"><a href="part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">15</span> <a href="part-4-engineering/chapter-15/index.html">Reference Architectures for AI Products</a></div>
+            <div class="dense-sections"><a href="part-4-engineering/chapter-15/sections/section-15-1.html">15.1 Architecture Spectrum</a> &middot; <a href="part-4-engineering/chapter-15/sections/section-15-2.html">15.2 Copilot Architecture</a> &middot; <a href="part-4-engineering/chapter-15/sections/section-15-3.html">15.3 Agentic Architecture</a> &middot; <a href="part-4-engineering/chapter-15/sections/section-15-4.html">15.4 Multi-Agent Systems</a> &middot; <a href="part-4-engineering/chapter-15/sections/section-15-5.html">15.5 Lab: Choose Your Architecture</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">16</span> <a href="part-4-engineering/chapter-16/index.html">Models, Routing, and Capability Allocation</a></div>
+            <div class="dense-sections"><a href="part-4-engineering/chapter-16/sections/section-16-1.html">16.1 Router Strategies</a> &middot; <a href="part-4-engineering/chapter-16/sections/section-16-2.html">16.2 Model Selection</a> &middot; <a href="part-4-engineering/chapter-16/sections/section-16-3.html">16.3 Cost-Performance Optimization</a> &middot; <a href="part-4-engineering/chapter-16/sections/section-16-4.html">16.4 Fallback Strategies</a> &middot; <a href="part-4-engineering/chapter-16/sections/section-16-5.html">16.5 Lab: Implement Model Routing</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">17</span> <a href="part-4-engineering/chapter-17/index.html">Retrieval and Knowledge Systems</a></div>
+            <div class="dense-sections"><a href="part-4-engineering/chapter-17/sections/section-17-1.html">17.1 Vector Databases</a> &middot; <a href="part-4-engineering/chapter-17/sections/section-17-2.html">17.2 Graph RAG</a> &middot; <a href="part-4-engineering/chapter-17/sections/section-17-3.html">17.3 Self-Correcting RAG</a> &middot; <a href="part-4-engineering/chapter-17/sections/section-17-4.html">17.4 Hybrid Search</a> &middot; <a href="part-4-engineering/chapter-17/sections/section-17-5.html">17.5 Lab: Build a RAG System</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">18</span> <a href="part-4-engineering/chapter-18/index.html">State, Memory, and Workflow Orchestration</a></div>
+            <div class="dense-sections"><a href="part-4-engineering/chapter-18/sections/section-18-1.html">18.1 Memory Patterns</a> &middot; <a href="part-4-engineering/chapter-18/sections/section-18-2.html">18.2 Conversation Context Management</a> &middot; <a href="part-4-engineering/chapter-18/sections/section-18-3.html">18.3 Orchestration Frameworks</a> &middot; <a href="part-4-engineering/chapter-18/sections/section-18-4.html">18.4 Workflow Design Patterns</a> &middot; <a href="part-4-engineering/chapter-18/sections/section-18-5.html">18.5 Lab: Implement Stateful Workflow</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">19</span> <a href="part-4-engineering/chapter-19/index.html">Building with Protocols and Interoperability</a></div>
+            <div class="dense-sections"><a href="part-4-engineering/chapter-19/sections/section-19-1.html">19.1 Model Context Protocol (MCP)</a> &middot; <a href="part-4-engineering/chapter-19/sections/section-19-2.html">19.2 Agent-to-Agent Protocol (A2A)</a> &middot; <a href="part-4-engineering/chapter-19/sections/section-19-3.html">19.3 Building MCP Servers</a> &middot; <a href="part-4-engineering/chapter-19/sections/section-19-4.html">19.4 Interoperability Patterns</a> &middot; <a href="part-4-engineering/chapter-19/sections/section-19-5.html">19.5 Lab: Build an MCP Server</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">20</span> <a href="part-4-engineering/chapter-20/index.html">Security, Privacy, and Abuse Resistance</a></div>
+            <div class="dense-sections"><a href="part-4-engineering/chapter-20/sections/section-20-1.html">20.1 Prompt Injection Defense</a> &middot; <a href="part-4-engineering/chapter-20/sections/section-20-2.html">20.2 Data Privacy in AI Products</a> &middot; <a href="part-4-engineering/chapter-20/sections/section-20-3.html">20.3 Adversarial Robustness</a> &middot; <a href="part-4-engineering/chapter-20/sections/section-20-4.html">20.4 Rate Limiting and Abuse Detection</a> &middot; <a href="part-4-engineering/chapter-20/sections/section-20-5.html">20.5 Lab: Security Audit Your AI Product</a></div>
 
-        <!-- Part VII: End-to-End Practice and Teaching Kit -->
-        <div class="toc-part">
-            <h2><a href="part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></h2>
-            <p class="part-intro">Putting it all together and teaching others.</p>
-            
-            <ul class="toc-chapters toc-overview">
-                <li><a href="part-7-practice-teaching/chapter-31/index.html" class="toc-ch">
-                    <span class="toc-ch-num">31</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">End-to-End Capstone Playbook</span>
-                        <span class="toc-ch-desc">Complete workflow from discovery to launch</span>
-                    </div>
-                </a></li>
-                <li><a href="part-7-practice-teaching/chapter-32/index.html" class="toc-ch">
-                    <span class="toc-ch-num">32</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Case Studies in Full</span>
-                        <span class="toc-ch-desc">Detailed real-world case studies</span>
-                    </div>
-                </a></li>
-                <li><a href="part-7-practice-teaching/chapter-33/index.html" class="toc-ch">
-                    <span class="toc-ch-num">33</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Teaching the Material as a Course</span>
-                        <span class="toc-ch-desc">Adapting content for teaching</span>
-                    </div>
-                </a></li>
-            </ul>
-        </div>
+            <!-- Part V -->
+            <div class="dense-part-header"><a href="part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">21</span> <a href="part-5-evaluation-reliability/chapter-21/index.html">Evals as the Core Development Discipline</a></div>
+            <div class="dense-sections"><a href="part-5-evaluation-reliability/chapter-21/sections/section-21-1.html">21.1 LLM-as-Judge</a> &middot; <a href="part-5-evaluation-reliability/chapter-21/sections/section-21-2.html">21.2 Building Eval Pipelines</a> &middot; <a href="part-5-evaluation-reliability/chapter-21/sections/section-21-3.html">21.3 Eval-Driven Development</a> &middot; <a href="part-5-evaluation-reliability/chapter-21/sections/section-21-4.html">21.4 Eval Metrics Selection</a> &middot; <a href="part-5-evaluation-reliability/chapter-21/sections/section-21-5.html">21.5 Lab: Build Your First Eval</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">22</span> <a href="part-5-evaluation-reliability/chapter-22/index.html">Observability, Debugging, and Failure Analysis</a></div>
+            <div class="dense-sections"><a href="part-5-evaluation-reliability/chapter-22/sections/section-22-1.html">22.1 Tracing AI Systems</a> &middot; <a href="part-5-evaluation-reliability/chapter-22/sections/section-22-2.html">22.2 Debugging AI Failures</a> &middot; <a href="part-5-evaluation-reliability/chapter-22/sections/section-22-3.html">22.3 Root Cause Analysis</a> &middot; <a href="part-5-evaluation-reliability/chapter-22/sections/section-22-4.html">22.4 Lab: Set Up Observability</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">23</span> <a href="part-5-evaluation-reliability/chapter-23/index.html">Reliability, Guardrails, and Recovery</a></div>
+            <div class="dense-sections"><a href="part-5-evaluation-reliability/chapter-23/sections/section-23-1.html">23.1 Circuit Breakers</a> &middot; <a href="part-5-evaluation-reliability/chapter-23/sections/section-23-2.html">23.2 Graceful Degradation</a> &middot; <a href="part-5-evaluation-reliability/chapter-23/sections/section-23-3.html">23.3 Guardrails and Content Filtering</a> &middot; <a href="part-5-evaluation-reliability/chapter-23/sections/section-23-4.html">23.4 Lab: Implement Guardrails</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">24</span> <a href="part-5-evaluation-reliability/chapter-24/index.html">Cost, Latency, and Unit Economics</a></div>
+            <div class="dense-sections"><a href="part-5-evaluation-reliability/chapter-24/sections/section-24-1.html">24.1 Cost Optimization Strategies</a> &middot; <a href="part-5-evaluation-reliability/chapter-24/sections/section-24-2.html">24.2 Latency Management</a> &middot; <a href="part-5-evaluation-reliability/chapter-24/sections/section-24-3.html">24.3 Unit Economics Modeling</a> &middot; <a href="part-5-evaluation-reliability/chapter-24/sections/section-24-4.html">24.4 Lab: Analyze Your Unit Economics</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">25</span> <a href="part-5-evaluation-reliability/chapter-25/index.html">Governance, Compliance, and Trustworthy AI</a></div>
+            <div class="dense-sections"><a href="part-5-evaluation-reliability/chapter-25/sections/section-25-1.html">25.1 NIST AI RMF</a> &middot; <a href="part-5-evaluation-reliability/chapter-25/sections/section-25-2.html">25.2 ISO 42001</a> &middot; <a href="part-5-evaluation-reliability/chapter-25/sections/section-25-3.html">25.3 EU AI Act Compliance</a> &middot; <a href="part-5-evaluation-reliability/chapter-25/sections/section-25-4.html">25.4 Lab: Conduct a Compliance Audit</a></div>
 
-        <!-- Appendices -->
-        <div class="toc-part">
-            <h2>Appendices</h2>
-            <ul class="toc-chapters toc-overview">
-                <li><a href="part-7-practice-teaching/appendices/appendix-a-glossary.html" class="toc-ch">
-                    <span class="toc-ch-num">A</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Glossary</span>
-                        <span class="toc-ch-desc">Key terminology for AI product development</span>
-                    </div>
-                </a></li>
-                <li><a href="part-7-practice-teaching/appendices/appendix-b-tool-comparison.html" class="toc-ch">
-                    <span class="toc-ch-num">B</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Tool Comparison Matrices</span>
-                        <span class="toc-ch-desc">AI coding tools, RAG frameworks, evaluation tools</span>
-                    </div>
-                </a></li>
-                <li><a href="part-7-practice-teaching/appendices/appendix-c-templates.html" class="toc-ch">
-                    <span class="toc-ch-num">C</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Templates</span>
-                        <span class="toc-ch-desc">Eval-first PRD, USID.O, and more</span>
-                    </div>
-                </a></li>
-                <li><a href="part-7-practice-teaching/appendices/appendix-d-evaluation-rubrics.html" class="toc-ch">
-                    <span class="toc-ch-num">D</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Evaluation Rubrics</span>
-                        <span class="toc-ch-desc">Detailed rubrics for assessing AI work</span>
-                    </div>
-                </a></li>
-                <li><a href="part-7-practice-teaching/appendices/appendix-e-architecture-checklists.html" class="toc-ch">
-                    <span class="toc-ch-num">E</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Architecture Checklists</span>
-                        <span class="toc-ch-desc">Pre-launch architecture review checklists</span>
-                    </div>
-                </a></li>
-                <li><a href="part-7-practice-teaching/appendices/appendix-f-prompts-skills-examples.html" class="toc-ch">
-                    <span class="toc-ch-num">F</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Prompts and Skills Examples</span>
-                        <span class="toc-ch-desc">Copy-paste prompts and .cursorrules</span>
-                    </div>
-                </a></li>
-                <li><a href="part-7-practice-teaching/appendices/appendix-g-artifact-translation.html" class="toc-ch">
-                    <span class="toc-ch-num">G</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Executable Product Artifacts</span>
-                        <span class="toc-ch-desc">AI-generated artifacts that become real products</span>
-                    </div>
-                </a></li>
-                <li><a href="part-7-practice-teaching/appendices/appendix-h-anti-patterns.html" class="toc-ch">
-                    <span class="toc-ch-num">H</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">AI Product Anti-Patterns</span>
-                        <span class="toc-ch-desc">Common mistakes and how to avoid them</span>
-                    </div>
-                </a></li>
-                <li><a href="part-7-practice-teaching/appendices/appendix-i-economics-of-loop.html" class="toc-ch">
-                    <span class="toc-ch-num">I</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Economics of the AI Product Loop</span>
-                        <span class="toc-ch-desc">Unit economics, loop dynamics, and sustainability</span>
-                    </div>
-                </a></li>
-            </ul>
-        </div>
+            <!-- Part VI -->
+            <div class="dense-part-header"><a href="part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">26</span> <a href="part-6-shipping-scaling/chapter-26/index.html">Launching AI Features and Products</a></div>
+            <div class="dense-sections"><a href="part-6-shipping-scaling/chapter-26/sections/section-26-1.html">26.1 GTM Strategies for AI</a> &middot; <a href="part-6-shipping-scaling/chapter-26/sections/section-26-2.html">26.2 Pricing Models</a> &middot; <a href="part-6-shipping-scaling/chapter-26/sections/section-26-3.html">26.3 Onboarding and Education</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">27</span> <a href="part-6-shipping-scaling/chapter-27/index.html">Post-Launch Learning Loops</a></div>
+            <div class="dense-sections"><a href="part-6-shipping-scaling/chapter-27/sections/section-27-1.html">27.1 User Feedback Integration</a> &middot; <a href="part-6-shipping-scaling/chapter-27/sections/section-27-2.html">27.2 Continuous Improvement Pipelines</a> &middot; <a href="part-6-shipping-scaling/chapter-27/sections/section-27-3.html">27.3 Model Retraining Strategies</a> &middot; <a href="part-6-shipping-scaling/chapter-27/sections/section-27-4.html">27.4 A/B Testing AI Features</a> &middot; <a href="part-6-shipping-scaling/chapter-27/sections/section-27-5.html">27.5 Lab: Build a Learning Loop</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">28</span> <a href="part-6-shipping-scaling/chapter-28/index.html">Team Topologies and AI-Native Operating Models</a></div>
+            <div class="dense-sections"><a href="part-6-shipping-scaling/chapter-28/sections/section-28-1.html">28.1 Cross-Functional AI Teams</a> &middot; <a href="part-6-shipping-scaling/chapter-28/sections/section-28-2.html">28.2 AI-First Culture</a> &middot; <a href="part-6-shipping-scaling/chapter-28/sections/section-28-3.html">28.3 Roles and Responsibilities</a> &middot; <a href="part-6-shipping-scaling/chapter-28/sections/section-28-4.html">28.4 Case Study: Spotify's AI Organization</a> &middot; <a href="part-6-shipping-scaling/chapter-28/sections/section-28-5.html">28.5 Lab: Design Your AI Team Topology</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">29</span> <a href="part-6-shipping-scaling/chapter-29/index.html">Building the AI Product Organization</a></div>
+            <div class="dense-sections"><a href="part-6-shipping-scaling/chapter-29/sections/section-29-1.html">29.1 Organizational Structures</a> &middot; <a href="part-6-shipping-scaling/chapter-29/sections/section-29-2.html">29.2 Career Paths for AI Product Roles</a> &middot; <a href="part-6-shipping-scaling/chapter-29/sections/section-29-3.html">29.3 Hiring AI Talent</a> &middot; <a href="part-6-shipping-scaling/chapter-29/sections/section-29-4.html">29.4 Lab: Create an AI Product Role</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">30</span> <a href="part-6-shipping-scaling/chapter-30/index.html">Strategic Positioning and Future-Proofing</a></div>
+            <div class="dense-sections"><a href="part-6-shipping-scaling/chapter-30/sections/section-30-1.html">30.1 Competitive Positioning</a> &middot; <a href="part-6-shipping-scaling/chapter-30/sections/section-30-2.html">30.2 2026+ Trend Analysis</a> &middot; <a href="part-6-shipping-scaling/chapter-30/sections/section-30-3.html">30.3 Building Defensibility</a> &middot; <a href="part-6-shipping-scaling/chapter-30/sections/section-30-4.html">30.4 Lab: Conduct a Strategic Review</a></div>
 
-        <!-- Back Matter -->
-        <div class="toc-part">
-            <h2>Back Matter</h2>
-            <ul class="toc-chapters toc-overview">
-                <li><a href="back-matter/conclusion.html" class="toc-ch">
-                    <span class="toc-ch-num">BM</span>
-                    <div class="toc-ch-info">
-                        <span class="toc-ch-title">Conclusion</span>
-                        <span class="toc-ch-desc">Your AI Product Mastery Roadmap</span>
-                    </div>
-                </a></li>
-            </ul>
+            <!-- Part VII -->
+            <div class="dense-part-header"><a href="part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">31</span> <a href="part-7-practice-teaching/chapter-31/index.html">End-to-End Capstone Playbook</a></div>
+            <div class="dense-sections"><a href="part-7-practice-teaching/chapter-31/sections/section-31-1.html">31.1 Complete Workflow Overview</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-2.html">31.2 Discovery Phase</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-3.html">31.3 Design Phase</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-4.html">31.4 Development Phase</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-5.html">31.5 Launch Phase</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-6.html">31.6 Capstone Project Guidelines</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">32</span> <a href="part-7-practice-teaching/chapter-32/index.html">Case Studies in Full</a></div>
+            <div class="dense-sections"><a href="part-7-practice-teaching/chapter-32/sections/section-32-1.html">32.1 Case Study: AI Coding Assistant</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-2.html">32.2 Case Study: AI Customer Service</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-3.html">32.3 Case Study: AI Content Platform</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-4.html">32.4 Case Study: AI Data Analysis Tool</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-5.html">32.5 Lab: Analyze Your Own Case</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">33</span> <a href="part-7-practice-teaching/chapter-33/index.html">Teaching the Material as a Course</a></div>
+            <div class="dense-sections"><a href="part-7-practice-teaching/chapter-33/sections/section-33-1.html">33.1 Course Design Principles</a> &middot; <a href="part-7-practice-teaching/chapter-33/sections/section-33-2.html">33.2 Curriculum Structure</a> &middot; <a href="part-7-practice-teaching/chapter-33/sections/section-33-3.html">33.3 Hands-On Exercises</a> &middot; <a href="part-7-practice-teaching/chapter-33/sections/section-33-4.html">33.4 Assessment Strategies</a> &middot; <a href="part-7-practice-teaching/chapter-33/sections/section-33-5.html">33.5 Adapting for Different Audiences</a></div>
+
+            <!-- Appendices -->
+            <div class="dense-part-header dense-appendices-header">Appendices</div>
+            <div class="dense-chapter"><span class="dense-ch-num">A</span> <a href="part-7-practice-teaching/appendices/appendix-a-glossary.html">Glossary</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">B</span> <a href="part-7-practice-teaching/appendices/appendix-b-tool-comparison.html">Tool Comparison Matrices</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">C</span> <a href="part-7-practice-teaching/appendices/appendix-c-templates.html">Templates</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">D</span> <a href="part-7-practice-teaching/appendices/appendix-d-evaluation-rubrics.html">Evaluation Rubrics</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">E</span> <a href="part-7-practice-teaching/appendices/appendix-e-architecture-checklists.html">Architecture Checklists</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">F</span> <a href="part-7-practice-teaching/appendices/appendix-f-prompts-skills-examples.html">Prompts and Skills Examples</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">G</span> <a href="part-7-practice-teaching/appendices/appendix-g-artifact-translation.html">Executable Product Artifacts</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">H</span> <a href="part-7-practice-teaching/appendices/appendix-h-anti-patterns.html">AI Product Anti-Patterns</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">I</span> <a href="part-7-practice-teaching/appendices/appendix-i-economics-of-loop.html">Economics of the AI Product Loop</a></div>
+
+            <!-- Back Matter -->
+            <div class="dense-part-header">Back Matter</div>
+            <div class="dense-chapter"><span class="dense-ch-num">BM</span> <a href="back-matter/conclusion.html">Conclusion: Your AI Product Mastery Roadmap</a></div>
+
         </div>
 
     </main>
@@ -479,13 +331,29 @@
     </footer>
     
     <script>
-        function setTocView(view) {
-            const toc = document.querySelector('.toc');
-            const buttons = document.querySelectorAll('.toc-view-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            if (view === 'detailed') { toc.classList.add('toc-view-detailed'); }
-            else { toc.classList.remove('toc-view-detailed'); }
+        function showToc(view) {
+            const content = document.querySelector('main.content');
+            const switchInput = document.getElementById('toc-switch-input');
+            const shortLabel = document.getElementById('toc-label-short');
+            const detailedLabel = document.getElementById('toc-label-detailed');
+            const shortToc = document.getElementById('toc-short');
+            const detailedToc = document.getElementById('toc-detailed');
+            
+            if (view === 'detailed') {
+                if (switchInput) switchInput.checked = true;
+                if (shortLabel) shortLabel.style.color = '#999';
+                if (detailedLabel) detailedLabel.style.color = 'var(--primary)';
+                if (shortToc) shortToc.style.display = 'none';
+                if (detailedToc) detailedToc.style.display = 'block';
+                content.classList.add('toc-view-detailed');
+            } else {
+                if (switchInput) switchInput.checked = false;
+                if (shortLabel) shortLabel.style.color = 'var(--primary)';
+                if (detailedLabel) detailedLabel.style.color = '#999';
+                if (shortToc) shortToc.style.display = 'block';
+                if (detailedToc) detailedToc.style.display = 'none';
+                content.classList.remove('toc-view-detailed');
+            }
         }
     </script>
 </body>
