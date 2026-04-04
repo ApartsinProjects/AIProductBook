@@ -61,17 +61,10 @@
         .toc-toggle input:checked ~ #toc-label-short { color: #999; }
         .toc-toggle input:checked ~ #toc-label-detailed { color: var(--primary); }
         
-        /* ToC Views */
-        .toc-view-short { display: block; }
-        .toc-view-detailed .toc-view-short { display: none; }
-        .toc-view-detailed .toc-view-detailed { display: block; }
-        .toc-view-detailed .toc-view-short { display: none; }
-        .toc-view-detailed { display: block; }
-        .toc-view-short { display: block; }
-        
         /* Dense ToC Styles - LLMBook match */
         .stoc-part { margin-bottom: 1.5rem; }
         .stoc-group { padding-left: 0.5rem; }
+        
         .dense-part-header {
             font-family: 'Cinzel', Georgia, serif;
             font-size: 1.15rem;
@@ -89,6 +82,7 @@
         .dense-part-header a:hover {
             color: var(--accent);
         }
+        
         .dense-appendices-header {
             font-family: 'Cinzel', Georgia, serif;
             font-size: 1.1rem;
@@ -99,13 +93,15 @@
             border-bottom: 2px solid #ccc;
             letter-spacing: 0.02em;
         }
+        
+        /* Single line chapter entries - LLMBook style */
         .dense-chapter {
             display: flex;
             align-items: baseline;
             gap: 0.6rem;
-            padding: 0.45rem 0.5rem;
-            margin-bottom: 0.15rem;
-            border-radius: 6px;
+            padding: 0.3rem 0.5rem;
+            margin-bottom: 0.1rem;
+            border-radius: 4px;
             transition: background 0.2s ease;
         }
         .dense-chapter:hover {
@@ -120,19 +116,21 @@
         .dense-chapter a:hover {
             color: var(--highlight);
         }
+        
         .dense-ch-num {
             font-family: 'Segoe UI', system-ui, sans-serif;
             font-size: 0.78rem;
             font-weight: 700;
             color: var(--accent);
-            min-width: 2.5rem;
+            min-width: 2.8rem;
             flex-shrink: 0;
         }
+        
         .dense-sections {
-            padding: 0.4rem 0.5rem 0.6rem 3.1rem;
+            padding: 0.2rem 0.5rem 0.4rem 3.4rem;
             font-size: 0.85rem;
             color: var(--text-light);
-            line-height: 1.6;
+            line-height: 1.5;
         }
         .dense-sections a {
             color: var(--accent);
@@ -142,6 +140,42 @@
         .dense-sections a:hover {
             color: var(--highlight);
             text-decoration: underline;
+        }
+        
+        /* Header - LLMBook match */
+        .llmbook-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+        .llmbook-header .book-title {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .llmbook-header .toc-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 0.8rem;
+            padding: 0.35rem 0.75rem;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .llmbook-header .toc-btn:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+        .llmbook-header .toc-icon {
+            font-size: 1rem;
         }
     </style>
 </head>
@@ -168,96 +202,96 @@
             <span id="toc-label-detailed" onclick="showToc('detailed')">Detailed</span>
         </div>
 
-        <!-- SHORT TOC (default, visible) -->
-        <div id="toc-short" class="toc-view-short">
+        <!-- SHORT TOC (default, visible) - LLMBook style: single line per chapter -->
+        <div id="toc-short" style="display: block;">
 
             <!-- Front Matter -->
             <div class="stoc-part">
-                <div class="dense-part-header"><a href="front-matter/introduction.html">Front Matter</a></div>
+                <div class="dense-part-header">Front Matter</div>
                 <div class="stoc-group">
                     <div class="dense-chapter"><span class="dense-ch-num">FM</span> <a href="front-matter/introduction.html">Introduction: Defining the Journey from AI Assistant to AI Engine</a></div>
                 </div>
             </div>
 
-            <!-- Part I: Why AI Changes Product Creation -->
+            <!-- Part I -->
             <div class="stoc-part">
                 <div class="dense-part-header"><a href="part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
                 <div class="stoc-group">
-                    <div class="dense-chapter"><span class="dense-ch-num">01</span> <a href="part-1-why-ai-changes/chapter-1/index.html">The New Economics of Building with AI</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">02</span> <a href="part-1-why-ai-changes/chapter-2/index.html">What AI Can and Cannot Reliably Do</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">03</span> <a href="part-1-why-ai-changes/chapter-3/index.html">The Human-AI Product Stack</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">04</span> <a href="part-1-why-ai-changes/chapter-4/index.html">Scientific and Philosophical Principles</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 01</span> <a href="part-1-why-ai-changes/chapter-1/index.html">The New Economics of Building with AI</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 02</span> <a href="part-1-why-ai-changes/chapter-2/index.html">What AI Can and Cannot Reliably Do</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 03</span> <a href="part-1-why-ai-changes/chapter-3/index.html">The Human-AI Product Stack</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 04</span> <a href="part-1-why-ai-changes/chapter-4/index.html">Scientific and Philosophical Principles</a></div>
                 </div>
             </div>
 
-            <!-- Part II: AI-Native Product Discovery and Design -->
+            <!-- Part II -->
             <div class="stoc-part">
                 <div class="dense-part-header"><a href="part-2-discovery-design/index.html">Part II: AI-Native Product Discovery and Design</a></div>
                 <div class="stoc-group">
-                    <div class="dense-chapter"><span class="dense-ch-num">05</span> <a href="part-2-discovery-design/chapter-5/index.html">Finding Problems Worth Solving with AI</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">06</span> <a href="part-2-discovery-design/chapter-6/index.html">AI Product Strategy and Portfolio Thinking</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">07</span> <a href="part-2-discovery-design/chapter-7/index.html">AI-Native Product Discovery</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">08</span> <a href="part-2-discovery-design/chapter-8/index.html">Designing AI User Experiences</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">09</span> <a href="part-2-discovery-design/chapter-9/index.html">Requirements for Probabilistic Products</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 05</span> <a href="part-2-discovery-design/chapter-5/index.html">Finding Problems Worth Solving with AI</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 06</span> <a href="part-2-discovery-design/chapter-6/index.html">AI Product Strategy and Portfolio Thinking</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 07</span> <a href="part-2-discovery-design/chapter-7/index.html">AI-Native Product Discovery</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 08</span> <a href="part-2-discovery-design/chapter-8/index.html">Designing AI User Experiences</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 09</span> <a href="part-2-discovery-design/chapter-9/index.html">Requirements for Probabilistic Products</a></div>
                 </div>
             </div>
 
-            <!-- Part III: Vibe-Coding and AI-Native Prototyping -->
+            <!-- Part III -->
             <div class="stoc-part">
                 <div class="dense-part-header"><a href="part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
                 <div class="stoc-group">
-                    <div class="dense-chapter"><span class="dense-ch-num">10</span> <a href="part-3-vibe-coding/chapter-10/index.html">What Vibe-Coding Is Really For</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">11</span> <a href="part-3-vibe-coding/chapter-11/index.html">AI-Native Prototyping Workflow</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">12</span> <a href="part-3-vibe-coding/chapter-12/index.html">Prompting, Context, Memory, and Reusable Skills</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">13</span> <a href="part-3-vibe-coding/chapter-13/index.html">Multi-Agent and Tool-Based Build Flows</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">14</span> <a href="part-3-vibe-coding/chapter-14/index.html">From Prototype to Reviewable System</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 10</span> <a href="part-3-vibe-coding/chapter-10/index.html">What Vibe-Coding Is Really For</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 11</span> <a href="part-3-vibe-coding/chapter-11/index.html">AI-Native Prototyping Workflow</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 12</span> <a href="part-3-vibe-coding/chapter-12/index.html">Prompting, Context, Memory, and Reusable Skills</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 13</span> <a href="part-3-vibe-coding/chapter-13/index.html">Multi-Agent and Tool-Based Build Flows</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 14</span> <a href="part-3-vibe-coding/chapter-14/index.html">From Prototype to Reviewable System</a></div>
                 </div>
             </div>
 
-            <!-- Part IV: Engineering AI Products -->
+            <!-- Part IV -->
             <div class="stoc-part">
                 <div class="dense-part-header"><a href="part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
                 <div class="stoc-group">
-                    <div class="dense-chapter"><span class="dense-ch-num">15</span> <a href="part-4-engineering/chapter-15/index.html">Reference Architectures for AI Products</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">16</span> <a href="part-4-engineering/chapter-16/index.html">Models, Routing, and Capability Allocation</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">17</span> <a href="part-4-engineering/chapter-17/index.html">Retrieval and Knowledge Systems</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">18</span> <a href="part-4-engineering/chapter-18/index.html">State, Memory, and Workflow Orchestration</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">19</span> <a href="part-4-engineering/chapter-19/index.html">Building with Protocols and Interoperability</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">20</span> <a href="part-4-engineering/chapter-20/index.html">Security, Privacy, and Abuse Resistance</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 15</span> <a href="part-4-engineering/chapter-15/index.html">Reference Architectures for AI Products</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 16</span> <a href="part-4-engineering/chapter-16/index.html">Models, Routing, and Capability Allocation</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 17</span> <a href="part-4-engineering/chapter-17/index.html">Retrieval and Knowledge Systems</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 18</span> <a href="part-4-engineering/chapter-18/index.html">State, Memory, and Workflow Orchestration</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 19</span> <a href="part-4-engineering/chapter-19/index.html">Building with Protocols and Interoperability</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 20</span> <a href="part-4-engineering/chapter-20/index.html">Security, Privacy, and Abuse Resistance</a></div>
                 </div>
             </div>
 
-            <!-- Part V: Evaluation, Reliability, and Governance -->
+            <!-- Part V -->
             <div class="stoc-part">
                 <div class="dense-part-header"><a href="part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
                 <div class="stoc-group">
-                    <div class="dense-chapter"><span class="dense-ch-num">21</span> <a href="part-5-evaluation-reliability/chapter-21/index.html">Evals as the Core Development Discipline</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">22</span> <a href="part-5-evaluation-reliability/chapter-22/index.html">Observability, Debugging, and Failure Analysis</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">23</span> <a href="part-5-evaluation-reliability/chapter-23/index.html">Reliability, Guardrails, and Recovery</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">24</span> <a href="part-5-evaluation-reliability/chapter-24/index.html">Cost, Latency, and Unit Economics</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">25</span> <a href="part-5-evaluation-reliability/chapter-25/index.html">Governance, Compliance, and Trustworthy AI</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 21</span> <a href="part-5-evaluation-reliability/chapter-21/index.html">Evals as the Core Development Discipline</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 22</span> <a href="part-5-evaluation-reliability/chapter-22/index.html">Observability, Debugging, and Failure Analysis</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 23</span> <a href="part-5-evaluation-reliability/chapter-23/index.html">Reliability, Guardrails, and Recovery</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 24</span> <a href="part-5-evaluation-reliability/chapter-24/index.html">Cost, Latency, and Unit Economics</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 25</span> <a href="part-5-evaluation-reliability/chapter-25/index.html">Governance, Compliance, and Trustworthy AI</a></div>
                 </div>
             </div>
 
-            <!-- Part VI: Shipping, Scaling, and Operating -->
+            <!-- Part VI -->
             <div class="stoc-part">
                 <div class="dense-part-header"><a href="part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
                 <div class="stoc-group">
-                    <div class="dense-chapter"><span class="dense-ch-num">26</span> <a href="part-6-shipping-scaling/chapter-26/index.html">Launching AI Features and Products</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">27</span> <a href="part-6-shipping-scaling/chapter-27/index.html">Post-Launch Learning Loops</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">28</span> <a href="part-6-shipping-scaling/chapter-28/index.html">Team Topologies and AI-Native Operating Models</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">29</span> <a href="part-6-shipping-scaling/chapter-29/index.html">Building the AI Product Organization</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">30</span> <a href="part-6-shipping-scaling/chapter-30/index.html">Strategic Positioning and Future-Proofing</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 26</span> <a href="part-6-shipping-scaling/chapter-26/index.html">Launching AI Features and Products</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 27</span> <a href="part-6-shipping-scaling/chapter-27/index.html">Post-Launch Learning Loops</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 28</span> <a href="part-6-shipping-scaling/chapter-28/index.html">Team Topologies and AI-Native Operating Models</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 29</span> <a href="part-6-shipping-scaling/chapter-29/index.html">Building the AI Product Organization</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 30</span> <a href="part-6-shipping-scaling/chapter-30/index.html">Strategic Positioning and Future-Proofing</a></div>
                 </div>
             </div>
 
-            <!-- Part VII: End-to-End Practice and Teaching Kit -->
+            <!-- Part VII -->
             <div class="stoc-part">
                 <div class="dense-part-header"><a href="part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></div>
                 <div class="stoc-group">
-                    <div class="dense-chapter"><span class="dense-ch-num">31</span> <a href="part-7-practice-teaching/chapter-31/index.html">End-to-End Capstone Playbook</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">32</span> <a href="part-7-practice-teaching/chapter-32/index.html">Case Studies in Full</a></div>
-                    <div class="dense-chapter"><span class="dense-ch-num">33</span> <a href="part-7-practice-teaching/chapter-33/index.html">Teaching the Material as a Course</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 31</span> <a href="part-7-practice-teaching/chapter-31/index.html">End-to-End Capstone Playbook</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 32</span> <a href="part-7-practice-teaching/chapter-32/index.html">Case Studies in Full</a></div>
+                    <div class="dense-chapter"><span class="dense-ch-num">Ch 33</span> <a href="part-7-practice-teaching/chapter-33/index.html">Teaching the Material as a Course</a></div>
                 </div>
             </div>
 
@@ -288,97 +322,97 @@
         </div>
 
         <!-- DETAILED TOC (hidden by default) -->
-        <div id="toc-detailed" class="toc-view-detailed" style="display: none;">
+        <div id="toc-detailed" style="display: none;">
 
             <!-- Front Matter -->
-            <div class="dense-part-header"><a href="front-matter/introduction.html">Front Matter</a></div>
+            <div class="dense-part-header">Front Matter</div>
             <div class="dense-chapter"><span class="dense-ch-num">FM</span> <a href="front-matter/introduction.html">Introduction: Defining the Journey from AI Assistant to AI Engine</a></div>
 
-            <!-- Part I: Why AI Changes Product Creation -->
+            <!-- Part I -->
             <div class="dense-part-header"><a href="part-1-why-ai-changes/index.html">Part I: Why AI Changes Product Creation</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">01</span> <a href="part-1-why-ai-changes/chapter-1/index.html">The New Economics of Building with AI</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 01</span> <a href="part-1-why-ai-changes/chapter-1/index.html">The New Economics of Building with AI</a></div>
             <div class="dense-sections"><a href="part-1-why-ai-changes/chapter-1/sections/section-1-1.html">1.1 The 50x Cost Reduction</a> &middot; <a href="part-1-why-ai-changes/chapter-1/sections/section-1-2.html">1.2 AI as Compression of Artifact Creation</a> &middot; <a href="part-1-why-ai-changes/chapter-1/sections/section-1-3.html">1.3 Build/Buy/Bake Decisions</a> &middot; <a href="part-1-why-ai-changes/chapter-1/sections/section-1-4.html">1.4 The New Economics Summary</a> &middot; <a href="part-1-why-ai-changes/chapter-1/sections/section-1-5.html">1.5 Lab: Calculate Your AI Economics</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">02</span> <a href="part-1-why-ai-changes/chapter-2/index.html">What AI Can and Cannot Reliably Do</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 02</span> <a href="part-1-why-ai-changes/chapter-2/index.html">What AI Can and Cannot Reliably Do</a></div>
             <div class="dense-sections"><a href="part-1-why-ai-changes/chapter-2/sections/section-2-1.html">2.1 Capabilities vs. Limitations</a> &middot; <a href="part-1-why-ai-changes/chapter-2/sections/section-2-2.html">2.2 Hallucination Mitigation Strategies</a> &middot; <a href="part-1-why-ai-changes/chapter-2/sections/section-2-3.html">2.3 Knowing When AI Is Unreliable</a> &middot; <a href="part-1-why-ai-changes/chapter-2/sections/section-2-4.html">2.4 Designing for AI Failure</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">03</span> <a href="part-1-why-ai-changes/chapter-3/index.html">The Human-AI Product Stack</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 03</span> <a href="part-1-why-ai-changes/chapter-3/index.html">The Human-AI Product Stack</a></div>
             <div class="dense-sections"><a href="part-1-why-ai-changes/chapter-3/sections/section-3-1.html">3.1 Human-AI Interaction Patterns</a> &middot; <a href="part-1-why-ai-changes/chapter-3/sections/section-3-2.html">3.2 Feedback Loops and Continuous Learning</a> &middot; <a href="part-1-why-ai-changes/chapter-3/sections/section-3-3.html">3.3 Anti-Patterns in Human-AI Collaboration</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">04</span> <a href="part-1-why-ai-changes/chapter-4/index.html">Scientific and Philosophical Principles</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 04</span> <a href="part-1-why-ai-changes/chapter-4/index.html">Scientific and Philosophical Principles</a></div>
             <div class="dense-sections"><a href="part-1-why-ai-changes/chapter-4/sections/section-4-1.html">4.1 Cognitive Load Theory for AI Products</a> &middot; <a href="part-1-why-ai-changes/chapter-4/sections/section-4-2.html">4.2 Complementary Change Theory</a> &middot; <a href="part-1-why-ai-changes/chapter-4/sections/section-4-3.html">4.3 Ethics and Responsible AI Product Development</a> &middot; <a href="part-1-why-ai-changes/chapter-4/sections/section-4-4.html">4.4 The Four Questions Framework</a> &middot; <a href="part-1-why-ai-changes/chapter-4/sections/section-4-5.html">4.5 Lab: Apply the Four Questions</a> &middot; <a href="part-1-why-ai-changes/chapter-4/sections/section-4-6.html">4.6 Part I Summary</a></div>
 
             <!-- Part II -->
             <div class="dense-part-header"><a href="part-2-discovery-design/index.html">Part II: AI-Native Product Discovery and Design</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">05</span> <a href="part-2-discovery-design/chapter-5/index.html">Finding Problems Worth Solving with AI</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 05</span> <a href="part-2-discovery-design/chapter-5/index.html">Finding Problems Worth Solving with AI</a></div>
             <div class="dense-sections"><a href="part-2-discovery-design/chapter-5/sections/section-5-1.html">5.1 User Research for AI Products</a> &middot; <a href="part-2-discovery-design/chapter-5/sections/section-5-2.html">5.2 Identifying AI-Appropriate Problems</a> &middot; <a href="part-2-discovery-design/chapter-5/sections/section-5-3.html">5.3 Problem Prioritization Frameworks</a> &middot; <a href="part-2-discovery-design/chapter-5/sections/section-5-4.html">5.4 Case Study: From Problem to AI Solution</a> &middot; <a href="part-2-discovery-design/chapter-5/sections/section-5-5.html">5.5 Lab: Find Your AI Problem Space</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">06</span> <a href="part-2-discovery-design/chapter-6/index.html">AI Product Strategy and Portfolio Thinking</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 06</span> <a href="part-2-discovery-design/chapter-6/index.html">AI Product Strategy and Portfolio Thinking</a></div>
             <div class="dense-sections"><a href="part-2-discovery-design/chapter-6/sections/section-6-1.html">6.1 AI Product Taxonomy</a> &middot; <a href="part-2-discovery-design/chapter-6/sections/section-6-2.html">6.2 Build/Buy/Bake Framework</a> &middot; <a href="part-2-discovery-design/chapter-6/sections/section-6-3.html">6.3 Value Proposition Design for AI</a> &middot; <a href="part-2-discovery-design/chapter-6/sections/section-6-4.html">6.4 Portfolio Thinking and Roadmapping</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">07</span> <a href="part-2-discovery-design/chapter-7/index.html">AI-Native Product Discovery</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 07</span> <a href="part-2-discovery-design/chapter-7/index.html">AI-Native Product Discovery</a></div>
             <div class="dense-sections"><a href="part-2-discovery-design/chapter-7/sections/section-7-1.html">7.1 Discovery Methods for AI</a> &middot; <a href="part-2-discovery-design/chapter-7/sections/section-7-2.html">7.2 Rapid Prototyping with AI</a> &middot; <a href="part-2-discovery-design/chapter-7/sections/section-7-3.html">7.3 Testing AI Product Hypotheses</a> &middot; <a href="part-2-discovery-design/chapter-7/sections/section-7-4.html">7.4 From Hypothesis to Validation</a> &middot; <a href="part-2-discovery-design/chapter-7/sections/section-7-5.html">7.5 Lab: Run an AI Discovery Sprint</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">08</span> <a href="part-2-discovery-design/chapter-8/index.html">Designing AI User Experiences</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 08</span> <a href="part-2-discovery-design/chapter-8/index.html">Designing AI User Experiences</a></div>
             <div class="dense-sections"><a href="part-2-discovery-design/chapter-8/sections/section-8-1.html">8.1 UX Patterns for AI Products</a> &middot; <a href="part-2-discovery-design/chapter-8/sections/section-8-2.html">8.2 Trust Design and Calibration</a> &middot; <a href="part-2-discovery-design/chapter-8/sections/section-8-3.html">8.3 Expectation Management</a> &middot; <a href="part-2-discovery-design/chapter-8/sections/section-8-4.html">8.4 Handling Uncertainty in UI</a> &middot; <a href="part-2-discovery-design/chapter-8/sections/section-8-5.html">8.5 Lab: Design an AI Trust Experience</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">09</span> <a href="part-2-discovery-design/chapter-9/index.html">Requirements for Probabilistic Products</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 09</span> <a href="part-2-discovery-design/chapter-9/index.html">Requirements for Probabilistic Products</a></div>
             <div class="dense-sections"><a href="part-2-discovery-design/chapter-9/sections/section-9-1.html">9.1 USID.O Framework</a> &middot; <a href="part-2-discovery-design/chapter-9/sections/section-9-2.html">9.2 Eval-First PRDs</a> &middot; <a href="part-2-discovery-design/chapter-9/sections/section-9-3.html">9.3 LLM-as-Judge for Requirements</a> &middot; <a href="part-2-discovery-design/chapter-9/sections/section-9-4.html">9.4 Lab: Write an Eval-First PRD</a></div>
 
             <!-- Part III -->
             <div class="dense-part-header"><a href="part-3-vibe-coding/index.html">Part III: Vibe-Coding and AI-Native Prototyping</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">10</span> <a href="part-3-vibe-coding/chapter-10/index.html">What Vibe-Coding Is Really For</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 10</span> <a href="part-3-vibe-coding/chapter-10/index.html">What Vibe-Coding Is Really For</a></div>
             <div class="dense-sections"><a href="part-3-vibe-coding/chapter-10/sections/section-10-1.html">10.1 Discovery Tool, Not Just Implementation</a> &middot; <a href="part-3-vibe-coding/chapter-10/sections/section-10-2.html">10.2 When to Use Vibe Coding</a> &middot; <a href="part-3-vibe-coding/chapter-10/sections/section-10-3.html">10.3 Limits of Vibe Coding</a> &middot; <a href="part-3-vibe-coding/chapter-10/sections/section-10-4.html">10.4 Lab: Run a Vibe Coding Discovery Session</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">11</span> <a href="part-3-vibe-coding/chapter-11/index.html">AI-Native Prototyping Workflow</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 11</span> <a href="part-3-vibe-coding/chapter-11/index.html">AI-Native Prototyping Workflow</a></div>
             <div class="dense-sections"><a href="part-3-vibe-coding/chapter-11/sections/section-11-1.html">11.1 From Idea to Prototype</a> &middot; <a href="part-3-vibe-coding/chapter-11/sections/section-11-2.html">11.2 Iteration Patterns</a> &middot; <a href="part-3-vibe-coding/chapter-11/sections/section-11-3.html">11.3 Evaluating Prototypes</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">12</span> <a href="part-3-vibe-coding/chapter-12/index.html">Prompting, Context, Memory, and Reusable Skills</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 12</span> <a href="part-3-vibe-coding/chapter-12/index.html">Prompting, Context, Memory, and Reusable Skills</a></div>
             <div class="dense-sections"><a href="part-3-vibe-coding/chapter-12/sections/section-12-1.html">12.1 Advanced Prompting Techniques</a> &middot; <a href="part-3-vibe-coding/chapter-12/sections/section-12-2.html">12.2 Context Management</a> &middot; <a href="part-3-vibe-coding/chapter-12/sections/section-12-3.html">12.3 Building Reusable Skills</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">13</span> <a href="part-3-vibe-coding/chapter-13/index.html">Multi-Agent and Tool-Based Build Flows</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 13</span> <a href="part-3-vibe-coding/chapter-13/index.html">Multi-Agent and Tool-Based Build Flows</a></div>
             <div class="dense-sections"><a href="part-3-vibe-coding/chapter-13/sections/section-13-1.html">13.1 Multi-Agent Orchestration</a> &middot; <a href="part-3-vibe-coding/chapter-13/sections/section-13-2.html">13.2 MCP Connectors</a> &middot; <a href="part-3-vibe-coding/chapter-13/sections/section-13-3.html">13.3 Lab: Build a Multi-Agent Prototype</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">14</span> <a href="part-3-vibe-coding/chapter-14/index.html">From Prototype to Reviewable System</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 14</span> <a href="part-3-vibe-coding/chapter-14/index.html">From Prototype to Reviewable System</a></div>
             <div class="dense-sections"><a href="part-3-vibe-coding/chapter-14/sections/section-14-1.html">14.1 Transitioning to Production-Ready Code</a> &middot; <a href="part-3-vibe-coding/chapter-14/sections/section-14-2.html">14.2 Code Review for AI-Generated Code</a> &middot; <a href="part-3-vibe-coding/chapter-14/sections/section-14-3.html">14.3 Testing AI Features</a> &middot; <a href="part-3-vibe-coding/chapter-14/sections/section-14-4.html">14.4 Lab: Refactor Prototype to Production</a></div>
 
             <!-- Part IV -->
             <div class="dense-part-header"><a href="part-4-engineering/index.html">Part IV: Engineering AI Products</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">15</span> <a href="part-4-engineering/chapter-15/index.html">Reference Architectures for AI Products</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 15</span> <a href="part-4-engineering/chapter-15/index.html">Reference Architectures for AI Products</a></div>
             <div class="dense-sections"><a href="part-4-engineering/chapter-15/sections/section-15-1.html">15.1 Architecture Spectrum</a> &middot; <a href="part-4-engineering/chapter-15/sections/section-15-2.html">15.2 Copilot Architecture</a> &middot; <a href="part-4-engineering/chapter-15/sections/section-15-3.html">15.3 Agentic Architecture</a> &middot; <a href="part-4-engineering/chapter-15/sections/section-15-4.html">15.4 Multi-Agent Systems</a> &middot; <a href="part-4-engineering/chapter-15/sections/section-15-5.html">15.5 Lab: Choose Your Architecture</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">16</span> <a href="part-4-engineering/chapter-16/index.html">Models, Routing, and Capability Allocation</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 16</span> <a href="part-4-engineering/chapter-16/index.html">Models, Routing, and Capability Allocation</a></div>
             <div class="dense-sections"><a href="part-4-engineering/chapter-16/sections/section-16-1.html">16.1 Router Strategies</a> &middot; <a href="part-4-engineering/chapter-16/sections/section-16-2.html">16.2 Model Selection</a> &middot; <a href="part-4-engineering/chapter-16/sections/section-16-3.html">16.3 Cost-Performance Optimization</a> &middot; <a href="part-4-engineering/chapter-16/sections/section-16-4.html">16.4 Fallback Strategies</a> &middot; <a href="part-4-engineering/chapter-16/sections/section-16-5.html">16.5 Lab: Implement Model Routing</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">17</span> <a href="part-4-engineering/chapter-17/index.html">Retrieval and Knowledge Systems</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 17</span> <a href="part-4-engineering/chapter-17/index.html">Retrieval and Knowledge Systems</a></div>
             <div class="dense-sections"><a href="part-4-engineering/chapter-17/sections/section-17-1.html">17.1 Vector Databases</a> &middot; <a href="part-4-engineering/chapter-17/sections/section-17-2.html">17.2 Graph RAG</a> &middot; <a href="part-4-engineering/chapter-17/sections/section-17-3.html">17.3 Self-Correcting RAG</a> &middot; <a href="part-4-engineering/chapter-17/sections/section-17-4.html">17.4 Hybrid Search</a> &middot; <a href="part-4-engineering/chapter-17/sections/section-17-5.html">17.5 Lab: Build a RAG System</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">18</span> <a href="part-4-engineering/chapter-18/index.html">State, Memory, and Workflow Orchestration</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 18</span> <a href="part-4-engineering/chapter-18/index.html">State, Memory, and Workflow Orchestration</a></div>
             <div class="dense-sections"><a href="part-4-engineering/chapter-18/sections/section-18-1.html">18.1 Memory Patterns</a> &middot; <a href="part-4-engineering/chapter-18/sections/section-18-2.html">18.2 Conversation Context Management</a> &middot; <a href="part-4-engineering/chapter-18/sections/section-18-3.html">18.3 Orchestration Frameworks</a> &middot; <a href="part-4-engineering/chapter-18/sections/section-18-4.html">18.4 Workflow Design Patterns</a> &middot; <a href="part-4-engineering/chapter-18/sections/section-18-5.html">18.5 Lab: Implement Stateful Workflow</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">19</span> <a href="part-4-engineering/chapter-19/index.html">Building with Protocols and Interoperability</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 19</span> <a href="part-4-engineering/chapter-19/index.html">Building with Protocols and Interoperability</a></div>
             <div class="dense-sections"><a href="part-4-engineering/chapter-19/sections/section-19-1.html">19.1 Model Context Protocol (MCP)</a> &middot; <a href="part-4-engineering/chapter-19/sections/section-19-2.html">19.2 Agent-to-Agent Protocol (A2A)</a> &middot; <a href="part-4-engineering/chapter-19/sections/section-19-3.html">19.3 Building MCP Servers</a> &middot; <a href="part-4-engineering/chapter-19/sections/section-19-4.html">19.4 Interoperability Patterns</a> &middot; <a href="part-4-engineering/chapter-19/sections/section-19-5.html">19.5 Lab: Build an MCP Server</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">20</span> <a href="part-4-engineering/chapter-20/index.html">Security, Privacy, and Abuse Resistance</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 20</span> <a href="part-4-engineering/chapter-20/index.html">Security, Privacy, and Abuse Resistance</a></div>
             <div class="dense-sections"><a href="part-4-engineering/chapter-20/sections/section-20-1.html">20.1 Prompt Injection Defense</a> &middot; <a href="part-4-engineering/chapter-20/sections/section-20-2.html">20.2 Data Privacy in AI Products</a> &middot; <a href="part-4-engineering/chapter-20/sections/section-20-3.html">20.3 Adversarial Robustness</a> &middot; <a href="part-4-engineering/chapter-20/sections/section-20-4.html">20.4 Rate Limiting and Abuse Detection</a> &middot; <a href="part-4-engineering/chapter-20/sections/section-20-5.html">20.5 Lab: Security Audit Your AI Product</a></div>
 
             <!-- Part V -->
             <div class="dense-part-header"><a href="part-5-evaluation-reliability/index.html">Part V: Evaluation, Reliability, and Governance</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">21</span> <a href="part-5-evaluation-reliability/chapter-21/index.html">Evals as the Core Development Discipline</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 21</span> <a href="part-5-evaluation-reliability/chapter-21/index.html">Evals as the Core Development Discipline</a></div>
             <div class="dense-sections"><a href="part-5-evaluation-reliability/chapter-21/sections/section-21-1.html">21.1 LLM-as-Judge</a> &middot; <a href="part-5-evaluation-reliability/chapter-21/sections/section-21-2.html">21.2 Building Eval Pipelines</a> &middot; <a href="part-5-evaluation-reliability/chapter-21/sections/section-21-3.html">21.3 Eval-Driven Development</a> &middot; <a href="part-5-evaluation-reliability/chapter-21/sections/section-21-4.html">21.4 Eval Metrics Selection</a> &middot; <a href="part-5-evaluation-reliability/chapter-21/sections/section-21-5.html">21.5 Lab: Build Your First Eval</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">22</span> <a href="part-5-evaluation-reliability/chapter-22/index.html">Observability, Debugging, and Failure Analysis</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 22</span> <a href="part-5-evaluation-reliability/chapter-22/index.html">Observability, Debugging, and Failure Analysis</a></div>
             <div class="dense-sections"><a href="part-5-evaluation-reliability/chapter-22/sections/section-22-1.html">22.1 Tracing AI Systems</a> &middot; <a href="part-5-evaluation-reliability/chapter-22/sections/section-22-2.html">22.2 Debugging AI Failures</a> &middot; <a href="part-5-evaluation-reliability/chapter-22/sections/section-22-3.html">22.3 Root Cause Analysis</a> &middot; <a href="part-5-evaluation-reliability/chapter-22/sections/section-22-4.html">22.4 Lab: Set Up Observability</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">23</span> <a href="part-5-evaluation-reliability/chapter-23/index.html">Reliability, Guardrails, and Recovery</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 23</span> <a href="part-5-evaluation-reliability/chapter-23/index.html">Reliability, Guardrails, and Recovery</a></div>
             <div class="dense-sections"><a href="part-5-evaluation-reliability/chapter-23/sections/section-23-1.html">23.1 Circuit Breakers</a> &middot; <a href="part-5-evaluation-reliability/chapter-23/sections/section-23-2.html">23.2 Graceful Degradation</a> &middot; <a href="part-5-evaluation-reliability/chapter-23/sections/section-23-3.html">23.3 Guardrails and Content Filtering</a> &middot; <a href="part-5-evaluation-reliability/chapter-23/sections/section-23-4.html">23.4 Lab: Implement Guardrails</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">24</span> <a href="part-5-evaluation-reliability/chapter-24/index.html">Cost, Latency, and Unit Economics</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 24</span> <a href="part-5-evaluation-reliability/chapter-24/index.html">Cost, Latency, and Unit Economics</a></div>
             <div class="dense-sections"><a href="part-5-evaluation-reliability/chapter-24/sections/section-24-1.html">24.1 Cost Optimization Strategies</a> &middot; <a href="part-5-evaluation-reliability/chapter-24/sections/section-24-2.html">24.2 Latency Management</a> &middot; <a href="part-5-evaluation-reliability/chapter-24/sections/section-24-3.html">24.3 Unit Economics Modeling</a> &middot; <a href="part-5-evaluation-reliability/chapter-24/sections/section-24-4.html">24.4 Lab: Analyze Your Unit Economics</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">25</span> <a href="part-5-evaluation-reliability/chapter-25/index.html">Governance, Compliance, and Trustworthy AI</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 25</span> <a href="part-5-evaluation-reliability/chapter-25/index.html">Governance, Compliance, and Trustworthy AI</a></div>
             <div class="dense-sections"><a href="part-5-evaluation-reliability/chapter-25/sections/section-25-1.html">25.1 NIST AI RMF</a> &middot; <a href="part-5-evaluation-reliability/chapter-25/sections/section-25-2.html">25.2 ISO 42001</a> &middot; <a href="part-5-evaluation-reliability/chapter-25/sections/section-25-3.html">25.3 EU AI Act Compliance</a> &middot; <a href="part-5-evaluation-reliability/chapter-25/sections/section-25-4.html">25.4 Lab: Conduct a Compliance Audit</a></div>
 
             <!-- Part VI -->
             <div class="dense-part-header"><a href="part-6-shipping-scaling/index.html">Part VI: Shipping, Scaling, and Operating the Product</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">26</span> <a href="part-6-shipping-scaling/chapter-26/index.html">Launching AI Features and Products</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 26</span> <a href="part-6-shipping-scaling/chapter-26/index.html">Launching AI Features and Products</a></div>
             <div class="dense-sections"><a href="part-6-shipping-scaling/chapter-26/sections/section-26-1.html">26.1 GTM Strategies for AI</a> &middot; <a href="part-6-shipping-scaling/chapter-26/sections/section-26-2.html">26.2 Pricing Models</a> &middot; <a href="part-6-shipping-scaling/chapter-26/sections/section-26-3.html">26.3 Onboarding and Education</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">27</span> <a href="part-6-shipping-scaling/chapter-27/index.html">Post-Launch Learning Loops</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 27</span> <a href="part-6-shipping-scaling/chapter-27/index.html">Post-Launch Learning Loops</a></div>
             <div class="dense-sections"><a href="part-6-shipping-scaling/chapter-27/sections/section-27-1.html">27.1 User Feedback Integration</a> &middot; <a href="part-6-shipping-scaling/chapter-27/sections/section-27-2.html">27.2 Continuous Improvement Pipelines</a> &middot; <a href="part-6-shipping-scaling/chapter-27/sections/section-27-3.html">27.3 Model Retraining Strategies</a> &middot; <a href="part-6-shipping-scaling/chapter-27/sections/section-27-4.html">27.4 A/B Testing AI Features</a> &middot; <a href="part-6-shipping-scaling/chapter-27/sections/section-27-5.html">27.5 Lab: Build a Learning Loop</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">28</span> <a href="part-6-shipping-scaling/chapter-28/index.html">Team Topologies and AI-Native Operating Models</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 28</span> <a href="part-6-shipping-scaling/chapter-28/index.html">Team Topologies and AI-Native Operating Models</a></div>
             <div class="dense-sections"><a href="part-6-shipping-scaling/chapter-28/sections/section-28-1.html">28.1 Cross-Functional AI Teams</a> &middot; <a href="part-6-shipping-scaling/chapter-28/sections/section-28-2.html">28.2 AI-First Culture</a> &middot; <a href="part-6-shipping-scaling/chapter-28/sections/section-28-3.html">28.3 Roles and Responsibilities</a> &middot; <a href="part-6-shipping-scaling/chapter-28/sections/section-28-4.html">28.4 Case Study: Spotify's AI Organization</a> &middot; <a href="part-6-shipping-scaling/chapter-28/sections/section-28-5.html">28.5 Lab: Design Your AI Team Topology</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">29</span> <a href="part-6-shipping-scaling/chapter-29/index.html">Building the AI Product Organization</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 29</span> <a href="part-6-shipping-scaling/chapter-29/index.html">Building the AI Product Organization</a></div>
             <div class="dense-sections"><a href="part-6-shipping-scaling/chapter-29/sections/section-29-1.html">29.1 Organizational Structures</a> &middot; <a href="part-6-shipping-scaling/chapter-29/sections/section-29-2.html">29.2 Career Paths for AI Product Roles</a> &middot; <a href="part-6-shipping-scaling/chapter-29/sections/section-29-3.html">29.3 Hiring AI Talent</a> &middot; <a href="part-6-shipping-scaling/chapter-29/sections/section-29-4.html">29.4 Lab: Create an AI Product Role</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">30</span> <a href="part-6-shipping-scaling/chapter-30/index.html">Strategic Positioning and Future-Proofing</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 30</span> <a href="part-6-shipping-scaling/chapter-30/index.html">Strategic Positioning and Future-Proofing</a></div>
             <div class="dense-sections"><a href="part-6-shipping-scaling/chapter-30/sections/section-30-1.html">30.1 Competitive Positioning</a> &middot; <a href="part-6-shipping-scaling/chapter-30/sections/section-30-2.html">30.2 2026+ Trend Analysis</a> &middot; <a href="part-6-shipping-scaling/chapter-30/sections/section-30-3.html">30.3 Building Defensibility</a> &middot; <a href="part-6-shipping-scaling/chapter-30/sections/section-30-4.html">30.4 Lab: Conduct a Strategic Review</a></div>
 
             <!-- Part VII -->
             <div class="dense-part-header"><a href="part-7-practice-teaching/index.html">Part VII: End-to-End Practice and Teaching Kit</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">31</span> <a href="part-7-practice-teaching/chapter-31/index.html">End-to-End Capstone Playbook</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 31</span> <a href="part-7-practice-teaching/chapter-31/index.html">End-to-End Capstone Playbook</a></div>
             <div class="dense-sections"><a href="part-7-practice-teaching/chapter-31/sections/section-31-1.html">31.1 Complete Workflow Overview</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-2.html">31.2 Discovery Phase</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-3.html">31.3 Design Phase</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-4.html">31.4 Development Phase</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-5.html">31.5 Launch Phase</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-6.html">31.6 Capstone Project Guidelines</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">32</span> <a href="part-7-practice-teaching/chapter-32/index.html">Case Studies in Full</a></div>
-            <div class="dense-sections"><a href="part-7-practice-teaching/chapter-32/sections/section-32-1.html">32.1 Case Study: AI Coding Assistant</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-2.html">32.2 Case Study: AI Customer Service</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-3.html">32.3 Case Study: AI Content Platform</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-4.html">32.4 Case Study: AI Data Analysis Tool</a> &middol; <a href="part-7-practice-teaching/chapter-32/sections/section-32-5.html">32.5 Lab: Analyze Your Own Case</a></div>
-            <div class="dense-chapter"><span class="dense-ch-num">33</span> <a href="part-7-practice-teaching/chapter-33/index.html">Teaching the Material as a Course</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 32</span> <a href="part-7-practice-teaching/chapter-32/index.html">Case Studies in Full</a></div>
+            <div class="dense-sections"><a href="part-7-practice-teaching/chapter-32/sections/section-32-1.html">32.1 Case Study: AI Coding Assistant</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-2.html">32.2 Case Study: AI Customer Service</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-3.html">32.3 Case Study: AI Content Platform</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-4.html">32.4 Case Study: AI Data Analysis Tool</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-5.html">32.5 Lab: Analyze Your Own Case</a></div>
+            <div class="dense-chapter"><span class="dense-ch-num">Ch 33</span> <a href="part-7-practice-teaching/chapter-33/index.html">Teaching the Material as a Course</a></div>
             <div class="dense-sections"><a href="part-7-practice-teaching/chapter-33/sections/section-33-1.html">33.1 Course Design Principles</a> &middot; <a href="part-7-practice-teaching/chapter-33/sections/section-33-2.html">33.2 Curriculum Structure</a> &middot; <a href="part-7-practice-teaching/chapter-33/sections/section-33-3.html">33.3 Hands-On Exercises</a> &middot; <a href="part-7-practice-teaching/chapter-33/sections/section-33-4.html">33.4 Assessment Strategies</a> &middot; <a href="part-7-practice-teaching/chapter-33/sections/section-33-5.html">33.5 Adapting for Different Audiences</a></div>
 
             <!-- Appendices -->
@@ -420,14 +454,12 @@
                 if (detailedLabel) detailedLabel.style.color = 'var(--primary)';
                 if (shortToc) shortToc.style.display = 'none';
                 if (detailedToc) detailedToc.style.display = 'block';
-                content.classList.add('toc-view-detailed');
             } else {
                 if (switchInput) switchInput.checked = false;
                 if (shortLabel) shortLabel.style.color = 'var(--primary)';
                 if (detailedLabel) detailedLabel.style.color = '#999';
                 if (shortToc) shortToc.style.display = 'block';
                 if (detailedToc) detailedToc.style.display = 'none';
-                content.classList.remove('toc-view-detailed');
             }
         }
     </script>
