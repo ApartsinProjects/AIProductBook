@@ -68,6 +68,81 @@
         .toc-view-detailed .toc-view-short { display: none; }
         .toc-view-detailed { display: block; }
         .toc-view-short { display: block; }
+        
+        /* Dense ToC Styles - LLMBook match */
+        .stoc-part { margin-bottom: 1.5rem; }
+        .stoc-group { padding-left: 0.5rem; }
+        .dense-part-header {
+            font-family: 'Cinzel', Georgia, serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 1.5rem 0 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid var(--highlight);
+            letter-spacing: 0.02em;
+        }
+        .dense-part-header a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .dense-part-header a:hover {
+            color: var(--accent);
+        }
+        .dense-appendices-header {
+            font-family: 'Cinzel', Georgia, serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 2rem 0 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid #ccc;
+            letter-spacing: 0.02em;
+        }
+        .dense-chapter {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            padding: 0.45rem 0.5rem;
+            margin-bottom: 0.15rem;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+        .dense-chapter:hover {
+            background: rgba(15, 52, 96, 0.04);
+        }
+        .dense-chapter a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .dense-chapter a:hover {
+            color: var(--highlight);
+        }
+        .dense-ch-num {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--accent);
+            min-width: 2.5rem;
+            flex-shrink: 0;
+        }
+        .dense-sections {
+            padding: 0.4rem 0.5rem 0.6rem 3.1rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        .dense-sections a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .dense-sections a:hover {
+            color: var(--highlight);
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -302,7 +377,7 @@
             <div class="dense-chapter"><span class="dense-ch-num">31</span> <a href="part-7-practice-teaching/chapter-31/index.html">End-to-End Capstone Playbook</a></div>
             <div class="dense-sections"><a href="part-7-practice-teaching/chapter-31/sections/section-31-1.html">31.1 Complete Workflow Overview</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-2.html">31.2 Discovery Phase</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-3.html">31.3 Design Phase</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-4.html">31.4 Development Phase</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-5.html">31.5 Launch Phase</a> &middot; <a href="part-7-practice-teaching/chapter-31/sections/section-31-6.html">31.6 Capstone Project Guidelines</a></div>
             <div class="dense-chapter"><span class="dense-ch-num">32</span> <a href="part-7-practice-teaching/chapter-32/index.html">Case Studies in Full</a></div>
-            <div class="dense-sections"><a href="part-7-practice-teaching/chapter-32/sections/section-32-1.html">32.1 Case Study: AI Coding Assistant</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-2.html">32.2 Case Study: AI Customer Service</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-3.html">32.3 Case Study: AI Content Platform</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-4.html">32.4 Case Study: AI Data Analysis Tool</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-5.html">32.5 Lab: Analyze Your Own Case</a></div>
+            <div class="dense-sections"><a href="part-7-practice-teaching/chapter-32/sections/section-32-1.html">32.1 Case Study: AI Coding Assistant</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-2.html">32.2 Case Study: AI Customer Service</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-3.html">32.3 Case Study: AI Content Platform</a> &middot; <a href="part-7-practice-teaching/chapter-32/sections/section-32-4.html">32.4 Case Study: AI Data Analysis Tool</a> &middol; <a href="part-7-practice-teaching/chapter-32/sections/section-32-5.html">32.5 Lab: Analyze Your Own Case</a></div>
             <div class="dense-chapter"><span class="dense-ch-num">33</span> <a href="part-7-practice-teaching/chapter-33/index.html">Teaching the Material as a Course</a></div>
             <div class="dense-sections"><a href="part-7-practice-teaching/chapter-33/sections/section-33-1.html">33.1 Course Design Principles</a> &middot; <a href="part-7-practice-teaching/chapter-33/sections/section-33-2.html">33.2 Curriculum Structure</a> &middot; <a href="part-7-practice-teaching/chapter-33/sections/section-33-3.html">33.3 Hands-On Exercises</a> &middot; <a href="part-7-practice-teaching/chapter-33/sections/section-33-4.html">33.4 Assessment Strategies</a> &middot; <a href="part-7-practice-teaching/chapter-33/sections/section-33-5.html">33.5 Adapting for Different Audiences</a></div>
 
