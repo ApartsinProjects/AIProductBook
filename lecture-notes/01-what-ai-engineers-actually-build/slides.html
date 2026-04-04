@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 1 Slides</title>
+  <style>
+    :root { --bg:#f6efe5; --paper:#fffdf8; --ink:#1f2937; --muted:#5b6574; --line:#ddcfbe; --brand:#0f766e; --brand2:#b45309; --soft:#eef6f5; --soft2:#fff4e8; --shadow:0 24px 60px rgba(45,30,13,.15); --shadow-soft:0 16px 36px rgba(45,30,13,.08); }
+    * { box-sizing:border-box; }
+    html, body { height:100%; margin:0; }
+    body { overflow:hidden; color:var(--ink); font-family:Georgia, "Times New Roman", serif; background:radial-gradient(circle at top left, rgba(15,118,110,.09), transparent 30%), radial-gradient(circle at bottom right, rgba(180,83,9,.08), transparent 25%), linear-gradient(180deg, #fbf8f2, var(--bg)); }
+    a { color:#1d4ed8; }
+    .deck { position:relative; height:100%; padding:14px; }
+    .bar { position:fixed; left:50%; z-index:20; width:min(1220px, calc(100vw - 28px)); margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); transform:translateX(-50%); padding:10px 14px; border:1px solid rgba(221,207,190,.9); border-radius:22px; background:rgba(255,253,248,.82); backdrop-filter:blur(14px); box-shadow:0 10px 28px rgba(45,30,13,.08); }
+    .deck > .bar:first-child { top:12px; }
+    .deck > .bar:last-child { bottom:12px; }
+    .actions, .controls { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    button, .linkbtn { appearance:none; border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.88); color:var(--ink); padding:.72rem 1rem; font:inherit; text-decoration:none; cursor:pointer; }
+    .primary { background:linear-gradient(135deg, var(--brand), #16867d); color:#fff; border-color:rgba(15,118,110,.25); }
+    .viewport { position:relative; width:min(1220px, calc(100vw - 28px)); height:calc(100vh - 28px); margin:0 auto; overflow:hidden; border-radius:34px; box-shadow:var(--shadow); }
+    .slides { height:100%; display:flex; transition:transform .3s ease; }
+    .slide { min-width:100%; height:100%; padding:72px 52px 76px; border:1px solid rgba(221,207,190,.9); background:linear-gradient(180deg, rgba(255,253,248,.99), rgba(248,242,233,.99)); display:grid; grid-template-rows:auto auto minmax(0,1fr) auto; gap:18px; align-content:start; }
+    .hero { background:linear-gradient(135deg, rgba(15,118,110,.98), rgba(180,83,9,.94)); color:#fffdf8; }
+    .hero a { color:#fffdf8; }
+    .eyebrow { display:inline-block; padding:.28rem .8rem; border-radius:999px; text-transform:uppercase; letter-spacing:.05em; font-size:.84rem; font-weight:700; border:1px solid rgba(255,255,255,.25); }
+    .slide:not(.hero) .eyebrow { color:var(--brand); border-color:rgba(15,118,110,.18); background:rgba(15,118,110,.08); }
+    h1, h2, h3, p { margin:0; }
+    h1 { font-size:clamp(3.2rem, 5.4vw, 5.5rem); max-width:11ch; line-height:1.02; letter-spacing:-0.02em; }
+    h2 { font-size:clamp(2.2rem, 3.5vw, 3.35rem); max-width:18ch; line-height:1.04; letter-spacing:-0.02em; }
+    h3 { font-size:1.28rem; line-height:1.15; }
+    p, li { font-size:1.18rem; line-height:1.42; }
+    ul, ol { margin:0; padding-left:1.2rem; }
+    .grid2, .grid3 { display:grid; gap:18px; }
+    .grid2 { grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .grid3 { grid-template-columns:repeat(3, minmax(0,1fr)); }
+    .card, .note, .diagram, .quote { border:1px solid var(--line); border-radius:26px; background:var(--paper); padding:22px; box-shadow:var(--shadow-soft); }
+    .note { background:var(--soft); }
+    .quote { background:var(--soft2); }
+    .diagram { background:linear-gradient(180deg, #fffdf8, #f8f2e9); }
+    .diagram svg { display:block; width:100%; max-height:330px; }
+    .xref { display:inline-flex; align-items:center; gap:8px; max-width:56ch; padding:.45rem .8rem; border:1px solid rgba(221,207,190,.95); border-radius:999px; background:rgba(255,255,255,.72); color:var(--muted); font-size:.82rem; line-height:1.25; }
+    .xref::before { content:"Related"; font-weight:700; color:var(--brand); }
+    .hero .card, .hero .note { background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.16); }
+    .hero .card, .hero .note, .hero .quote { box-shadow:none; }
+    .footer { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; color:var(--muted); font-size:.84rem; }
+    .hero .footer { color:rgba(255,250,244,.9); }
+    .progress { flex:1; max-width:360px; height:10px; border-radius:999px; background:rgba(31,41,55,.1); overflow:hidden; }
+    .progress > span { display:block; height:100%; width:0; background:linear-gradient(90deg, var(--brand), var(--brand2)); transition:width .3s ease; }
+    .index { min-width:72px; text-align:right; font-variant-numeric:tabular-nums; }
+    .overview { position:absolute; inset:18px; z-index:5; display:none; overflow:auto; border:1px solid var(--line); border-radius:28px; background:rgba(255,252,246,.98); padding:18px; box-shadow:var(--shadow); }
+    .overview.visible { display:block; }
+    .overview-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; margin-top:16px; }
+    .overview-grid button { text-align:left; white-space:normal; border-radius:20px; min-height:88px; }
+    .kbd { display:inline-block; padding:.14rem .4rem; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.75); font-size:.82rem; }
+    @media (max-width: 960px) {
+      .grid2, .grid3, .overview-grid { grid-template-columns:1fr; }
+      .viewport, .bar { width:calc(100vw - 18px); }
+      .viewport { height:calc(100vh - 18px); }
+      .slide { padding:68px 24px 72px; }
+      p, li { font-size:1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <div class="bar">
+      <div>Module 1 · Interactive Slides</div>
+      <div class="actions">
+        <a class="linkbtn" href="./lecture-notes.html">Lecture notes</a>
+        <a class="linkbtn" href="./lab.html">Lab</a>
+        <button id="overview-toggle" type="button">Overview</button>
+      </div>
+    </div>
+    <div class="viewport">
+      <div class="overview" id="overview">
+        <h2>Slide Overview</h2>
+        <p>Navigate with <span class="kbd">←</span> <span class="kbd">→</span>, <span class="kbd">Home</span>, <span class="kbd">End</span>, or <span class="kbd">O</span>.</p>
+        <div class="overview-grid" id="overview-grid"></div>
+      </div>
+      <div class="slides" id="slides">
+        <section class="slide hero" data-title="Title">
+          <span class="eyebrow">Module 1</span>
+          <div><h1>What AI Engineers Actually Build</h1><p>A fast, visual map of the discipline before the course dives into prompts, retrieval, agents, evals, and serving.</p></div>
+          <div class="grid2">
+            <article class="card"><h3>Students should leave with</h3><ul><li>What work should AI do?</li><li>What shapes do AI products take?</li><li>How is trust engineered?</li><li>Why does production get hard?</li></ul></article>
+            <article class="card"><h3>Teaching sequence</h3><p>Need -> task -> product shape -> architecture -> reliability.</p></article>
+          </div>
+          <div class="xref"><a href="./lecture-notes.html#course-map">Course map in lecture notes</a></div>
+          <div class="footer"><span>Use with the detailed notes for speaker depth.</span><span>1</span></div>
+        </section>
+        <section class="slide" data-title="Big map">
+          <span class="eyebrow">Orientation</span>
+          <h2>The map of the territory</h2>
+          <div class="diagram"><svg viewBox="0 0 1080 380" width="100%" aria-hidden="true"><rect x="390" y="22" width="300" height="58" rx="18" fill="#fff4e8" stroke="#efcfaa" /><text x="540" y="58" text-anchor="middle" font-size="24" font-weight="700">Need</text><rect x="80" y="124" width="220" height="74" rx="18" fill="#eef4ff" stroke="#c9d8fb" /><rect x="330" y="124" width="220" height="74" rx="18" fill="#edf6f5" stroke="#c8e4df" /><rect x="580" y="124" width="220" height="74" rx="18" fill="#f7f1ff" stroke="#d8caef" /><rect x="830" y="124" width="180" height="74" rx="18" fill="#eef8ef" stroke="#cbe6cf" /><text x="190" y="164" text-anchor="middle" font-size="21" font-weight="700">Task choice</text><text x="440" y="164" text-anchor="middle" font-size="21" font-weight="700">Product shape</text><text x="690" y="164" text-anchor="middle" font-size="21" font-weight="700">System design</text><text x="920" y="164" text-anchor="middle" font-size="21" font-weight="700">Operations</text><rect x="200" y="274" width="210" height="58" rx="18" fill="#fff7ea" stroke="#ead5aa" /><rect x="440" y="274" width="210" height="58" rx="18" fill="#eef4ff" stroke="#c9d8fb" /><rect x="680" y="274" width="210" height="58" rx="18" fill="#edf6f5" stroke="#c8e4df" /><text x="305" y="309" text-anchor="middle" font-size="20" font-weight="700">User trust</text><text x="545" y="309" text-anchor="middle" font-size="20" font-weight="700">Production readiness</text><text x="785" y="309" text-anchor="middle" font-size="20" font-weight="700">Improvement loop</text></svg></div>
+          <div class="grid2"><article class="note"><h3>Main intuition</h3><p>Everything else is downstream of task choice and system shape.</p></article><article class="note"><h3>Why it matters</h3><p>Without this map, prompts, RAG, agents, and serving feel disconnected.</p></article></div>
+          <div class="xref"><a href="./lecture-notes.html#course-map">Large-picture map in notes</a></div>
+          <div class="footer"><span>This is the backbone of the whole course.</span><span>2</span></div>
+        </section>
+        <section class="slide" data-title="Problem">
+          <span class="eyebrow">Big picture</span>
+          <h2>AI engineering solves problems that are hard to fully encode as rules</h2>
+          <div class="grid2"><article class="card"><h3>Classical software</h3><ul><li>Procedure is explicit</li><li>Output is deterministic</li><li>Reliability comes from code + tests</li></ul></article><article class="card"><h3>AI-powered software</h3><ul><li>Goal and context are explicit</li><li>Behavior is probabilistic</li><li>Reliability comes from system design</li></ul></article></div>
+          <div class="quote"><h3>Deep intuition</h3><p>The model is not a source of truth. It is a flexible judgment component inside a larger engineered product.</p></div>
+          <div class="footer"><span>Students should understand when AI belongs in the stack.</span><span>3</span></div>
+        </section>
+        <section class="slide" data-title="Mental models">
+          <span class="eyebrow">Mental models</span>
+          <h2>The four ideas that organize everything else</h2>
+          <div class="grid2">
+            <article class="card"><h3>Judgment engine</h3><p>Transforms messy input into useful judgment.</p></article>
+            <article class="card"><h3>Task framing first</h3><p>Better task design often beats bigger models.</p></article>
+            <article class="card"><h3>Reliability is layered</h3><p>Product, context, model, validation, ops.</p></article>
+            <article class="card"><h3>Trust is a feature</h3><p>Approvals, citations, uncertainty, fallbacks.</p></article>
+          </div>
+          <div class="footer"><span>This slide is the compact mental model for the rest of the course.</span><span>4</span></div>
+        </section>
+        <section class="slide" data-title="Leverage">
+          <span class="eyebrow">Leverage</span>
+          <h2>Where quality really comes from</h2>
+          <div class="diagram"><svg viewBox="0 0 1040 330" width="100%" aria-hidden="true"><rect x="120" y="250" width="800" height="56" rx="18" fill="#fff4e8" stroke="#efcfaa" /><rect x="176" y="186" width="688" height="48" rx="18" fill="#eef4ff" stroke="#c9d8fb" /><rect x="238" y="128" width="564" height="40" rx="18" fill="#edf6f5" stroke="#c8e4df" /><rect x="316" y="76" width="408" height="32" rx="16" fill="#f7f1ff" stroke="#d8caef" /><text x="520" y="284" text-anchor="middle" font-size="22" font-weight="700">Task design, workflow, autonomy</text><text x="520" y="217" text-anchor="middle" font-size="20" font-weight="700">Context engineering, retrieval, tools</text><text x="520" y="154" text-anchor="middle" font-size="19" font-weight="700">Prompting and output schemas</text><text x="520" y="97" text-anchor="middle" font-size="18" font-weight="700">Model choice</text></svg></div>
+          <div class="quote"><h3>Corrective insight</h3><p>Well-shaped workflows often outperform stronger models in vague systems.</p></div>
+          <div class="xref"><a href="./lecture-notes.html#mental-models">Task framing in notes</a></div>
+          <div class="footer"><span>This counters the instinct to solve every problem by switching models.</span><span>5</span></div>
+        </section>
+        <section class="slide" data-title="Product shapes I">
+          <span class="eyebrow">Product types</span>
+          <h2>Three common shapes appear first in most teams</h2>
+          <div class="grid3"><article class="card"><h3>Copilot</h3><p>Human stays in the loop and uses AI for draft, lookup, or critique.</p></article><article class="card"><h3>Knowledge system</h3><p>Retrieve, ground, and answer from trusted sources.</p></article><article class="card"><h3>Workflow</h3><p>Classify, extract, route, summarize, or transform work at scale.</p></article></div>
+          <div class="note"><h3>Connection</h3><p>Shape is the first architecture decision, because it predicts context, controls, and evaluation style.</p></div>
+          <div class="xref"><a href="./lecture-notes.html#product-types">Product types in notes</a> · <a href="./lab.html#exercise-1">Lab exercise 1</a></div>
+          <div class="footer"><span>Categories matter because they imply different architectures.</span><span>6</span></div>
+        </section>
+        <section class="slide" data-title="Product shapes II">
+          <span class="eyebrow">Product types</span>
+          <h2>The other shapes push harder on autonomy and risk</h2>
+          <div class="grid3"><article class="card"><h3>Decision support</h3><p>Improve human judgment where stakes are high and explanations matter.</p></article><article class="card"><h3>Agent</h3><p>Choose steps, call tools, and move work forward across a workflow.</p></article><article class="card"><h3>Multimodal</h3><p>Combine text with documents, images, audio, or live voice interaction.</p></article></div>
+          <div class="quote"><h3>Design implication</h3><p>The more a system acts, the more approvals, observability, and recovery paths it needs.</p></div>
+          <div class="footer"><span>These shapes raise the bar on trust and operational design.</span><span>7</span></div>
+        </section>
+        <section class="slide" data-title="Autonomy">
+          <span class="eyebrow">Autonomy</span>
+          <h2>How much should the system act on its own?</h2>
+          <div class="diagram"><svg viewBox="0 0 940 170" width="100%" aria-hidden="true"><line x1="60" y1="108" x2="880" y2="108" stroke="#cdbca7" stroke-width="6" /><circle cx="120" cy="108" r="20" fill="#fff" stroke="#b45309" stroke-width="4" /><circle cx="290" cy="108" r="20" fill="#fff" stroke="#b45309" stroke-width="4" /><circle cx="460" cy="108" r="20" fill="#fff" stroke="#b45309" stroke-width="4" /><circle cx="630" cy="108" r="20" fill="#fff" stroke="#b45309" stroke-width="4" /><circle cx="800" cy="108" r="20" fill="#fff" stroke="#b45309" stroke-width="4" /><text x="120" y="74" text-anchor="middle" font-size="17">Generate</text><text x="290" y="74" text-anchor="middle" font-size="17">Suggest</text><text x="460" y="74" text-anchor="middle" font-size="17">Assist</text><text x="630" y="74" text-anchor="middle" font-size="17">Act with approval</text><text x="800" y="74" text-anchor="middle" font-size="17">Act autonomously</text></svg></div>
+          <div class="grid2"><article class="note"><h3>Intuition</h3><p>Autonomy is a product and risk decision.</p></article><article class="note"><h3>Heuristic</h3><p>Irreversible or costly actions need more review.</p></article></div>
+          <div class="xref"><a href="./lecture-notes.html#product-types">Autonomy ladder in notes</a> · <a href="./lab.html#exercise-4">Lab exercise 4</a></div>
+          <div class="footer"><span>This concept will return later in agents, safety, and workflow design.</span><span>8</span></div>
+        </section>
+        <section class="slide" data-title="Architecture">
+          <span class="eyebrow">Architecture</span>
+          <h2>The model is only one layer of the application</h2>
+          <div class="diagram"><svg viewBox="0 0 980 320" width="100%" aria-hidden="true"><rect x="30" y="24" width="170" height="70" rx="16" fill="#eef4ff" stroke="#c8d8fb" /><rect x="240" y="24" width="220" height="70" rx="16" fill="#edf6f5" stroke="#c8e4df" /><rect x="500" y="24" width="220" height="70" rx="16" fill="#fff4e8" stroke="#efcfaa" /><rect x="760" y="24" width="190" height="70" rx="16" fill="#f6eefc" stroke="#dbcaee" /><text x="115" y="65" text-anchor="middle" font-size="22">UI</text><text x="350" y="65" text-anchor="middle" font-size="22">App layer</text><text x="610" y="65" text-anchor="middle" font-size="22">Orchestration</text><text x="855" y="65" text-anchor="middle" font-size="22">Model</text><rect x="110" y="146" width="180" height="64" rx="16" fill="#ffffff" stroke="#d9d0c5" /><rect x="320" y="146" width="180" height="64" rx="16" fill="#ffffff" stroke="#d9d0c5" /><rect x="530" y="146" width="180" height="64" rx="16" fill="#ffffff" stroke="#d9d0c5" /><rect x="740" y="146" width="180" height="64" rx="16" fill="#ffffff" stroke="#d9d0c5" /><text x="200" y="185" text-anchor="middle" font-size="18">Prompt + context</text><text x="410" y="185" text-anchor="middle" font-size="18">Retrieval / tools</text><text x="620" y="185" text-anchor="middle" font-size="18">State / storage</text><text x="830" y="185" text-anchor="middle" font-size="18">Observability</text></svg></div>
+          <div class="quote"><h3>Most important architecture question</h3><p>What should not be AI?</p></div>
+          <div class="xref"><a href="./lecture-notes.html#system-anatomy">System anatomy in notes</a> · <a href="./lab.html#exercise-2">Lab exercise 2</a></div>
+          <div class="footer"><span>Students should learn to divide work between software and models.</span><span>9</span></div>
+        </section>
+        <section class="slide" data-title="Three layers">
+          <span class="eyebrow">Architecture</span>
+          <h2>Keep these three layers distinct</h2>
+          <div class="grid3"><article class="card"><h3>Product layer</h3><p>User need, task, UX, autonomy, trust.</p></article><article class="card"><h3>Application layer</h3><p>Business logic, routing, context assembly, validation, logging.</p></article><article class="card"><h3>Model layer</h3><p>Generation, extraction, classification, tool use, reasoning.</p></article></div>
+          <div class="note"><h3>Why it matters</h3><p>Separate layers make design and debugging much clearer.</p></div>
+          <div class="footer"><span>This slide prevents “the model did it” from becoming the whole explanation.</span><span>10</span></div>
+        </section>
+        <section class="slide" data-title="Production">
+          <span class="eyebrow">Maturity</span>
+          <h2>A demo proves possibility. Production proves trustworthiness.</h2>
+          <div class="grid3"><article class="card"><h3>Demo</h3><p>Capability proof on ideal inputs.</p></article><article class="card"><h3>Pilot</h3><p>Workflow proof on real users and data.</p></article><article class="card"><h3>Operated product</h3><p>Measured, owned, observable, recoverable.</p></article></div>
+          <div class="grid2"><article class="note"><h3>Production asks</h3><ul><li>How is quality measured?</li><li>How do we recover?</li><li>Who reviews risk?</li><li>What about cost and latency?</li></ul></article><article class="note"><h3>Deep insight</h3><p>Production is a trust contract.</p></article></div>
+          <div class="xref"><a href="./lecture-notes.html#prototype-production">Prototype vs production in notes</a></div>
+          <div class="footer"><span>This slide reframes maturity in operational terms.</span><span>11</span></div>
+        </section>
+        <section class="slide" data-title="Failure modes I">
+          <span class="eyebrow">Failure modes</span>
+          <h2>Start with the product-facing causes</h2>
+          <div class="grid3"><article class="card"><h3>Prompt</h3><p>Instructions were weak or underspecified.</p></article><article class="card"><h3>Context</h3><p>The model saw the wrong inputs or too little context.</p></article><article class="card"><h3>Retrieval</h3><p>The right knowledge was not found or was ranked poorly.</p></article></div>
+          <div class="note"><h3>Diagnostic discipline</h3><p>Debug from the outside in: user symptom first, then system layer, then model.</p></div>
+          <div class="xref"><a href="./lecture-notes.html#failure-modes">Failure modes in notes</a> · <a href="./lab.html#exercise-3">Lab exercise 3</a></div>
+          <div class="footer"><span>Most visible failures are not “just the model.”</span><span>12</span></div>
+        </section>
+        <section class="slide" data-title="Failure modes II">
+          <span class="eyebrow">Failure modes</span>
+          <h2>Then check the system and operating conditions</h2>
+          <div class="grid3"><article class="card"><h3>Workflow</h3><p>The surrounding logic made the wrong choice or skipped a check.</p></article><article class="card"><h3>Model</h3><p>The capability ceiling was too low for the task.</p></article><article class="card"><h3>Operations</h3><p>Latency, outage, or cost pressure broke the experience.</p></article></div>
+          <div class="quote"><h3>Teaching move</h3><p>Every later module exists because one of these failure buckets becomes real in production.</p></div>
+          <div class="footer"><span>This sets up later modules on evals, observability, and serving.</span><span>13</span></div>
+        </section>
+        <section class="slide" data-title="Course logic">
+          <span class="eyebrow">Course logic</span>
+          <h2>Every later module is really an answer to a failure mode</h2>
+          <div class="grid2"><article class="card"><h3>Prompting + structure</h3><p>Reduce ambiguity.</p><h3>RAG + retrieval</h3><p>Reduce missing knowledge.</p><h3>Workflows + agents</h3><p>Turn output into action.</p></article><article class="card"><h3>Evals + observability</h3><p>Make quality visible.</p><h3>Safety + approvals</h3><p>Bound risk.</p><h3>Serving + infra</h3><p>Keep systems fast and available.</p></article></div>
+          <div class="footer"><span>This slide connects Module 1 to the full syllabus.</span><span>14</span></div>
+        </section>
+        <section class="slide" data-title="Concrete example">
+          <span class="eyebrow">Concrete</span>
+          <h2>AI behavior still lives inside normal application boundaries</h2>
+          <div class="grid2"><article class="card"><h3>Shape</h3><div class="quote"><p><code>request -> context -> model -> validate -> log -> respond</code></p></div><p>The stack changes. The shape stays.</p></article><article class="card"><h3>What matters</h3><ul><li>Schema and validation</li><li>Thresholds and escalation</li><li>Retrieval and tool data</li><li>Observability and cost</li></ul></article></div>
+          <div class="quote"><h3>Practical insight</h3><p>AI code is ordinary software around a probabilistic component.</p></div>
+          <div class="footer"><span>This is the bridge from concept to implementation.</span><span>15</span></div>
+        </section>
+        <section class="slide" data-title="Wrap-up">
+          <span class="eyebrow">Wrap-up</span>
+          <h2>What students should now be able to do</h2>
+          <div class="grid3"><article class="card"><h3>Name the task</h3><p>What judgment belongs to AI?</p></article><article class="card"><h3>Name the shape</h3><p>What product archetype is this?</p></article><article class="card"><h3>Name the risks</h3><p>Where will quality and trust break?</p></article></div>
+          <div class="grid2"><article class="note"><h3>Next step</h3><p>Read deeper, then apply the map in the lab.</p></article><article class="note"><h3>Cross-reference</h3><p><a href="./lecture-notes.html">Lecture notes</a> · <a href="./lab.html">Lab</a> · <a href="./lab-solution.html">Lab solution</a></p></article></div>
+          <div class="xref"><a href="./lecture-notes.html#course-map">Course map</a> · <a href="./lecture-notes.html#mental-models">Mental models</a> · <a href="./lecture-notes.html#system-anatomy">System anatomy</a> · <a href="./lecture-notes.html#failure-modes">Failure modes</a></div>
+          <div class="footer"><span>Clean stopping point for lecture or transition into discussion.</span><span>16</span></div>
+        </section>
+      </div>
+    </div>
+    <div class="bar">
+      <div class="controls"><button id="prev" type="button">Previous</button><button id="next" class="primary" type="button">Next</button></div>
+      <div class="progress"><span id="progress-fill"></span></div>
+      <div class="index" id="slide-index">1 / 16</div>
+    </div>
+  </div>
+  <script>
+    const slidesEl = document.getElementById("slides");
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const prevBtn = document.getElementById("prev");
+    const nextBtn = document.getElementById("next");
+    const progressFill = document.getElementById("progress-fill");
+    const slideIndex = document.getElementById("slide-index");
+    const overview = document.getElementById("overview");
+    const overviewGrid = document.getElementById("overview-grid");
+    const overviewToggle = document.getElementById("overview-toggle");
+    let current = 0;
+    function goTo(index) {
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slidesEl.style.transform = `translateX(-${current * 100}%)`;
+      slideIndex.textContent = `${current + 1} / ${slides.length}`;
+      progressFill.style.width = `${((current + 1) / slides.length) * 100}%`;
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === slides.length - 1;
+      document.title = `Module 1 Slides - ${slides[current].dataset.title}`;
+    }
+    function renderOverview() {
+      slides.forEach((slide, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.innerHTML = `<strong>${index + 1}. ${slide.dataset.title}</strong><br>${slide.querySelector("h1, h2").textContent}`;
+        button.addEventListener("click", () => { overview.classList.remove("visible"); goTo(index); });
+        overviewGrid.appendChild(button);
+      });
+    }
+    prevBtn.addEventListener("click", () => goTo(current - 1));
+    nextBtn.addEventListener("click", () => goTo(current + 1));
+    overviewToggle.addEventListener("click", () => overview.classList.toggle("visible"));
+    document.addEventListener("keydown", (event) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) { event.preventDefault(); if (!overview.classList.contains("visible")) goTo(current + 1); }
+      if (["ArrowLeft", "PageUp"].includes(event.key)) { event.preventDefault(); if (!overview.classList.contains("visible")) goTo(current - 1); }
+      if (event.key === "Home") { event.preventDefault(); goTo(0); }
+      if (event.key === "End") { event.preventDefault(); goTo(slides.length - 1); }
+      if (event.key.toLowerCase() === "o") overview.classList.toggle("visible");
+      if (event.key === "Escape") overview.classList.remove("visible");
+    });
+    renderOverview();
+    goTo(0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Engineering from Ground to Production - Comprehensive Course Syllabus</title>
+  <style>
+    :root {
+      --panel: rgba(255, 252, 247, 0.92);
+      --ink: #1f2430;
+      --muted: #5d6573;
+      --line: rgba(31, 36, 48, 0.12);
+      --brand: #0f766e;
+      --brand-2: #b45309;
+      --accent: #1d4ed8;
+      --shadow: 0 18px 40px rgba(59, 42, 18, 0.08);
+      --radius: 22px;
+      --max: 1240px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(180, 83, 9, 0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(15, 118, 110, 0.14), transparent 32%),
+        linear-gradient(180deg, #fbf7ef 0%, #f5efe4 45%, #efe7d8 100%);
+      line-height: 1.65;
+    }
+
+    a { color: var(--accent); }
+
+    .page {
+      width: min(calc(100% - 2rem), var(--max));
+      margin: 0 auto;
+      padding: 1rem 0 4rem;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      margin-top: 1rem;
+      padding: 3.5rem 2rem 2.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(15, 118, 110, 0.92), rgba(180, 83, 9, 0.88)),
+        linear-gradient(135deg, #0f766e, #b45309);
+      color: #fffdf9;
+      box-shadow: 0 24px 60px rgba(35, 25, 11, 0.2);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -5% -35% auto;
+      width: 22rem;
+      height: 22rem;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      filter: blur(10px);
+    }
+
+    .eyebrow, .pill, .module .label {
+      display: inline-block;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .eyebrow {
+      padding: 0.35rem 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 0.75rem;
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    h1 {
+      max-width: 13ch;
+      margin-top: 1rem;
+      font-size: clamp(2.4rem, 6vw, 4.8rem);
+    }
+
+    .hero p {
+      max-width: 60rem;
+      margin: 0.8rem 0 0;
+      font-size: 1.06rem;
+      color: rgba(255, 251, 244, 0.93);
+    }
+
+    .hero-grid, .summary-grid, .module-grid, .project-grid, .matrix-grid, .resource-grid, .outcome-grid, .faq-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .hero-grid {
+      grid-template-columns: 1.4fr 0.9fr;
+      align-items: end;
+      margin-top: 2rem;
+    }
+
+    .hero-panel, .card, .module, .project, .matrix, .resource, .faq {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+
+    .hero-panel {
+      padding: 1.2rem;
+      border-color: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 251, 244, 0.12);
+      box-shadow: none;
+    }
+
+    .hero-panel ul, .card ul, .module ul, .project ul, .resource ul, .faq ul {
+      margin: 0;
+      padding-left: 1.15rem;
+    }
+
+    section { margin-top: 1.4rem; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: end;
+      margin: 2rem 0 1rem;
+    }
+
+    .section-head p, .module .goal, footer { color: var(--muted); }
+    .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card, .project, .matrix, .resource, .faq, .module { padding: 1.25rem; }
+    .card h3, .project h3, .matrix h3, .resource h3, .faq h3 { color: var(--brand); font-size: 1.05rem; }
+
+    .timeline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 1rem;
+    }
+
+    .pill {
+      padding: 0.45rem 0.8rem;
+      background: rgba(15, 118, 110, 0.08);
+      border: 1px solid rgba(15, 118, 110, 0.14);
+      color: var(--brand);
+      font-size: 0.93rem;
+    }
+
+    .pill.orange {
+      background: rgba(180, 83, 9, 0.08);
+      border-color: rgba(180, 83, 9, 0.16);
+      color: var(--brand-2);
+    }
+
+    .module-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .module { background: linear-gradient(180deg, rgba(255, 250, 243, 0.96), rgba(255, 253, 249, 0.9)); }
+    .module header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: start;
+      margin-bottom: 0.7rem;
+    }
+    .module h3 { margin-bottom: 0.2rem; font-size: 1.22rem; }
+    .module .label {
+      min-width: fit-content;
+      padding: 0.35rem 0.65rem;
+      background: rgba(29, 78, 216, 0.08);
+      color: var(--accent);
+      font-size: 0.82rem;
+    }
+    .subhead {
+      margin-top: 0.95rem;
+      margin-bottom: 0.3rem;
+      color: var(--brand);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.82rem;
+    }
+    .project-grid, .matrix-grid, .resource-grid, .outcome-grid, .faq-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .matrix table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; font-size: 0.95rem; }
+    .matrix th, .matrix td {
+      padding: 0.65rem 0;
+      text-align: left;
+      vertical-align: top;
+      border-top: 1px solid var(--line);
+    }
+    .matrix th { color: var(--muted); font-weight: 700; width: 34%; }
+
+    .banner {
+      padding: 1.2rem 1.35rem;
+      border-left: 5px solid var(--brand-2);
+      border-radius: 18px;
+      background: rgba(180, 83, 9, 0.08);
+    }
+
+    footer { margin-top: 2.3rem; padding: 1.25rem 1.4rem 2rem; }
+    .sources { font-size: 0.96rem; }
+
+    @media (max-width: 1080px) {
+      .summary-grid, .project-grid, .matrix-grid, .resource-grid, .outcome-grid, .faq-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-grid, .module-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .page { width: min(calc(100% - 1rem), var(--max)); }
+      .hero { padding: 2.25rem 1.1rem 1.6rem; border-radius: 24px; }
+      .section-head { display: block; }
+      .summary-grid, .project-grid, .matrix-grid, .resource-grid, .outcome-grid, .faq-grid, .module-grid { grid-template-columns: 1fr; }
+      .module header { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <span class="eyebrow">Comprehensive Production AI Curriculum</span>
+      <h1>AI Engineering from Ground to Production</h1>
+      <p>
+        A complete, ground-up, project-based course for software engineers who want to design,
+        build, evaluate, deploy, monitor, and scale modern AI systems in real products. The syllabus
+        assumes only basic software engineering knowledge and progressively builds the full stack of
+        practical AI engineering capabilities needed for production work.
+      </p>
+
+      <div class="timeline">
+        <span class="pill">Level: Beginner to Advanced</span>
+        <span class="pill">Format: Hands-on + Demo-heavy</span>
+        <span class="pill orange">Orientation: Production-first</span>
+        <span class="pill orange">Scope: LLMs, agents, RAG, multimodal, MLOps</span>
+      </div>
+
+      <div class="hero-grid">
+        <div class="hero-panel">
+          <h3>Who This Is For</h3>
+          <ul>
+            <li>Software engineers transitioning into AI engineering</li>
+            <li>Builders who can code but are new to modern AI systems</li>
+            <li>Teams that want one curriculum spanning prototypes to reliable production</li>
+          </ul>
+        </div>
+        <div class="hero-panel">
+          <h3>By the End, Learners Will Be Able To</h3>
+          <ul>
+            <li>Choose the right model, architecture, and deployment pattern for a use case</li>
+            <li>Build robust RAG and agentic systems with tools, memory, and workflows</li>
+            <li>Ship production services with evals, observability, guardrails, and cost controls</li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>Course Design Principles</h2>
+          <p>
+            The course is intentionally broad, modern, and practical. It covers not only model APIs,
+            but also data, retrieval, orchestration, evaluation, reliability, compliance, performance,
+            infrastructure, product thinking, and team workflows.
+          </p>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <article class="card">
+          <h3>Ground Up</h3>
+          <p>Starts with AI and LLM fundamentals, service patterns, APIs, JSON, embeddings, and vector search before moving into advanced systems.</p>
+        </article>
+        <article class="card">
+          <h3>Complete</h3>
+          <p>Covers prompt and context engineering, RAG, agents, evaluation, safety, infra, CI/CD, MLOps, and operations.</p>
+        </article>
+        <article class="card">
+          <h3>Modern</h3>
+          <p>Includes current practices such as reasoning models, tool use, MCP, multimodal pipelines, async workflows, tracing, and continuous evals.</p>
+        </article>
+        <article class="card">
+          <h3>Hands-On</h3>
+          <p>Every module includes labs, demonstrations, design reviews, and portfolio-grade projects that compound into a final capstone.</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>Program At a Glance</h2>
+          <p>
+            A suggested 24-module sequence organized into six phases. The structure is suitable for a
+            bootcamp, semester-length intensive, or self-paced cohort, with an explicit serving and
+            production-systems spine that starts early and culminates in benchmark-driven inference work.
+          </p>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <article class="card"><h3>Phase 1: Foundations</h3><p><strong>Modules 1-4</strong><br />AI basics, software stack, data formats, model APIs, prompting, embeddings, and the first introduction to latency and cost tradeoffs.</p></article>
+        <article class="card"><h3>Phase 2: Core Systems</h3><p><strong>Modules 5-8</strong><br />RAG pipelines, indexing, context engineering, structured outputs, workflows, async architecture, and retrieval quality.</p></article>
+        <article class="card"><h3>Phase 3: Agentic Patterns</h3><p><strong>Modules 9-12</strong><br />Tools, function calling, planners, memory, multi-step systems, MCP, connectors, and human-in-the-loop controls.</p></article>
+        <article class="card"><h3>Phase 4: Productionization</h3><p><strong>Modules 13-16</strong><br />Evaluation, testing, observability, safety, security, service-level metrics, and cost engineering.</p></article>
+        <article class="card"><h3>Phase 5: Serving and Infrastructure</h3><p><strong>Modules 17-20</strong><br />Deployment, LLM serving, GPUs, inference engines, pipelines, CI/CD, governance, and MLOps.</p></article>
+        <article class="card"><h3>Phase 6: Specialization and Launch</h3><p><strong>Modules 21-24</strong><br />Multimodal AI, realtime systems, fine-tuning, product strategy, capstone architecture, and launch readiness.</p></article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>Built-In Background Bridge</h2>
+          <p>
+            The course assumes only basic software engineering knowledge, so the first phase explicitly
+            teaches the missing foundations that many strong engineers have not formally studied in AI,
+            ML, search, or production data systems.
+          </p>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <article class="card"><h3>Math and ML Basics</h3><p>Probability, similarity intuition, precision and recall, train/dev/test thinking, and the language needed to discuss model behavior sensibly.</p></article>
+        <article class="card"><h3>Software and Data Basics</h3><p>HTTP, JSON, SQL, queues, webhooks, files, APIs, and the difference between application state, retrieval state, and model context.</p></article>
+        <article class="card"><h3>Search and Retrieval Basics</h3><p>Keyword search, BM25 intuition, embeddings, reranking, chunking, and when lexical methods outperform vector-only systems.</p></article>
+        <article class="card"><h3>Production Basics</h3><p>Logging, testing, deployment environments, cost awareness, latency awareness, and the idea that AI systems are software systems first.</p></article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>Serving Spine</h2>
+          <p>
+            Rather than treating inference serving as a late infrastructure appendix, the course revisits
+            serving decisions throughout the program so students learn to connect product behavior to
+            latency, cost, architecture, and hardware realities.
+          </p>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <article class="card">
+          <h3>Early Awareness</h3>
+          <p>Modules 1-4 introduce tokens, latency, prompt shape, structured outputs, and why API choices affect downstream serving cost.</p>
+        </article>
+        <article class="card">
+          <h3>System Design</h3>
+          <p>Modules 5-12 connect retrieval, workflows, tools, async execution, and agent design to serving load, responsiveness, and failure recovery.</p>
+        </article>
+        <article class="card">
+          <h3>Operational Metrics</h3>
+          <p>Modules 13-16 formalize service-level engineering with TTFT, TPOT, throughput, goodput, SLOs, observability, and incident handling.</p>
+        </article>
+        <article class="card">
+          <h3>Inference Engineering</h3>
+          <p>Modules 17-20 go deep on engines, KV cache, continuous batching, quantization, routing, autoscaling, and benchmark-driven serving decisions.</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>Detailed Module Syllabus</h2>
+          <p>
+            Each module includes theory, demonstration, guided build, and production perspective. The
+            learner should leave every module with something that runs, can be tested, and can be discussed in design review terms.
+          </p>
+        </div>
+      </div>
+
+      <div class="module-grid">
+        <article class="module">
+          <header><div><h3>1. What AI Engineers Actually Build</h3><p class="goal">Orient learners to the AI product stack, common roles, system boundaries, failure modes, and the baseline concepts they will need later.</p></div><span class="label">Foundation</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>AI engineer vs ML engineer vs data scientist vs platform engineer</li>
+            <li>Model-powered application anatomy: UI, service layer, orchestration, storage, observability</li>
+            <li>Use-case taxonomy: chat, extraction, automation, retrieval, copilots, agents, multimodal apps</li>
+            <li>Core prerequisite map: APIs, HTTP, JSON, SQL, cloud services, and debugging habits that matter in AI systems</li>
+            <li>Prototype versus production expectations</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Map three real-world AI products to their underlying system components</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>2. AI, ML, LLM, and Deep Learning Fundamentals</h3><p class="goal">Build intuition without requiring a research background, and supply the minimum math and evaluation language used later in the course.</p></div><span class="label">Foundation</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Supervised, unsupervised, self-supervised, and reinforcement learning</li>
+            <li>Neural networks, transformers, tokens, embeddings, attention, context windows</li>
+            <li>Pretraining, instruction tuning, RLHF and post-training concepts</li>
+            <li>Capabilities, limitations, hallucination, uncertainty, and brittleness</li>
+            <li>Probability and statistics basics for engineers: similarity, distributions, thresholds, precision, recall, and calibration</li>
+            <li>Classical ML intuition that still matters in AI products: classifiers, regression, overfitting, underfitting, and cross-validation</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Tokenization and embedding visualization exercise with a short precision-versus-recall threshold analysis</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>3. AI Engineering Setup and Developer Workflow</h3><p class="goal">Establish the practical stack and the missing runtime knowledge many software engineers need before building AI systems.</p></div><span class="label">Foundation</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Python and TypeScript service basics for AI apps, including common AI engineering libraries and notebooks-to-service workflows</li>
+            <li>Virtual environments, package managers, secrets, environment variables, Docker</li>
+            <li>REST APIs, HTTP fundamentals, JSON payloads, async jobs, webhooks, queues, background workers</li>
+            <li>SQL, NoSQL, object storage, files, logs, and the data stores commonly used in AI applications</li>
+            <li>Git, branching, code review, testing, reproducibility, notebooks versus services</li>
+            <li>AI-assisted coding workflows and best practices for tools such as Codex, Cursor, and Claude Code</li>
+            <li>Cloud and runtime basics: local development, containers, staging, production, and environment isolation</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Create a local AI service skeleton with API, worker, storage, and config layers</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>4. Prompt Engineering and Structured Outputs</h3><p class="goal">Move beyond ad hoc prompting into repeatable interface design.</p></div><span class="label">Core</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Instructions, roles, examples, delimiters, decomposition, verification prompts</li>
+            <li>Schema-constrained outputs, JSON mode, tool invocation contracts</li>
+            <li>Reliability patterns: retries, validators, fallback prompts, self-checks</li>
+            <li>Prompt versioning, prompt asset management, and token-budget awareness</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Build a structured information extraction pipeline with validation</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>5. Search Foundations, Embeddings, and Vector Databases</h3><p class="goal">Teach the foundation of retrieval-driven AI systems without assuming prior search-engine knowledge.</p></div><span class="label">Core</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Keyword search, lexical retrieval, BM25 intuition, embeddings, distance metrics, chunking, metadata, hybrid retrieval</li>
+            <li>Vector stores, indexing tradeoffs, filters, freshness, re-indexing strategies</li>
+            <li>Precision, recall, grounding, semantic drift, and when lexical methods beat vector-only methods</li>
+            <li>When not to use a vector database</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Build keyword, vector, and hybrid search over a document corpus and compare chunking and ranking strategies</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>6. Retrieval-Augmented Generation End to End</h3><p class="goal">Build production RAG pipelines that answer accurately and cite sources.</p></div><span class="label">Core</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Ingestion, parsing, cleaning, chunking, indexing, retrieval, ranking, generation</li>
+            <li>Source attribution, answer synthesis, citation UX, abstention behavior</li>
+            <li>Offline and online evaluation for retrieval and answer quality</li>
+            <li>Failure patterns in enterprise knowledge systems</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Ship a document question-answering service with citations and answer confidence policy</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>7. Context Engineering and Memory Design</h3><p class="goal">Teach learners how to control what the model sees and remembers.</p></div><span class="label">Core</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Conversation state, session memory, summaries, retrieval memory, profile memory</li>
+            <li>Context windows, caching, compression, salience selection, truncation policies</li>
+            <li>Short-term versus long-term memory</li>
+            <li>Privacy and data retention implications of stateful systems</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Implement memory policies for a support copilot and compare behavior over long sessions</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>8. Workflow-Oriented AI Applications</h3><p class="goal">Show how many useful AI systems are workflows, not autonomous agents.</p></div><span class="label">Core</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Classification, routing, extraction, transformation, summarization, generation pipelines</li>
+            <li>Deterministic orchestration around stochastic model calls</li>
+            <li>State machines, DAGs, job queues, retries, dead-letter handling, resumability</li>
+            <li>Background mode, long-running jobs, webhooks, callback handling, and user notification patterns</li>
+            <li>Online inference versus batch and flex processing for enrichment, backfills, and eval pipelines</li>
+            <li>When to combine LLMs with classical ML, rules, or heuristics instead of using an LLM end to end</li>
+            <li>Human approval checkpoints</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Build an intake triage system that classifies, extracts, routes work, and completes asynchronously through queues and webhooks</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>9. Tool Use, Function Calling, and External Actions</h3><p class="goal">Teach safe and dependable connections between models and real systems.</p></div><span class="label">Agentic</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Tool definitions, argument schemas, tool selection, retries, idempotency</li>
+            <li>Search, database, code, email, ticketing, browser, computer-use, and business-action tools</li>
+            <li>Permissioning, auditability, rollback, side-effect management, and sandbox design</li>
+            <li>OAuth scopes, enterprise connectors, SSO-aware integrations, and approval boundaries for external actions</li>
+            <li>Toolformer-style thinking versus bounded orchestration</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Create an AI assistant that queries systems, uses a controlled browser/computer-use tool, and drafts actions without unsafe execution</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>10. Agent Architectures and Planning Patterns</h3><p class="goal">Separate useful agent patterns from hype and over-engineering.</p></div><span class="label">Agentic</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Single-agent loops, planner-executor, critic, router, swarm, hierarchical, and agent-to-agent collaboration patterns</li>
+            <li>When to use workflows instead of agents</li>
+            <li>Task decomposition, reflection, structured planning, interruption and recovery</li>
+            <li>Latency, cost, determinism, and product tradeoffs</li>
+            <li>Evaluating agent actions, tool correctness, task completion, and approval compliance</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Compare three architectures for the same operations automation task, including a workflow-first design, a bounded agent, and a multi-agent handoff design</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>11. MCP and AI System Interoperability</h3><p class="goal">Introduce modern standards and interfaces for tool and context connectivity.</p></div><span class="label">Agentic</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Model Context Protocol concepts and ecosystem role</li>
+            <li>Tool servers, documentation servers, knowledge connectors, local vs remote integration</li>
+            <li>Standardized interfaces versus custom adapters and emerging inter-agent interoperability patterns</li>
+            <li>Security boundaries, trust models, approvals, OAuth flows, and remote connector governance</li>
+            <li>Third-party MCP risk review, least-privilege design, and tenant-aware data access</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Connect an assistant to controlled local and remote tool/context servers and document the trust, auth, and approval model</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>12. Building Human-in-the-Loop Systems</h3><p class="goal">Teach systems that are useful, governable, and aligned with real work.</p></div><span class="label">Agentic</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Approval workflows, escalation paths, review queues, exception handling</li>
+            <li>Operator UX, transparency, explainability, and reversible actions</li>
+            <li>Designing for trust and calibrated reliance</li>
+            <li>Feedback capture for future evaluation and improvement</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Build a review-and-approve workflow for AI-generated actions in a business process</li></ul>
+        </article>
+        <article class="module">
+          <header><div><h3>13. AI Evaluation and Quality Engineering</h3><p class="goal">Make learners fluent in evals as a central production discipline.</p></div><span class="label">Production</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Golden datasets, task success metrics, rubric evals, model-graded evals, human review, and online measurement</li>
+            <li>Regression testing, scenario coverage, adversarial testing, red teaming</li>
+            <li>Retrieval evals versus generation evals versus action-level and workflow-level evals</li>
+            <li>Eval dataset operations: curation, annotation, synthetic generation, failure bucketing, versioning, and collaboration with SMEs or labelers</li>
+            <li>Prompt optimization loops with graders, test sets, and controlled prompt revisions</li>
+            <li>Foundational metrics review: accuracy, precision, recall, F1, ranking quality, thresholding, and tradeoff interpretation</li>
+            <li>Continuous evaluation in CI/CD and post-deployment</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Create an eval harness for a RAG or agent system, including dataset versioning, grader prompts, action checks, and CI gates</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>14. Observability, Tracing, and Production Debugging</h3><p class="goal">Give learners the tools to understand live AI systems and diagnose failures.</p></div><span class="label">Production</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Request tracing, prompt and response logging, tool-call traces, retrieval traces</li>
+            <li>Token, latency, quality, cost, cache-hit, and tool-success telemetry</li>
+            <li>PII-safe logging, sampling, aggregation, dashboards, and tenant-aware tracing</li>
+            <li>Using observability to improve prompts, retrieval, caches, and workflows</li>
+            <li>AI-specific incident triage for hallucinations, prompt injection, connector faults, provider outages, and runaway spend</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Instrument an AI service with end-to-end traces, cache metrics, and an incident-focused debugging dashboard</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>15. Safety, Security, and Responsible AI</h3><p class="goal">Treat risk management as core engineering, not an appendix.</p></div><span class="label">Production</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Prompt injection, data exfiltration, insecure tool access, jailbreaks, model misuse, and browser/computer-use abuse</li>
+            <li>PII handling, retention, compliance-aware design, audit logs, and tenant isolation</li>
+            <li>Content safety, abuse prevention, policy enforcement, fallback behavior</li>
+            <li>Threat modeling for RAG, agentic, connector-based, and enterprise-integrated systems</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Red-team an agent system and add layered mitigations</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>16. Cost, Latency, Reliability, and Service-Level Engineering</h3><p class="goal">Help learners operate AI products within real business constraints and measurable service targets.</p></div><span class="label">Production</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Model selection by task, cascade architectures, prompt caching, semantic caching, batching, streaming</li>
+            <li>Synchronous vs background execution, queue-based designs, graceful degradation, and offline batch processing</li>
+            <li>Rate limits, retries, fallback models, circuit breakers, SLAs, SLOs, and error budgets</li>
+            <li>Serving metrics such as time-to-first-token, time-per-output-token, throughput, goodput, and tail latency</li>
+            <li>Cost attribution, budget controls, cache-aware prompt design, and gateway-level routing policies</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Optimize an AI endpoint for quality, latency, and cost under a fixed budget using prompt caching, response reuse, model routing, and service-level metrics</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>17. Serving AI Applications in Production</h3><p class="goal">Move from local demos to deployed, supportable systems.</p></div><span class="label">Infrastructure</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Service design, API gateways, auth, configuration, tenancy, secret management, and LLM gateways</li>
+            <li>Cloud deployment patterns, containers, serverless, worker pools, edge runtimes, and mobile/web client considerations</li>
+            <li>Online inference versus batch jobs, async callbacks, event-driven architectures, and streaming transport choices</li>
+            <li>Orchestration layer versus inference layer, request routing, load balancing, and warm-pool strategies</li>
+            <li>Blue-green deployments, canaries, rollback plans</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Deploy an AI app with separate API, worker, gateway, inference, and monitoring services, plus a streaming client experience</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>18. LLM Serving Systems, Inference Engines, and Self-Hosted Models</h3><p class="goal">Give practical understanding of modern LLM serving as a systems discipline, not just deployment.</p></div><span class="label">Infrastructure</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Inference servers and frameworks: vLLM, TGI, TensorRT-LLM, llama.cpp, managed endpoints, and OpenAI-compatible serving</li>
+            <li>Quantization, throughput, batch sizing, concurrency, continuous batching, and KV-cache behavior</li>
+            <li>Paged attention, memory fragmentation, prefix caching, chunked prefill, and prefill-versus-decode optimization</li>
+            <li>GPU basics, VRAM planning, autoscaling challenges, cold starts, and throughput benchmarking</li>
+            <li>Hosted APIs versus open-weight deployment across single-GPU, multi-GPU, and multi-node serving tiers</li>
+            <li>Latency, privacy, sovereignty, economics tradeoffs, and speculative decoding performance tactics</li>
+            <li>Serving reasoning models, long-context models, multimodal models, and model-specific serving constraints</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Benchmark a hosted model against a self-hosted open model and compare two serving frameworks using TTFT, TPOT, throughput, goodput, batching, and decode-strategy tradeoffs</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>19. Data Pipelines, Governance, and AI MLOps</h3><p class="goal">Connect application engineering to data and operational discipline.</p></div><span class="label">Infrastructure</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Data ingestion pipelines, labeling, feedback loops, versioning, lineage, and eval-data pipelines</li>
+            <li>Feature/data quality concepts for AI applications, feature engineering intuition, and document-ingestion quality control</li>
+            <li>Modern data stack exposure: Kafka, Airflow, Snowflake, warehouses, and distributed data workflows</li>
+            <li>Experiment tracking, model and prompt registries, release management, and personalization assets</li>
+            <li>Governance for enterprise knowledge, training data, user profiles, and memory stores</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Create a pipeline that captures feedback, buckets failures, and turns them into eval, personalization, or training assets</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>20. Testing, CI/CD, and Team Delivery Practices</h3><p class="goal">Train learners to ship AI systems with engineering rigor.</p></div><span class="label">Infrastructure</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Unit, integration, end-to-end, contract, online experiment, and evaluation tests for AI systems</li>
+            <li>Replay testing, mock providers, fixture management, deterministic wrappers, and action simulation harnesses</li>
+            <li>CI/CD for prompts, configs, retrieval indexes, and service code</li>
+            <li>Release notes, operational checklists, incident response, and AI-specific rollback criteria</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Build a release pipeline for an AI service including tests, evals, rollout gates, and an A/B or canary experiment plan</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>21. Multimodal AI Systems</h3><p class="goal">Expand learners beyond text into modern production AI interfaces.</p></div><span class="label">Specialization</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Image, audio, document, and vision-language workflows</li>
+            <li>OCR, transcription, image understanding, screenshot analysis, voice interfaces, and realtime speech systems</li>
+            <li>Multimodal retrieval, layout-aware chunking, and document intelligence ingestion pipelines</li>
+            <li>Streaming UX, turn-taking, interruption handling, and UX implications of multimodal systems</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Build a document intake or voice-enabled multimodal system that extracts, streams, and reasons over text, images, and audio</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>22. Fine-Tuning, Adaptation, and Customization</h3><p class="goal">Teach when customization is worth the effort and when it is not.</p></div><span class="label">Specialization</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Prompting versus retrieval versus fine-tuning versus distillation</li>
+            <li>Dataset design, quality control, evaluation before and after tuning</li>
+            <li>Specialized models for classification, extraction, or style adaptation</li>
+            <li>Risk, maintenance cost, and governance of custom models</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Run a small adaptation experiment and compare it against prompt-only and RAG baselines</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>23. Product Strategy for AI Features</h3><p class="goal">Make learners strong at deciding what should be built, not only how.</p></div><span class="label">Specialization</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Use-case selection, ROI framing, user trust, UX for uncertainty, approval, and personalized experiences</li>
+            <li>Build vs buy decisions, vendor risk, platform lock-in, pricing strategies, and gateway/provider abstraction</li>
+            <li>Success metrics, rollout strategy, adoption, A/B testing, online experiments, and change management</li>
+            <li>Stakeholder discovery, workshop facilitation, requirements gathering, and translating ambiguous business goals into technical plans</li>
+            <li>Writing AI design docs, reference implementations, technical guides, and production readiness reviews</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Produce a design review memo and technical rollout guide for a new AI feature in an existing product, including experiment plan, personalization policy, and provider strategy</li></ul>
+        </article>
+
+        <article class="module">
+          <header><div><h3>24. Capstone Build and Launch Readiness</h3><p class="goal">Integrate the whole course into a final, production-quality system.</p></div><span class="label">Capstone</span></header>
+          <p class="subhead">Topics</p>
+          <ul>
+            <li>Architecture review, security review, eval review, observability review</li>
+            <li>Performance testing, launch checklist, runbooks, incident playbooks</li>
+            <li>Stakeholder demo and technical walkthrough</li>
+            <li>Post-launch improvement roadmap</li>
+          </ul>
+          <p class="subhead">Lab</p>
+          <ul><li>Launch the final project with a deployment plan, dashboard, and test evidence</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>Portfolio Projects</h2>
+          <p>The course is anchored by cumulative projects so learners graduate with tangible, job-relevant work instead of isolated exercises.</p>
+        </div>
+      </div>
+      <div class="project-grid">
+        <article class="project"><h3>Project 1: AI Support Copilot</h3><ul><li>Multi-turn assistant for support agents</li><li>RAG over policy and product docs with reranking and query rewrite</li><li>Structured response templates, citations, and personalization boundaries</li><li>Eval suite for answer quality, hallucination rate, and retrieval quality</li></ul></article>
+        <article class="project"><h3>Project 2: AI Workflow Automation Service</h3><ul><li>Inbox or ticket triage pipeline</li><li>Extraction, classification, routing, approval, async completion, and hybrid ML or rules where appropriate</li><li>Human-in-the-loop dashboard with webhook and queue status</li><li>Queue-based architecture with retries, audit logs, and incident runbook</li></ul></article>
+        <article class="project"><h3>Project 3: Agent with Tools</h3><ul><li>Bounded agent that searches data, uses connectors, and drafts actions</li><li>Tool permission model, side-effect controls, and browser/computer-use sandboxing</li><li>Tracing, red-team tests, action-level evals, and fallback behavior</li><li>Operational review of cost, latency, gateway routing, and safety</li></ul></article>
+        <article class="project"><h3>Project 4: Multimodal Document Intelligence App</h3><ul><li>Processes PDFs, screenshots, forms, invoices, or voice inputs</li><li>OCR, extraction, layout-aware ingestion, validation, and review workflow</li><li>Confidence thresholds, exception queues, and streaming or realtime UX</li><li>Production dashboard for throughput, ingestion quality, and accuracy</li></ul></article>
+        <article class="project"><h3>Project 5: Self-Hosted vs API Benchmark</h3><ul><li>Compare hosted and open-weight deployments across two serving stacks</li><li>Measure quality, cost, TTFT, TPOT, throughput, goodput, privacy, and ops burden</li><li>Write architecture recommendation memo including caching, routing, and serving-framework strategy</li><li>Present tradeoff-driven decision to a stakeholder panel</li></ul></article>
+        <article class="project"><h3>Final Capstone: Production AI Product</h3><ul><li>Student-defined use case with clear business value</li><li>Live deployment, observability, tests, evals, experiment plan, and stakeholder-facing documentation</li><li>Security, connector trust, and reliability review</li><li>Launch demo plus post-launch roadmap for iteration and incident handling</li></ul></article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>Competency Matrix</h2>
+          <p>Completion should mean practical readiness across the full lifecycle of an AI system, from framing and prototyping to production operations.</p>
+        </div>
+      </div>
+      <div class="matrix-grid">
+        <article class="matrix">
+          <h3>Technical Competencies</h3>
+          <table>
+            <tr><th>Modeling</th><td>Prompting, context design, retrieval, reranking, tool use, architecture selection, prompt optimization</td></tr>
+            <tr><th>Application</th><td>Service design, APIs, queues, webhooks, streaming, structured outputs, realtime UX, UI integration, AI-assisted development</td></tr>
+            <tr><th>Data</th><td>Ingestion, indexing, cleaning, metadata, governance, personalization state, feedback capture, data-stack fluency</td></tr>
+            <tr><th>Operations</th><td>Testing, evals, tracing, deployment, runbooks, incident handling, online experiments, benchmarking</td></tr>
+          </table>
+        </article>
+        <article class="matrix">
+          <h3>Production Competencies</h3>
+          <table>
+            <tr><th>Reliability</th><td>Fallbacks, retries, monitoring, degradation, resumability, SLO thinking</td></tr>
+            <tr><th>Safety</th><td>Prompt injection defense, access control, policy guardrails, auditability, connector trust</td></tr>
+            <tr><th>Performance</th><td>Latency tuning, prompt caching, semantic caching, KV-cache tuning, batching, goodput, cost control, throughput planning</td></tr>
+            <tr><th>Evaluation</th><td>Golden sets, rubrics, regression tests, action evals, online feedback loops</td></tr>
+          </table>
+        </article>
+        <article class="matrix">
+          <h3>Professional Competencies</h3>
+          <table>
+            <tr><th>Product Sense</th><td>Use-case selection, ROI framing, trust-aware UX, launch strategy, experimentation, stakeholder discovery</td></tr>
+            <tr><th>Communication</th><td>Design docs, architecture reviews, technical demos, stakeholder updates, technical guides, incident reports</td></tr>
+            <tr><th>Teamwork</th><td>Versioning prompts and configs, code review, shared eval ownership, connector governance</td></tr>
+            <tr><th>Judgment</th><td>Knowing when not to use AI, when to prefer a simpler system, and when to limit autonomy</td></tr>
+          </table>
+        </article>
+      </div>
+    </section>
+
+    <section><div class="banner"><p><strong>Guiding philosophy:</strong> the strongest AI engineers are not the ones who can merely call a model API. They can shape ambiguous problems, choose the right level of autonomy, design for failure, evaluate quality, protect users and data, and operate systems responsibly after launch.</p></div></section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>Assessment Model</h2>
+          <p>The course measures what matters in real jobs: working systems, sound engineering decisions, and clear evidence of quality.</p>
+        </div>
+      </div>
+      <div class="outcome-grid">
+        <article class="card"><h3>Labs and Checkpoints</h3><ul><li>Weekly coding labs</li><li>Architecture and debugging checkpoints</li><li>Short written reflections on tradeoffs and failure analysis</li></ul></article>
+        <article class="card"><h3>Project Reviews</h3><ul><li>Demo-based grading</li><li>Design doc submissions</li><li>Production readiness review before capstone sign-off</li></ul></article>
+        <article class="card"><h3>Evidence Required</h3><ul><li>Tests, evals, and benchmark reports</li><li>Tracing or monitoring evidence</li><li>Security, reliability, and serving-performance considerations</li></ul></article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>Recommended Tooling Covered in the Course</h2>
+          <p>Tool choices can change over time, so the course teaches categories and engineering principles first, then uses representative modern tools.</p>
+        </div>
+      </div>
+      <div class="resource-grid">
+        <article class="resource"><h3>Model Providers and APIs</h3><ul><li>Hosted frontier model APIs, realtime APIs, and batch APIs</li><li>Open-weight model serving stacks, OpenAI-compatible servers, and gateway-based routing layers</li><li>Responses-style unified APIs, tools, background jobs, and webhooks</li></ul></article>
+        <article class="resource"><h3>Retrieval and Data</h3><ul><li>Vector databases, hybrid search engines, rerankers, and query-rewrite systems</li><li>Document parsing, OCR, and layout-aware ingestion pipelines</li><li>Storage for chat state, metadata, personalization state, and evaluation assets</li></ul></article>
+        <article class="resource"><h3>Orchestration and Runtime</h3><ul><li>Backend frameworks for AI services, streaming runtimes, and edge clients</li><li>Workflow engines, queues, background job processors, and webhook handlers</li><li>Tooling for agent traces, MCP, connectors, and multi-step execution</li></ul></article>
+        <article class="resource"><h3>Quality and Observability</h3><ul><li>Evaluation platforms, prompt optimizers, and custom eval harnesses</li><li>Tracing and telemetry stacks with cache, cost, and action metrics</li><li>Dashboarding, experimentation, and incident response tooling</li></ul></article>
+        <article class="resource"><h3>Infra and Delivery</h3><ul><li>Containers, cloud runtimes, worker services, edge deployment patterns, and load-balancing layers</li><li>CI/CD pipelines, feature flags, canaries, warm pools, and secrets management</li><li>GPU deployment, managed inference services, vLLM or TGI-style engines, and performance benchmarking tools</li></ul></article>
+        <article class="resource"><h3>Security and Governance</h3><ul><li>Identity, SSO, OAuth scopes, and access control</li><li>Policy enforcement, auditing, remote connector approvals, and trust review</li><li>Data lifecycle, privacy, tenant isolation, and compliance-aware controls</li></ul></article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2>Suggested Delivery Format</h2>
+          <p>The syllabus is flexible, but one effective implementation is a 24-week program with one main module per week, one lab, and one project milestone every two to three weeks. A strong delivery pattern is to pair each week’s application topic with a short production-systems clinic so serving and operations stay visible throughout.</p>
+        </div>
+      </div>
+      <div class="faq-grid">
+        <article class="faq"><h3>Weekly Rhythm</h3><ul><li>Concept lecture and architecture discussion</li><li>Live build or debugging demonstration</li><li>Production-systems clinic on serving, evals, or operations</li><li>Hands-on lab session</li><li>Project office hours and review</li></ul></article>
+        <article class="faq"><h3>Artifacts Students Produce</h3><ul><li>Working repositories</li><li>Architecture diagrams and design notes</li><li>Evaluation reports, serving benchmarks, and dashboards</li><li>Deployment checklists, launch plans, and performance recommendation memos</li></ul></article>
+        <article class="faq"><h3>Capstone Exit Standard</h3><ul><li>Deployed service or documented local production simulation</li><li>Evidence of tests, evals, observability, and serving benchmarks</li><li>Security and risk review</li><li>Business-value narrative and improvement roadmap</li></ul></article>
+      </div>
+    </section>
+
+    <footer>
+      <h2>Current-Technology Notes</h2>
+      <p>
+        This syllabus was shaped to reflect current AI engineering practice as of March 25, 2026, including the shift toward
+        unified responses-style APIs, tool-enabled and agentic workflows, asynchronous/background execution, webhooks, MCP-based
+        interoperability, multimodal product design, evaluation-first development, production observability for LLM systems, and
+        modern LLM serving patterns such as continuous batching, KV-cache-aware inference, and benchmark-driven serving design.
+      </p>
+      <div class="sources">
+        <p><strong>Selected current references used to keep the syllabus modern:</strong></p>
+        <ul>
+          <li><a href="https://platform.openai.com/docs/guides/migrate-to-responses">OpenAI: Migrate to the Responses API</a></li>
+          <li><a href="https://platform.openai.com/docs/guides/background">OpenAI: Background mode</a></li>
+          <li><a href="https://platform.openai.com/docs/guides/webhooks">OpenAI: Webhooks</a></li>
+          <li><a href="https://platform.openai.com/docs/docs-mcp">OpenAI: Docs MCP</a></li>
+          <li><a href="https://modelcontextprotocol.io/docs/python/servers">Model Context Protocol documentation</a></li>
+          <li><a href="https://docs.smith.langchain.com/">LangSmith documentation</a></li>
+          <li><a href="https://opentelemetry.io/docs/specs/semconv/">OpenTelemetry semantic conventions</a></li>
+          <li><a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf">OpenAI: A practical guide to building agents</a></li>
+          <li><a href="https://docs.anyscale.com/llm/serving">Anyscale: Serve LLMs with Anyscale services</a></li>
+          <li><a href="https://docs.vllm.ai/en/latest/">vLLM documentation</a></li>
+          <li><a href="https://docs.nvidia.com/tensorrt-llm/">NVIDIA TensorRT-LLM documentation</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

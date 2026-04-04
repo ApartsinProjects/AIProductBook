@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 2 Lab - AI, ML, LLM, and Deep Learning Fundamentals</title>
+  <style>
+    :root {
+      --paper: #fffdf9;
+      --ink: #1f2937;
+      --muted: #5b6574;
+      --line: #ded6ca;
+      --brand: #0f766e;
+      --brand-2: #1d4ed8;
+      --soft: #f8f2e9;
+      --soft-2: #edf6f5;
+      --soft-3: #eef4ff;
+      --shadow: 0 18px 40px rgba(49, 31, 11, 0.08);
+      --max: 1080px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: linear-gradient(180deg, #faf7f2, #f2ece4); font-family: Georgia, "Times New Roman", serif; line-height: 1.7; }
+    a { color: var(--brand-2); }
+    .page { width: min(calc(100% - 2rem), var(--max)); margin: 0 auto; padding: 1rem 0 4rem; }
+    .hero, section, .card { background: var(--paper); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); }
+    .hero { padding: 2.2rem 1.8rem; background: linear-gradient(135deg, rgba(29, 78, 216, 0.95), rgba(15, 118, 110, 0.9)); color: #fffdfa; }
+    .grid-2, .grid-3 { display: grid; gap: 1rem; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card, section { padding: 1.25rem; margin-top: 1rem; }
+    .label { display: inline-block; margin-bottom: 0.6rem; padding: 0.28rem 0.65rem; border-radius: 999px; background: rgba(15, 118, 110, 0.1); color: var(--brand); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .soft { background: var(--soft); }
+    .soft-2 { background: var(--soft-2); }
+    .soft-3 { background: var(--soft-3); }
+    ul, ol { padding-left: 1.2rem; }
+    .muted { color: var(--muted); }
+    @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <span class="label" style="background:rgba(255,255,255,0.14); color:#fffdfa;">Module 2 Lab</span>
+      <h1>Tokenization, Embeddings, And Threshold Decisions</h1>
+      <p>
+        This lab turns the module’s core ideas into engineering decisions. Students will inspect token
+        behavior, reason about embedding similarity, analyze precision-versus-recall tradeoffs, and connect
+        the fundamentals to a narrow AI product design.
+      </p>
+      <p>
+        <a href="./lecture-notes.html" style="color:#fffdfa; font-weight:700;">Open lecture notes</a>
+        |
+        <a href="./lab-solution.html" style="color:#fffdfa; font-weight:700;">Open lab solution</a>
+        |
+        <a href="./slides.html" style="color:#fffdfa; font-weight:700;">Open slides</a>
+      </p>
+    </header>
+
+    <section>
+      <span class="label">Objectives</span>
+      <h2>Lab Objectives</h2>
+      <div class="grid-3">
+        <article class="card soft"><h3>Representation</h3><p>Understand how tokenization and embeddings affect model behavior and product design.</p></article>
+        <article class="card soft-2"><h3>Evaluation</h3><p>Make and justify a threshold choice using precision and recall reasoning.</p></article>
+        <article class="card soft-3"><h3>Translation</h3><p>Translate fundamentals into product architecture and review decisions.</p></article>
+      </div>
+    </section>
+
+    <section>
+      <span class="label">Preparation</span>
+      <h2>Before Starting</h2>
+      <ul>
+        <li>Read <a href="./lecture-notes.html#landscape">AI, ML, Deep Learning, Transformers, and LLMs Are Nested Concepts</a></li>
+        <li>Study <a href="./lecture-notes.html#tokens-embeddings">Tokens And Embeddings</a></li>
+        <li>Review <a href="./lecture-notes.html#training">From Pretraining To Post-Training To Inference</a></li>
+        <li>Review <a href="./lecture-notes.html#metrics">Metrics And Thresholds</a></li>
+        <li>Optionally revisit <a href="../01-what-ai-engineers-actually-build/lecture-notes.html#mental-models">Module 1 mental models</a></li>
+      </ul>
+    </section>
+
+    <section id="exercise-1">
+      <span class="label">Exercise 1</span>
+      <h2>Inspect Tokenization And Context Cost</h2>
+      <p>
+        Pick five short strings that look similar in visible length but differ in structure, for example:
+        a plain sentence, a URL, a JSON blob, code, and a sentence with punctuation-heavy formatting.
+      </p>
+      <ol>
+        <li>Estimate which ones you think will produce more tokens and why.</li>
+        <li>Use a tokenizer tool or reason carefully from known tokenization behavior.</li>
+        <li>Explain how token count affects cost, latency, and context fit in a production system.</li>
+        <li>State one practical implication for prompt design or chunking.</li>
+      </ol>
+      <p class="muted">Supporting lecture sections: <a href="./lecture-notes.html#tokens-embeddings">Tokens And Embeddings</a>, <a href="./lecture-notes.html#transformers">Transformers</a></p>
+      <h3>Deliverable</h3>
+      <p>Create a one-page note with your five examples, tokenization observations, and one engineering takeaway.</p>
+    </section>
+
+    <section id="exercise-2">
+      <span class="label">Exercise 2</span>
+      <h2>Reason About Embedding Similarity</h2>
+      <p>
+        Build a small set of 8-10 support-style sentences. Include pairs that are semantically similar but
+        not string-similar, and pairs that are string-similar but semantically different.
+      </p>
+      <ol>
+        <li>Group the sentences into clusters you expect embeddings to place near each other.</li>
+        <li>Explain why semantic similarity can differ from keyword overlap.</li>
+        <li>Identify one case where embeddings may still fail without better context or metadata.</li>
+      </ol>
+      <p class="muted">Supporting lecture sections: <a href="./lecture-notes.html#tokens-embeddings">Tokens And Embeddings</a>, <a href="./lecture-notes.html#networks">Why Neural Networks Matter</a></p>
+      <h3>Deliverable</h3>
+      <p>Create a small similarity table or cluster diagram and a short written explanation.</p>
+    </section>
+
+    <section id="exercise-3">
+      <span class="label">Exercise 3</span>
+      <h2>Choose A Threshold And Defend It</h2>
+      <p>
+        Imagine you are building an inbound-support triage system that predicts whether a ticket should be
+        escalated to a senior specialist. You are given these model scores for ten cases:
+      </p>
+      <p><code>0.94, 0.89, 0.81, 0.77, 0.72, 0.68, 0.61, 0.54, 0.40, 0.22</code></p>
+      <p>
+        Assume that the truly escalation-worthy cases are the first, second, fourth, fifth, and seventh
+        items in the list.
+      </p>
+      <ol>
+        <li>Evaluate two thresholds of your choice, for example `0.80` and `0.60`.</li>
+        <li>Compute the resulting true positives, false positives, false negatives, precision, and recall.</li>
+        <li>Choose a threshold and defend it in product terms, not just mathematical terms.</li>
+        <li>State whether calibration or human review policy should be part of the design.</li>
+      </ol>
+      <p class="muted">Supporting lecture sections: <a href="./lecture-notes.html#metrics">Metrics And Thresholds</a>, <a href="./lecture-notes.html#failures">Capabilities, Limits, And Failures</a></p>
+      <h3>Deliverable</h3>
+      <p>Create a short threshold-analysis memo with your calculations and recommendation.</p>
+    </section>
+
+    <section id="exercise-4">
+      <span class="label">Exercise 4</span>
+      <h2>Design A Fundamentals-Aware AI Feature</h2>
+      <p>
+        Design a narrow AI feature for one business workflow. Keep the scope small enough that you can
+        clearly justify the model choice, threshold policy, and likely failure modes.
+      </p>
+      <ul>
+        <li>Describe the user problem in 2-3 sentences.</li>
+        <li>State which model behaviors matter most: classification, extraction, ranking, generation, or semantic retrieval.</li>
+        <li>List the core fundamentals that matter to your design: tokens, embeddings, thresholds, context window, training assumptions, or calibration.</li>
+        <li>State one thing the system should definitely not do automatically.</li>
+      </ul>
+      <p class="muted">Supporting lecture sections: <a href="./lecture-notes.html#orientation">The Large-Picture Map For This Module</a>, <a href="./lecture-notes.html#metrics">Metrics And Thresholds</a>, <a href="../01-what-ai-engineers-actually-build/lecture-notes.html#prototype-production">Module 1 Prototype Versus Production</a></p>
+      <h3>Deliverable</h3>
+      <p>Turn in a short design note with a problem statement, design choices, threshold stance, and failure/risk notes.</p>
+    </section>
+
+    <section>
+      <span class="label">Rubric</span>
+      <h2>Rubric</h2>
+      <div class="grid-2">
+        <article class="card soft">
+          <h3>Strong Submission</h3>
+          <ul>
+            <li>Shows correct conceptual understanding, not just copied definitions</li>
+            <li>Connects fundamentals to engineering decisions</li>
+            <li>Uses metrics in product terms</li>
+            <li>Identifies realistic limitations and review needs</li>
+          </ul>
+        </article>
+        <article class="card soft-2">
+          <h3>Weak Submission</h3>
+          <ul>
+            <li>Repeats buzzwords without operational meaning</li>
+            <li>Treats embeddings or thresholds as purely abstract concepts</li>
+            <li>Makes no connection to cost, risk, or product behavior</li>
+            <li>Overstates model confidence or ignores failure modes</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <span class="label">Wrap-Up</span>
+      <h2>What This Lab Should Change</h2>
+      <p>
+        After this lab, students should be less likely to use model words vaguely. They should be able to
+        explain, in engineering terms, why tokenization changes cost, why embeddings change retrieval, and
+        why threshold choice changes product behavior.
+      </p>
+    </section>
+  </div>
+</body>
+</html>

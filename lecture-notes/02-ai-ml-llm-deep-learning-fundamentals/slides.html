@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 2 Slides</title>
+  <style>
+    :root { --bg:#f6efe5; --paper:#fffdf8; --ink:#1f2937; --muted:#5b6574; --line:#ddcfbe; --brand:#1d4ed8; --brand2:#0f766e; --soft:#eef6f5; --soft2:#fff4e8; --shadow:0 24px 60px rgba(45,30,13,.15); --shadow-soft:0 16px 36px rgba(45,30,13,.08); }
+    * { box-sizing:border-box; }
+    html, body { height:100%; margin:0; }
+    body { overflow:hidden; color:var(--ink); font-family:Georgia, "Times New Roman", serif; background:radial-gradient(circle at top left, rgba(29,78,216,.09), transparent 30%), radial-gradient(circle at bottom right, rgba(15,118,110,.08), transparent 25%), linear-gradient(180deg, #fbf8f2, var(--bg)); }
+    a { color:#1d4ed8; }
+    .deck { height:100%; display:grid; grid-template-rows:auto 1fr auto; gap:12px; padding:18px 24px; }
+    .bar { width:min(1280px, calc(100vw - 48px)); margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); }
+    .actions, .controls { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    button, .linkbtn { appearance:none; border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.88); color:var(--ink); padding:.72rem 1rem; font:inherit; text-decoration:none; cursor:pointer; }
+    .primary { background:linear-gradient(135deg, var(--brand), #2563eb); color:#fff; border-color:rgba(29,78,216,.25); }
+    .viewport { position:relative; width:min(1280px, calc(100vw - 48px)); height:min(820px, calc(100vh - 112px)); margin:0 auto; overflow:hidden; border-radius:34px; box-shadow:var(--shadow); }
+    .slides { height:100%; display:flex; transition:transform .3s ease; }
+    .slide { min-width:100%; height:100%; padding:40px 44px 28px; border:1px solid rgba(221,207,190,.9); background:linear-gradient(180deg, rgba(255,253,248,.99), rgba(248,242,233,.99)); display:grid; grid-template-rows:auto auto minmax(0,1fr) auto; gap:18px; align-content:start; }
+    .hero { background:linear-gradient(135deg, rgba(29,78,216,.98), rgba(15,118,110,.94)); color:#fffdf8; }
+    .hero a { color:#fffdf8; }
+    .eyebrow { display:inline-block; padding:.28rem .8rem; border-radius:999px; text-transform:uppercase; letter-spacing:.05em; font-size:.84rem; font-weight:700; border:1px solid rgba(255,255,255,.25); }
+    .slide:not(.hero) .eyebrow { color:var(--brand2); border-color:rgba(15,118,110,.18); background:rgba(15,118,110,.08); }
+    h1, h2, h3, p { margin:0; }
+    h1 { font-size:clamp(3.2rem, 5.4vw, 5.5rem); max-width:11ch; line-height:1.02; letter-spacing:-0.02em; }
+    h2 { font-size:clamp(2.2rem, 3.5vw, 3.35rem); max-width:18ch; line-height:1.04; letter-spacing:-0.02em; }
+    h3 { font-size:1.28rem; line-height:1.15; }
+    p, li { font-size:1.12rem; line-height:1.44; }
+    ul { margin:0; padding-left:1.2rem; }
+    .grid2, .grid3 { display:grid; gap:18px; }
+    .grid2 { grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .grid3 { grid-template-columns:repeat(3, minmax(0,1fr)); }
+    .card, .note, .diagram, .quote { border:1px solid var(--line); border-radius:26px; background:var(--paper); padding:22px; box-shadow:var(--shadow-soft); }
+    .note { background:var(--soft); }
+    .quote { background:var(--soft2); }
+    .diagram { background:linear-gradient(180deg, #fffdf8, #f8f2e9); }
+    .diagram svg { display:block; width:100%; max-height:330px; }
+    .xref { margin-top:6px; color:var(--muted); font-size:.88rem; line-height:1.35; }
+    .hero .card, .hero .note, .hero .quote { background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.16); box-shadow:none; }
+    .footer { display:flex; justify-content:space-between; gap:16px; color:var(--muted); font-size:.86rem; }
+    .hero .footer { color:rgba(255,250,244,.9); }
+    .progress { flex:1; max-width:360px; height:10px; border-radius:999px; background:rgba(31,41,55,.1); overflow:hidden; }
+    .progress > span { display:block; height:100%; width:0; background:linear-gradient(90deg, var(--brand2), var(--brand)); transition:width .3s ease; }
+    .index { min-width:72px; text-align:right; font-variant-numeric:tabular-nums; }
+    .overview { position:absolute; inset:18px; z-index:5; display:none; overflow:auto; border:1px solid var(--line); border-radius:28px; background:rgba(255,252,246,.98); padding:18px; box-shadow:var(--shadow); }
+    .overview.visible { display:block; }
+    .overview-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; margin-top:16px; }
+    .overview-grid button { text-align:left; white-space:normal; border-radius:20px; min-height:88px; }
+    .kbd { display:inline-block; padding:.14rem .4rem; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.75); font-size:.82rem; }
+    @media (max-width: 960px) {
+      .grid2, .grid3, .overview-grid { grid-template-columns:1fr; }
+      .viewport, .bar { width:calc(100vw - 28px); }
+      .viewport { height:calc(100vh - 132px); }
+      .slide { padding:24px 22px 20px; }
+      p, li { font-size:1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <div class="bar">
+      <div>Module 2 · Interactive Slides</div>
+      <div class="actions">
+        <a class="linkbtn" href="./lecture-notes.html">Lecture notes</a>
+        <a class="linkbtn" href="./lab.html">Lab</a>
+        <button id="overview-toggle" type="button">Overview</button>
+      </div>
+    </div>
+    <div class="viewport">
+      <div class="overview" id="overview">
+        <h2>Slide Overview</h2>
+        <p>Navigate with <span class="kbd">←</span> <span class="kbd">→</span>, <span class="kbd">Home</span>, <span class="kbd">End</span>, or <span class="kbd">O</span>.</p>
+        <div class="overview-grid" id="overview-grid"></div>
+      </div>
+      <div class="slides" id="slides">
+        <section class="slide hero" data-title="Title">
+          <span class="eyebrow">Module 2</span>
+          <div><h1>AI, ML, LLM, and Deep Learning Fundamentals</h1><p>The minimum model intuition an AI engineer needs for the rest of the course.</p></div>
+          <div class="grid2">
+            <article class="card"><h3>Students should leave with</h3><ul><li>A category map</li><li>Token and embedding intuition</li><li>Transformer intuition</li><li>Metric and threshold judgment</li></ul></article>
+            <article class="card"><h3>Builds on Module 1</h3><p>Module 1 gave the system view. Module 2 explains the model and evaluation concepts inside that system.</p></article>
+          </div>
+          <div class="xref">Cross-reference: <a href="../01-what-ai-engineers-actually-build/lecture-notes.html#mental-models">Module 1 mental models</a>.</div>
+          <div class="footer"><span>Use with the long-form notes for speaker depth.</span><span>1</span></div>
+        </section>
+        <section class="slide" data-title="Map">
+          <span class="eyebrow">Orientation</span>
+          <h2>How the concepts fit together</h2>
+          <div class="diagram"><svg viewBox="0 0 1080 380" width="100%" aria-hidden="true"><rect x="390" y="22" width="300" height="58" rx="18" fill="#fff4e8" stroke="#efcfaa" /><text x="540" y="58" text-anchor="middle" font-size="24" font-weight="700">AI products need behavior</text><rect x="80" y="124" width="220" height="74" rx="18" fill="#eef4ff" stroke="#c9d8fb" /><rect x="330" y="124" width="220" height="74" rx="18" fill="#edf6f5" stroke="#c8e4df" /><rect x="580" y="124" width="220" height="74" rx="18" fill="#f7f1ff" stroke="#d8caef" /><rect x="830" y="124" width="180" height="74" rx="18" fill="#eef8ef" stroke="#cbe6cf" /><text x="190" y="164" text-anchor="middle" font-size="21" font-weight="700">ML basics</text><text x="440" y="164" text-anchor="middle" font-size="21" font-weight="700">Deep learning</text><text x="690" y="164" text-anchor="middle" font-size="21" font-weight="700">Transformers</text><text x="920" y="164" text-anchor="middle" font-size="21" font-weight="700">LLMs</text><rect x="200" y="274" width="210" height="58" rx="18" fill="#fff7ea" stroke="#ead5aa" /><rect x="440" y="274" width="210" height="58" rx="18" fill="#eef4ff" stroke="#c9d8fb" /><rect x="680" y="274" width="210" height="58" rx="18" fill="#edf6f5" stroke="#c8e4df" /><text x="305" y="309" text-anchor="middle" font-size="20" font-weight="700">Tokens & embeddings</text><text x="545" y="309" text-anchor="middle" font-size="20" font-weight="700">Training lifecycle</text><text x="785" y="309" text-anchor="middle" font-size="20" font-weight="700">Metrics & thresholds</text></svg></div>
+          <div class="grid2"><article class="note"><h3>Main intuition</h3><p>These are nested ideas, not interchangeable buzzwords.</p></article><article class="note"><h3>Why it matters</h3><p>Without this map, later modules feel disconnected.</p></article></div>
+          <div class="xref">See also: <a href="./lecture-notes.html#orientation">lecture notes: large-picture map</a>.</div>
+          <div class="footer"><span>This is the conceptual backbone of the module.</span><span>2</span></div>
+        </section>
+        <section class="slide" data-title="Landscape">
+          <span class="eyebrow">Landscape</span>
+          <h2>AI, ML, deep learning, transformers, and LLMs are nested concepts</h2>
+          <div class="grid2">
+            <article class="card"><h3>AI</h3><p>Broad umbrella for intelligent behavior.</p><h3>ML</h3><p>Learning from data.</p></article>
+            <article class="card"><h3>Deep learning</h3><p>Neural representation learning.</p><h3>Transformers / LLMs</h3><p>Attention-based architectures and large pretrained language models.</p></article>
+          </div>
+          <div class="quote"><h3>Key correction</h3><p>“LLM” is not a synonym for “AI.”</p></div>
+          <div class="xref">See also: <a href="./lecture-notes.html#landscape">lecture notes: landscape</a>.</div>
+          <div class="footer"><span>Category clarity prevents a lot of confusion later.</span><span>3</span></div>
+        </section>
+        <section class="slide" data-title="Learning paradigms">
+          <span class="eyebrow">Learning</span>
+          <h2>How the model gets its learning signal matters</h2>
+          <div class="grid2">
+            <article class="card"><h3>Supervised</h3><p>Input + desired label.</p><h3>Unsupervised</h3><p>Find structure in raw data.</p></article>
+            <article class="card"><h3>Self-supervised</h3><p>Data creates its own labels.</p><h3>Reinforcement</h3><p>Learn from reward and feedback.</p></article>
+          </div>
+          <div class="quote"><h3>Most important practical point</h3><p>LLMs get broad competence mainly from self-supervised pretraining, then become more useful through post-training.</p></div>
+          <div class="xref">See also: <a href="./lecture-notes.html#learning-paradigms">lecture notes: learning paradigms</a>.</div>
+          <div class="footer"><span>Students should know what kind of signal created the behavior they see.</span><span>4</span></div>
+        </section>
+        <section class="slide" data-title="Neural nets">
+          <span class="eyebrow">Neural nets</span>
+          <h2>Neural networks matter because they learn representations</h2>
+          <div class="grid2">
+            <article class="card"><h3>Large-picture intuition</h3><p>Layers transform raw input into a space where useful predictions become easier.</p></article>
+            <article class="card"><h3>Why engineers care</h3><p>This is why hidden states, embeddings, and semantic similarity become operationally useful.</p></article>
+          </div>
+          <div class="quote"><h3>Connection to Module 1</h3><p>Task framing still matters, but the model is learning internal patterns rather than just memorizing outputs.</p></div>
+          <div class="xref">See also: <a href="./lecture-notes.html#networks">lecture notes: neural networks</a>.</div>
+          <div class="footer"><span>Representation learning is the conceptual bridge to embeddings.</span><span>5</span></div>
+        </section>
+        <section class="slide" data-title="Transformers">
+          <span class="eyebrow">Transformers</span>
+          <h2>Transformers changed modern AI because context changes meaning</h2>
+          <div class="diagram"><svg viewBox="0 0 1040 300" width="100%" aria-hidden="true"><rect x="60" y="50" width="400" height="200" rx="20" fill="#eef4ff" stroke="#c9d8fb" /><rect x="580" y="50" width="400" height="200" rx="20" fill="#edf6f5" stroke="#c8e4df" /><text x="260" y="88" text-anchor="middle" font-size="23" font-weight="700">“bank” in finance</text><text x="780" y="88" text-anchor="middle" font-size="23" font-weight="700">“bank” by a river</text><circle cx="260" cy="170" r="42" fill="#fff" stroke="#c9d8fb" stroke-width="4" /><circle cx="780" cy="170" r="42" fill="#fff" stroke="#c8e4df" stroke-width="4" /><text x="260" y="176" text-anchor="middle" font-size="18">bank</text><text x="780" y="176" text-anchor="middle" font-size="18">bank</text></svg></div>
+          <div class="grid2"><article class="note"><h3>Attention intuition</h3><p>Meaning depends on what other tokens matter right now.</p></article><article class="note"><h3>Engineering implication</h3><p>Prompt shape and context assembly directly affect behavior.</p></article></div>
+          <div class="xref">See also: <a href="./lecture-notes.html#transformers">lecture notes: transformers</a>.</div>
+          <div class="footer"><span>This is the root of prompt and context engineering.</span><span>6</span></div>
+        </section>
+        <section class="slide" data-title="Tokens and embeddings">
+          <span class="eyebrow">Representations</span>
+          <h2>Tokens are the model’s units. Embeddings are its semantic representations.</h2>
+          <div class="grid2">
+            <article class="card"><h3>Tokens</h3><p>Not the same as words. They affect cost, latency, and context fit.</p></article>
+            <article class="card"><h3>Embeddings</h3><p>Vector representations where related meanings tend to end up closer together.</p></article>
+          </div>
+          <div class="quote"><h3>Why this matters</h3><p>Token counts shape prompt cost. Embeddings shape semantic search.</p></div>
+          <div class="xref">See also: <a href="./lecture-notes.html#tokens-embeddings">lecture notes: tokens and embeddings</a> and <a href="./lab.html#exercise-1">lab exercise 1</a>.</div>
+          <div class="footer"><span>This slide tees up RAG and retrieval later in the course.</span><span>7</span></div>
+        </section>
+        <section class="slide" data-title="Training lifecycle">
+          <span class="eyebrow">Lifecycle</span>
+          <h2>Broad competence and user-facing helpfulness come from different stages</h2>
+          <div class="grid3"><article class="card"><h3>Pretraining</h3><p>Build broad language competence.</p></article><article class="card"><h3>Post-training</h3><p>Shape helpfulness and alignment.</p></article><article class="card"><h3>Inference</h3><p>Use the model inside a real product.</p></article></div>
+          <div class="quote"><h3>Key correction</h3><p>RLHF does not simply “make the model smart.” It mainly shapes user-facing behavior.</p></div>
+          <div class="xref">See also: <a href="./lecture-notes.html#training">lecture notes: training lifecycle</a>.</div>
+          <div class="footer"><span>Students should distinguish competence from alignment.</span><span>8</span></div>
+        </section>
+        <section class="slide" data-title="Metrics">
+          <span class="eyebrow">Metrics</span>
+          <h2>Precision, recall, thresholds, and calibration are really cost decisions</h2>
+          <div class="grid3"><article class="card"><h3>Precision</h3><p>When we act, how often are we right?</p></article><article class="card"><h3>Recall</h3><p>How many real cases do we catch?</p></article><article class="card"><h3>Calibration</h3><p>Do confidence scores mean what they claim?</p></article></div>
+          <div class="quote"><h3>Deep insight</h3><p>The right threshold depends on the cost of false positives versus false negatives.</p></div>
+          <div class="xref">See also: <a href="./lecture-notes.html#metrics">lecture notes: metrics and thresholds</a> and <a href="./lab.html#exercise-3">lab exercise 3</a>.</div>
+          <div class="footer"><span>One threshold does not fit every product.</span><span>9</span></div>
+        </section>
+        <section class="slide" data-title="Failures">
+          <span class="eyebrow">Limits</span>
+          <h2>Powerful models are still probabilistic and brittle</h2>
+          <div class="grid3"><article class="card"><h3>Hallucination</h3><p>Plausible but ungrounded output.</p></article><article class="card"><h3>Brittleness</h3><p>Small context shifts can change behavior a lot.</p></article><article class="card"><h3>Uncertainty</h3><p>Confidence is often imperfect.</p></article></div>
+          <div class="quote"><h3>Operational realism</h3><p>Respect the model’s capability, but never mistake it for guaranteed truth.</p></div>
+          <div class="xref">See also: <a href="./lecture-notes.html#failures">lecture notes: failures</a> and <a href="../01-what-ai-engineers-actually-build/lecture-notes.html#failure-modes">Module 1 failure modes</a>.</div>
+          <div class="footer"><span>This is why retrieval, evals, and guardrails exist later.</span><span>10</span></div>
+        </section>
+        <section class="slide" data-title="Concrete examples">
+          <span class="eyebrow">Concrete</span>
+          <h2>What the fundamentals look like in engineering work</h2>
+          <div class="grid2"><article class="card"><h3>Token intuition</h3><p><code>same visible length != same token cost</code></p></article><article class="card"><h3>Threshold intuition</h3><p><code>lower threshold -> more recall</code><br><code>higher threshold -> more precision</code></p></article></div>
+          <div class="quote"><h3>Practical lesson</h3><p>Fundamentals become useful when they change system choices: chunking, retrieval, routing, review, and cost controls.</p></div>
+          <div class="xref">See also: <a href="./lecture-notes.html#code">lecture notes: examples</a>.</div>
+          <div class="footer"><span>This is the bridge from theory to production design.</span><span>11</span></div>
+        </section>
+        <section class="slide" data-title="Wrap-up">
+          <span class="eyebrow">Wrap-up</span>
+          <h2>What students should now be able to do</h2>
+          <div class="grid3"><article class="card"><h3>Name the category</h3><p>AI vs ML vs DL vs transformer vs LLM.</p></article><article class="card"><h3>Name the mechanism</h3><p>Token, embedding, attention, post-training, threshold.</p></article><article class="card"><h3>Name the consequence</h3><p>How it affects cost, quality, retrieval, or product risk.</p></article></div>
+          <div class="grid2"><article class="note"><h3>Next step</h3><p>Use the notes for depth, then apply the concepts in the lab.</p></article><article class="note"><h3>Cross-reference</h3><p><a href="./lecture-notes.html">Lecture notes</a> · <a href="./lab.html">Lab</a> · <a href="./lab-solution.html">Lab solution</a></p></article></div>
+          <div class="xref">Use the detailed anchors for review: <a href="./lecture-notes.html#tokens-embeddings">tokens & embeddings</a>, <a href="./lecture-notes.html#training">training lifecycle</a>, and <a href="./lecture-notes.html#metrics">metrics & thresholds</a>.</div>
+          <div class="footer"><span>Good stopping point for lecture or transition into exercises.</span><span>12</span></div>
+        </section>
+      </div>
+    </div>
+    <div class="bar">
+      <div class="controls"><button id="prev" type="button">Previous</button><button id="next" class="primary" type="button">Next</button></div>
+      <div class="progress"><span id="progress-fill"></span></div>
+      <div class="index" id="slide-index">1 / 12</div>
+    </div>
+  </div>
+  <script>
+    const slidesEl = document.getElementById("slides");
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const prevBtn = document.getElementById("prev");
+    const nextBtn = document.getElementById("next");
+    const progressFill = document.getElementById("progress-fill");
+    const slideIndex = document.getElementById("slide-index");
+    const overview = document.getElementById("overview");
+    const overviewGrid = document.getElementById("overview-grid");
+    const overviewToggle = document.getElementById("overview-toggle");
+    let current = 0;
+    function goTo(index) {
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slidesEl.style.transform = `translateX(-${current * 100}%)`;
+      slideIndex.textContent = `${current + 1} / ${slides.length}`;
+      progressFill.style.width = `${((current + 1) / slides.length) * 100}%`;
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === slides.length - 1;
+      document.title = `Module 2 Slides - ${slides[current].dataset.title}`;
+    }
+    function renderOverview() {
+      slides.forEach((slide, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.innerHTML = `<strong>${index + 1}. ${slide.dataset.title}</strong><br>${slide.querySelector("h1, h2").textContent}`;
+        button.addEventListener("click", () => { overview.classList.remove("visible"); goTo(index); });
+        overviewGrid.appendChild(button);
+      });
+    }
+    prevBtn.addEventListener("click", () => goTo(current - 1));
+    nextBtn.addEventListener("click", () => goTo(current + 1));
+    overviewToggle.addEventListener("click", () => overview.classList.toggle("visible"));
+    document.addEventListener("keydown", (event) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) { event.preventDefault(); if (!overview.classList.contains("visible")) goTo(current + 1); }
+      if (["ArrowLeft", "PageUp"].includes(event.key)) { event.preventDefault(); if (!overview.classList.contains("visible")) goTo(current - 1); }
+      if (event.key === "Home") { event.preventDefault(); goTo(0); }
+      if (event.key === "End") { event.preventDefault(); goTo(slides.length - 1); }
+      if (event.key.toLowerCase() === "o") overview.classList.toggle("visible");
+      if (event.key === "Escape") overview.classList.remove("visible");
+    });
+    renderOverview();
+    goTo(0);
+  </script>
+</body>
+</html>

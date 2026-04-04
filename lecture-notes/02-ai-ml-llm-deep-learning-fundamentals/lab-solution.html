@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 2 Lab Solution - AI, ML, LLM, and Deep Learning Fundamentals</title>
+  <style>
+    :root {
+      --paper: #fffdf9;
+      --ink: #1f2937;
+      --muted: #5b6574;
+      --line: #ded6ca;
+      --brand: #0f766e;
+      --brand-2: #1d4ed8;
+      --soft: #f8f2e9;
+      --soft-2: #edf6f5;
+      --soft-3: #eef4ff;
+      --shadow: 0 18px 40px rgba(49, 31, 11, 0.08);
+      --max: 1080px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: linear-gradient(180deg, #faf7f2, #f2ece4); font-family: Georgia, "Times New Roman", serif; line-height: 1.7; }
+    a { color: var(--brand-2); }
+    code, pre { font-family: Consolas, "SFMono-Regular", monospace; }
+    pre { background: #15202b; color: #eef4ff; padding: 1rem; border-radius: 16px; overflow-x: auto; }
+    .page { width: min(calc(100% - 2rem), var(--max)); margin: 0 auto; padding: 1rem 0 4rem; }
+    .hero, section, .card { background: var(--paper); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); }
+    .hero { padding: 2.2rem 1.8rem; background: linear-gradient(135deg, rgba(29, 78, 216, 0.95), rgba(15, 118, 110, 0.9)); color: #fffdfa; }
+    .grid-2, .grid-3 { display: grid; gap: 1rem; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card, section { padding: 1.25rem; margin-top: 1rem; }
+    .label { display: inline-block; margin-bottom: 0.6rem; padding: 0.28rem 0.65rem; border-radius: 999px; background: rgba(15, 118, 110, 0.1); color: var(--brand); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .soft { background: var(--soft); }
+    .soft-2 { background: var(--soft-2); }
+    .soft-3 { background: var(--soft-3); }
+    ul, ol { padding-left: 1.2rem; }
+    .muted { color: var(--muted); }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 0.7rem 0; text-align: left; vertical-align: top; border-top: 1px solid var(--line); }
+    th { width: 22%; color: var(--muted); }
+    @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <span class="label" style="background:rgba(255,255,255,0.14); color:#fffdfa;">Module 2 Lab Solution</span>
+      <h1>Worked Solution: Tokenization, Embeddings, And Threshold Decisions</h1>
+      <p>
+        This is a worked solution, not the only acceptable answer. The goal is to show what strong
+        reasoning looks like when fundamentals are translated into engineering decisions.
+      </p>
+      <p>
+        <a href="./lab.html" style="color:#fffdfa; font-weight:700;">Open lab</a>
+        |
+        <a href="./lecture-notes.html" style="color:#fffdfa; font-weight:700;">Open lecture notes</a>
+      </p>
+    </header>
+
+    <section>
+      <span class="label">How To Use This</span>
+      <h2>Instructor And Student Notes</h2>
+      <div class="grid-3">
+        <article class="card soft"><h3>Students</h3><p>Compare your reasoning and tradeoff logic, not just the exact numbers or sentence choices.</p></article>
+        <article class="card soft-2"><h3>Instructors</h3><p>Reward operational thinking: cost, risk, metric tradeoffs, and clarity of model boundaries.</p></article>
+        <article class="card soft-3"><h3>Cross-References</h3><p>Each solution links back to the lecture sections that justify the answer.</p></article>
+      </div>
+    </section>
+
+    <section id="solution-1">
+      <span class="label">Exercise 1 Solution</span>
+      <h2>Inspect Tokenization And Context Cost</h2>
+      <p class="muted">
+        Supporting lecture sections:
+        <a href="./lecture-notes.html#tokens-embeddings">Tokens And Embeddings</a>,
+        <a href="./lecture-notes.html#transformers">Transformers</a>
+      </p>
+      <div class="card soft">
+        <h3>Original Assignment</h3>
+        <p>Pick five short strings that look similar in visible length but differ in structure, for example: a plain sentence, a URL, a JSON blob, code, and a sentence with punctuation-heavy formatting.</p>
+        <ol>
+          <li>Estimate which ones you think will produce more tokens and why.</li>
+          <li>Use a tokenizer tool or reason carefully from known tokenization behavior.</li>
+          <li>Explain how token count affects cost, latency, and context fit in a production system.</li>
+          <li>State one practical implication for prompt design or chunking.</li>
+        </ol>
+        <h3>Expected Deliverable</h3>
+        <p>Create a one-page note with your five examples, tokenization observations, and one engineering takeaway.</p>
+      </div>
+      <div class="card">
+        <h3>Worked Example</h3>
+        <table>
+          <tr><th>String</th><th>Likely token behavior</th><th>Reason</th></tr>
+          <tr><td>`Reset my password please.`</td><td>Relatively compact</td><td>Common words are often tokenized efficiently</td></tr>
+          <tr><td>`https://app.example.com/reset?token=abc123`</td><td>Often higher token count than expected</td><td>URLs mix punctuation, symbols, and uncommon fragments</td></tr>
+          <tr><td>`{"user":"ana","action":"reset"}`</td><td>Can be token-heavy for its size</td><td>JSON punctuation and quoting patterns often fragment</td></tr>
+          <tr><td>`if (!user) return 401;`</td><td>Can tokenize differently from plain language</td><td>Code uses symbols and syntax-specific fragments</td></tr>
+          <tr><td>`Reset!!! Password??? Now...`</td><td>Often less efficient than plain prose</td><td>Heavy punctuation can increase token fragmentation</td></tr>
+        </table>
+      </div>
+      <div class="grid-2">
+        <article class="card soft"><h3>Engineering Takeaway</h3><p>Visible character count is not enough. Structured or punctuation-heavy text can consume more tokens than students expect, which directly affects prompt cost and context budgets.</p></article>
+        <article class="card soft-2"><h3>Why This Matters Later</h3><p>This becomes crucial in prompt compression, chunking, RAG context assembly, and latency optimization.</p></article>
+      </div>
+    </section>
+
+    <section id="solution-2">
+      <span class="label">Exercise 2 Solution</span>
+      <h2>Reason About Embedding Similarity</h2>
+      <p class="muted">
+        Supporting lecture sections:
+        <a href="./lecture-notes.html#tokens-embeddings">Tokens And Embeddings</a>,
+        <a href="./lecture-notes.html#networks">Why Neural Networks Matter</a>
+      </p>
+      <div class="card soft">
+        <h3>Original Assignment</h3>
+        <p>Build a small set of 8-10 support-style sentences. Include pairs that are semantically similar but not string-similar, and pairs that are string-similar but semantically different.</p>
+        <ol>
+          <li>Group the sentences into clusters you expect embeddings to place near each other.</li>
+          <li>Explain why semantic similarity can differ from keyword overlap.</li>
+          <li>Identify one case where embeddings may still fail without better context or metadata.</li>
+        </ol>
+        <h3>Expected Deliverable</h3>
+        <p>Create a small similarity table or cluster diagram and a short written explanation.</p>
+      </div>
+      <div class="card">
+        <h3>Worked Example Clusters</h3>
+        <table>
+          <tr><th>Sentence</th><th>Expected cluster</th><th>Why</th></tr>
+          <tr><td>`I can't log in to my account`</td><td>Authentication</td><td>Login/access problem</td></tr>
+          <tr><td>`reset my password`</td><td>Authentication</td><td>Closely related intent though different wording</td></tr>
+          <tr><td>`my invoice total looks wrong`</td><td>Billing</td><td>Payment/accounting issue</td></tr>
+          <tr><td>`why was I charged twice?`</td><td>Billing</td><td>Same business intent, different wording</td></tr>
+          <tr><td>`account page won't load`</td><td>May be ambiguous</td><td>Could be auth, UI, or outage depending on context</td></tr>
+        </table>
+      </div>
+      <div class="grid-2">
+        <article class="card soft"><h3>Key Concept</h3><p>Embeddings help when meaning matters more than literal overlap.</p></article>
+        <article class="card soft-2"><h3>Where Embeddings Still Fail</h3><p>Ambiguous short texts may need metadata, user history, or product context.</p></article>
+      </div>
+    </section>
+
+    <section id="solution-3">
+      <span class="label">Exercise 3 Solution</span>
+      <h2>Choose A Threshold And Defend It</h2>
+      <p class="muted">
+        Supporting lecture sections:
+        <a href="./lecture-notes.html#metrics">Metrics And Thresholds</a>,
+        <a href="./lecture-notes.html#failures">Capabilities, Limits, And Failures</a>
+      </p>
+      <div class="card soft">
+        <h3>Original Assignment</h3>
+        <p>Imagine you are building an inbound-support triage system that predicts whether a ticket should be escalated to a senior specialist. You are given these model scores for ten cases:</p>
+        <p><code>0.94, 0.89, 0.81, 0.77, 0.72, 0.68, 0.61, 0.54, 0.40, 0.22</code></p>
+        <p>Assume that the truly escalation-worthy cases are the first, second, fourth, fifth, and seventh items in the list.</p>
+        <ol>
+          <li>Evaluate two thresholds of your choice, for example `0.80` and `0.60`.</li>
+          <li>Compute the resulting true positives, false positives, false negatives, precision, and recall.</li>
+          <li>Choose a threshold and defend it in product terms, not just mathematical terms.</li>
+          <li>State whether calibration or human review policy should be part of the design.</li>
+        </ol>
+        <h3>Expected Deliverable</h3>
+        <p>Create a short threshold-analysis memo with your calculations and recommendation.</p>
+      </div>
+      <div class="card">
+        <h3>Worked Calculation</h3>
+        <table>
+          <tr><th>Threshold</th><th>Predicted positives</th><th>TP</th><th>FP</th><th>FN</th><th>Precision</th><th>Recall</th></tr>
+          <tr><td>0.80</td><td>1, 2, 3</td><td>2</td><td>1</td><td>3</td><td>2/3 = 0.67</td><td>2/5 = 0.40</td></tr>
+          <tr><td>0.60</td><td>1, 2, 3, 4, 5, 6, 7</td><td>5</td><td>2</td><td>0</td><td>5/7 = 0.71</td><td>5/5 = 1.00</td></tr>
+        </table>
+      </div>
+      <div class="grid-2">
+        <article class="card soft"><h3>Recommendation</h3><p>If the system is only routing cases into a human review queue, a threshold near `0.60` may be preferable because missing escalation-worthy tickets is costly.</p></article>
+        <article class="card soft-2"><h3>Why Calibration Still Matters</h3><p>Confidence scores should not be treated as perfectly trustworthy.</p></article>
+      </div>
+    </section>
+
+    <section id="solution-4">
+      <span class="label">Exercise 4 Solution</span>
+      <h2>Design A Fundamentals-Aware AI Feature</h2>
+      <p class="muted">
+        Supporting lecture sections:
+        <a href="./lecture-notes.html#orientation">The Large-Picture Map For This Module</a>,
+        <a href="./lecture-notes.html#metrics">Metrics And Thresholds</a>,
+        <a href="../01-what-ai-engineers-actually-build/lecture-notes.html#prototype-production">Module 1 Prototype Versus Production</a>
+      </p>
+      <div class="card soft">
+        <h3>Original Assignment</h3>
+        <p>Design a narrow AI feature for one business workflow. Keep the scope small enough that you can clearly justify the model choice, threshold policy, and likely failure modes.</p>
+        <ul>
+          <li>Describe the user problem in 2-3 sentences.</li>
+          <li>State which model behaviors matter most: classification, extraction, ranking, generation, or semantic retrieval.</li>
+          <li>List the core fundamentals that matter to your design: tokens, embeddings, thresholds, context window, training assumptions, or calibration.</li>
+          <li>State one thing the system should definitely not do automatically.</li>
+        </ul>
+        <h3>Expected Deliverable</h3>
+        <p>Turn in a short design note with a problem statement, design choices, threshold stance, and failure/risk notes.</p>
+      </div>
+      <div class="card">
+        <h3>Worked Example: Escalation-Recommendation Assistant</h3>
+        <pre><code>Problem:
+Support leads want help identifying tickets that probably need escalation.
+
+Model behaviors:
+- classification
+- semantic retrieval of similar past cases
+
+Fundamentals that matter:
+- embeddings for similar-case retrieval
+- threshold choice for escalation recommendation
+- calibration of confidence scores
+- token cost when attaching long ticket histories
+
+What the system should not do automatically:
+- it should not escalate premium or legal-risk tickets without human review</code></pre>
+      </div>
+      <div class="grid-2">
+        <article class="card soft"><h3>Why This Is Strong</h3><ul><li>The scope is narrow and operationally clear.</li><li>The design uses fundamentals, not just buzzwords.</li><li>The review boundary is explicit.</li></ul></article>
+        <article class="card soft-2"><h3>Common Weak Answer</h3><p>“Use an LLM to handle support better” is too vague.</p></article>
+      </div>
+    </section>
+
+    <section>
+      <span class="label">Wrap-Up</span>
+      <h2>Full Lab Challenge At A Glance</h2>
+      <ul>
+        <li>Exercise 1: reason about tokenization and context cost</li>
+        <li>Exercise 2: reason about embedding similarity and semantic clustering</li>
+        <li>Exercise 3: compute threshold tradeoffs and defend a product decision</li>
+        <li>Exercise 4: design a narrow AI feature grounded in fundamentals and review boundaries</li>
+      </ul>
+      <p>The larger lesson is that fundamentals become useful only when they inform system design, measurement, and operational choices.</p>
+    </section>
+  </div>
+</body>
+</html>

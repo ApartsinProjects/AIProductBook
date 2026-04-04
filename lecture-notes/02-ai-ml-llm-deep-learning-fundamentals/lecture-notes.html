@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 2 Lecture Notes - AI, ML, LLM, and Deep Learning Fundamentals</title>
+  <style>
+    :root {
+      --paper: #fffdfa;
+      --ink: #1f2937;
+      --muted: #5f6670;
+      --line: #ddd7cf;
+      --brand: #2d5f5a;
+      --brand-2: #2c4f86;
+      --brand-3: #6d4c2f;
+      --soft: #f6f2eb;
+      --soft-2: #f4f3ef;
+      --soft-3: #f3f4f6;
+      --shadow: 0 12px 26px rgba(49, 31, 11, 0.05);
+      --max: 940px;
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      counter-reset: section figure table;
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, #fbfaf7, #f3efe8);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.82;
+    }
+    a { color: var(--brand-2); }
+    code, pre { font-family: Consolas, "SFMono-Regular", monospace; }
+    pre {
+      margin: 1rem 0;
+      padding: 1rem;
+      overflow-x: auto;
+      background: #15202b;
+      color: #eef4ff;
+      border-radius: 16px;
+      font-size: 0.92rem;
+    }
+    .page { width: min(calc(100% - 2rem), var(--max)); margin: 0 auto; padding: 1.25rem 0 5rem; }
+    .running-head {
+      display:flex;
+      justify-content:space-between;
+      gap:1rem;
+      padding:0.35rem 0 1rem;
+      color:var(--muted);
+      font-size:0.84rem;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+    .hero {
+      padding: 2.6rem 2rem 2rem;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #f7f4ed, #f3eee6);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+    }
+    .eyebrow, .label {
+      display: inline-block;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .eyebrow {
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--line);
+      font-size: 0.76rem;
+      color: var(--muted);
+      background: rgba(255,255,255,0.8);
+    }
+    .label {
+      margin-bottom: 0.6rem;
+      padding: 0.28rem 0.65rem;
+      background: #f2eee7;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+    h1, h2, h3 { margin: 0 0 0.75rem; line-height: 1.15; }
+    h1 { margin-top: 1rem; font-size: clamp(2.2rem, 5vw, 4.4rem); max-width: 13ch; }
+    .hero p { max-width: 66ch; font-size: 1.08rem; color: var(--ink); }
+    .hero-grid, .grid-2, .grid-3, .toc, .callouts { display: grid; gap: 1.1rem; }
+    .hero-grid { grid-template-columns: 1fr; margin-top: 1.5rem; }
+    .grid-2, .grid-3, .toc, .callouts { grid-template-columns: 1fr; }
+    .panel, .card, .diagram, .note, .table-wrap {
+      background: #fcfbf8;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 16px rgba(49, 31, 11, 0.03);
+    }
+    .panel { padding: 1.2rem 1.25rem; background: rgba(255,255,255,0.45); box-shadow: none; }
+    .diagram, .table-wrap { padding: 1.35rem 1.45rem; }
+    .card, .note { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+    .toc .card, .callouts .card { padding: 1.05rem 1.15rem; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,253,249,.72); box-shadow: none; }
+    .card h3, .note h3, .diagram h3 { font-size: 1.34rem; }
+    .diagram { margin: 1.9rem auto; padding: 1.5rem; background: #fbfaf7; }
+    .diagram svg { display:block; width:100%; height:auto; }
+    .note { padding: 1rem 1.15rem; border-left: 3px solid #b9b1a6; background: rgba(247,244,238,.8); border-radius: 0 10px 10px 0; }
+    .note.blue, .note.green { background: rgba(247,244,238,.8); border-left-color: #b9b1a6; }
+    .meta-list, .card ul, .note ul, section ul, section ol { margin: 0; padding-left: 1.15rem; }
+    .meta-list li, .card li, .note li, section li { margin: 0.28rem 0; }
+    .chapter-nav {
+      margin-top: 2rem;
+      padding: 1.4rem 1.5rem 1.2rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.35);
+    }
+    .chapter-nav h2 { font-size: 1.45rem; margin-bottom: 0.9rem; }
+    .chapter-nav ol { margin: 0; padding-left: 1.25rem; columns: 2; column-gap: 2rem; }
+    .chapter-nav li { margin: 0 0 0.5rem; break-inside: avoid; }
+    .chapter-nav a { color: var(--ink); text-decoration: none; border-bottom: 1px solid rgba(31,41,55,.2); }
+    section {
+      margin-top: 2.35rem;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+    .section-intro, .caption { max-width: 68ch; color: var(--muted); }
+    section > p, section > ul, section > ol, section > .bridge, section > pre, section > .table-wrap, .grid-2 > *, .grid-3 > *, .callouts > * { max-width: 68ch; }
+    section > h2 { margin-top: 0.2rem; font-size: clamp(1.95rem, 4vw, 3rem); }
+    section[id] { counter-increment: section; }
+    section[id] > h2::before {
+      content: counter(section) ". ";
+      color: var(--muted);
+    }
+    section > h3 { margin-top: 1.3rem; }
+    section p, section li, section td, section th { font-size: 1.03rem; }
+    .table-wrap table { width: 100%; border-collapse: collapse; font-size: 0.96rem; }
+    .table-wrap th, .table-wrap td {
+      padding: 0.75rem 0;
+      text-align: left;
+      vertical-align: top;
+      border-top: 1px solid var(--line);
+    }
+    .table-wrap th { width: 23%; color: var(--muted); }
+    .diagram { counter-increment: figure; }
+    .table-wrap { counter-increment: table; }
+    body.chapter-2 .diagram h3::before { content: "Figure 2." counter(figure) ". "; color: var(--muted); }
+    body.chapter-2 .table-wrap h3::before { content: "Table 2." counter(table) ". "; color: var(--muted); }
+    .bridge {
+      margin: 1.2rem 0;
+      padding: 1rem 1.15rem;
+      border-left: 3px solid #b9b1a6;
+      background: rgba(247,244,238,.8);
+      border-radius: 0 10px 10px 0;
+      max-width: 68ch;
+    }
+    .bridge strong { color: var(--ink); }
+    .xref, .footer-links a { font-weight: 700; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1rem; }
+    @media (max-width: 960px) {
+      .hero-grid, .grid-2, .grid-3, .toc, .callouts { grid-template-columns: 1fr; }
+      .chapter-nav ol { columns: 1; }
+    }
+  </style>
+</head>
+<body class="chapter-2">
+  <div class="page">
+    <div class="running-head">
+      <span>AI Engineering Course</span>
+      <span>Chapter 2</span>
+    </div>
+    <header class="hero">
+      <span class="eyebrow">Module 2 Lecture Notes</span>
+      <h1>AI, ML, LLM, and Deep Learning Fundamentals</h1>
+      <p>
+        This module gives students the mental model behind the tools they will use for the rest of the
+        course. The goal is not to turn them into ML researchers. The goal is to make them fluent enough
+        to reason about models, data, uncertainty, embeddings, transformers, thresholds, and evaluation
+        tradeoffs in production AI systems.
+      </p>
+      <div class="hero-grid">
+        <div class="panel">
+          <h3>How To Read This Chapter</h3>
+          <p>
+            This chapter narrows the lens from Module 1. There, students learned to view AI products as
+            systems. Here, they learn just enough model intuition to reason sensibly about those systems:
+            what the major terms mean, how modern language models represent text, where capability comes
+            from, and why evaluation language such as precision, recall, and threshold choice matters in
+            product work.
+          </p>
+          <p>
+            It builds directly on
+            <a href="../01-what-ai-engineers-actually-build/lecture-notes.html#mental-models">Module 1 mental models</a>.
+            Companion materials:
+            <a href="./lab.html">lab</a>,
+            <a href="./lab-solution.html">lab solution</a>,
+            and
+            <a href="./slides.html">slides</a>.
+          </p>
+        </div>
+      </div>
+      <div class="bridge" style="margin-top:1.35rem;">
+        <strong>Prerequisites and scope:</strong>
+        students only need the Module 1 system view plus basic software engineering. No calculus-heavy ML
+        background is assumed. The point is not to make students ML researchers. It is to give them enough
+        internal model understanding that later topics like prompting, retrieval, evaluation, and serving
+        feel conceptually grounded instead of magical.
+      </div>
+    </header>
+
+    <section class="chapter-nav">
+      <span class="label">Contents</span>
+      <h2>Chapter Overview</h2>
+      <ol>
+        <li><a href="#orientation">The large-picture map</a></li>
+        <li><a href="#landscape">AI, ML, deep learning, transformers, and LLMs</a></li>
+        <li><a href="#learning-paradigms">Learning paradigms</a></li>
+        <li><a href="#networks">Neural network intuition</a></li>
+        <li><a href="#transformers">Why transformers matter</a></li>
+        <li><a href="#tokens-embeddings">Tokens and embeddings</a></li>
+        <li><a href="#training">Training and post-training</a></li>
+        <li><a href="#metrics">Metrics, thresholds, and calibration</a></li>
+        <li><a href="#failures">Capabilities and limits</a></li>
+        <li><a href="#code">Examples</a></li>
+        <li><a href="#sources">Sources</a></li>
+      </ol>
+    </section>
+
+    <section class="toc">
+      <article class="card"><span class="label">Chapter Thread</span><h3>Models Are Statistical Systems</h3><p>This chapter moves from category map, to learning signal, to representations, to training, to evaluation. The main theme is that AI engineers do not need every mathematical detail, but they do need accurate intuitions about where model behavior comes from and how it affects system design.</p></article>
+    </section>
+
+    <section id="orientation">
+      <span class="label">1. Orientation</span>
+      <h2>The Large-Picture Map For This Module</h2>
+      <p class="section-intro">
+        Students often hear AI words as if they are interchangeable: AI, ML, deep learning, transformer,
+        LLM, embedding, attention. They are not interchangeable. This module gives the map that keeps the
+        whole stack mentally organized.
+      </p>
+      <div class="diagram">
+        <h3>Illustration: How The Fundamental Concepts Fit Together</h3>
+        <svg viewBox="0 0 1080 440" width="100%" aria-hidden="true">
+          <rect x="390" y="30" width="300" height="64" rx="18" fill="#fff4e8" stroke="#efcfaa" />
+          <text x="540" y="68" text-anchor="middle" font-size="24" font-weight="700">AI Products Need Behavior</text>
+
+          <rect x="80" y="150" width="220" height="80" rx="18" fill="#eef4ff" stroke="#c9d8fb" />
+          <rect x="330" y="150" width="220" height="80" rx="18" fill="#edf6f5" stroke="#c8e4df" />
+          <rect x="580" y="150" width="220" height="80" rx="18" fill="#f7f1ff" stroke="#d8caef" />
+          <rect x="830" y="150" width="180" height="80" rx="18" fill="#eef8ef" stroke="#cbe6cf" />
+          <text x="190" y="188" text-anchor="middle" font-size="22" font-weight="700">ML Basics</text>
+          <text x="190" y="214" text-anchor="middle" font-size="16">learning from data</text>
+          <text x="440" y="188" text-anchor="middle" font-size="22" font-weight="700">Deep Learning</text>
+          <text x="440" y="214" text-anchor="middle" font-size="16">neural representations</text>
+          <text x="690" y="188" text-anchor="middle" font-size="22" font-weight="700">Transformers</text>
+          <text x="690" y="214" text-anchor="middle" font-size="16">attention over tokens</text>
+          <text x="920" y="188" text-anchor="middle" font-size="22" font-weight="700">LLMs</text>
+          <text x="920" y="214" text-anchor="middle" font-size="16">large pretrained text models</text>
+
+          <rect x="170" y="320" width="220" height="72" rx="18" fill="#fff7ea" stroke="#ead5aa" />
+          <rect x="430" y="320" width="220" height="72" rx="18" fill="#eef4ff" stroke="#c9d8fb" />
+          <rect x="690" y="320" width="220" height="72" rx="18" fill="#edf6f5" stroke="#c8e4df" />
+          <text x="280" y="360" text-anchor="middle" font-size="20" font-weight="700">Tokens & Embeddings</text>
+          <text x="540" y="360" text-anchor="middle" font-size="20" font-weight="700">Training & Post-Training</text>
+          <text x="800" y="360" text-anchor="middle" font-size="20" font-weight="700">Metrics & Thresholds</text>
+        </svg>
+        <p class="caption">Original diagram for this course. The map is intentionally simple: product needs lead us into model families, then into representations, then into training and evaluation choices.</p>
+      </div>
+      <p>
+        The key thing to notice in this figure is that it is layered. AI is the broadest umbrella, but as
+        engineers move downward they get closer to the mechanisms that actually affect product behavior.
+        That is why the lower row matters so much. Tokens, embeddings, training stages, and evaluation
+        choices are where many real engineering decisions get made later in the course.
+      </p>
+      <div class="grid-2">
+        <article class="card">
+          <h3>How To Read This Module</h3>
+          <p>
+            We move from broad categories to internal mechanics to operational implications. This mirrors
+            how engineers think in practice: what kind of model behavior do we need, what mechanism provides
+            that behavior, and what does that imply for data, quality, and product risk?
+          </p>
+        </article>
+        <article class="card">
+          <h3>Backward Reference To Module 1</h3>
+          <p>
+            Module 1 taught that <a href="../01-what-ai-engineers-actually-build/lecture-notes.html#big-picture">AI engineering is systems work</a>.
+            This module adds the model-layer intuition needed to make good system decisions later.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="landscape">
+      <span class="label">2. Landscape</span>
+      <h2>AI, ML, Deep Learning, Transformers, and LLMs Are Nested Concepts</h2>
+      <p class="section-intro">
+        One of the first confusions students have is category confusion. They hear “AI” and “LLM” used as
+        if they are the same thing. They are related, but they sit at different levels of abstraction.
+      </p>
+      <div class="grid-2">
+        <article class="note green">
+          <h3>Artificial Intelligence</h3>
+          <p>Any technique intended to produce useful intelligent behavior. This is the broadest term.</p>
+        </article>
+        <article class="note blue">
+          <h3>Machine Learning</h3>
+          <p>Systems that learn patterns from data rather than relying only on hand-written rules.</p>
+        </article>
+      </div>
+      <div class="grid-2">
+        <article class="note">
+          <h3>Deep Learning</h3>
+          <p>Machine learning based on neural networks with many layers and learned internal representations.</p>
+        </article>
+        <article class="note blue">
+          <h3>Transformers And LLMs</h3>
+          <p>Transformers are a model architecture. LLMs are large transformer-based language models trained on massive text corpora.</p>
+        </article>
+      </div>
+      <div class="table-wrap">
+        <h3>Category Comparison</h3>
+        <table>
+          <tr><th>Term</th><th>What it means</th><th>Why an AI engineer should care</th></tr>
+          <tr><td>AI</td><td>Broad umbrella for intelligent systems</td><td>Helps place products in the wider space of automation and reasoning</td></tr>
+          <tr><td>ML</td><td>Learning from examples and data</td><td>Explains why data quality and labels matter</td></tr>
+          <tr><td>Deep learning</td><td>Representation learning with neural networks</td><td>Explains why models can learn flexible patterns from raw inputs</td></tr>
+          <tr><td>Transformer</td><td>Architecture built around attention</td><td>Explains tokens, context windows, scaling, and modern model behavior</td></tr>
+          <tr><td>LLM</td><td>Large pretrained language model</td><td>Explains why prompting, context engineering, and post-training matter in apps</td></tr>
+        </table>
+      </div>
+      <p>
+        A useful way to read this table is as a nesting guide. “AI” tells you the broad problem family.
+        “ML” tells you that the system learns from data. “Deep learning” tells you that internal
+        representations matter. “Transformer” tells you which architecture family is shaping context use.
+        “LLM” tells you which application pattern is now possible at scale. Each lower row narrows the
+        engineering conversation.
+      </p>
+      <div class="bridge">
+        <strong>Connection forward:</strong>
+        once students understand the landscape, the next question is how these systems actually learn. That
+        means distinguishing supervised, unsupervised, self-supervised, and reinforcement learning.
+      </div>
+    </section>
+
+    <section id="learning-paradigms">
+      <span class="label">3. Learning Paradigms</span>
+      <h2>How Models Learn: The Big Families</h2>
+      <p class="section-intro">
+        Engineers do not need to derive the algorithms from scratch, but they do need to understand what
+        type of learning signal a model gets. That tells us what a model is likely to be good at and where
+        its blind spots come from.
+      </p>
+      <div class="callouts">
+        <article class="card"><h3>Supervised Learning</h3><p>Learn from labeled examples: input -> desired output.</p></article>
+        <article class="card"><h3>Unsupervised Learning</h3><p>Find structure without explicit labels: clusters, latent structure, compression.</p></article>
+        <article class="card"><h3>Self-Supervised Learning</h3><p>Create supervision from the data itself, such as predicting missing or next tokens.</p></article>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Reinforcement Learning</h3>
+          <p>
+            Learn by interacting with an environment and receiving rewards or penalties. For AI engineers,
+            this matters mostly as background for post-training ideas and agent behavior, not because every
+            production application uses RL directly.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Most Important Practical Insight</h3>
+          <p>
+            LLMs are not usually trained by feeding in millions of perfect human question-answer pairs at
+            the start. Their initial general capability mainly comes from self-supervised learning on large
+            corpora, then later post-training makes them more helpful and aligned for user-facing work.
+          </p>
+        </article>
+      </div>
+      <div class="diagram">
+        <h3>Illustration: What Signal The Model Receives</h3>
+        <svg viewBox="0 0 1040 330" width="100%" aria-hidden="true">
+          <rect x="40" y="50" width="220" height="200" rx="18" fill="#eef4ff" stroke="#c9d8fb" />
+          <rect x="290" y="50" width="220" height="200" rx="18" fill="#edf6f5" stroke="#c8e4df" />
+          <rect x="540" y="50" width="220" height="200" rx="18" fill="#f7f1ff" stroke="#d8caef" />
+          <rect x="790" y="50" width="210" height="200" rx="18" fill="#fff4e8" stroke="#efcfaa" />
+          <text x="150" y="88" text-anchor="middle" font-size="22" font-weight="700">Supervised</text>
+          <text x="150" y="124" text-anchor="middle" font-size="17">Input + answer label</text>
+          <text x="150" y="156" text-anchor="middle" font-size="17">“This is correct”</text>
+          <text x="400" y="88" text-anchor="middle" font-size="22" font-weight="700">Unsupervised</text>
+          <text x="400" y="124" text-anchor="middle" font-size="17">Only raw data</text>
+          <text x="400" y="156" text-anchor="middle" font-size="17">Find structure</text>
+          <text x="650" y="88" text-anchor="middle" font-size="22" font-weight="700">Self-Supervised</text>
+          <text x="650" y="124" text-anchor="middle" font-size="17">Data creates the label</text>
+          <text x="650" y="156" text-anchor="middle" font-size="17">Predict next or masked part</text>
+          <text x="895" y="88" text-anchor="middle" font-size="22" font-weight="700">Reinforcement</text>
+          <text x="895" y="124" text-anchor="middle" font-size="17">Action + reward</text>
+          <text x="895" y="156" text-anchor="middle" font-size="17">Learn through feedback</text>
+        </svg>
+        <p class="caption">Original diagram for this course. The point is to anchor the intuition around learning signal rather than formula details.</p>
+      </div>
+      <div class="note">
+        <h3>Common misconception to explicitly correct</h3>
+        <p>
+          “LLMs are just supervised models trained to answer questions.” That misses the core story. Their
+          broad language competence mainly emerges from self-supervised pretraining; supervised and
+          preference-style post-training shape usefulness after that.
+        </p>
+      </div>
+    </section>
+
+    <section id="networks">
+      <span class="label">4. Neural Networks</span>
+      <h2>Why Neural Networks Matter</h2>
+      <p class="section-intro">
+        Traditional ML often relies on manual features or relatively shallow decision boundaries. Neural
+        networks matter because they can learn their own internal representations. That turns many hard
+        perception and language tasks from manual feature engineering problems into representation learning
+        problems.
+      </p>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Large-Picture Intuition</h3>
+          <p>
+            A neural network is a stack of functions that gradually transforms raw input into a space where
+            the final prediction becomes easier. Early layers might detect simple patterns; later layers
+            combine them into more abstract concepts.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Why This Matters For AI Engineers</h3>
+          <p>
+            This is why embeddings, hidden states, and model representations are so important later. Models
+            are not just memorizing answers. They are building internal spaces where semantic similarity and
+            useful distinctions can be represented.
+          </p>
+        </article>
+      </div>
+      <div class="diagram">
+        <h3>Illustration: Representation Learning</h3>
+        <svg viewBox="0 0 980 300" width="100%" aria-hidden="true">
+          <rect x="40" y="110" width="150" height="76" rx="16" fill="#eef4ff" stroke="#c9d8fb" />
+          <rect x="250" y="80" width="120" height="136" rx="16" fill="#edf6f5" stroke="#c8e4df" />
+          <rect x="430" y="80" width="120" height="136" rx="16" fill="#edf6f5" stroke="#c8e4df" />
+          <rect x="610" y="80" width="120" height="136" rx="16" fill="#edf6f5" stroke="#c8e4df" />
+          <rect x="790" y="110" width="150" height="76" rx="16" fill="#fff4e8" stroke="#efcfaa" />
+          <text x="115" y="154" text-anchor="middle" font-size="21">Raw Input</text>
+          <text x="310" y="154" text-anchor="middle" font-size="20">Layer 1</text>
+          <text x="490" y="154" text-anchor="middle" font-size="20">Layer 2</text>
+          <text x="670" y="154" text-anchor="middle" font-size="20">Layer 3</text>
+          <text x="865" y="154" text-anchor="middle" font-size="21">Prediction</text>
+        </svg>
+        <p class="caption">Original diagram for this course. Each layer is not magic; it is a learned transformation that makes the final problem easier.</p>
+      </div>
+      <div class="table-wrap">
+        <h3>Classical ML Intuition That Still Matters</h3>
+        <table>
+          <tr><th>Concept</th><th>High-level meaning</th><th>Why it still matters in AI products</th></tr>
+          <tr><td>Classifier</td><td>Pick a category</td><td>Routing, moderation, triage, document tagging, guardrails</td></tr>
+          <tr><td>Regression</td><td>Predict a numeric value</td><td>Scoring, prioritization, estimation, ranking support</td></tr>
+          <tr><td>Overfitting</td><td>Model memorizes training quirks</td><td>Explains why demos can look good while production quality collapses</td></tr>
+          <tr><td>Underfitting</td><td>Model too simple to capture the pattern</td><td>Explains weak baseline behavior even with clean data</td></tr>
+          <tr><td>Cross-validation</td><td>Test generalization across splits</td><td>Teaches the habit of evaluating beyond one lucky sample</td></tr>
+        </table>
+      </div>
+      <p>
+        This table is here to keep students from treating LLMs as a complete break from earlier ML. The
+        vocabulary of classifiers, regression, overfitting, and generalization still matters because AI
+        products are still being judged by whether they transfer from examples to real operating conditions.
+        A slick demo can still fail for the same old reasons.
+      </p>
+      <div class="bridge">
+        <strong>Connection backward:</strong>
+        Module 1 emphasized that product quality is shaped by task framing. Neural nets add another layer to
+        that story: the model learns internal patterns, but good product framing still decides what the
+        model should and should not do.
+      </div>
+    </section>
+
+    <section id="transformers">
+      <span class="label">5. Transformers</span>
+      <h2>Why Transformers Changed Modern AI Engineering</h2>
+      <p class="section-intro">
+        Transformers matter because they made it practical to model long-range relationships in sequences
+        while training in parallel at scale. For engineers, the important intuition is simpler: transformers
+        let modern language models use token-level context much more effectively than earlier generations.
+      </p>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Attention Intuition</h3>
+          <p>
+            When interpreting a token, the model can weight other tokens by relevance. That means the
+            representation of a word or symbol is not fixed in isolation. It changes depending on context.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Why Engineers Care</h3>
+          <p>
+            This is the root of many later concepts: context windows, prompt construction, retrieval
+            augmentation, token budgets, and why prompt order or surrounding evidence can drastically change
+            output behavior.
+          </p>
+        </article>
+      </div>
+      <div class="diagram">
+        <h3>Illustration: Context Changes Meaning</h3>
+        <svg viewBox="0 0 1040 340" width="100%" aria-hidden="true">
+          <rect x="60" y="60" width="400" height="220" rx="20" fill="#eef4ff" stroke="#c9d8fb" />
+          <rect x="580" y="60" width="400" height="220" rx="20" fill="#edf6f5" stroke="#c8e4df" />
+          <text x="260" y="98" text-anchor="middle" font-size="23" font-weight="700">“bank” in a finance sentence</text>
+          <text x="780" y="98" text-anchor="middle" font-size="23" font-weight="700">“bank” in a river sentence</text>
+          <text x="260" y="150" text-anchor="middle" font-size="18">The company opened a new bank branch.</text>
+          <text x="780" y="150" text-anchor="middle" font-size="18">We sat on the bank of the river.</text>
+          <circle cx="260" cy="215" r="42" fill="#fff" stroke="#c9d8fb" stroke-width="4" />
+          <circle cx="780" cy="215" r="42" fill="#fff" stroke="#c8e4df" stroke-width="4" />
+          <text x="260" y="221" text-anchor="middle" font-size="18">bank</text>
+          <text x="780" y="221" text-anchor="middle" font-size="18">bank</text>
+        </svg>
+        <p class="caption">Original diagram for this course. Same token string, different contextual meaning. This is one of the core intuitions behind attention-based models.</p>
+      </div>
+      <div class="note blue">
+        <h3>Deep insight: prompt engineering is really context engineering</h3>
+        <p>
+          Students often think prompts are magic spells. A better mental model is that prompt design is one
+          specific case of context design. You are shaping which information the model can attend to and how
+          that information is structured.
+        </p>
+      </div>
+    </section>
+
+    <section id="tokens-embeddings">
+      <span class="label">6. Tokens And Embeddings</span>
+      <h2>Tokens Are The Model’s Basic Units, Embeddings Are Its Basic Representations</h2>
+      <p class="section-intro">
+        Tokenization and embeddings are among the most practical concepts in the whole course. They directly
+        affect cost, context limits, similarity search, chunking strategy, and retrieval system behavior.
+      </p>
+      <div class="grid-2">
+        <article class="note green">
+          <h3>Token Intuition</h3>
+          <p>A token is a chunk of text the model processes as one unit. Tokens are not the same thing as words.</p>
+        </article>
+        <article class="note blue">
+          <h3>Embedding Intuition</h3>
+          <p>An embedding is a vector representation where semantically related inputs tend to end up closer together.</p>
+        </article>
+      </div>
+      <div class="diagram">
+        <h3>Illustration: Text -> Tokens -> Embeddings</h3>
+        <svg viewBox="0 0 1020 330" width="100%" aria-hidden="true">
+          <rect x="40" y="120" width="220" height="82" rx="18" fill="#eef4ff" stroke="#c9d8fb" />
+          <rect x="330" y="60" width="260" height="200" rx="18" fill="#edf6f5" stroke="#c8e4df" />
+          <rect x="660" y="120" width="320" height="82" rx="18" fill="#fff4e8" stroke="#efcfaa" />
+          <text x="150" y="168" text-anchor="middle" font-size="22">Input text</text>
+          <text x="460" y="96" text-anchor="middle" font-size="22">Tokens</text>
+          <text x="460" y="138" text-anchor="middle" font-size="18">"token"</text>
+          <text x="460" y="168" text-anchor="middle" font-size="18">"ization"</text>
+          <text x="460" y="198" text-anchor="middle" font-size="18">" matters"</text>
+          <text x="820" y="168" text-anchor="middle" font-size="22">Embedding vector space</text>
+        </svg>
+        <p class="caption">Original diagram for this course. This is the practical bridge from raw text to model computation and later to semantic search.</p>
+      </div>
+      <div class="table-wrap">
+        <h3>Practical Consequences For Engineers</h3>
+        <table>
+          <tr><th>Concept</th><th>What it changes in practice</th></tr>
+          <tr><td>Token count</td><td>Cost, latency, context fit, prompt truncation, chunk sizing</td></tr>
+          <tr><td>Embedding similarity</td><td>Search ranking, clustering, recommendation, duplication detection</td></tr>
+          <tr><td>Tokenizer differences</td><td>Same visible text can produce different token counts across models</td></tr>
+          <tr><td>Context window limit</td><td>You cannot simply “paste everything in” forever; selection and compression matter</td></tr>
+        </table>
+      </div>
+      <div class="bridge">
+        <strong>Connection forward:</strong>
+        Module 5 and Module 6 will return to embeddings in much greater depth for search and RAG. This
+        module only builds the intuition you will need when semantic retrieval starts to matter.
+      </div>
+      <a class="xref" href="./lab.html#exercise-1">Lab tie-in: Exercise 1 uses tokenization and embedding intuition directly.</a>
+    </section>
+
+    <section id="training">
+      <span class="label">7. Training Lifecycle</span>
+      <h2>From Pretraining To Post-Training To Inference</h2>
+      <p class="section-intro">
+        Students should understand model lifecycle at a high level, because it explains both strengths and
+        limitations. Why can a model write fluent text? Why can it still hallucinate? Why does instruction
+        tuning help? Why does RLHF change style more than raw world knowledge?
+      </p>
+      <div class="diagram">
+        <h3>Illustration: The Modern LLM Lifecycle</h3>
+        <svg viewBox="0 0 1040 280" width="100%" aria-hidden="true">
+          <rect x="40" y="110" width="180" height="72" rx="18" fill="#eef4ff" stroke="#c9d8fb" />
+          <rect x="270" y="85" width="180" height="97" rx="18" fill="#edf6f5" stroke="#c8e4df" />
+          <rect x="500" y="60" width="180" height="122" rx="18" fill="#f7f1ff" stroke="#d8caef" />
+          <rect x="730" y="85" width="180" height="97" rx="18" fill="#fff4e8" stroke="#efcfaa" />
+          <text x="130" y="152" text-anchor="middle" font-size="20">Raw data</text>
+          <text x="360" y="139" text-anchor="middle" font-size="20">Pretraining</text>
+          <text x="590" y="126" text-anchor="middle" font-size="20">Instruction / preference post-training</text>
+          <text x="820" y="139" text-anchor="middle" font-size="20">Inference in products</text>
+        </svg>
+        <p class="caption">Original diagram for this course. The key lesson is that broad language capability and user-facing helpfulness come from different stages.</p>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Pretraining</h3>
+          <p>
+            The model learns broad language and pattern knowledge by predicting text from large corpora.
+            This stage creates general competence.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Instruction Tuning And Preference Training</h3>
+          <p>
+            These stages shape the model to follow instructions, be more helpful, safer, and better aligned
+            with human preferences. They usually change interaction quality more than basic world knowledge.
+          </p>
+        </article>
+      </div>
+      <div class="note">
+        <h3>Common misconception to explicitly correct</h3>
+        <p>
+          “RLHF makes the model smart.” More precisely, it often makes the model more useful, more compliant
+          with desired conversational behavior, and better aligned with human judgments. Raw competence and
+          post-training behavior are related but distinct.
+        </p>
+      </div>
+    </section>
+
+    <section id="metrics">
+      <span class="label">8. Metrics And Thresholds</span>
+      <h2>Why Precision, Recall, Thresholds, And Calibration Matter So Much</h2>
+      <p class="section-intro">
+        This is one of the most practically valuable sections for AI engineers. Many real systems do not
+        fail because the model architecture is wrong. They fail because teams choose the wrong threshold,
+        optimize the wrong metric, or ignore confidence calibration.
+      </p>
+      <div class="grid-3">
+        <article class="card"><h3>Precision</h3><p>Of the things the model predicted positive, how many were actually right?</p></article>
+        <article class="card"><h3>Recall</h3><p>Of the things that really were positive, how many did the model catch?</p></article>
+        <article class="card"><h3>Calibration</h3><p>Does the model’s confidence roughly match real-world accuracy?</p></article>
+      </div>
+      <div class="diagram">
+        <h3>Illustration: Threshold Choice Changes Product Behavior</h3>
+        <svg viewBox="0 0 980 300" width="100%" aria-hidden="true">
+          <line x1="90" y1="220" x2="880" y2="220" stroke="#cdbca7" stroke-width="6" />
+          <circle cx="210" cy="220" r="20" fill="#fff" stroke="#1d4ed8" stroke-width="4" />
+          <circle cx="490" cy="220" r="20" fill="#fff" stroke="#0f766e" stroke-width="4" />
+          <circle cx="760" cy="220" r="20" fill="#fff" stroke="#b45309" stroke-width="4" />
+          <text x="210" y="174" text-anchor="middle" font-size="18">Low threshold</text>
+          <text x="210" y="252" text-anchor="middle" font-size="15">High recall, more false positives</text>
+          <text x="490" y="174" text-anchor="middle" font-size="18">Balanced threshold</text>
+          <text x="490" y="252" text-anchor="middle" font-size="15">Tradeoff point</text>
+          <text x="760" y="174" text-anchor="middle" font-size="18">High threshold</text>
+          <text x="760" y="252" text-anchor="middle" font-size="15">High precision, more misses</text>
+        </svg>
+        <p class="caption">Original diagram for this course. One threshold does not fit every product; the cost of false positives and false negatives changes the right choice.</p>
+      </div>
+      <div class="table-wrap">
+        <h3>Metric Choice By Product Scenario</h3>
+        <table>
+          <tr><th>Scenario</th><th>Metric instinct</th><th>Why</th></tr>
+          <tr><td>Fraud flagging for review</td><td>Higher recall may matter more</td><td>Missing a true fraud case may be more costly than reviewing extra cases</td></tr>
+          <tr><td>Auto-send customer messages</td><td>Higher precision may matter more</td><td>False positives can create bad user-facing behavior</td></tr>
+          <tr><td>Human review queue routing</td><td>Calibration matters</td><td>You need confidence scores that mean something operationally</td></tr>
+        </table>
+      </div>
+      <div class="note blue">
+        <h3>Deep insight: metrics are really about costs</h3>
+        <p>
+          Precision and recall are not abstract exam concepts. They are a way of expressing business and
+          product tradeoffs. A false positive and a false negative have different costs in different systems.
+          Strong AI engineers map metrics back to those costs.
+        </p>
+      </div>
+      <a class="xref" href="./lab.html#exercise-3">Lab tie-in: Exercise 3 asks students to make a threshold decision and justify it in product terms.</a>
+    </section>
+
+    <section id="failures">
+      <span class="label">9. Capabilities, Limits, And Failures</span>
+      <h2>Why Powerful Models Are Still Brittle</h2>
+      <p class="section-intro">
+        Students should leave this module respecting both model capability and model fragility. Over-hyping
+        and underestimating are both dangerous. The right stance is operational realism.
+      </p>
+      <div class="grid-3">
+        <article class="card"><h3>Hallucination</h3><p>The model generates plausible text that is not grounded in fact.</p></article>
+        <article class="card"><h3>Brittleness</h3><p>Small phrasing or context changes can produce large behavior shifts.</p></article>
+        <article class="card"><h3>Uncertainty</h3><p>Confidence is often implicit and not perfectly calibrated.</p></article>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Why These Failures Happen</h3>
+          <ul>
+            <li>Models are optimizing prediction, not guaranteed truth retrieval</li>
+            <li>Training data is imperfect and broad, not task-specific in every case</li>
+            <li>Context windows are limited and selective</li>
+            <li>Inference-time prompts cannot fully replace missing world knowledge or missing evidence</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Why Engineers Should Care</h3>
+          <ul>
+            <li>This is why retrieval matters later</li>
+            <li>This is why structured outputs and validators matter later</li>
+            <li>This is why evals and observability matter later</li>
+            <li>This is why product trust must be designed instead of assumed</li>
+          </ul>
+        </article>
+      </div>
+      <div class="bridge">
+        <strong>Connection backward:</strong>
+        Module 1 said a wrong answer can come from many layers, not only the prompt. This module explains
+        the model-layer reasons why even a well-designed system can remain probabilistic and brittle.
+      </div>
+    </section>
+
+    <section id="code">
+      <span class="label">10. Examples</span>
+      <h2>What The Fundamentals Look Like In Practice</h2>
+      <p class="section-intro">
+        Fundamentals are easiest to remember when students see them embodied in code, metrics, and product
+        decisions rather than only in definitions.
+      </p>
+      <article class="card">
+        <h3>Example 1: Token Counting Matters</h3>
+        <pre><code>text = "Tokenization matters because cost and context windows matter."
+
+tokens = tokenize(text)
+print(len(tokens))
+
+# Engineering implication:
+# fewer tokens can reduce cost and latency,
+# but over-compressing can remove needed context.</code></pre>
+        <p>This is the first glimpse of why prompt shape, chunking, and later latency engineering matter.</p>
+      </article>
+      <article class="card">
+        <h3>Example 2: Embedding Similarity</h3>
+        <pre><code>sentences = [
+    "reset my password",
+    "I can't sign in to my account",
+    "how to cook pasta"
+]
+
+vectors = embed(sentences)
+sim_1 = cosine_similarity(vectors[0], vectors[1])
+sim_2 = cosine_similarity(vectors[0], vectors[2])
+
+print(sim_1, sim_2)</code></pre>
+        <p>
+          This is the core intuition behind semantic search: useful closeness in vector space can represent
+          meaning rather than exact string overlap.
+        </p>
+      </article>
+      <article class="card">
+        <h3>Example 3: Threshold Tuning</h3>
+        <pre><code>scores = [0.91, 0.82, 0.63, 0.57, 0.42]
+threshold = 0.80
+
+predicted_positive = [s for s in scores if s >= threshold]
+print(predicted_positive)
+
+# Lower threshold -> more positives -> higher recall, lower precision
+# Higher threshold -> fewer positives -> higher precision, lower recall</code></pre>
+        <p>This simple pattern appears everywhere in production triage and automation systems.</p>
+      </article>
+      <article class="card">
+        <h3>Example 4: Better Mental Framing</h3>
+        <pre><code>Weak framing:
+"Use AI to decide customer support actions."
+
+Better framing:
+1. Classify issue type
+2. Estimate urgency score
+3. Retrieve policy excerpts
+4. Draft a reply with citations
+5. Route to review if confidence is below threshold</code></pre>
+        <p>
+          This builds directly on Module 1’s task-framing lesson: fundamentals become useful when they help
+          engineers decompose real systems into measurable, testable subproblems.
+        </p>
+      </article>
+    </section>
+
+    <section id="sources">
+      <span class="label">11. Sources</span>
+      <h2>References And Illustration Notes</h2>
+      <p class="section-intro">
+        I used current, high-credibility sources for technical grounding while keeping the diagrams on this
+        page original to the course. No third-party images are embedded in this document.
+      </p>
+      <ul>
+        <li><a href="https://developers.google.com/machine-learning/crash-course/neural-networks">Google Machine Learning Crash Course: Neural Networks</a></li>
+        <li><a href="https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall">Google Machine Learning Crash Course: Accuracy, Precision, Recall</a></li>
+        <li><a href="https://platform.openai.com/docs/introduction/">OpenAI API Introduction: Tokens and Embeddings</a></li>
+        <li><a href="https://platform.openai.com/docs/guides/latency-optimization/2-generate-fewer-tokens">OpenAI: Latency Optimization</a></li>
+        <li><a href="https://huggingface.co/course">Hugging Face LLM Course</a></li>
+        <li><a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a></li>
+        <li><a href="../01-what-ai-engineers-actually-build/lecture-notes.html">Module 1 Lecture Notes</a></li>
+        <li><a href="./lab.html">Companion lab for this module</a></li>
+        <li><a href="./lab-solution.html">Worked lab solution for this module</a></li>
+        <li><a href="./slides.html">Interactive slides for this module</a></li>
+      </ul>
+      <div class="footer-links">
+        <a href="./lab.html">Open Lab</a>
+        <a href="./lab-solution.html">Open Lab Solution</a>
+        <a href="./slides.html">Open Slides</a>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
