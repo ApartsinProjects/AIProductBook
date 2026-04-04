@@ -1819,13 +1819,14 @@ footer a:hover { color: var(--accent); }
 /* Part Headers */
 .dense-part-header {
     font-family: 'Cinzel', Georgia, serif;
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: var(--primary);
     margin: 1.5rem 0 0.75rem;
     padding: 0.5rem 0;
     border-bottom: 2px solid var(--highlight);
-    letter-spacing: 0.02em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 .dense-part-header a {
     color: inherit;
@@ -1837,13 +1838,14 @@ footer a:hover { color: var(--accent); }
 
 .dense-appendices-header {
     font-family: 'Cinzel', Georgia, serif;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--accent);
     margin: 2rem 0 0.75rem;
     padding: 0.5rem 0;
     border-bottom: 2px solid #ccc;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 /* Chapter Entries */
